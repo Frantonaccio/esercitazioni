@@ -6,7 +6,7 @@
       "error": "RealProviderDisabled",
       "message": "REAL_PROVIDER_DISABLED: provider_mode='adapter:builtins.NoneType'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
       "ok": false,
-      "pid": 754
+      "pid": 1119
     },
     "status": ""
   },
@@ -27,7 +27,7 @@
     "error": "STALE_CORE_PIN",
     "observed": "9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7",
     "ok": false,
-    "pid": 777,
+    "pid": 1142,
     "required": "819e7cfedb0f6641dc797e7993bec79462ac8df6"
   },
   "tracked_modified": {
@@ -37,7 +37,7 @@
       "error": "CORE_WORKTREE_DIRTY",
       "observed": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
       "ok": false,
-      "pid": 760,
+      "pid": 1125,
       "required": "819e7cfedb0f6641dc797e7993bec79462ac8df6"
     },
     "status": "M transport/pipeline.py"
@@ -49,7 +49,7 @@
       "error": "CORE_WORKTREE_DIRTY",
       "observed": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
       "ok": false,
-      "pid": 767,
+      "pid": 1132,
       "required": "819e7cfedb0f6641dc797e7993bec79462ac8df6"
     },
     "status": "?? adapters/stray_module.py"
@@ -59,7 +59,7 @@
     "error": "CORE_PIN_MISMATCH",
     "observed": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
     "ok": false,
-    "pid": 773,
+    "pid": 1138,
     "required": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
   }
 }

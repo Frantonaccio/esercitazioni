@@ -1,0 +1,56 @@
+{
+ "run_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+ "batch": "B5_STILLS",
+ "authority": "E067 — B5 v3 REJECTED AS SEMANTICALLY AMBIGUOUS; nuovo B5 HUMAN_APPROVED CONCEPT: telefonata in parallelo / appuntamento concordato, due still separate per split in montaggio. Reference ChatGPT su Drive NON usata come anchor né come still.",
+ "parallel": 2,
+ "identity_anchor": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "CONSULTANT": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_STILLS/stills/CAST_C_still.png",
+  "B3B_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_STORYBOARD_V2/stills/B3B_CHIAMATA_CONSULENTE_still.png"
+ },
+ "anchors": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "CONSULTANT": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_STILLS/stills/CAST_C_still.png",
+  "B3B_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_STORYBOARD_V2/stills/B3B_CHIAMATA_CONSULENTE_still.png"
+ },
+ "prompt_blocks": {
+  "OWNER_ID": "IDENTITY ANCHOR — the pharmacy owner is the SAME recurring ValoreFarmacia protagonist shown in reference images 1, 2 and 3, not a similar man and not a reinterpretation: the same full, rounded Italian face and soft jaw, the same broad nose and warm eyes, the same hairline, the same thick grey hair with loose natural curls and the same medium volume, the same short grey stubble beard, the same apparent age around 60-62, the same medium build. Take only his face, hair, beard and body from references 1-3; ignore their clothing, locations and expressions.",
+  "CONSULTANT_ID": "IDENTITY ANCHOR — the ValoreFarmacia consultant is exactly the woman of reference image 1: same face, same shoulder-length wavy dark brown hair with natural grey strands, same age around 52; take only her face, hair and body from reference 1. Reference image 2 shows her approved warm studio and outfit: keep the same room, the same light-oak desk, window light, plant and bookshelf, and the same sand fine-knit sweater under a camel blazer. Warm, competent, an entrepreneur talking with another entrepreneur; never a lawyer, notary, saleswoman or call-centre operator.",
+  "CAMERA": "CAMERA IS NOT THE CLIENT: phones, agendas, papers and screens face the characters, never the camera; nothing is presented to the viewer.",
+  "NEG": "Photorealistic, premium documentary realism, contemporary Italy, natural skin and hands with correct fingers. Nobody looks into the lens. No readable text, letters, dates or numbers anywhere, no logos, no brands, no watermark. It is a normal voice phone call, not a video call: no phone screen visible, no computer screen, no headset, no split screen inside the image. Square 1:1 frame; keep generous margin above the head and below the agenda so the image can be cropped to a slightly wider band without cutting face, phone, hands or agenda."
+ },
+ "jobs": [
+  {
+   "asset": "B5_OWNER_SPLIT",
+   "beat": 5,
+   "kind": "image",
+   "model": "gpt_image_2",
+   "params": {"aspect_ratio": "1:1", "resolution": "2k", "quality": "high"},
+   "references": ["OWNER_1", "OWNER_2", "OWNER_3"],
+   "prefix_blocks": ["OWNER_ID"],
+   "suffix_blocks": ["CAMERA", "NEG"],
+   "prompt": "Photorealistic cinematic still. Morning in a quiet traditional Italian café, a small wooden table by the window, almost empty, soft warm daylight from the side. The owner, in a white shirt with an open collar and a mid-grey unstructured jacket, sits at the table on a voice phone call, holding his smartphone to his left ear with his left hand. An open paper week-planner agenda with a dark leather cover lies flat on the table in front of him, facing him; his right hand holds a pen just above the page, about to write the time he is choosing for the next meeting. An espresso cup at the edge of the table. Expression composed, autonomous and decisive, the look of a man setting the terms himself, lips closed, no commercial smile, eyes on the agenda. Medium shot from slightly beside and in front of him at table height, 40mm look; his face and phone in the upper half of the frame, his writing hand and the agenda in the lower half, the agenda pages at a strong oblique angle so nothing is readable.",
+   "must_show": ["owner = protagonista canonico AD02_B", "telefonata vocale, telefono all'orecchio", "agenda cartacea davanti a lui, penna in mano: sta per fissare lui il momento", "luogo neutro e privato (café), camicia bianca + giacca grigia", "espressione composta e autonoma"],
+   "must_not_show": ["schermo del telefono o altri schermi", "videochiamata", "testo, date o numeri leggibili", "agenda rivolta alla camera", "calendario enorme", "sorriso commerciale", "sguardo in camera", "altre persone al suo tavolo"],
+   "edit_use": "metà alta dello split B5 (1080×960) · VO «Se vorrà approfondire, sarà Lei a decidere come, dove e quando incontrarci.»"
+  },
+  {
+   "asset": "B5_CONSULTANT_SPLIT",
+   "beat": 5,
+   "kind": "image",
+   "model": "gpt_image_2",
+   "params": {"aspect_ratio": "1:1", "resolution": "2k", "quality": "high"},
+   "references": ["CONSULTANT", "B3B_ENV"],
+   "prefix_blocks": ["CONSULTANT_ID"],
+   "suffix_blocks": ["CAMERA", "NEG"],
+   "prompt": "Photorealistic cinematic still. Her warm, bright professional studio as in reference image 2. The consultant sits at her light-oak desk on a voice phone call, holding her smartphone to her right ear with her right hand. An open professional desk agenda lies flat on the desk in front of her, facing her; her left hand holds a pen resting on the page, ready to note the time the caller is proposing. She listens attentively and checks the page: focused, warm and competent, a hint of a reassuring smile, clearly receiving the other person's decision rather than leading it. A cup of coffee at the side; no laptop, no computer, no folders. Medium shot from slightly beside and in front of her at desk height, 40mm look; her face and phone in the upper half of the frame, her hand and the agenda in the lower half, the agenda pages at a strong oblique angle so nothing is readable.",
+   "must_show": ["consulente P2 canonica (CAST_C)", "stesso studio caldo di B3B, stessi abiti", "telefonata vocale, telefono all'orecchio", "agenda professionale davanti a lei, penna pronta: ascolta e verifica per annotare"],
+   "must_not_show": ["laptop, computer, schermi", "headset o estetica call center", "videochiamata", "testo, date o numeri leggibili", "agenda rivolta alla camera", "atteggiamento da venditrice", "sguardo in camera"],
+   "edit_use": "metà bassa dello split B5 (1080×960)"
+  }
+ ]
+}

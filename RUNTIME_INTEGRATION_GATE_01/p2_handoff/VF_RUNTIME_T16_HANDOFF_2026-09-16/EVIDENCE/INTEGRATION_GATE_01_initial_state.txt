@@ -1,0 +1,9 @@
+=== STATO INIZIALE ===
+creative-os  main 9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7 dirty=0
+vf-tenant    fix/performance-first-creative-gate 5bb3cf2cb5c9d5227c195a376a7d6c29cd5091be dirty=1
+VF_CREATIVE_OS main 5f2650a50bcf1d3d401c73af1415d1990d729fd8 dirty=6
+--- hash dei file sorgente che NON verranno modificati ---
+637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1  /Users/francescoantonaccio/valore_farmacia_local/VF_PILOT_OUTPUTS/P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/scripts/hf_batch.py
+6c622c1293cc4962ac9ca51df5d531e469023b3d94a374c5ed2987b2e405e77a  /Users/francescoantonaccio/valore_farmacia_local/VF_PILOT_OUTPUTS/P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/scripts/preflight.py
+--- P2 e' fuori git? ---
+fatal: not a git repository (or any of the parent directories): .git

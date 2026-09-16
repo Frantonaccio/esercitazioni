@@ -1,0 +1,70 @@
+{
+ "run_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+ "batch": "B45_STILLS_P1",
+ "authority": "E068 — HUMAN GATE PATCH B4/B5 SEMANTIC VISUAL FIX: nuove still B4 (prima telefonata: titolare fuori farmacia che parla, consulente che ascolta) e B5 (appuntamento concordato). Fase 1: B4_OWNER, B4_CONSULTANT, B5_CONSULTANT. Cast lock assoluto; nessuna immagine ChatGPT come reference. STOP dopo le still.",
+ "parallel": 3,
+ "identity_anchor": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "CONSULTANT": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_STILLS/stills/CAST_C_still.png",
+  "B3B_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_STORYBOARD_V2/stills/B3B_CHIAMATA_CONSULENTE_still.png"
+ },
+ "anchors": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "CONSULTANT": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_STILLS/stills/CAST_C_still.png",
+  "B3B_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_STORYBOARD_V2/stills/B3B_CHIAMATA_CONSULENTE_still.png"
+ },
+ "prompt_blocks": {
+  "OWNER_ID": "IDENTITY ANCHOR — the pharmacy owner is the SAME recurring ValoreFarmacia protagonist shown in reference images 1, 2 and 3, not a similar man and not a reinterpretation: the same full, rounded Italian face and soft jaw, the same broad nose and warm eyes, the same hairline, the same thick grey hair with loose natural curls and the same medium volume, the same short grey stubble beard, the same apparent age around 60-62, the same medium build. Take only his face, hair, beard and body from references 1-3; ignore their clothing, locations and expressions.",
+  "CONSULTANT_ID": "IDENTITY ANCHOR — the ValoreFarmacia consultant is exactly the woman of reference image 1: same face, same shoulder-length wavy dark brown hair with natural grey strands, same age around 52; take only her face, hair and body from reference 1. Reference image 2 shows her approved warm studio and outfit: keep the same room, the same light-oak desk, window, plant and bookshelf, and the same sand fine-knit sweater under a camel blazer. Warm, competent, an entrepreneur talking with another entrepreneur; never a lawyer, notary, saleswoman or call-centre operator.",
+  "CAMERA": "CAMERA IS NOT THE CLIENT: phones, notebooks, agendas and screens face the characters, never the camera; nothing is presented to the viewer.",
+  "NEG": "Photorealistic, premium documentary realism, contemporary Italy, natural skin and hands with correct fingers. Nobody looks into the lens. No readable text, letters, dates or numbers anywhere, no logos, no brands, no watermark. A normal voice phone call, not a video call: exactly one phone per person, no phone screen visible, no computer screen, no headset, no split screen inside the image. Vertical 9:16."
+ },
+ "jobs": [
+  {
+   "asset": "B4_OWNER_CALL",
+   "beat": 4,
+   "kind": "image",
+   "model": "gpt_image_2",
+   "params": {"aspect_ratio": "9:16", "resolution": "2k", "quality": "high"},
+   "references": ["OWNER_1", "OWNER_2", "OWNER_3"],
+   "prefix_blocks": ["OWNER_ID"],
+   "suffix_blocks": ["CAMERA", "NEG"],
+   "prompt": "Photorealistic cinematic still. Late afternoon, at the end of the working day, in a quiet traditional Italian café, elegant but everyday: warm low sunlight through the tall window, dark wood, a marble counter softly out of focus in the background, a few empty tables, nobody sitting near him. The owner, in a white shirt with an open collar and a mid-grey unstructured jacket, no pharmacist coat, sits alone at a small round table by the window. He holds his smartphone to his ear with his left hand and is talking: he is telling the person on the other end something about himself and his pharmacy, his right hand open in a small, natural explanatory gesture just above the table. Expression serene, reflective and engaged, a man speaking openly about his own situation; not worried, not selling, not buying. On the table only a small espresso cup and a glass of water: no agenda, no notebook, no tablet, no laptop, no papers, no documents. Medium shot from a three-quarter front angle at table height, 40mm look, his face in the upper third, the gesturing hand in the middle of the frame, soft depth of field.",
+   "must_show": ["owner = protagonista canonico AD02_B", "fuori dalla farmacia (café tranquillo, fine giornata)", "abiti civili, nessun camice", "telefonata vocale, telefono all'orecchio", "sta parlando di sé: mano libera in un gesto naturale"],
+   "must_not_show": ["farmacia o camice", "automobile", "lusso ostentato / terrazza vacanza / turistico", "agenda, taccuino, calendario, tablet", "bilanci, report, documenti, laptop", "videochiamata o secondo telefono", "testo leggibile", "sguardo in camera"],
+   "edit_use": "B4 prima parte · VO «All'inizio non chiediamo bilanci, documenti o dati sensibili.»"
+  },
+  {
+   "asset": "B4_CONSULTANT_LISTEN",
+   "beat": 4,
+   "kind": "image",
+   "model": "gpt_image_2",
+   "params": {"aspect_ratio": "9:16", "resolution": "2k", "quality": "high"},
+   "references": ["CONSULTANT", "B3B_ENV"],
+   "prefix_blocks": ["CONSULTANT_ID"],
+   "suffix_blocks": ["CAMERA", "NEG"],
+   "prompt": "Photorealistic cinematic still. Her warm, bright professional studio as in reference image 2, in late afternoon light. The consultant sits at her light-oak desk holding her smartphone to her ear with her right hand, listening with full, empathetic attention: head slightly tilted, gentle focused eyes, lips closed with a hint of warmth, clearly listening far more than speaking. Her left hand rests relaxed on the desk beside a pen lying still; a closed notebook and a coffee cup at the side. No open agenda, no writing, no documents, no laptop or computer. A closer framing than a standard office shot: medium close-up from her left side at eye level, 50mm look, her face in the upper third, her resting hand and the pen at the lower edge, the window light behind her softly out of focus.",
+   "must_show": ["consulente P2 canonica (CAST_C)", "stesso studio caldo e stessi abiti di B3B", "telefono all'orecchio", "ascolto empatico, mani libere, penna appoggiata"],
+   "must_not_show": ["agenda aperta o scrittura", "documenti, laptop, computer", "headset / call center", "atteggiamento da venditrice", "testo leggibile", "sguardo in camera"],
+   "edit_use": "B4 seconda parte · VO «Vogliamo capire Lei e le Sue esigenze.»"
+  },
+  {
+   "asset": "B5_CONSULTANT_AGENDA",
+   "beat": 5,
+   "kind": "image",
+   "model": "gpt_image_2",
+   "params": {"aspect_ratio": "9:16", "resolution": "2k", "quality": "high"},
+   "references": ["CONSULTANT", "B3B_ENV"],
+   "prefix_blocks": ["CONSULTANT_ID"],
+   "suffix_blocks": ["CAMERA", "NEG"],
+   "prompt": "Photorealistic cinematic still. Her warm studio as in reference image 2, the same late afternoon light. The consultant sits at her light-oak desk, smartphone to her ear with her right hand. An open professional desk agenda now lies flat on the desk in front of her, facing her; her left hand holds a pen just above the page, not yet writing, while she listens and looks down at the page, ready to note the time the caller is choosing. Attentive, receptive, warm and competent: she is receiving his decision, not leading it. A coffee cup at the side; no laptop, no computer, no folders, no documents. Medium shot from slightly beside and in front of her at desk height, 40mm look, her face in the upper half, her hand and the agenda in the lower half, the agenda pages at a strong oblique angle so nothing is readable.",
+   "must_show": ["consulente P2 canonica (CAST_C)", "stesso studio e abiti", "telefono all'orecchio", "agenda cartacea aperta, penna sollevata: ascolta prima di annotare"],
+   "must_not_show": ["scrittura già in corso", "laptop, computer, schermi", "documenti", "testo o date leggibili", "agenda rivolta alla camera", "sguardo in camera"],
+   "edit_use": "B5 seconda parte · VO «…dove e quando incontrarci.»"
+  }
+ ]
+}

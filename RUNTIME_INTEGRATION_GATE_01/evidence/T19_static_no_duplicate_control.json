@@ -10,6 +10,8 @@
     "core_pin.py",
     "genspec_bridge.py",
     "go_candidate.py",
+    "hf_batch_bridge.py",
+    "hf_batch_runtime.py",
     "provider_gate.py"
   ],
   "findings": [],

@@ -1,0 +1,524 @@
+{
+  "base_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+  "hf_batch_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+  "lock_bound": {
+    "B1_NEW_CLIP": {
+      "genspec": {
+        "kind": "video",
+        "model": "seedance_2_0",
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 13,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION"
+      },
+      "prompt_sha_matches_lock": true,
+      "refs": [
+        "start-image:START:a21193dafc4e52fc8cc3ad1ee230698f2ae62ec222581e6997d21c7da014ae65"
+      ],
+      "refs_match_lock_media": true,
+      "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db"
+    },
+    "B4C_NEW_CLIP": {
+      "genspec": {
+        "kind": "video",
+        "model": "seedance_2_0",
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 5,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION"
+      },
+      "prompt_sha_matches_lock": true,
+      "refs": [
+        "start-image:START:538a7f3b217847ff9f187494ec5754ec7acebf44a7a373b87f2b617c01b8c50c"
+      ],
+      "refs_match_lock_media": true,
+      "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f"
+    }
+  },
+  "missing_media_rejected": true,
+  "mutations": {
+    "param_duration": "08952e9c92d93976a923b05af8085005ab83062a350e39f3bcc7085713d6e262",
+    "prompt_block": "8a53f22950a61317aa12cfe619b90ccc5fa4cbda47bc07781550026e9afde702",
+    "qa_metadata_only(no change expected)": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+    "run_id": "5750261b84b07a04ba3e39fc6412851735b44ccf5f5db86be96a7c703fbc8b6d",
+    "start_image_bytes": "aa034c7cfecd2ef8201f6e644d940385e8bb6ce573e4760e3cffc864011adaa8"
+  },
+  "other_process": {
+    "keys": {
+      "B1_NEW_CLIP": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+      "B4C_NEW_CLIP": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f"
+    },
+    "pid": 1148
+  },
+  "specs": {
+    "spec_B1_B4C_stills.json": [
+      {
+        "asset": "B1_NEW_STILL",
+        "kind": "image",
+        "model": "gpt_image_2",
+        "n_refs": 4,
+        "params": {
+          "aspect_ratio": "9:16",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "30a4740b2ca3143b048e6460bf8fb6019c3bfd01031a770edd4cde20cbd47be5",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B4C_NEW_STILL",
+        "kind": "image",
+        "model": "gpt_image_2",
+        "n_refs": 4,
+        "params": {
+          "aspect_ratio": "9:16",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "d37a6ad385e8673149c43bcedf166b6cdfa643f35c2ee3b24f1754cc26f00749",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ],
+    "spec_B1_approach_motion.json": [
+      {
+        "asset": "B1_APPROACH_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 13,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "e4dd1090baca6a90a9090bc796f754c26354643ca9e0e3d268d8b641bffd7bfc",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ],
+    "spec_B1_sober_motion.json": [
+      {
+        "asset": "B1_SOBER_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 13,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "2db7f0346ea846c2e033e7efa479ffa3ffb4a9cb4f6a12bf1142ebd915cf8953",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ],
+    "spec_B1_sober_still.json": [
+      {
+        "asset": "B1_SOBER_STILL",
+        "kind": "image",
+        "model": "gpt_image_2",
+        "n_refs": 4,
+        "params": {
+          "aspect_ratio": "9:16",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "1eb7dea3e389d13f427935659316917f0d81c6126711c0867fe401b6f10c2444",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ],
+    "spec_B45_stills_phase1.json": [
+      {
+        "asset": "B4_OWNER_CALL",
+        "kind": "image",
+        "model": "gpt_image_2",
+        "n_refs": 3,
+        "params": {
+          "aspect_ratio": "9:16",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "edd44130e8ffc104cb6d5457fd687dbb1b0aa20b732356798e9f79d60d5c4b5f",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B4_CONSULTANT_LISTEN",
+        "kind": "image",
+        "model": "gpt_image_2",
+        "n_refs": 2,
+        "params": {
+          "aspect_ratio": "9:16",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "e39f10e6b7065a71d6957a8fd926cbe8818c4e501f876effb5a9ed62d3398f19",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B5_CONSULTANT_AGENDA",
+        "kind": "image",
+        "model": "gpt_image_2",
+        "n_refs": 2,
+        "params": {
+          "aspect_ratio": "9:16",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "31f8e0641c8dba51cffa538cad6795fcbca7e610c98c942b4bc11ba0400e732a",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ],
+    "spec_B45_stills_phase2.json": [
+      {
+        "asset": "B5_OWNER_CALENDAR",
+        "kind": "image",
+        "model": "gpt_image_2",
+        "n_refs": 4,
+        "params": {
+          "aspect_ratio": "9:16",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "a24852feb5e34b0a67c9872688ea2222525f32bb3aca4aaa34842d4493b93357",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ],
+    "spec_B4C_still.json": [
+      {
+        "asset": "B4C_OWNER_REFLECTIVE",
+        "kind": "image",
+        "model": "gpt_image_2",
+        "n_refs": 4,
+        "params": {
+          "aspect_ratio": "9:16",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "f86fb9f8c8aea45135db9ed7e5a0b19741e8db6d941485822dd9b360a1bfa305",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ],
+    "spec_B5_stills.json": [
+      {
+        "asset": "B5_OWNER_SPLIT",
+        "kind": "image",
+        "model": "gpt_image_2",
+        "n_refs": 3,
+        "params": {
+          "aspect_ratio": "1:1",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "aa183da42127a249d7d24f8c4b680dd34b2c0b34421764d0e319b80d01c6717d",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B5_CONSULTANT_SPLIT",
+        "kind": "image",
+        "model": "gpt_image_2",
+        "n_refs": 2,
+        "params": {
+          "aspect_ratio": "1:1",
+          "quality": "high",
+          "resolution": "2k"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "67a3dcc0161df769568c98d0833232ba8fc4e11a035567f2967b2534ef1d315c",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ],
+    "spec_motion.json": [
+      {
+        "asset": "B1_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 13,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "9691175c35772085df308a5408f91b5524fbd11b9facd44933cf87949c3f73f3",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B2_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 5,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "ec9868099f84bcc33ed3e7b1f2c22ee19f08c798eefe424f984e3909c3b9faaf",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B3A_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 5,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "e83166abd8510a955f584424e4583ca148f053ad338422482cdbd3ce4be8bca8",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B3B_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 5,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "6ac8ed43d0666619dbf121b97cffcecf55ca2d8d137e1d280f29bd1f23ee69ef",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B4_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 8,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "c8125254a6cf3d85df413293622d6e9fe8ad8570ee6b938ee53065c827939ae6",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B5_OWNER_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "1:1",
+          "duration": 6,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "91413a5dec2cad0b5f1b0e740a32ae3eab10c3bd815056695fa6d83550265b2d",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B5_CONSULTANT_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "1:1",
+          "duration": 6,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "6d813958880e15edecd2bf5fd869f4bc5e97e098950dc1736afa8feaa6348a92",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B6_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 8,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "b1a7072c1ea7deb8280521e25ac0098989468f479eb8c1479eebbb50868a5d2d",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B7_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 6,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "b8dc5df3ca3f961b9262cd509478cbf8dbe16dee9645a16b727505eb55c4fc4c",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ],
+    "spec_motion_B1_B4C.json": [
+      {
+        "asset": "B1_NEW_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 13,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "61ca18ac37b57d43a89fd8b8d61d05b569e9cea5d90a63bde09c5446c647fb47",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B4C_NEW_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 5,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "aa01c4cda378ca49bc740340664a850021a2b0f68e1468f43a70bbd8a39f80b6",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ],
+    "spec_motion_B45.json": [
+      {
+        "asset": "B4_OWNER_CALL_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 6,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "fd3baf425b4f1b36dceaf65368a71d7a5df8253821e565c912482bc73bf6b308",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B4_CONSULTANT_LISTEN_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 6,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "9a069294aeac3177f859922622b1793eb27ad4c5e85017abfee82e4a3ea2e126",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B5_OWNER_CALENDAR_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 6,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "41746f8850d2898e21c495acf2c07b6575ee5e24d47705c75dcc4c71c2413a18",
+        "same_media_order": true,
+        "same_prompt": true
+      },
+      {
+        "asset": "B5_CONSULTANT_AGENDA_CLIP",
+        "kind": "video",
+        "model": "seedance_2_0",
+        "n_refs": 1,
+        "params": {
+          "aspect_ratio": "9:16",
+          "duration": 6,
+          "generate_audio": false,
+          "mode": "std",
+          "resolution": "1080p"
+        },
+        "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+        "prompt_sha256": "134dfd03aa4251b6bc72b9768889cb03d6727cdba90c89cae039a16e230e03cf",
+        "same_media_order": true,
+        "same_prompt": true
+      }
+    ]
+  }
+}

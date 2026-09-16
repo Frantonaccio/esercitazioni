@@ -1,5 +1,21 @@
 {
-  "P2_HF_BATCH_PATH": null,
-  "reason": "hf_batch.py (P2) non disponibile in questo ambiente: nessun file da hashare. Baseline storica nota solo come prefix 637f3a80… (non verificabile).",
-  "status": "BLOCKED"
+  "after": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+  "baseline": {
+    "mtime": 1789571852.5568104,
+    "path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/hf_batch.py",
+    "sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "size": 13484
+  },
+  "before": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+  "declared": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+  "independent_sources": {
+    "LAB/hf_batch_ORIGINAL.py": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "declared_in_mandate": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "handoff_SHA256SUMS": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "historical_INITIAL_STATE_txt": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "production_RUNTIME_LOCK.scripts": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
+  },
+  "mac_original_path": "/Users/francescoantonaccio/valore_farmacia_local/VF_PILOT_OUTPUTS/P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/scripts/hf_batch.py (fuori git, non in questo ambiente)",
+  "note": "il file verificato e' la copia read-only del handoff; l'originale sul Mac e' attestato dalle 4 fonti",
+  "path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/hf_batch.py"
 }

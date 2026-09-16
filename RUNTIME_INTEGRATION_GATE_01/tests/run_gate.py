@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""RUNTIME INTEGRATION GATE 01 — matrice T01..T20.
+"""RUNTIME INTEGRATION GATE 01 — matrice T01..T23.
 
 MOCK ONLY · ZERO HIGGSFIELD · ZERO CREDITS · NO PRODUCTION.
 
@@ -30,7 +30,11 @@ from tests import static_checks, worker                                         
 CORE_PATH = os.environ.get("CREATIVE_OS_CORE_PATH", "/home/user/creative-os")
 STATE_DIR = os.path.join(GATE_ROOT, "state")
 EVIDENCE_DIR = os.path.join(GATE_ROOT, "evidence")
-P2_HF_BATCH = os.environ.get("P2_HF_BATCH_PATH", "")          # non disponibile in questo ambiente
+HANDOFF = os.path.join(GATE_ROOT, "p2_handoff", "VF_RUNTIME_T16_HANDOFF_2026-09-16")
+# P2 originale: copia read-only consegnata dal handoff (sul Mac vive fuori git, vedi INITIAL_STATE)
+P2_HF_BATCH = os.environ.get("P2_HF_BATCH_PATH", os.path.join(HANDOFF, "P2_RUNTIME", "hf_batch.py"))
+P2_HF_BATCH_SHA_DECLARED = "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
+P2_BASELINE: dict = {}
 STALE_SHA = sorted(KNOWN_STALE_CORE_SHAS)[0]
 CTX = multiprocessing.get_context("spawn")
 
@@ -389,16 +393,33 @@ def t15(canary_home: str):
 
 # ---------------------------------------------------------------- T16-T17
 def t16():
-    if not P2_HF_BATCH or not os.path.exists(P2_HF_BATCH):
-        ev = evidence("T16", "p2_hash", {"status": "BLOCKED", "reason":
-                      "hf_batch.py (P2) non disponibile in questo ambiente: nessun file da "
-                      "hashare. Baseline storica nota solo come prefix 637f3a80… (non verificabile).",
-                      "P2_HF_BATCH_PATH": P2_HF_BATCH or None})
-        return "BLOCKED: P2 hf_batch.py assente in questo ambiente (nessun hash calcolabile)", ev, False
-    before = json.load(open(os.path.join(EVIDENCE_DIR, "T16_p2_baseline.json")))["sha256"]
+    """P2 hash before/after. `before` = SHA calcolato all'avvio della corsa (P2_BASELINE)
+    e confrontato con lo SHA dichiarato da 4 fonti indipendenti del handoff."""
+    if not os.path.exists(P2_HF_BATCH):
+        ev = evidence("T16", "p2_hash", {"status": "BLOCKED", "reason": "hf_batch.py assente",
+                                         "P2_HF_BATCH_PATH": P2_HF_BATCH})
+        return "BLOCKED: P2 hf_batch.py assente", ev, False
     after = sha256_file(P2_HF_BATCH)
-    ev = evidence("T16", "p2_hash", {"before": before, "after": after})
-    return f"before={before[:12]} after={after[:12]}", ev, before == after
+    backup = os.path.join(HANDOFF, "LAB", "hf_batch_ORIGINAL.py")
+    after_backup = sha256_file(backup) if os.path.exists(backup) else None
+    lock = json.load(open(os.path.join(HANDOFF, "EVIDENCE", "MOTION_B1_B4C_RUNTIME_LOCK.json"), encoding="utf-8"))
+    lock_sha = next(x["sha256"] for x in lock["scripts"] if x["path"] == "scripts/hf_batch.py")
+    manifest = dict(line.split("  ", 1)[::-1] for line in
+                    open(os.path.join(HANDOFF, "SHA256SUMS"), encoding="utf-8").read().splitlines() if line.strip())
+    manifest_sha = manifest.get("./P2_RUNTIME/hf_batch.py")
+    initial_state = open(os.path.join(HANDOFF, "EVIDENCE", "INTEGRATION_GATE_01_initial_state.txt"), encoding="utf-8").read()
+    sources = {"declared_in_mandate": P2_HF_BATCH_SHA_DECLARED, "handoff_SHA256SUMS": manifest_sha,
+               "production_RUNTIME_LOCK.scripts": lock_sha,
+               "historical_INITIAL_STATE_txt": P2_HF_BATCH_SHA_DECLARED if P2_HF_BATCH_SHA_DECLARED in initial_state else None,
+               "LAB/hf_batch_ORIGINAL.py": after_backup}
+    before = P2_BASELINE.get("sha256")
+    ok = (before == after == P2_HF_BATCH_SHA_DECLARED and all(v == P2_HF_BATCH_SHA_DECLARED for v in sources.values())
+          and P2_BASELINE.get("mtime") == os.stat(P2_HF_BATCH).st_mtime and P2_BASELINE.get("size") == os.path.getsize(P2_HF_BATCH))
+    ev = evidence("T16", "p2_hash", {"path": P2_HF_BATCH, "before": before, "after": after, "declared": P2_HF_BATCH_SHA_DECLARED,
+                                     "independent_sources": sources, "baseline": P2_BASELINE,
+                                     "mac_original_path": "/Users/francescoantonaccio/valore_farmacia_local/VF_PILOT_OUTPUTS/P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/scripts/hf_batch.py (fuori git, non in questo ambiente)",
+                                     "note": "il file verificato e' la copia read-only del handoff; l'originale sul Mac e' attestato dalle 4 fonti"})
+    return f"before={str(before)[:12]} after={after[:12]} declared={P2_HF_BATCH_SHA_DECLARED[:12]} sources_agree={all(v == P2_HF_BATCH_SHA_DECLARED for v in sources.values())}", ev, ok
 
 
 def t17():
@@ -496,6 +517,123 @@ def t20(stale_core_path: str):
             f"stale+clean -> {steps['stale_clean'].get('error')}"), ev, ok
 
 
+def t21():
+    """Mapping REALE hf_batch go -> GenSpec, provato contro il codice originale (read-only)."""
+    import glob
+    import importlib.util
+    if CORE_PATH not in sys.path:
+        sys.path.insert(0, CORE_PATH)
+    from adapters.base import GenSpec
+    from runtime.hf_batch_bridge import go_inputs_from_job, media, media_sha_from_lock, prompt
+    spec_mod = importlib.util.spec_from_file_location("hf_batch_original", P2_HF_BATCH)
+    orig = importlib.util.module_from_spec(spec_mod)
+    spec_mod.loader.exec_module(orig)
+    per_spec = {}
+    n_jobs = 0
+    for f in sorted(glob.glob(os.path.join(HANDOFF, "SPECS", "*.json"))):
+        b = orig.Batch(f)
+        rows = []
+        for j in b.spec["jobs"]:
+            n_jobs += 1
+            same_prompt = b.prompt(j) == prompt(b.spec, j)
+            same_media = [(fl, rid) for fl, rid, _ in b.media(j)] == [(fl, rid) for fl, rid, _ in media(b.spec, j)]
+            gi = go_inputs_from_job(b.spec, j, lambda fl, rid, ref: "0" * 64)
+            g = build_genspec(gi, GenSpec)
+            rows.append({"asset": j["asset"], "kind": g.kind, "model": g.model, "same_prompt": same_prompt,
+                         "same_media_order": same_media, "n_refs": len(g.refs), "params": g.params,
+                         "project_id": g.project_id, "prompt_sha256": hashlib.sha256(g.prompt.encode()).hexdigest()})
+        per_spec[os.path.basename(f)] = rows
+    all_equal = all(r["same_prompt"] and r["same_media_order"] for rows in per_spec.values() for r in rows)
+    # lock reale: prompt_sha256 e sha256_sent dei media -> GenSpec e spec_key
+    lock = json.load(open(os.path.join(HANDOFF, "EVIDENCE", "MOTION_B1_B4C_RUNTIME_LOCK.json"), encoding="utf-8"))
+    spec = json.load(open(os.path.join(HANDOFF, "SPECS", "spec_motion_B1_B4C.json"), encoding="utf-8"))
+    res = media_sha_from_lock(lock)
+    lock_rows = {}
+    for j, lj in zip(spec["jobs"], lock["jobs"]):
+        g = build_genspec(go_inputs_from_job(spec, j, res(j["asset"])), GenSpec)
+        lock_rows[j["asset"]] = {"prompt_sha_matches_lock": hashlib.sha256(g.prompt.encode()).hexdigest() == lj["prompt_sha256"],
+                                 "refs": list(g.refs), "refs_match_lock_media": [r.split(":")[-1] for r in g.refs] == [m["sha256_sent"] for m in lj["media"]],
+                                 "spec_key": g.spec_key, "genspec": {"kind": g.kind, "model": g.model, "params": g.params, "project_id": g.project_id}}
+    other = in_process(worker.real_spec_keys, CORE_PATH)
+    deterministic = all(other["keys"][a] == lock_rows[a]["spec_key"] for a in lock_rows)
+    # mutazioni reali: un blocco di prompt, un param, la start image, il run_id -> chiave diversa
+    j0 = spec["jobs"][0]
+    base = lock_rows[j0["asset"]]["spec_key"]
+    import copy
+    muts = {}
+    s2 = copy.deepcopy(spec); s2["prompt_blocks"]["V916"] += " (mutato)"
+    muts["prompt_block"] = build_genspec(go_inputs_from_job(s2, s2["jobs"][0], res(j0["asset"])), GenSpec).spec_key
+    s3 = copy.deepcopy(spec); s3["jobs"][0]["params"]["duration"] = 12
+    muts["param_duration"] = build_genspec(go_inputs_from_job(s3, s3["jobs"][0], res(j0["asset"])), GenSpec).spec_key
+    muts["start_image_bytes"] = build_genspec(go_inputs_from_job(spec, j0, lambda fl, rid, ref: "f" * 64), GenSpec).spec_key
+    s4 = copy.deepcopy(spec); s4["run_id"] = "ALTRO_RUN"
+    muts["run_id"] = build_genspec(go_inputs_from_job(s4, s4["jobs"][0], res(j0["asset"])), GenSpec).spec_key
+    s5 = copy.deepcopy(spec); s5["jobs"][0]["edit_use"] = "altro"; s5["jobs"][0]["must_show"] = []; s5["jobs"][0]["beat"] = 9
+    muts["qa_metadata_only(no change expected)"] = build_genspec(go_inputs_from_job(s5, s5["jobs"][0], res(j0["asset"])), GenSpec).spec_key
+    mut_ok = (all(v != base for k, v in muts.items() if not k.startswith("qa_metadata"))
+              and muts["qa_metadata_only(no change expected)"] == base)
+    try:
+        go_inputs_from_job(spec, j0, lambda fl, rid, ref: "MISSING")
+        missing_ok = False
+    except GenSpecBridgeError:
+        missing_ok = True
+    ok = (all_equal and n_jobs == 27 and all(r["prompt_sha_matches_lock"] and r["refs_match_lock_media"] for r in lock_rows.values())
+          and deterministic and mut_ok and missing_ok)
+    ev = evidence("T21", "real_genspec_mapping", {"hf_batch_sha256": sha256_file(P2_HF_BATCH), "specs": per_spec,
+                                                   "lock_bound": lock_rows, "other_process": other, "base_key": base,
+                                                   "mutations": muts, "missing_media_rejected": missing_ok})
+    return (f"{n_jobs} job reali in {len(per_spec)} spec: prompt/media == originale {all_equal}; lock: prompt_sha e sha256_sent combaciano; "
+            f"spec_key stabile in altro processo {deterministic}; 4 mutazioni reali -> chiave diversa, metadati QA -> stessa chiave {mut_ok}; media MISSING rifiutato {missing_ok}"), ev, ok
+
+
+def t22(canary_home: str):
+    """La COPIA hf_batch_runtime.go su spec reale -> Core C26 -> FakeAdapter, sotto sentinella."""
+    db = db_for("T22")
+    # round 1+2 con job che restano vivi: GO#2 deve trovare EXISTING_LIVE_JOB, 0 nuovi submit
+    live = in_process(worker.hf_batch_runtime_go, db, canary_home, CORE_PATH,
+                      adapter_kw={"never_terminal": True}, max_polls=1, rounds=2)
+    mid = in_process(worker.read_state, db, CORE_PATH)
+    # round 3, NUOVO processo e nuovo adapter: riprende i job vivi e li porta a SUCCEEDED
+    done = in_process(worker.hf_batch_runtime_go, db, canary_home, CORE_PATH,
+                      adapter_kw={"latency_polls": 1}, max_polls=5, rounds=1)
+    end = in_process(worker.read_state, db, CORE_PATH)
+    # i verbi CLI restano chiusi: lock e quote -> REAL_PROVIDER_DISABLED prima di ogni subprocess
+    lock_v = in_process(worker.hf_batch_runtime_go, db_for("T22lock"), canary_home, CORE_PATH, verb="lock")
+    quote_v = in_process(worker.hf_batch_runtime_go, db_for("T22quote"), canary_home, CORE_PATH, verb="quote")
+    t1, t2 = (live.get("traces") or [{}, {}])[:2]
+    t3 = (done.get("traces") or [{}])[0]
+    ok = (live.get("ok") and done.get("ok")
+          and [x["reservation_outcome"] for x in t1.get("jobs", [])] == ["RESERVED_NEW", "RESERVED_NEW"]
+          and [x["run_status"] for x in t2.get("jobs", [])] == ["EXISTING_LIVE_JOB", "EXISTING_LIVE_JOB"]
+          and live.get("submits") == 2 and len(mid["rows"]) == 2 and all(r["state"] == "RUNNING" for r in mid["rows"])
+          and [x["reservation_outcome"] for x in t3.get("jobs", [])] == ["EXISTING_LIVE_JOB", "EXISTING_LIVE_JOB"]
+          and [x["run_status"] for x in t3.get("jobs", [])] == ["SUCCEEDED", "SUCCEEDED"] and done.get("submits") == 0
+          and {x["job_id"] for x in t3["jobs"]} == {x["job_id"] for x in t1["jobs"]}
+          and len(end["rows"]) == 2 and all(r["state"] == "SUCCEEDED" and r["provider"] == "fake" for r in end["rows"])
+          and t1.get("run_verdict") == "LOCK_HELD"
+          and live["violations"] == [] and done["violations"] == [] and lock_v["violations"] == [] and quote_v["violations"] == []
+          and lock_v.get("error") == "REAL_PROVIDER_DISABLED" and quote_v.get("error") == "REAL_PROVIDER_DISABLED"
+          and live.get("pid") != done.get("pid"))
+    ev = evidence("T22", "hf_batch_runtime_go_real_spec", {"rounds_1_2_live": live, "state_after_live": mid,
+                                                            "round_3_new_process": done, "state_final": end,
+                                                            "lock_verb": lock_v, "quote_verb": quote_v})
+    return (f"spec reale MOTION_B1_B4C: GO#1 2x RESERVED_NEW (2 submit) · GO#2 2x EXISTING_LIVE_JOB (0 submit) · "
+            f"GO#3 nuovo processo -> 2x SUCCEEDED (0 submit) · lock/quote -> {lock_v.get('error')} · violazioni sentinella 0"), ev, ok
+
+
+def t23():
+    """Integrita' del handoff dentro il gate: manifest 0 mismatch, ZIP hash registrati, albero read-only."""
+    r = subprocess.run(["sha256sum", "-c", "SHA256SUMS", "--quiet"], cwd=HANDOFF, capture_output=True, text=True)
+    n = sum(1 for line in open(os.path.join(HANDOFF, "SHA256SUMS"), encoding="utf-8") if line.strip())
+    zips = open(os.path.join(EVIDENCE_DIR, "HANDOFF_ZIPS.sha256"), encoding="utf-8").read().strip().splitlines()
+    ro = all(not os.access(os.path.join(dp, f), os.W_OK) or os.getuid() == 0
+             for dp, _, fs in os.walk(HANDOFF) for f in fs)
+    ok = r.returncode == 0 and n == 35 and len(zips) == 2
+    ev = evidence("T23", "handoff_integrity", {"manifest_entries": n, "sha256sum_rc": r.returncode, "stderr": r.stderr,
+                                                "zips": zips, "readonly_flag_set": ro})
+    return f"handoff SHA256SUMS: {n} file, rc={r.returncode} (0 mismatch); 2 ZIP hash registrati", ev, ok
+
+
 def t19():
     r = static_checks.run()
     ev = evidence("T19", "static_no_duplicate_control", r)
@@ -528,6 +666,11 @@ def main() -> int:
     os.makedirs(STATE_DIR, exist_ok=True)
     os.makedirs(EVIDENCE_DIR, exist_ok=True)
     print(f"RUNTIME INTEGRATION GATE 01 — Core {CORE_PATH} @ {git('rev-parse', 'HEAD')[:12]}")
+    if os.path.exists(P2_HF_BATCH):
+        st = os.stat(P2_HF_BATCH)
+        P2_BASELINE.update(sha256=sha256_file(P2_HF_BATCH), size=st.st_size, mtime=st.st_mtime, path=P2_HF_BATCH)
+        evidence("T16", "p2_baseline", P2_BASELINE)
+        print(f"  P2 hf_batch.py baseline {P2_BASELINE['sha256'][:16]} ({st.st_size} bytes)")
     scratch = tempfile.mkdtemp(prefix="gate01_")
     stale_core = os.path.join(scratch, "core_stale_9afaddf")
     canary_home = os.path.join(scratch, "canary_home")
@@ -558,6 +701,10 @@ def main() -> int:
         record("T19", "static: no duplicate control system (AST)", "0 findings; import dal Core = 4 attesi", t19)
         record("T20", "dirty Core must fail closed", "canonical+clean PASS; canonical+tracked mod -> CORE_WORKTREE_DIRTY (no import); wrong+clean -> MISMATCH; stale+clean -> STALE",
                lambda: t20(stale_core))
+        record("T21", "real hf_batch go -> GenSpec mapping", "27 job reali: prompt/media identici all'originale; lock: prompt_sha256 e sha256_sent combaciano; spec_key deterministico; mutazioni reali cambiano chiave", t21)
+        record("T22", "hf_batch_runtime.go on real spec via Core", "2 RESERVED_NEW + 2 submit; GO#2 EXISTING_LIVE_JOB 0 submit; nuovo processo completa SUCCEEDED; lock/quote REAL_PROVIDER_DISABLED; 0 violazioni",
+               lambda: t22(canary_home))
+        record("T23", "P2 handoff integrity", "manifest 0 mismatch; ZIP hash registrati", t23)
     finally:
         subprocess.run(["git", "-C", CORE_PATH, "worktree", "remove", "--force", stale_core],
                        capture_output=True)

@@ -1,0 +1,17 @@
+--- INTEGRATION_GATE_01/lab/candidate_fixed/creative-os-production-control/scripts/test_control.py
++++ VF_CREATIVE_OS/_cowork_inbox/2026-09-16_PRODUCTION_CONTROL_PACK/production-control-pack/creative-os-production-control/scripts/test_control.py
+@@ -249,14 +249,3 @@
+             self.refused_before_provider("FILE_HASH_MISMATCH")
+         self.assertEqual(self.c.status(self.m["job_id"])["state"],
+                          "BLOCKED_AFTER_RESERVATION")
+-
+-
+-if __name__ == "__main__":
+-    # 14A — un'esecuzione diretta non puo' uscire 0 senza aver eseguito i test:
+-    # questo modulo richiede il contratto Core, iniettato dal runner.
+-    import sys
+-    print("test_control.py non e' un runner autonomo: i test richiedono il contratto "
+-          "Core (variabile di modulo CORE).\n"
+-          "Usa:  python scripts/control.py --core-root <creative-os> selftest",
+-          file=sys.stderr)
+-    raise SystemExit(2)

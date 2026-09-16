@@ -1,0 +1,11 @@
+--- INTEGRATION_GATE_01/lab/candidate_fixed/creative-os-production-control/SKILL.md
++++ VF_CREATIVE_OS/_cowork_inbox/2026-09-16_PRODUCTION_CONTROL_PACK/production-control-pack/creative-os-production-control/SKILL.md
+@@ -1,7 +1,7 @@
+ ---
+ name: creative-os-production-control
+ description: "Controlla preparazione e ripresa dei job Creative OS con contesto canonico, lock, trace e Human Gate. Usa per avviare, riprendere o verificare una produzione; non per brainstorming libero o pubblicazione. Questa versione esegue soltanto test con provider fittizio."
+-compatibility: "Python 3.9+ (requisito reale: Path.is_relative_to; verificato su 3.9.6), Git e checkout Creative OS verificato. Nessuna dipendenza Python esterna, nessun provider reale."
++compatibility: "Python 3.10+, Git e checkout Creative OS verificato. Nessuna dipendenza Python esterna, nessun provider reale."
+ metadata:
+   version: "0.1.0-candidate"
+   target: "Claude Code; shared Creative OS procedures"

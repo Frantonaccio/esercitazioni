@@ -1,0 +1,38 @@
+{
+ "run_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+ "batch": "B4C_STILL",
+ "authority": "E069 — nuovo beat B4C «conoscere la persona»: 1 still concept del titolare riflessivo nella stessa telefonata al café B4. Identità SOLO dalle reference canoniche 1-3; B4_OWNER_CALL (KEEP) come reference 4 solo per luogo, luce e abiti. La consulente in ascolto usa la still B4_CONSULTANT_LISTEN già approvata. STOP dopo la still, nessun motion B4C prima del Human Gate.",
+ "parallel": 1,
+ "identity_anchor": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "B4_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4_OWNER_CALL.png"
+ },
+ "anchors": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "B4_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4_OWNER_CALL.png"
+ },
+ "prompt_blocks": {
+  "OWNER_ID": "IDENTITY ANCHOR — the pharmacy owner is the SAME recurring ValoreFarmacia protagonist shown in reference images 1, 2 and 3, not a similar man and not a reinterpretation: the same full, rounded Italian face and soft jaw, the same broad nose and warm eyes, the same hairline, the same thick grey hair with loose natural curls and the same medium volume, the same short grey stubble beard, the same apparent age around 60-62, the same medium build. Take his face, hair, beard and body ONLY from references 1-3. Reference image 4 is used ONLY for the location, the light and his clothes: never take the face from reference 4.",
+  "NEG": "Photorealistic, premium documentary realism, contemporary Italy, natural skin and hands with correct fingers. Nobody looks into the lens. No readable text, letters or numbers anywhere, no logos, no brands, no watermark. A normal voice phone call, not a video call: exactly one phone, held to his ear, no phone screen visible. Vertical 9:16."
+ },
+ "jobs": [
+  {
+   "asset": "B4C_OWNER_REFLECTIVE",
+   "beat": 4,
+   "kind": "image",
+   "model": "gpt_image_2",
+   "params": {"aspect_ratio": "9:16", "resolution": "2k", "quality": "high"},
+   "references": ["OWNER_1", "OWNER_2", "OWNER_3", "B4_ENV"],
+   "prefix_blocks": ["OWNER_ID"],
+   "suffix_blocks": ["NEG"],
+   "prompt": "Photorealistic cinematic still. The same quiet traditional Italian café, the same round marble table by the window, the same warm late-afternoon light and the same white shirt and mid-grey jacket as in reference image 4, a moment later in the same phone call. The owner still holds his smartphone to his ear, but he has stopped gesturing: his free hand rests calmly on the table beside the espresso cup. He speaks slowly and thoughtfully, his gaze drifting a little away through the window into the middle distance, as a man explaining what really matters to him and what he would like for his own future and for his pharmacy. Expression calm, lucid, open and engaged, a quiet sense of purpose; not worried, not sad, not nostalgic, not dreamy. Closer framing than reference 4 so the two shots cut together without a jump: a medium close-up from the window side at eye level, 50mm look, his face in the upper third lit by the warm side light, the café softly out of focus behind him. On the table only the espresso cup and the glass of water: no tablet, no agenda, no notebook, no papers, no documents, no laptop.",
+   "must_show": ["owner = protagonista canonico AD02_B", "stesso café, luce e abiti di B4", "stessa telefonata, telefono all'orecchio", "momento riflessivo: smette di gesticolare, sguardo verso la finestra, racconta cosa desidera", "inquadratura diversa da B4 (primo piano dal lato finestra)"],
+   "must_not_show": ["tristezza, preoccupazione, nostalgia o fragilità (S05)", "tablet, agenda, documenti, laptop", "secondo telefono o videochiamata", "testo leggibile", "sguardo in camera"],
+   "edit_use": "B4C · dopo B4 titolare che parla, prima del cut sulla consulente che ascolta · VO «Vogliamo capire Lei e le Sue esigenze.»"
+  }
+ ]
+}

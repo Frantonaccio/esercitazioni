@@ -20,10 +20,10 @@ l'esito che il CORE ha deciso in `reserve_or_get_live`, cosi' il runtime puo'
 riferirlo senza rifare la lettura "c'e' un job vivo?" per conto suo. Delega
 tutto, non decide nulla.
 
-NOTA SU hf_batch.py: il file reale (P2) non e' disponibile in questo ambiente.
-Questo modulo e' il candidate del solo percorso `go -> Core`, scritto per
-essere innestato nella copia `runtime/hf_batch_runtime.py` quando P2 sara'
-leggibile. Non pretende di essere una copia di hf_batch.py.
+NOTA SU hf_batch.py: questo modulo e' il candidate del solo percorso
+`go -> Core`. E' innestato nella copia `runtime/hf_batch_runtime.py` del vero
+P2 hf_batch.py (SHA256 637f3a80…3ea7d1, handoff 2026-09-16) tramite
+`runtime/hf_batch_bridge.py`, che deriva `GoInputs` dai dati reali del job.
 """
 from __future__ import annotations
 
@@ -61,6 +61,8 @@ class GoResult:
         if self.reservation_outcome == "EXISTING_LIVE_JOB":
             if self.state == "SUBMIT_UNKNOWN":
                 return "EXISTING_LIVE_JOB/reconciliation-required"
+            if self.state in ("SUCCEEDED", "FAILED", "TIMEOUT"):
+                return self.state            # job di un altro chiamante, portato a terminale dal poll
             return "EXISTING_LIVE_JOB"
         return self.state
 

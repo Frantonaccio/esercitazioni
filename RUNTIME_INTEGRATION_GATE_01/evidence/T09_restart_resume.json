@@ -1,6 +1,6 @@
 {
   "after_A": {
-    "pid": 653,
+    "pid": 1018,
     "reserved_units": 0,
     "rows": [
       {
@@ -16,7 +16,7 @@
     ]
   },
   "after_B": {
-    "pid": 659,
+    "pid": 1024,
     "reserved_units": 0,
     "rows": [
       {
@@ -46,11 +46,11 @@
       "provider_job_id": "pv_29f82fa2",
       "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
       "state": "RUNNING",
-      "submitted_at": 1789567258.8378859,
-      "terminal_by": 1789567558.8378859,
+      "submitted_at": 1789572129.9710345,
+      "terminal_by": 1789572429.9710345,
       "webhook_hints": 0
     },
-    "pid": 649,
+    "pid": 1014,
     "provider": "fake",
     "provider_job_id": "pv_29f82fa2",
     "reservation_outcome": "RESERVED_NEW",
@@ -63,7 +63,7 @@
     "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
     "job_id": "res_29f82fa26eb391cc_1",
     "ok": true,
-    "outcome": "EXISTING_LIVE_JOB",
+    "outcome": "SUCCEEDED",
     "persisted": {
       "cost_credits": 4.0,
       "error": null,
@@ -73,11 +73,11 @@
       "provider_job_id": "pv_29f82fa2",
       "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
       "state": "SUCCEEDED",
-      "submitted_at": 1789567258.8378859,
-      "terminal_by": 1789567558.8378859,
+      "submitted_at": 1789572129.9710345,
+      "terminal_by": 1789572429.9710345,
       "webhook_hints": 0
     },
-    "pid": 655,
+    "pid": 1020,
     "provider": "fake",
     "provider_job_id": "pv_29f82fa2",
     "reservation_outcome": "EXISTING_LIVE_JOB",

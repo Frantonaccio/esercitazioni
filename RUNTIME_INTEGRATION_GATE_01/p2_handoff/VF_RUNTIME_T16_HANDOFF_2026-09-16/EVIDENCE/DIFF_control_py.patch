@@ -1,0 +1,15 @@
+--- INTEGRATION_GATE_01/lab/candidate_fixed/creative-os-production-control/scripts/control.py
++++ VF_CREATIVE_OS/_cowork_inbox/2026-09-16_PRODUCTION_CONTROL_PACK/production-control-pack/creative-os-production-control/scripts/control.py
+@@ -18,12 +18,6 @@
+ from pathlib import Path
+ 
+ CORE_SHA = "9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7"
+-MIN_PYTHON = (3, 9)   # requisito reale: Path.is_relative_to (3.9). Verificato su 3.9.6.
+-
+-if sys.version_info < MIN_PYTHON:
+-    raise SystemExit(
+-        f"PYTHON_TOO_OLD: richiesto >= {'.'.join(map(str, MIN_PYTHON))}, "
+-        f"trovato {sys.version.split()[0]}")
+ 
+ 
+ class Blocked(ValueError):

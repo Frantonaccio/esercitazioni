@@ -77,3 +77,14 @@ Worktree Core separato per il cleanup typing: `/home/user/creative-os-typing-cle
 
 Rollback del gate: cancellare `RUNTIME_INTEGRATION_GATE_01/` e
 `git -C /home/user/creative-os worktree remove /home/user/creative-os-typing-cleanup`.
+
+## F. RESUME 2026-09-16 — handoff P2 ricevuto
+
+| voce | valore |
+|---|---|
+| branch ripreso | `claude/runtime-integration-gate-01-n8l0y7` @ `042de1f` (working tree pulito) |
+| `VF_RUNTIME_T16_HANDOFF_2026-09-16.zip` | SHA256 `7d7c93af350da7cf73affa05737b157f97152d1e7da9a0024744f587924c0512`, 35 file, manifest 0 mismatch |
+| `VF_ARTIFACT_AUDIT_DECISION_2026-09-16.zip` | SHA256 `50b9bd9aec65eb03290f4e80d4a8409c31e3de638f1d5f62fc0e78da822f3065`, reference only |
+| `P2_RUNTIME/hf_batch.py` | SHA256 `637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1` = dichiarato; byte-identico a `LAB/hf_batch_ORIGINAL.py` |
+| `gate01_lab.py`, `control.py` (×2), `test_control.py` (×2), `preflight.py`, 11 spec, lock reale | presenti, classificati in PIN_AUDIT.md |
+| sezioni B/C sopra | superate da questa tabella; la classificazione BLOCKED di allora era corretta per quell'ambiente |

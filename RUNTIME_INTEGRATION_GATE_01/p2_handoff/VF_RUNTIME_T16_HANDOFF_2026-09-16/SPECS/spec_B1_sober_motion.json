@@ -1,0 +1,19 @@
+{
+ "run_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+ "batch": "MOTION_B1_SOBER",
+ "authority": "E077 — motion della still B1_SOBER approvata dal QA. La farmacia continua normalmente; solo il titolare percepisce l'intrusione, con fastidio contenuto. Stesso workflow validato: seedance_2_0, start image, 9:16 1080p std, generate_audio false. 1 tentativo, 0 retry.",
+ "parallel": 1,
+ "identity_anchor": {"B1_SOBER": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B1_SOBER_STILL.png"},
+ "anchors": {},
+ "prompt_blocks": {"V916": "Preserve faces, hair, hands and anatomy exactly, no morphing, no people or objects appearing or disappearing, no text, letters or numbers appearing, nobody looks at the camera, single continuous shot, vertical 9:16."},
+ "jobs": [
+  {"asset": "B1_SOBER_CLIP", "beat": 1, "kind": "video", "model": "seedance_2_0",
+   "start_image": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B1_SOBER_STILL.png",
+   "params": {"aspect_ratio": "9:16", "resolution": "1080p", "duration": 13, "generate_audio": false, "mode": "std"},
+   "suffix_blocks": ["V916"],
+   "prompt": "An ordinary working moment in the same bright contemporary Italian pharmacy; camera almost still with a very slight natural drift. The female pharmacist stays fully absorbed in serving: she finishes handing the small white box to the customer, says a few words and keeps her attention on her; the customer, on the public side of the counter, takes the box and answers naturally, never turning toward the door. The man in the dark suit with the briefcase is inside near the entrance, standing quietly, shifting his weight once; he does not walk forward, he does not approach the counter, he makes no gesture. The only reaction in the whole pharmacy is the owner's: working at the till, he lifts his eyes for a moment toward the entrance, a small controlled tightening of the jaw and a faintly annoyed look, then he lowers his eyes and simply goes back to his work. Nobody else turns, no head turns toward the door, no group reaction, no surprise, no drama. Everyday realistic pace, unhurried micro-movements, 13 seconds.",
+   "must_show": ["farmacia che continua normalmente", "collaboratrice concentrata sul servizio e cliente che non si voltano", "visitatore fermo vicino all'ingresso", "solo il titolare che alza lo sguardo con fastidio contenuto e torna al lavoro"],
+   "must_not_show": ["teste che si girano verso la porta o reazione corale", "cliente bloccata o sorpresa", "ingresso teatrale o visitatore che avanza", "atmosfera drammatica", "sguardo in camera", "morphing dei volti"],
+   "edit_use": "B1 0,00–12,23 s · VO «Quando si parla… Mai con una visita inattesa.»"}
+ ]
+}

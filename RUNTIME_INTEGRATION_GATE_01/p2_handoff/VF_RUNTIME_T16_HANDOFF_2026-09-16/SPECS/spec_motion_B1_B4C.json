@@ -1,0 +1,32 @@
+{
+ "run_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+ "batch": "MOTION_B1_B4C",
+ "authority": "E076 — motion delle due still nuove approvate dal QA (B1_NEW_STILL, B4C_NEW_STILL). Stesso workflow validato: Higgsfield seedance_2_0, start image, 9:16 1080p std, generate_audio false. 1 tentativo per clip, 0 retry; se un clip è mediocre si rigenera (qualità prima del costo, E076).",
+ "parallel": 2,
+ "identity_anchor": {
+  "B1_NEW": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B1_NEW_STILL.png",
+  "B4C_NEW": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4C_NEW_STILL.png"
+ },
+ "anchors": {},
+ "prompt_blocks": {
+  "V916": "Preserve faces, hair, hands and anatomy exactly, no morphing, no people or objects appearing or disappearing, no text, letters or numbers appearing, nobody looks at the camera, single continuous shot, vertical 9:16."
+ },
+ "jobs": [
+  {"asset": "B1_NEW_CLIP", "beat": 1, "kind": "video", "model": "seedance_2_0",
+   "start_image": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B1_NEW_STILL.png",
+   "params": {"aspect_ratio": "9:16", "resolution": "1080p", "duration": 13, "generate_audio": false, "mode": "std"},
+   "suffix_blocks": ["V916"],
+   "prompt": "The same bright contemporary Italian pharmacy during normal business, camera almost still with a very slight natural drift. Behind the counter the female pharmacist finishes handing the small white box to the customer and says a few words; the customer, in her beige coat with the handbag on her shoulder, takes the box and answers naturally, staying on the public side of the counter. The owner in his white coat works calmly at the till, then lifts his eyes for a moment toward the entrance where the man in the dark suit with the briefcase is waiting just inside the door; a brief, controlled hesitation, then he returns professionally to his work. The man with the briefcase stays where he is and waits politely, shifting his weight once; he does not walk forward and does not approach the counter. The second customer waits calmly. Small, realistic, unhurried movements; nobody rushes, no theatrical entrance, no thriller tension, no caricature, 13 seconds.",
+   "must_show": ["cliente sul lato pubblico che riceve la confezione", "farmacista e titolare in camice dietro il banco", "titolare che nota il visitatore e torna al lavoro", "visitatore fermo vicino alla porta che attende"],
+   "must_not_show": ["persone in abiti civili che passano dietro il banco", "ingresso teatrale o visitatore che avanza al banco", "sguardo in camera", "testo o loghi che compaiono", "morphing dei volti"],
+   "edit_use": "B1 0,00–12,23 s · VO «Quando si parla… Mai con una visita inattesa.»"},
+  {"asset": "B4C_NEW_CLIP", "beat": 4, "kind": "video", "model": "seedance_2_0",
+   "start_image": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4C_NEW_STILL.png",
+   "params": {"aspect_ratio": "9:16", "resolution": "1080p", "duration": 5, "generate_audio": false, "mode": "std"},
+   "suffix_blocks": ["V916"],
+   "prompt": "Medium close-up of the pharmacy owner on the same phone call in the quiet café, warm late-afternoon light. He listens for a moment, his gaze drifting slightly off camera into the middle distance while he thinks; a small calm breath; then he says a few quiet words and keeps listening, present and lucid. Micro-expressions only: a slight movement of the eyes, a small nod, the lips moving softly while speaking. The phone stays at his ear, the free hand stays out of frame. Camera static with a barely perceptible push-in; the café background stays softly out of focus. No wide smile, no broad gesture, no sadness or tiredness, no objects appearing, 5 seconds.",
+   "must_show": ["ascolto, breve pausa, sguardo riflessivo fuori campo, poi riprende a parlare", "espressione calma, lucida, presente", "telefono sempre all'orecchio"],
+   "must_not_show": ["grande sorriso o gesti ampi", "tristezza, nostalgia, stanchezza", "cambio di volto o morphing", "oggetti che compaiono", "sguardo in camera"],
+   "edit_use": "B4C 26,40–27,90 s · VO «Vogliamo capire Lei…»"}
+ ]
+}

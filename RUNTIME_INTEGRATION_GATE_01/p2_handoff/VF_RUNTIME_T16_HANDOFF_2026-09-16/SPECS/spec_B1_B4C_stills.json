@@ -1,0 +1,54 @@
+{
+ "run_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+ "batch": "B1_B4C_NEW_STILLS",
+ "authority": "E076 — patch qualitativa su B1 (linee spaziali cliente/staff inequivocabili) e B4C (vero close-up dedicato). Identità solo dagli anchor canonici; nessuna immagine ChatGPT. Qualità prima del costo: se una still è mediocre si rigenera.",
+ "parallel": 2,
+ "identity_anchor": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "PHARMACY_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_STORYBOARD_V2/stills/B7_TUTTO_NORMALE_still.png",
+  "CAFE_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4_OWNER_CALL.png"
+ },
+ "anchors": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "PHARMACY_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_STORYBOARD_V2/stills/B7_TUTTO_NORMALE_still.png",
+  "CAFE_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4_OWNER_CALL.png"
+ },
+ "prompt_blocks": {
+  "OWNER_ID": "IDENTITY ANCHOR — the pharmacy owner is the SAME recurring ValoreFarmacia protagonist shown in reference images 1, 2 and 3, not a similar man and not a reinterpretation: the same full, rounded Italian face and soft jaw, the same broad nose and warm eyes, the same hairline, the same thick grey hair with loose natural curls and the same medium volume, the same short grey stubble beard, the same apparent age around 60-62, the same medium build. Take his face, hair, beard and body ONLY from references 1-3.",
+  "NEG": "Photorealistic, premium documentary realism, contemporary Italy, natural skin and hands with correct fingers, cinematic depth of field. Nobody looks into the lens, nobody talks to camera. No readable text, letters or numbers anywhere, no logos, no brands, no shop names, no watermark. Vertical 9:16."
+ },
+ "jobs": [
+  {
+   "asset": "B1_NEW_STILL",
+   "beat": 1,
+   "kind": "image",
+   "model": "gpt_image_2",
+   "params": {"aspect_ratio": "9:16", "resolution": "2k", "quality": "high"},
+   "references": ["OWNER_1", "OWNER_2", "OWNER_3", "PHARMACY_ENV"],
+   "prefix_blocks": ["OWNER_ID"],
+   "suffix_blocks": ["NEG"],
+   "prompt": "Reference image 4 shows the approved pharmacy: keep the same bright contemporary Italian pharmacy, the same long light-oak and white counter, the same tidy perimeter shelving and daylight. Photorealistic cinematic still, mid-morning, the pharmacy open and busy. The counter runs across the frame and separates two clearly readable zones. BEHIND the counter, on the staff side: the owner in a crisp white pharmacist coat over a light-blue shirt, standing at the till and working; beside him a younger female pharmacist, also in a white coat, handing a small white box across the counter to a customer. IN FRONT of the counter, on the public side with her back three-quarters to camera: a woman customer in ordinary civilian clothes, a beige coat and a handbag on her shoulder, taking the box and speaking with the pharmacist; a second customer waits calmly a step behind her. Through the glass entrance door, on the far left of the frame, a man around 50 in a dark suit with a slim briefcase has just walked in without an appointment: he stands just inside the door, polite and ordinary, looking toward the counter; the owner has just noticed him and glances his way with a brief, controlled hesitation while staying professional. Everyone in civilian clothes is clearly on the customer side; everyone in a white coat is clearly behind the counter. Medium-wide shot from the public side at counter height, slightly behind the waiting customer, 35mm look, the owner's face in the upper third, the visitor small but clearly visible in the background. Calm everyday atmosphere, no drama, no threat.",
+   "must_show": ["cliente in abiti civili DAVANTI al banco, con borsa", "titolare canonico in camice dietro il banco", "collaboratrice farmacista in camice dietro il banco che serve", "uomo elegante con borsa che entra dalla porta, visibile", "farmacia aperta e operativa, linee spaziali chiare"],
+   "must_not_show": ["cliente o persone in abiti civili dietro il banco", "personale senza camice che sembra farmacista", "farmacia vuota o titolare da solo", "atmosfera drammatica o visitatore minaccioso", "testo, loghi o marchi leggibili", "layout da drugstore americano"],
+   "edit_use": "B1 0,00–12,23 · VO «Quando si parla… Mai con una visita inattesa.»"
+  },
+  {
+   "asset": "B4C_NEW_STILL",
+   "beat": 4,
+   "kind": "image",
+   "model": "gpt_image_2",
+   "params": {"aspect_ratio": "9:16", "resolution": "2k", "quality": "high"},
+   "references": ["OWNER_1", "OWNER_2", "OWNER_3", "CAFE_ENV"],
+   "prefix_blocks": ["OWNER_ID"],
+   "suffix_blocks": ["NEG"],
+   "prompt": "Reference image 4 gives the world: the same quiet traditional Italian café, the same warm late-afternoon light, the same white shirt with open collar and mid-grey unstructured jacket. Take from it only location, light and clothes, never the face. Photorealistic cinematic still, a genuine medium close-up, much closer than reference 4: the owner fills the frame from mid-chest up, seen from a three-quarter front angle at eye level, 85mm look with a softly blurred café background and only a sliver of the marble table at the very bottom edge. He holds his smartphone to his ear with his left hand, still in the same call. He has just paused: he is listening and thinking, his gaze drifting slightly off camera into the middle distance, lips closed in a calm, composed expression, a lucid entrepreneur weighing what matters to him and what he wants for the future of his pharmacy. Present, intelligent, engaged. Not sad, not nostalgic, not worried, not tired, not lonely; no wide smile, no broad gesture. His face and eyes are the subject of the frame.",
+   "must_show": ["owner = protagonista canonico AD02_B", "vero medium close-up: volto protagonista, poco tavolo", "telefono all'orecchio, stessa telefonata", "stesso café, luce e abiti di B4", "sguardo riflessivo fuori campo, espressione calma e lucida"],
+   "must_not_show": ["tristezza, nostalgia, preoccupazione, stanchezza, solitudine", "grande sorriso o gesti ampi", "inquadratura uguale a B4 (piano medio)", "agenda, tablet, documenti", "testo leggibile", "sguardo in camera"],
+   "edit_use": "B4C 26,40–27,90 · VO «Vogliamo capire Lei…»"
+  }
+ ]
+}

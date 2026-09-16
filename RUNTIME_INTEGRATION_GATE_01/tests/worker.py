@@ -161,6 +161,81 @@ def sentinel_run(mode: str, db: str, canary_home: str, core_path: str) -> dict:
     return out
 
 
+HANDOFF = os.path.join(GATE_ROOT, "p2_handoff", "VF_RUNTIME_T16_HANDOFF_2026-09-16")
+
+
+def real_spec_keys(core_path: str) -> dict:
+    """Nuovo interprete: ricalcola gli spec_key dei job reali di MOTION_B1_B4C dal lock."""
+    import json
+    if core_path not in sys.path:
+        sys.path.insert(0, core_path)
+    from adapters.base import GenSpec
+    from runtime.genspec_bridge import build_genspec
+    from runtime.hf_batch_bridge import go_inputs_from_job, media_sha_from_lock
+    lock = json.load(open(os.path.join(HANDOFF, "EVIDENCE", "MOTION_B1_B4C_RUNTIME_LOCK.json"), encoding="utf-8"))
+    spec = json.load(open(os.path.join(HANDOFF, "SPECS", "spec_motion_B1_B4C.json"), encoding="utf-8"))
+    res = media_sha_from_lock(lock)
+    return {"pid": os.getpid(),
+            "keys": {j["asset"]: build_genspec(go_inputs_from_job(spec, j, res(j["asset"])), GenSpec).spec_key
+                     for j in spec["jobs"]}}
+
+
+def hf_batch_runtime_go(db: str, canary_home: str, core_path: str, *, adapter_kw: dict | None = None,
+                        max_polls: int = 5, rounds: int = 1, verb: str = "go") -> dict:
+    """Sentinella attiva, poi il verbo `go` della COPIA hf_batch_runtime su una spec reale.
+
+    `require`/`fingerprint` sono stubbati: il lock preventivo di P2 (fingerprint di
+    tenant/Core/regole/media sul Mac) e' il controllo di deriva degli input, non
+    fa parte del contratto C26 e i suoi file non esistono in questo ambiente.
+    """
+    import json
+    from tests import audit_sentinel
+    audit_sentinel.install(canary_home)
+    out: dict = {"pid": os.getpid(), "verb": verb}
+    try:
+        if core_path not in sys.path:
+            sys.path.insert(0, core_path)
+        from runtime import hf_batch_runtime as hb
+        from runtime.hf_batch_bridge import media_sha_from_lock
+        from runtime.provider_gate import RealProviderDisabled
+        lock = json.load(open(os.path.join(HANDOFF, "EVIDENCE", "MOTION_B1_B4C_RUNTIME_LOCK.json"), encoding="utf-8"))
+        res = media_sha_from_lock(lock)
+        adapter = _make_adapter("fake", **(adapter_kw or {}))
+        b = hb.Batch(os.path.join(HANDOFF, "SPECS", "spec_motion_B1_B4C.json"), adapter=adapter,
+                     store_path=db, max_polls=max_polls,
+                     media_sha256=None)
+        # resolver per asset: il lock registra sha256_sent per (asset, role, id)
+        current = {"asset": None}
+        b.media_sha256 = lambda flag, rid, ref: res(current["asset"])(flag, rid, ref)
+        orig_run_job = b.run_job
+        def run_job(j, lk):
+            current["asset"] = j["asset"]
+            return orig_run_job(j, lk)
+        b.run_job = run_job
+        b.lock_path = os.path.join(HANDOFF, "EVIDENCE", "MOTION_B1_B4C_RUNTIME_LOCK.json")  # lock reale
+        b.require = lambda: lock                                    # stub: vedi docstring
+        b.fingerprint = lambda: (lock["fingerprint_sha256"], {})
+        b.trace_path = os.path.join(os.path.dirname(db), f"{b.name}_LAB_TRACE.json")
+        if verb == "go":
+            traces = []
+            for _ in range(rounds):
+                traces.append(b.go())
+            out.update(ok=True, traces=[{"run_verdict": t["run_verdict"], "jobs": [
+                {k: x.get(k) for k in ("asset", "run_status", "reservation_outcome", "job_id",
+                                       "provider_job_id", "provider", "spec_key", "core_sha")}
+                for x in t["jobs"]]} for t in traces], submits=adapter.submits)
+        else:
+            try:
+                getattr(b, verb)()
+                out.update(ok=False, error="VERB_RAN")
+            except RealProviderDisabled as e:
+                out.update(ok=True, error=e.code, message=str(e))
+    except Exception as e:                                  # noqa: BLE001
+        out.update(ok=False, error=type(e).__name__, message=str(e), trace=traceback.format_exc(limit=4))
+    out["violations"] = audit_sentinel.violations()
+    return out
+
+
 def _entry(q, fn, args, kwargs):
     try:
         q.put(fn(*args, **kwargs))

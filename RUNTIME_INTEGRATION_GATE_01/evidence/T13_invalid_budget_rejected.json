@@ -5,49 +5,49 @@
       "error": "ReservationContractError",
       "message": "budget_units deve essere un intero >= 0, ricevuto True",
       "ok": false,
-      "pid": 707,
+      "pid": 1072,
       "submits": 0,
-      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 115, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 57, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto True\n"
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 117, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 57, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto True\n"
     },
     "float": {
       "core_imported": true,
       "error": "ReservationContractError",
       "message": "budget_units deve essere un intero >= 0, ricevuto 1.5",
       "ok": false,
-      "pid": 711,
+      "pid": 1076,
       "submits": 0,
-      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 115, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 57, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto 1.5\n"
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 117, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 57, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto 1.5\n"
     },
     "negative": {
       "core_imported": true,
       "error": "ReservationContractError",
       "message": "budget_units deve essere un intero >= 0, ricevuto -1",
       "ok": false,
-      "pid": 703,
+      "pid": 1068,
       "submits": 0,
-      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 115, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 57, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto -1\n"
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 117, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 57, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto -1\n"
     },
     "negative_envelope": {
       "core_imported": true,
       "error": "ReservationContractError",
       "message": "envelope_units deve essere None o un intero >= 0, ricevuto -5",
       "ok": false,
-      "pid": 719,
+      "pid": 1084,
       "submits": 0,
-      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 115, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 57, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: envelope_units deve essere None o un intero >= 0, ricevuto -5\n"
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 117, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 57, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: envelope_units deve essere None o un intero >= 0, ricevuto -5\n"
     },
     "str": {
       "core_imported": true,
       "error": "ReservationContractError",
       "message": "budget_units deve essere un intero >= 0, ricevuto '10'",
       "ok": false,
-      "pid": 715,
+      "pid": 1080,
       "submits": 0,
-      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 115, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 57, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto '10'\n"
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 117, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 57, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto '10'\n"
     }
   },
   "state": {
-    "pid": 723,
+    "pid": 1088,
     "reserved_units": 0,
     "rows": []
   }

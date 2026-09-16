@@ -1,0 +1,55 @@
+--- VF_PILOT_OUTPUTS/P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/scripts/hf_batch.py
++++ INTEGRATION_GATE_01/lab/hf_batch_lab.py
+@@ -24,6 +24,7 @@
+ WORK = os.path.dirname(PILOT)
+ TENANT = os.path.join(WORK, "VF_REPO_WORKSPACE", "vf-tenant")
+ CORE = os.path.join(WORK, "VF_REPO_WORKSPACE", "creative-os")
++LAB = os.path.join(os.path.dirname(os.path.abspath(__file__)))  # gate01_lab accanto allo script
+ RULES = ["CLAUDE.md", "TENANT_CONFIG.json", "LEARNINGS/CREATIVE_SYNAPSE.md", "LEARNINGS/HUMAN_GATE_EVENTS.jsonl",
+          "BENCHMARKS/AD02_B_SUCCESS.json", "BENCHMARKS/P2_RISERVATEZZA_NEGATIVE.json", "CAST/CANONICAL_OWNER.json",
+          "CAST/P2_CONSULTANT.json", "CONCEPTS/P2_PRIMA_SI_PARLA_V2/SCENE_CONSTRAINTS.json",
+@@ -219,6 +220,35 @@
+             print(f"{x['asset']:22} {x['run_status']} job={x.get('job_id')} {x.get('seconds')}s {x.get('output', {}).get('sha256', '')[:16]}")
+         print(f"balance {b0} -> {b1} · {trace['run_verdict']}")
+ 
++    def lab(self):
++        """MOCK_ONLY (INTEGRATION GATE 01). Nessuna rete, nessun credito, nessuna credenziale.
++        Esercita lock -> reservation -> submit -> reconcile sui contratti GIA' nel Core."""
++        lock = self.require()                       # stesso fingerprint dei verbi reali
++        sys.path.insert(0, LAB)
++        import gate01_lab as L
++        core = L.load_core(CORE)
++        snap_dir = os.path.join(RUN, "logs", f"{self.name}_LAB_SNAPSHOTS")
++        store = L.DurableJobStore(os.path.join(RUN, "logs", f"{self.name}_LAB.db"), core)
++        cap = int(self.spec.get("lab_budget_units", 1000))
++        out = []
++        for j in self.spec["jobs"]:
++            refs = [L.snapshot(p, snap_dir) for _, _, p in self.media(j)]
++            fp_now, _ = self.fingerprint()
++            if fp_now != lock["fingerprint_sha256"]:
++                out.append({"asset": j["asset"], "state": "BLOCKED_INPUT_DRIFT"})
++                continue
++            out.append({"asset": j["asset"], **L.run_mock_job(
++                core, store, job_id=f"{self.name}:{j['asset']}", model="fake_model_v1",
++                prompt=self.prompt(j), refs=[(s, d) for s, d in refs],
++                units=1, budget_cap=cap, snap_dir=snap_dir)})
++        trace = {"mode": "MOCK_ONLY", "control_version": L.CONTROL_VERSION,
++                 "core_sha": core["sha"], "lock_fingerprint": lock["fingerprint_sha256"],
++                 "jobs": out, "production": "NOT_ENABLED", "visual_qa": "NOT_VERIFIED"}
++        json.dump(trace, open(os.path.join(RUN, "logs", f"{self.name}_LAB.json"), "w"),
++                  indent=1, ensure_ascii=False)
++        for o in out:
++            print(f"{o['asset']:22} {o['state']} {o.get('job_id','')}")
++
+     def qa(self):
+         trace = json.load(open(self.trace_path, encoding="utf-8"))
+         qa_path = os.path.join(RUN, "qa", f"{self.name}_QA.json")
+@@ -232,4 +262,7 @@
+ 
+ if __name__ == "__main__":
+     b = Batch(sys.argv[1])
+-    getattr(b, sys.argv[2])()
++    verb = sys.argv[2]
++    if verb not in ("lock", "quote", "go", "qa", "lab"):
++        sys.exit(f"verbo sconosciuto: {verb}")
++    getattr(b, verb)()

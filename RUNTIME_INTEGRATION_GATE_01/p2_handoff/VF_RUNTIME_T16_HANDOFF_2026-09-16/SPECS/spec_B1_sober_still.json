@@ -1,0 +1,38 @@
+{
+ "run_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+ "batch": "B1_SOBER_STILL",
+ "authority": "E077 — B1 senza teatralità: la farmacia continua normalmente, solo il titolare percepisce l'intrusione con un fastidio contenuto. Identità dagli anchor canonici; B1_NEW_STILL usata come reference del mondo (stesso banco, stessi ruoli e linee spaziali già corretti), mai per l'espressione o la posa.",
+ "parallel": 1,
+ "identity_anchor": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "PHARMACY_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B1_NEW_STILL.png"
+ },
+ "anchors": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "PHARMACY_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B1_NEW_STILL.png"
+ },
+ "prompt_blocks": {
+  "OWNER_ID": "IDENTITY ANCHOR — the pharmacy owner is the SAME recurring ValoreFarmacia protagonist shown in reference images 1, 2 and 3, not a similar man and not a reinterpretation: the same full, rounded Italian face and soft jaw, the same broad nose and warm eyes, the same hairline, the same thick grey hair with loose natural curls and the same medium volume, the same short grey stubble beard, the same apparent age around 60-62, the same medium build. Take his face, hair, beard and body ONLY from references 1-3.",
+  "NEG": "Photorealistic, premium documentary realism, contemporary Italy, natural skin and hands with correct fingers. Nobody looks into the lens, nobody talks to camera. No readable text, letters or numbers anywhere, no logos, no brands, no shop names, no watermark. Vertical 9:16."
+ },
+ "jobs": [
+  {
+   "asset": "B1_SOBER_STILL",
+   "beat": 1,
+   "kind": "image",
+   "model": "gpt_image_2",
+   "params": {"aspect_ratio": "9:16", "resolution": "2k", "quality": "high"},
+   "references": ["OWNER_1", "OWNER_2", "OWNER_3", "PHARMACY_ENV"],
+   "prefix_blocks": ["OWNER_ID"],
+   "suffix_blocks": ["NEG"],
+   "prompt": "Reference image 4 gives the world and the layout: the same bright contemporary Italian pharmacy, the same long light-oak and white counter, the same tidy shelving and daylight, the same clear separation between the staff side and the public side. Take from it only the place and the spatial logic, never the expressions or the poses. Photorealistic cinematic still, mid-morning, an ordinary busy moment. BEHIND the counter: the owner in a crisp white pharmacist coat over a light-blue shirt stands at the till working; beside him a younger female pharmacist, also in a white coat, is fully absorbed in serving, looking down at the small white box she is handing over. IN FRONT of the counter, on the public side, seen three-quarters from behind: a woman customer in ordinary clothes with a handbag on her shoulder, calmly continuing her interaction with the pharmacist, looking at her and at the box. Through the glass entrance on the far left a man around 50 in a dark suit with a slim briefcase has just stepped inside without an appointment: he stands quietly near the door, ordinary and discreet, not imposing, not threatening. The ONLY person who reacts is the owner: for an instant he has lifted his eyes from the till toward the entrance, a small controlled tightening of the jaw and a faintly annoyed, unimpressed look, his body still turned to his work. Nobody else notices him: the customer does not turn, the female pharmacist does not turn, no head turns toward the door, no group reaction, no surprise, no drama. Everyday realistic atmosphere, the pharmacy simply carries on. Medium-wide shot from the public side at counter height, 35mm look, the owner's face in the upper third, the visitor small but clearly visible in the background.",
+   "must_show": ["cliente in abiti civili chiaramente davanti al banco, interazione che continua", "titolare canonico in camice dietro il banco", "collaboratrice in camice dietro il banco che continua a servire, attenzione sulla cliente", "visitatore elegante presente ma discreto vicino all'ingresso", "farmacia attiva e normale", "fastidio contenuto percepibile SOLO nel titolare (sguardo verso l'ingresso, mascella contratta)"],
+   "must_not_show": ["tutti che guardano il visitatore o teste che si girano verso la porta", "cliente bloccata, sorpresa o che si volta", "collaboratrice che si volta vistosamente", "ingresso teatrale o visitatore minaccioso", "atmosfera drammatica o scena troppo costruita", "persone in abiti civili dietro il banco", "testo, loghi o marchi leggibili"],
+   "edit_use": "B1 0,00–12,23 s · VO «Quando si parla… Mai con una visita inattesa.»"
+  }
+ ]
+}

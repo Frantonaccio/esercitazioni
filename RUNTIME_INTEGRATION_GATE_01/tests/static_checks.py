@@ -94,6 +94,31 @@ def run() -> dict:
                 findings.append(f"{name}:{i}: SQL nel runtime")
             if BUDGET_ARITH_RE.search(line):
                 findings.append(f"{name}:{i}: aritmetica di budget nel runtime")
+    # 7) hf_batch_runtime.py: la CLI provider e' raggiungibile SOLO da funzioni che
+    #    iniziano con _real_cli() (che solleva sempre). Nessun urllib, nessun download.
+    hb = os.path.join(RUNTIME_DIR, "hf_batch_runtime.py")
+    if os.path.exists(hb):
+        src = open(hb, encoding="utf-8").read()
+        tree = ast.parse(src)
+        if "urllib" in src:
+            findings.append("hf_batch_runtime.py: riferimento a urllib (download provider)")
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                seg = ast.get_source_segment(src, node) or ""
+                if "higgsfield" in seg and node.name != "_real_cli":
+                    first = node.body[0]
+                    guarded = (isinstance(first, ast.Expr) and isinstance(first.value, ast.Call)
+                               and getattr(first.value.func, "id", "") == "_real_cli")
+                    if not guarded:
+                        findings.append(
+                            f"hf_batch_runtime.py:{node.lineno}: {node.name} tocca la CLI provider "
+                            "senza _real_cli() come prima istruzione")
+                if node.name == "run_job":
+                    for sub in ast.walk(node):
+                        if (isinstance(sub, ast.Attribute) and isinstance(sub.value, ast.Name)
+                                and sub.value.id in ("subprocess", "urllib", "os") and sub.attr in
+                                ("run", "Popen", "call", "check_output", "system", "urlretrieve", "urlopen")):
+                            findings.append(f"hf_batch_runtime.py:{sub.lineno}: run_job chiama {sub.value.id}.{sub.attr}")
     expected_core_imports = {
         "adapters.base.GenSpec", "adapters.fake.FakeAdapter",
         "registry.reservations.SqliteReservationStore", "transport.pipeline.run_job"}

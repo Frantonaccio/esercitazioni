@@ -1,0 +1,39 @@
+{
+ "run_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+ "batch": "B45_STILLS_P2",
+ "authority": "E068 — fase 2: B5_OWNER con calendario digitale nello stesso café di B4. Identità SOLO dalle reference canoniche 1-3; la still B4_OWNER_CALL (fase 1, controllata) è usata come reference 4 solo per luogo, luce e abiti. STOP dopo le still.",
+ "parallel": 1,
+ "identity_anchor": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "B4_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4_OWNER_CALL.png"
+ },
+ "anchors": {
+  "OWNER_1": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/01_stills/SH2B_still.png",
+  "OWNER_2": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/11_patch02/stills/NEW_C_still.png",
+  "OWNER_3": "PILOT:AD02_B_LA_LORO_STRADA/RUN_20260914T215732/08_patch/cast_anchor/PILOT_CAST_REFERENCE_FATHER.png",
+  "B4_ENV": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4_OWNER_CALL.png"
+ },
+ "prompt_blocks": {
+  "OWNER_ID": "IDENTITY ANCHOR — the pharmacy owner is the SAME recurring ValoreFarmacia protagonist shown in reference images 1, 2 and 3, not a similar man and not a reinterpretation: the same full, rounded Italian face and soft jaw, the same broad nose and warm eyes, the same hairline, the same thick grey hair with loose natural curls and the same medium volume, the same short grey stubble beard, the same apparent age around 60-62, the same medium build. Take his face, hair, beard and body ONLY from references 1-3. Reference image 4 is used ONLY for the location, the light and his clothes: never take the face from reference 4.",
+  "CAMERA": "CAMERA IS NOT THE CLIENT: the tablet screen faces him, never the camera; nothing is presented to the viewer; no screen reflection toward the camera.",
+  "NEG": "Photorealistic, premium documentary realism, contemporary Italy, natural skin and hands with correct fingers. Nobody looks into the lens. No readable text, letters, dates or numbers anywhere, no logos (no Apple, no Google), no brands, no watermark, no floating interface. A normal voice phone call, not a video call: exactly one phone, held to his ear; no second phone. Vertical 9:16."
+ },
+ "jobs": [
+  {
+   "asset": "B5_OWNER_CALENDAR",
+   "beat": 5,
+   "kind": "image",
+   "model": "gpt_image_2",
+   "params": {"aspect_ratio": "9:16", "resolution": "2k", "quality": "high"},
+   "references": ["OWNER_1", "OWNER_2", "OWNER_3", "B4_ENV"],
+   "prefix_blocks": ["OWNER_ID"],
+   "suffix_blocks": ["CAMERA", "NEG"],
+   "prompt": "Photorealistic cinematic still. The same quiet traditional Italian café, the same small round table by the window, the same warm late-afternoon light and the same white shirt and mid-grey jacket as in reference image 4, a little later in the same phone call. The owner still holds his smartphone to his ear with his left hand. On the table in front of him lies a tablet in a slim dark case, propped at a low angle and turned toward him; he looks down at it and with his right index finger touches one slot of a generic weekly calendar, choosing the time that suits him, with a small composed nod of confirmation. The tablet screen is seen from a steep side angle: only a soft glow and a faint grid of pale coloured blocks are perceptible, no readable text, no dates, no numbers, no logos, no reflection toward the camera. Expression composed and self-directed: he is the one setting when to meet. The espresso cup is still on the table; no agenda, no notebook, no papers, no laptop. Medium shot from a three-quarter side angle at table height, 40mm look, his face in the upper third, his hand and the tablet in the middle of the frame, soft depth of field.",
+   "must_show": ["owner = protagonista canonico AD02_B", "stesso café, luce e abiti di B4", "telefono all'orecchio (un solo telefono)", "tablet con calendario generico orientato verso di lui; tocca uno slot e conferma"],
+   "must_not_show": ["secondo telefono", "schermo o riflesso rivolto alla camera", "testo, date, numeri o loghi leggibili", "UI fluttuante", "agenda, documenti, laptop", "farmacia o camice", "sguardo in camera"],
+   "edit_use": "B5 prima parte · VO «Se vorrà approfondire, sarà Lei a decidere come,…»"
+  }
+ ]
+}

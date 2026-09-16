@@ -1,0 +1,163 @@
+{
+  "lock_verb": {
+    "error": "REAL_PROVIDER_DISABLED",
+    "message": "REAL_PROVIDER_DISABLED: provider_mode='higgsfield-cli'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
+    "ok": true,
+    "pid": 1176,
+    "verb": "lock",
+    "violations": []
+  },
+  "quote_verb": {
+    "error": "REAL_PROVIDER_DISABLED",
+    "message": "REAL_PROVIDER_DISABLED: provider_mode='higgsfield-cli'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
+    "ok": true,
+    "pid": 1178,
+    "verb": "quote",
+    "violations": []
+  },
+  "round_3_new_process": {
+    "ok": true,
+    "pid": 1166,
+    "submits": 0,
+    "traces": [
+      {
+        "jobs": [
+          {
+            "asset": "B1_NEW_CLIP",
+            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "job_id": "res_f4076e463c1fbcd9_1",
+            "provider": "fake",
+            "provider_job_id": "pv_f4076e46",
+            "reservation_outcome": "EXISTING_LIVE_JOB",
+            "run_status": "SUCCEEDED",
+            "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db"
+          },
+          {
+            "asset": "B4C_NEW_CLIP",
+            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "job_id": "res_6d687b11cfaf4fd0_1",
+            "provider": "fake",
+            "provider_job_id": "pv_6d687b11",
+            "reservation_outcome": "EXISTING_LIVE_JOB",
+            "run_status": "SUCCEEDED",
+            "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f"
+          }
+        ],
+        "run_verdict": "LOCK_HELD"
+      }
+    ],
+    "verb": "go",
+    "violations": []
+  },
+  "rounds_1_2_live": {
+    "ok": true,
+    "pid": 1150,
+    "submits": 2,
+    "traces": [
+      {
+        "jobs": [
+          {
+            "asset": "B1_NEW_CLIP",
+            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "job_id": "res_f4076e463c1fbcd9_1",
+            "provider": "fake",
+            "provider_job_id": "pv_f4076e46",
+            "reservation_outcome": "RESERVED_NEW",
+            "run_status": "RUNNING",
+            "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db"
+          },
+          {
+            "asset": "B4C_NEW_CLIP",
+            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "job_id": "res_6d687b11cfaf4fd0_1",
+            "provider": "fake",
+            "provider_job_id": "pv_6d687b11",
+            "reservation_outcome": "RESERVED_NEW",
+            "run_status": "RUNNING",
+            "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f"
+          }
+        ],
+        "run_verdict": "LOCK_HELD"
+      },
+      {
+        "jobs": [
+          {
+            "asset": "B1_NEW_CLIP",
+            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "job_id": "res_f4076e463c1fbcd9_1",
+            "provider": "fake",
+            "provider_job_id": "pv_f4076e46",
+            "reservation_outcome": "EXISTING_LIVE_JOB",
+            "run_status": "EXISTING_LIVE_JOB",
+            "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db"
+          },
+          {
+            "asset": "B4C_NEW_CLIP",
+            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "job_id": "res_6d687b11cfaf4fd0_1",
+            "provider": "fake",
+            "provider_job_id": "pv_6d687b11",
+            "reservation_outcome": "EXISTING_LIVE_JOB",
+            "run_status": "EXISTING_LIVE_JOB",
+            "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f"
+          }
+        ],
+        "run_verdict": "LOCK_HELD"
+      }
+    ],
+    "verb": "go",
+    "violations": []
+  },
+  "state_after_live": {
+    "pid": 1164,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": null,
+        "job_id": "res_6d687b11cfaf4fd0_1",
+        "polls": 2,
+        "provider": "fake",
+        "provider_job_id": "pv_6d687b11",
+        "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
+        "state": "RUNNING"
+      },
+      {
+        "budget_units": 0,
+        "cost_credits": null,
+        "job_id": "res_f4076e463c1fbcd9_1",
+        "polls": 2,
+        "provider": "fake",
+        "provider_job_id": "pv_f4076e46",
+        "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+        "state": "RUNNING"
+      }
+    ]
+  },
+  "state_final": {
+    "pid": 1174,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": 4.0,
+        "job_id": "res_6d687b11cfaf4fd0_1",
+        "polls": 3,
+        "provider": "fake",
+        "provider_job_id": "pv_6d687b11",
+        "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
+        "state": "SUCCEEDED"
+      },
+      {
+        "budget_units": 0,
+        "cost_credits": 4.0,
+        "job_id": "res_f4076e463c1fbcd9_1",
+        "polls": 3,
+        "provider": "fake",
+        "provider_job_id": "pv_f4076e46",
+        "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+        "state": "SUCCEEDED"
+      }
+    ]
+  }
+}

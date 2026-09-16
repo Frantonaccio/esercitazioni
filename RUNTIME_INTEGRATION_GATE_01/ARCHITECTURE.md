@@ -3,6 +3,12 @@
 ## Percorso realizzato
 
 ```
+runtime/hf_batch_runtime.py  (copia del vero P2 hf_batch.py 637f3a80…, verbo go innestato)
+    │  Batch.go → ThreadPool(spec.parallel) → Batch.run_job(job, lock)
+    │  fingerprint/RUN_INVALIDATED e EXISTS_NOT_OVERWRITTEN conservati (guardie P2 sugli input e sul file)
+    ↓
+runtime/hf_batch_bridge.go_inputs_from_job(spec, job, media_sha256)  → GoInputs (mappa reale, GENSPEC_MAPPING.md)
+    ↓
 hf_batch GO  (candidate: runtime/go_candidate.go)
     │
     ├─ 1. provider_gate.require_fake_mode(provider_mode)     → REAL_PROVIDER_DISABLED se ≠ "fake"
@@ -58,8 +64,8 @@ hf_batch GO  (candidate: runtime/go_candidate.go)
 File confinati in `RUNTIME_INTEGRATION_GATE_01/state/` (il candidate rifiuta path esterni).
 Non è dichiarato storage di produzione.
 
-## Cosa manca per chiudere il percorso (BLOCCATO da P2)
+## Percorso chiuso con il handoff P2
 
-`runtime/hf_batch_runtime.py` — copia del vero `hf_batch.py` con il verbo `go` reindirizzato a
-`go_candidate.go`. Senza il file originale non esiste nulla da copiare; il candidate espone
-l'unica funzione che la copia dovrà chiamare.
+`runtime/hf_batch_runtime.py` è la copia del vero `hf_batch.py` con il solo verbo `go` reindirizzato a
+`go_candidate.go` (RUNTIME_DIFF.md). T22 la esercita su una spec reale attraverso il Core con FakeAdapter.
+I verbi `lock`/`quote` che parlano con la CLI provider sono chiusi da `_real_cli()` in questo gate.

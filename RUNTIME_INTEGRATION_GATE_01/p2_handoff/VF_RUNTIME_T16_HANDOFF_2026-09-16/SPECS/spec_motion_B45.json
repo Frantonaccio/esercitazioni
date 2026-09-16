@@ -1,0 +1,46 @@
+{
+ "run_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
+ "batch": "MOTION_B45",
+ "authority": "E068 §11 (motion B4/B5 solo dopo PASS delle still) + E069 (4 still KEEP). Stesso workflow validato: Higgsfield seedance_2_0, start image, 9:16 1080p std, generate_audio false. 1 tentativo per clip, 0 retry. B4C escluso (still in Human Gate).",
+ "parallel": 4,
+ "identity_anchor": {
+  "B4_OWNER": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4_OWNER_CALL.png",
+  "B4_CONSULTANT": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4_CONSULTANT_LISTEN.png",
+  "B5_OWNER": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B5_OWNER_CALENDAR.png",
+  "B5_CONSULTANT": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B5_CONSULTANT_AGENDA.png"
+ },
+ "anchors": {},
+ "prompt_blocks": {
+  "V916": "Preserve faces, hair, hands and anatomy exactly, no morphing, no people or objects appearing or disappearing, no text, letters or numbers appearing, nobody looks at the camera, exactly one phone per person, this is a voice call not a video call, single continuous shot, vertical 9:16."
+ },
+ "jobs": [
+  {"asset": "B4_OWNER_CALL_CLIP", "beat": 4, "kind": "video", "model": "seedance_2_0", "start_image": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4_OWNER_CALL.png",
+   "params": {"aspect_ratio": "9:16", "resolution": "1080p", "duration": 6, "generate_audio": false, "mode": "std"},
+   "suffix_blocks": ["V916"],
+   "prompt": "At the café table in the warm late-afternoon light, the owner talks on the phone held to his ear: he explains something about himself with a small, natural open-hand gesture, pauses for a moment to listen, then resumes speaking with calm engagement. Relaxed, sincere, an entrepreneur telling his story. Camera static with a barely perceptible drift. The table keeps only the espresso cup and the glass of water: no agenda, tablet, papers or laptop appearing, 6 seconds.",
+   "must_show": ["titolare che parla di sé al telefono", "gesto naturale, pausa, riprende"],
+   "must_not_show": ["oggetti che compaiono (agenda, tablet, documenti)", "secondo telefono", "sguardo in camera", "morphing"],
+   "edit_use": "B4 · «All'inizio non chiediamo bilanci, documenti o dati sensibili.»"},
+  {"asset": "B4_CONSULTANT_LISTEN_CLIP", "beat": 4, "kind": "video", "model": "seedance_2_0", "start_image": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4_CONSULTANT_LISTEN.png",
+   "params": {"aspect_ratio": "9:16", "resolution": "1080p", "duration": 6, "generate_audio": false, "mode": "std"},
+   "suffix_blocks": ["V916"],
+   "prompt": "In her warm studio the consultant listens on the phone with full, genuine attention: she keeps still, her eyes focused, then gives a slight, slow nod of understanding, and her lips part briefly as if asking one short, gentle question before listening again. Empathetic and professional. Her free hand stays resting on the desk, the pen stays still, the notebook stays closed: she does not write. Camera static with a barely perceptible push-in, 6 seconds.",
+   "must_show": ["ascolto pieno", "leggero cenno di comprensione", "mani ferme, niente scrittura"],
+   "must_not_show": ["scrittura", "agenda aperta, computer, documenti", "sorriso da venditrice", "sguardo in camera"],
+   "edit_use": "B4 / B4C · «Vogliamo capire Lei e le Sue esigenze.»"},
+  {"asset": "B5_OWNER_CALENDAR_CLIP", "beat": 5, "kind": "video", "model": "seedance_2_0", "start_image": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B5_OWNER_CALENDAR.png",
+   "params": {"aspect_ratio": "9:16", "resolution": "1080p", "duration": 6, "generate_audio": false, "mode": "std"},
+   "suffix_blocks": ["V916"],
+   "prompt": "Still on the call with the phone at his ear, the owner looks down at the tablet propped on the table and turned toward him: he slides his index finger slightly across the screen, stops, taps once as he chooses a time, then gives a small composed nod of confirmation while saying a brief word. Self-directed and calm: he sets when to meet. The tablet screen keeps facing him and is never visible to the camera, no reflection toward the camera. Camera static, 6 seconds.",
+   "must_show": ["il titolare scorre, si ferma, tocca uno slot, conferma con un cenno", "telefono all'orecchio"],
+   "must_not_show": ["schermo o riflesso verso la camera", "UI fluttuante", "secondo telefono", "sguardo in camera"],
+   "edit_use": "B5 · «Se vorrà approfondire, sarà Lei a decidere come,…»"},
+  {"asset": "B5_CONSULTANT_AGENDA_CLIP", "beat": 5, "kind": "video", "model": "seedance_2_0", "start_image": "PILOT:P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B5_CONSULTANT_AGENDA.png",
+   "params": {"aspect_ratio": "9:16", "resolution": "1080p", "duration": 6, "generate_audio": false, "mode": "std"},
+   "suffix_blocks": ["V916"],
+   "prompt": "In her warm studio, on the phone: for the first two seconds she only listens, lifting the pen slightly off the page and looking at her open agenda, then she gives a small nod as she hears the time he has chosen and only then writes one short entry on the page, and looks up with a brief warm confirming nod. Receptive, competent, she records his decision. The agenda stays flat on the desk facing her, handwriting unreadable. Camera static, 6 seconds.",
+   "must_show": ["prima ascolta con penna sollevata", "poi annota", "cenno di conferma"],
+   "must_not_show": ["scrittura dal primo frame", "computer o schermi", "testo o date leggibili", "sguardo in camera"],
+   "edit_use": "B5 · «…dove e quando incontrarci.»"}
+ ]
+}

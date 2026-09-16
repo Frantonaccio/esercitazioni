@@ -1,0 +1,143 @@
+--- p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/hf_batch.py	2026-09-16 15:17:32.556810376 +0000
++++ runtime/hf_batch_runtime.py	2026-09-16 15:18:52.402426128 +0000
+@@ -1,4 +1,10 @@
+-"""P2 FINAL PRODUCTION — batch runner with ONE preventive runtime lock per coherent batch (E058, E062, E067).
++"""RUNTIME CANDIDATE (RUNTIME INTEGRATION GATE 01) — copia di P2 hf_batch.py (SHA256 637f3a80…3ea7d1)
++con il SOLO verbo `go` innestato sul Core C26 via runtime.go_candidate. MOCK ONLY: FakeAdapter, zero
++crediti, nessuna CLI provider. `lock` e `quote` richiedono la CLI reale e in questo gate sono
++disabilitati (REAL_PROVIDER_DISABLED). Differenze rispetto all'originale: vedi RUNTIME_DIFF.md.
++
++--- testo originale ---
++P2 FINAL PRODUCTION — batch runner with ONE preventive runtime lock per coherent batch (E058, E062, E067).
+ 
+ usage: python3 hf_batch.py <spec.json> lock|quote|go|qa
+   lock   MEMORY PRE-FLIGHT, then logs/<batch>_RUNTIME_LOCK.json (core/tenant SHA + clean/dirty, policy, rules, script,
+@@ -17,7 +23,18 @@
+ import sys
+ import threading
+ import time
+-import urllib.request
++
++GATE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
++if GATE_ROOT not in sys.path:
++    sys.path.insert(0, GATE_ROOT)
++from runtime import go_candidate                                   # noqa: E402
++from runtime.hf_batch_bridge import go_inputs_from_job             # noqa: E402
++from runtime.provider_gate import RealProviderDisabled             # noqa: E402
++
++
++def _real_cli():
++    """I verbi che parlano con la CLI provider non esistono in questo gate."""
++    raise RealProviderDisabled("higgsfield-cli")
+ 
+ RUN = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ PILOT = os.path.dirname(os.path.dirname(RUN))
+@@ -59,12 +76,21 @@
+ 
+ 
+ class Batch:
+-    def __init__(self, spec_path):
++    def __init__(self, spec_path, *, adapter=None, store_path=None, media_sha256=None,
++                 provider_mode="fake", budget_units=0, envelope_units=None, max_polls=20):
+         self.spec_path = os.path.abspath(spec_path)
+         self.spec = json.load(open(self.spec_path, encoding="utf-8"))
+         self.name = self.spec["batch"]
+         self.lock_path = os.path.join(RUN, "logs", f"{self.name}_RUNTIME_LOCK.json")
+         self.trace_path = os.path.join(RUN, "logs", f"{self.name}_PRODUCTION_TRACE.json")
++        # --- candidate: cio' che il Core richiede e che l'originale non aveva ---
++        self.adapter = adapter                       # solo FakeAdapter in questo gate
++        self.store_path = store_path                 # SqliteReservationStore in state/
++        self.provider_mode = provider_mode
++        self.budget_units, self.envelope_units, self.max_polls = budget_units, envelope_units, max_polls
++        # sha256 dei byte inviati: in produzione e' sha_file(resolve(ref)) come nel
++        # fingerprint originale; il lab inietta gli sha256_sent del RUNTIME_LOCK.
++        self.media_sha256 = media_sha256 or (lambda flag, rid, ref: sha_file(resolve(ref)))
+ 
+     def prompt(self, job):
+         return " ".join(self.spec["prompt_blocks"][b] for b in job.get("prefix_blocks", [])) + (" " if job.get("prefix_blocks") else "") + \
+@@ -99,6 +125,7 @@
+         return sha_text(json.dumps(parts, sort_keys=True)), parts
+ 
+     def lock(self):
++        _real_cli()
+         r = subprocess.run([sys.executable, os.path.join(RUN, "scripts", "preflight.py"), "--pillar", "P2_RISERVATEZZA",
+                             "--prompts", self.spec_path])
+         if r.returncode != 0:
+@@ -155,6 +182,7 @@
+         return lock
+ 
+     def quote(self):
++        _real_cli()
+         lock = self.require()
+         total = 0.0
+         for j in self.spec["jobs"]:
+@@ -181,33 +209,29 @@
+         if os.path.exists(dest):
+             rec["run_status"] = "EXISTS_NOT_OVERWRITTEN"
+             return rec
++        # --- CANDIDATE: niente subprocess provider, niente urlretrieve. ---
++        # Il Core decide se questa spec e' gia' viva (reserve_or_get_live), chiama
++        # l'adapter solo su RESERVED_NEW, persiste ogni poll. Qui non c'e' un
++        # "esiste gia'?" locale: il dest-exists sopra e' una guardia sul FILE,
++        # non sull'identita' della generazione.
+         t0 = time.time()
+-        r = subprocess.run(["higgsfield", "generate", "create", j["model"]] + self.args(j) + ["--wait", "--wait-timeout", "40m", "--json"],
+-                           capture_output=True, text=True)
+-        open(os.path.join(RUN, "logs", f"{j['asset']}.stdout.json"), "w").write(r.stdout)
+-        open(os.path.join(RUN, "logs", f"{j['asset']}.stderr.txt"), "w").write(r.stderr)
+-        rec.update(attempt=1, rc=r.returncode, seconds=round(time.time() - t0, 1))
+-        try:
+-            job = json.loads(r.stdout)
+-            job = job[0] if isinstance(job, list) else job
+-            rec["job_id"], url = job.get("id"), job.get("result_url")
+-        except Exception:
+-            url = None
+-        if r.returncode != 0 or not url:
+-            rec["run_status"] = "CLIENT_FAILED_CHECK_SERVER"
+-            return rec
+-        urllib.request.urlretrieve(url, dest)
+-        rec.update(run_status="GENERATED", source_url=url,
+-                   output={"path": os.path.relpath(dest, RUN), "sha256": sha_file(dest), "bytes": os.path.getsize(dest)}, qa=[])
++        inputs = go_inputs_from_job(self.spec, j, self.media_sha256)
++        res = go_candidate.go(inputs, adapter=self.adapter, provider_mode=self.provider_mode,
++                              store_path=self.store_path, budget_units=self.budget_units,
++                              envelope_units=self.envelope_units, max_polls=self.max_polls)
++        rec.update(attempt=1, seconds=round(time.time() - t0, 1), job_id=res.job_id,
++                   provider_job_id=res.provider_job_id, provider=res.provider,
++                   spec_key=res.spec_key, core_sha=res.core_sha,
++                   reservation_outcome=res.reservation_outcome, run_status=res.outcome,
++                   persisted=res.persisted, qa=[])
+         return rec
+ 
+     def go(self):
+         lock = self.require()
+-        bal = lambda: (lambda m: float(m.group(1)) if m else None)(re.search(r"([\d.]+)\s*credits", subprocess.run(["higgsfield", "account", "status"], capture_output=True, text=True).stdout))
+-        b0 = bal()
++        b0 = None                                    # candidate: nessuna CLI, nessun saldo
+         with cf.ThreadPoolExecutor(max_workers=self.spec.get("parallel", 4)) as ex:
+             recs = list(ex.map(lambda j: self.run_job(j, lock), self.spec["jobs"]))
+-        b1 = bal()
++        b1 = None
+         fp_after, _ = self.fingerprint()
+         held = fp_after == lock["fingerprint_sha256"] and all(x["run_status"] != "RUN_INVALIDATED" for x in recs)
+         trace = {k: v for k, v in lock.items() if k != "jobs"}
+@@ -218,6 +242,7 @@
+         for x in recs:
+             print(f"{x['asset']:22} {x['run_status']} job={x.get('job_id')} {x.get('seconds')}s {x.get('output', {}).get('sha256', '')[:16]}")
+         print(f"balance {b0} -> {b1} · {trace['run_verdict']}")
++        return trace
+ 
+     def qa(self):
+         trace = json.load(open(self.trace_path, encoding="utf-8"))
+@@ -231,5 +256,10 @@
+ 
+ 
+ if __name__ == "__main__":
++    # Candidate: senza adapter/store iniettati, `go` si ferma in REAL_PROVIDER_DISABLED
++    # (go_candidate rifiuta adapter=None). `lock`/`quote` si fermano in _real_cli().
++    verb = sys.argv[2]
++    if verb not in ("lock", "quote", "go", "qa"):
++        sys.exit(f"verbo sconosciuto: {verb}")
+     b = Batch(sys.argv[1])
+-    getattr(b, sys.argv[2])()
++    getattr(b, verb)()

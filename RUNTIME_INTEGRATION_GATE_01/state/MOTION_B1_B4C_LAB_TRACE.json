@@ -1,0 +1,285 @@
+{
+ "schema": "VF_PREVENTIVE_RUNTIME_MANIFEST_v0.1",
+ "lock_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION_MOTION_B1_B4C_LOCK_20260916T005424",
+ "created_at": "2026-09-16T00:54:24+0200",
+ "runtime_mode": "EXPERIMENTAL_FROM_EXACT_COMMIT",
+ "authority": "E076 — motion delle due still nuove approvate dal QA (B1_NEW_STILL, B4C_NEW_STILL). Stesso workflow validato: Higgsfield seedance_2_0, start image, 9:16 1080p std, generate_audio false. 1 tentativo per clip, 0 retry; se un clip è mediocre si rigenera (qualità prima del costo, E076).",
+ "scope_note": "Il manifest dimostra gli input realmente usati. NON promette riproducibilità bit-identical dell'output generativo.",
+ "core": {
+  "path": "/Users/francescoantonaccio/valore_farmacia_local/VF_REPO_WORKSPACE/creative-os",
+  "sha": "9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7",
+  "branch": "main",
+  "working_tree": "CLEAN",
+  "dirty_files": [],
+  "role_in_run": "nessuno per la generazione",
+  "not_active_candidates": [
+   {
+    "ref": "7ea87fd265090a4f82977fd4745ef659378d319e",
+    "status": "RULE_NOT_ACTIVE"
+   }
+  ]
+ },
+ "tenant": {
+  "path": "/Users/francescoantonaccio/valore_farmacia_local/VF_REPO_WORKSPACE/vf-tenant",
+  "sha": "5bb3cf2cb5c9d5227c195a376a7d6c29cd5091be",
+  "branch": "fix/performance-first-creative-gate",
+  "working_tree": "DIRTY",
+  "dirty_files": [
+   "M LEARNINGS/HUMAN_GATE_EVENTS.jsonl"
+  ],
+  "pushed": false
+ },
+ "policy": {
+  "id": "VF_2026_09_V3",
+  "path": "policies/VF_2026_09_V3.json",
+  "sha256": "d43347a75c540beeace9965e6c2d86f2673df9a33d060e81a2c6a4c89d1a354c",
+  "modified": false
+ },
+ "rules_loaded": [
+  {
+   "path": "CLAUDE.md",
+   "sha256": "bf29171b9e4976546c6a8c9485c85b4fdd65cf17befacbf3e167c52f4ece9747",
+   "state": [
+    "HUMAN_APPROVED"
+   ]
+  },
+  {
+   "path": "TENANT_CONFIG.json",
+   "sha256": "141c7b750eeb92668b1b5a09d9d547ad80916509ec3ab49b7b4f836436e189c7",
+   "state": [
+    "UNINDEXED"
+   ]
+  },
+  {
+   "path": "LEARNINGS/CREATIVE_SYNAPSE.md",
+   "sha256": "652601b4fd13403a105add4469cfc68188e1ee9db928a350aa82eb15bcc88475",
+   "state": [
+    "CANDIDATE_RULE",
+    "HUMAN_APPROVED"
+   ]
+  },
+  {
+   "path": "LEARNINGS/HUMAN_GATE_EVENTS.jsonl",
+   "sha256": "bba7e4697562d938049c02599f19ff15de00ad4f0eeec5d0dc3480aa49d01748",
+   "state": [
+    "HUMAN_APPROVED"
+   ]
+  },
+  {
+   "path": "BENCHMARKS/AD02_B_SUCCESS.json",
+   "sha256": "b3ba5cadc1e8715c2f3938ad38f7248914a8d3eb8c00ed5e6d431e35cfa0b541",
+   "state": [
+    "HUMAN_APPROVED"
+   ]
+  },
+  {
+   "path": "BENCHMARKS/P2_RISERVATEZZA_NEGATIVE.json",
+   "sha256": "5e2a91c396b0aab88cdb7ad430ca82dd8ed2d282efb72d8f2dccdf05aba54084",
+   "state": [
+    "NEGATIVE_EVIDENCE"
+   ]
+  },
+  {
+   "path": "CAST/CANONICAL_OWNER.json",
+   "sha256": "7512b5387635362a87fd5e784803d17a07a28683f1d7530ddaa5f437734135c7",
+   "state": [
+    "HUMAN_APPROVED",
+    "NEGATIVE_EVIDENCE",
+    "PENDING_HUMAN_GATE"
+   ]
+  },
+  {
+   "path": "CAST/P2_CONSULTANT.json",
+   "sha256": "220b02b16648b6e7adc47ed76d9fa89dd6cb5ced269f643845f06d936b1b4c1d",
+   "state": [
+    "HUMAN_APPROVED"
+   ]
+  },
+  {
+   "path": "CONCEPTS/P2_PRIMA_SI_PARLA_V2/SCENE_CONSTRAINTS.json",
+   "sha256": "106b59113ec3b5df7758483566e81844df19576b780020b19b2bb4ad92a03865",
+   "state": [
+    "CANDIDATE_RULE"
+   ]
+  },
+  {
+   "path": "CONCEPTS/P2_PRIMA_SI_PARLA_V2/VO_CANDIDATE_P2_V4_SHORT.txt",
+   "sha256": "29cf204bf24be66f4fc1830455b921ad33b446a76ea7dfaab79c432f900d2674",
+   "state": [
+    "PENDING_HUMAN_GATE"
+   ]
+  },
+  {
+   "path": "RUNTIME/PREVENTIVE_RUNTIME_MANIFEST_TEMPLATE.json",
+   "sha256": "9c9e4413eaeb8e2e0a0d840500b01bc1cc92d4e91d62677288f0d0396bdf3be9",
+   "state": [
+    "CANDIDATE_RULE"
+   ]
+  },
+  {
+   "path": "RUNTIME/CHECKPOINT_STATUS_INDEX.json",
+   "sha256": "1018f915daa3a99106ccc0a3aa2e34a954fcfd5fb98a6061756cedd01827ea4e",
+   "state": [
+    "DRAFT"
+   ]
+  }
+ ],
+ "scripts": [
+  {
+   "path": "scripts/hf_batch.py",
+   "sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
+  },
+  {
+   "path": "scripts/preflight.py",
+   "sha256": "6c622c1293cc4962ac9ca51df5d531e469023b3d94a374c5ed2987b2e405e77a"
+  }
+ ],
+ "spec": {
+  "path": "spec_motion_B1_B4C.json",
+  "sha256": "bb47f02da5ef1df0fae9ea2cb8a73329d3a5082aec7b5a00160d2d64ac577f7b"
+ },
+ "preflight": {
+  "path": "logs/PREFLIGHT.json",
+  "sha256": "df25d74472f6db8225a165694dd5c663da8434a390720c5b61b656eb1f39e873"
+ },
+ "fingerprint_sha256": "b8397ca588a20f14f9a0d88d59583ea95c3d10488f2a558bdeb0df79f15e8480",
+ "trace_created_at": "2026-09-16T15:22:12+0000",
+ "lock_sha256": "c0ceba2c26cf59bed4cc732b8f96b9ec89b7ff44ae66b3b29da979ae69d1aa49",
+ "retries": 0,
+ "jobs": [
+  {
+   "asset": "B1_NEW_CLIP",
+   "beat": 1,
+   "kind": "video",
+   "provider": "fake",
+   "provider_client": "higgsfield 1.1.24 (74e091aaff646537b8f77d42e695ecccafbaa761) built 2026-08-29T03:23:05Z",
+   "model": "seedance_2_0",
+   "params": {
+    "aspect_ratio": "9:16",
+    "resolution": "1080p",
+    "duration": 13,
+    "generate_audio": false,
+    "mode": "std"
+   },
+   "media": [
+    {
+     "role": "start-image",
+     "id": "START",
+     "path": "P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B1_NEW_STILL.png",
+     "sha256_sent": "a21193dafc4e52fc8cc3ad1ee230698f2ae62ec222581e6997d21c7da014ae65",
+     "local_transformations": [],
+     "provider_side_processing": "NOT_VERIFIABLE"
+    }
+   ],
+   "prompt_final": "The same bright contemporary Italian pharmacy during normal business, camera almost still with a very slight natural drift. Behind the counter the female pharmacist finishes handing the small white box to the customer and says a few words; the customer, in her beige coat with the handbag on her shoulder, takes the box and answers naturally, staying on the public side of the counter. The owner in his white coat works calmly at the till, then lifts his eyes for a moment toward the entrance where the man in the dark suit with the briefcase is waiting just inside the door; a brief, controlled hesitation, then he returns professionally to his work. The man with the briefcase stays where he is and waits politely, shifting his weight once; he does not walk forward and does not approach the counter. The second customer waits calmly. Small, realistic, unhurried movements; nobody rushes, no theatrical entrance, no thriller tension, no caricature, 13 seconds. Preserve faces, hair, hands and anatomy exactly, no morphing, no people or objects appearing or disappearing, no text, letters or numbers appearing, nobody looks at the camera, single continuous shot, vertical 9:16.",
+   "prompt_sha256": "61ca18ac37b57d43a89fd8b8d61d05b569e9cea5d90a63bde09c5446c647fb47",
+   "must_show": [
+    "cliente sul lato pubblico che riceve la confezione",
+    "farmacista e titolare in camice dietro il banco",
+    "titolare che nota il visitatore e torna al lavoro",
+    "visitatore fermo vicino alla porta che attende"
+   ],
+   "must_not_show": [
+    "persone in abiti civili che passano dietro il banco",
+    "ingresso teatrale o visitatore che avanza al banco",
+    "sguardo in camera",
+    "testo o loghi che compaiono",
+    "morphing dei volti"
+   ],
+   "edit_use": "B1 0,00–12,23 s · VO «Quando si parla… Mai con una visita inattesa.»",
+   "fingerprint_at_submit": "b8397ca588a20f14f9a0d88d59583ea95c3d10488f2a558bdeb0df79f15e8480",
+   "attempt": 1,
+   "seconds": 0.0,
+   "job_id": "res_f4076e463c1fbcd9_1",
+   "provider_job_id": "pv_f4076e46",
+   "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+   "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+   "reservation_outcome": "EXISTING_LIVE_JOB",
+   "run_status": "SUCCEEDED",
+   "persisted": {
+    "job_id": "res_f4076e463c1fbcd9_1",
+    "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+    "provider": "fake",
+    "state": "SUCCEEDED",
+    "provider_job_id": "pv_f4076e46",
+    "submitted_at": 1789572132.738422,
+    "terminal_by": 1789572432.738422,
+    "polls": 3,
+    "webhook_hints": 0,
+    "error": null,
+    "cost_credits": 4.0
+   },
+   "qa": []
+  },
+  {
+   "asset": "B4C_NEW_CLIP",
+   "beat": 4,
+   "kind": "video",
+   "provider": "fake",
+   "provider_client": "higgsfield 1.1.24 (74e091aaff646537b8f77d42e695ecccafbaa761) built 2026-08-29T03:23:05Z",
+   "model": "seedance_2_0",
+   "params": {
+    "aspect_ratio": "9:16",
+    "resolution": "1080p",
+    "duration": 5,
+    "generate_audio": false,
+    "mode": "std"
+   },
+   "media": [
+    {
+     "role": "start-image",
+     "id": "START",
+     "path": "P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/stills/B4C_NEW_STILL.png",
+     "sha256_sent": "538a7f3b217847ff9f187494ec5754ec7acebf44a7a373b87f2b617c01b8c50c",
+     "local_transformations": [],
+     "provider_side_processing": "NOT_VERIFIABLE"
+    }
+   ],
+   "prompt_final": "Medium close-up of the pharmacy owner on the same phone call in the quiet café, warm late-afternoon light. He listens for a moment, his gaze drifting slightly off camera into the middle distance while he thinks; a small calm breath; then he says a few quiet words and keeps listening, present and lucid. Micro-expressions only: a slight movement of the eyes, a small nod, the lips moving softly while speaking. The phone stays at his ear, the free hand stays out of frame. Camera static with a barely perceptible push-in; the café background stays softly out of focus. No wide smile, no broad gesture, no sadness or tiredness, no objects appearing, 5 seconds. Preserve faces, hair, hands and anatomy exactly, no morphing, no people or objects appearing or disappearing, no text, letters or numbers appearing, nobody looks at the camera, single continuous shot, vertical 9:16.",
+   "prompt_sha256": "aa01c4cda378ca49bc740340664a850021a2b0f68e1468f43a70bbd8a39f80b6",
+   "must_show": [
+    "ascolto, breve pausa, sguardo riflessivo fuori campo, poi riprende a parlare",
+    "espressione calma, lucida, presente",
+    "telefono sempre all'orecchio"
+   ],
+   "must_not_show": [
+    "grande sorriso o gesti ampi",
+    "tristezza, nostalgia, stanchezza",
+    "cambio di volto o morphing",
+    "oggetti che compaiono",
+    "sguardo in camera"
+   ],
+   "edit_use": "B4C 26,40–27,90 s · VO «Vogliamo capire Lei…»",
+   "fingerprint_at_submit": "b8397ca588a20f14f9a0d88d59583ea95c3d10488f2a558bdeb0df79f15e8480",
+   "attempt": 1,
+   "seconds": 0.0,
+   "job_id": "res_6d687b11cfaf4fd0_1",
+   "provider_job_id": "pv_6d687b11",
+   "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
+   "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+   "reservation_outcome": "EXISTING_LIVE_JOB",
+   "run_status": "SUCCEEDED",
+   "persisted": {
+    "job_id": "res_6d687b11cfaf4fd0_1",
+    "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
+    "provider": "fake",
+    "state": "SUCCEEDED",
+    "provider_job_id": "pv_6d687b11",
+    "submitted_at": 1789572132.745085,
+    "terminal_by": 1789572432.745085,
+    "polls": 3,
+    "webhook_hints": 0,
+    "error": null,
+    "cost_credits": 4.0
+   },
+   "qa": []
+  }
+ ],
+ "balance": {
+  "before": null,
+  "after": null,
+  "spent": null
+ },
+ "fingerprint_after_run": "b8397ca588a20f14f9a0d88d59583ea95c3d10488f2a558bdeb0df79f15e8480",
+ "run_verdict": "LOCK_HELD"
+}

@@ -102,7 +102,7 @@
     "id": "T12",
     "title": "budget atomicity",
     "expected": "envelope 100: 70+50 -> uno BudgetExceeded, impegnati <= 100",
-    "actual": "concorrente: ['BudgetExceeded', 'OK'] impegnati=70/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70",
+    "actual": "concorrente: ['BudgetExceeded', 'OK'] impegnati=50/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70",
     "exit": 0,
     "evidence": "evidence/T12_budget_atomicity.json",
     "pass": true
@@ -138,10 +138,10 @@
     "id": "T16",
     "title": "P2 hash unchanged",
     "expected": "SHA256(hf_batch.py) before == after",
-    "actual": "BLOCKED: P2 hf_batch.py assente in questo ambiente (nessun hash calcolabile)",
-    "exit": 1,
+    "actual": "before=637f3a803ee3 after=637f3a803ee3 declared=637f3a803ee3 sources_agree=True",
+    "exit": 0,
     "evidence": "evidence/T16_p2_hash.json",
-    "pass": false
+    "pass": true
   },
   {
     "id": "T17",
@@ -177,6 +177,33 @@
     "actual": "clean -> pin ok | tracked mod (HEAD invariato) -> CORE_WORKTREE_DIRTY core_imported=False | untracked inside -> CORE_WORKTREE_DIRTY | wrong+clean -> CORE_PIN_MISMATCH | stale+clean -> STALE_CORE_PIN",
     "exit": 0,
     "evidence": "evidence/T20_dirty_core_fail_closed.json",
+    "pass": true
+  },
+  {
+    "id": "T21",
+    "title": "real hf_batch go -> GenSpec mapping",
+    "expected": "27 job reali: prompt/media identici all'originale; lock: prompt_sha256 e sha256_sent combaciano; spec_key deterministico; mutazioni reali cambiano chiave",
+    "actual": "27 job reali in 11 spec: prompt/media == originale True; lock: prompt_sha e sha256_sent combaciano; spec_key stabile in altro processo True; 4 mutazioni reali -> chiave diversa, metadati QA -> stessa chiave True; media MISSING rifiutato True",
+    "exit": 0,
+    "evidence": "evidence/T21_real_genspec_mapping.json",
+    "pass": true
+  },
+  {
+    "id": "T22",
+    "title": "hf_batch_runtime.go on real spec via Core",
+    "expected": "2 RESERVED_NEW + 2 submit; GO#2 EXISTING_LIVE_JOB 0 submit; nuovo processo completa SUCCEEDED; lock/quote REAL_PROVIDER_DISABLED; 0 violazioni",
+    "actual": "spec reale MOTION_B1_B4C: GO#1 2x RESERVED_NEW (2 submit) · GO#2 2x EXISTING_LIVE_JOB (0 submit) · GO#3 nuovo processo -> 2x SUCCEEDED (0 submit) · lock/quote -> REAL_PROVIDER_DISABLED · violazioni sentinella 0",
+    "exit": 0,
+    "evidence": "evidence/T22_hf_batch_runtime_go_real_spec.json",
+    "pass": true
+  },
+  {
+    "id": "T23",
+    "title": "P2 handoff integrity",
+    "expected": "manifest 0 mismatch; ZIP hash registrati",
+    "actual": "handoff SHA256SUMS: 35 file, rc=0 (0 mismatch); 2 ZIP hash registrati",
+    "exit": 0,
+    "evidence": "evidence/T23_handoff_integrity.json",
     "pass": true
   }
 ]
