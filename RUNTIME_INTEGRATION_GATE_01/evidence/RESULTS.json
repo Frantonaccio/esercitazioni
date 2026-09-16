@@ -102,7 +102,7 @@
     "id": "T12",
     "title": "budget atomicity",
     "expected": "envelope 100: 70+50 -> uno BudgetExceeded, impegnati <= 100",
-    "actual": "concorrente: ['BudgetExceeded', 'OK'] impegnati=50/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70",
+    "actual": "concorrente: ['BudgetExceeded', 'OK'] impegnati=70/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70",
     "exit": 0,
     "evidence": "evidence/T12_budget_atomicity.json",
     "pass": true
@@ -168,6 +168,15 @@
     "actual": "findings=0 core_imports=4",
     "exit": 0,
     "evidence": "evidence/T19_static_no_duplicate_control.json",
+    "pass": true
+  },
+  {
+    "id": "T20",
+    "title": "dirty Core must fail closed",
+    "expected": "canonical+clean PASS; canonical+tracked mod -> CORE_WORKTREE_DIRTY (no import); wrong+clean -> MISMATCH; stale+clean -> STALE",
+    "actual": "clean -> pin ok | tracked mod (HEAD invariato) -> CORE_WORKTREE_DIRTY core_imported=False | untracked inside -> CORE_WORKTREE_DIRTY | wrong+clean -> CORE_PIN_MISMATCH | stale+clean -> STALE_CORE_PIN",
+    "exit": 0,
+    "evidence": "evidence/T20_dirty_core_fail_closed.json",
     "pass": true
   }
 ]

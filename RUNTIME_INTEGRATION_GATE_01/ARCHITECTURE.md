@@ -6,7 +6,8 @@
 hf_batch GO  (candidate: runtime/go_candidate.go)
     │
     ├─ 1. provider_gate.require_fake_mode(provider_mode)     → REAL_PROVIDER_DISABLED se ≠ "fake"
-    ├─ 2. core_pin.require_core(core_path)                   → CORE_PIN_MISMATCH / STALE_CORE_PIN
+    ├─ 2. core_pin.require_core(core_path)                   → CORE_PIN_MISMATCH / STALE_CORE_PIN /
+    │        (A. HEAD == 819e7cf  B. working tree clean)        CORE_WORKTREE_DIRTY
     ├─ 3. import del Core (solo dopo 1 e 2)
     ├─ 3b. provider_gate.require_fake_adapter(adapter, FakeAdapter)
     ├─ 4. genspec_bridge.build_genspec(GoInputs) → adapters.base.GenSpec   (spec_key dal Core)

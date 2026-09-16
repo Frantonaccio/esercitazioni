@@ -1,0 +1,65 @@
+{
+  "clean": {
+    "head": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "probe": {
+      "core_imported": true,
+      "error": "RealProviderDisabled",
+      "message": "REAL_PROVIDER_DISABLED: provider_mode='adapter:builtins.NoneType'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
+      "ok": false,
+      "pid": 754
+    },
+    "status": ""
+  },
+  "pure_verdicts": {
+    "canonical_clean": "CORE_PIN_OK",
+    "canonical_dirty": "CORE_WORKTREE_DIRTY",
+    "canonical_unverifiable": "CORE_WORKTREE_DIRTY",
+    "stale_clean": "STALE_CORE_PIN",
+    "stale_dirty_identity_wins": "STALE_CORE_PIN",
+    "wrong_clean": "CORE_PIN_MISMATCH"
+  },
+  "restored": {
+    "head": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "status": ""
+  },
+  "stale_clean": {
+    "core_imported": false,
+    "error": "STALE_CORE_PIN",
+    "observed": "9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7",
+    "ok": false,
+    "pid": 777,
+    "required": "819e7cfedb0f6641dc797e7993bec79462ac8df6"
+  },
+  "tracked_modified": {
+    "head": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "probe": {
+      "core_imported": false,
+      "error": "CORE_WORKTREE_DIRTY",
+      "observed": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+      "ok": false,
+      "pid": 760,
+      "required": "819e7cfedb0f6641dc797e7993bec79462ac8df6"
+    },
+    "status": "M transport/pipeline.py"
+  },
+  "untracked_inside": {
+    "head": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "probe": {
+      "core_imported": false,
+      "error": "CORE_WORKTREE_DIRTY",
+      "observed": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+      "ok": false,
+      "pid": 767,
+      "required": "819e7cfedb0f6641dc797e7993bec79462ac8df6"
+    },
+    "status": "?? adapters/stray_module.py"
+  },
+  "wrong_sha_clean": {
+    "core_imported": false,
+    "error": "CORE_PIN_MISMATCH",
+    "observed": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "ok": false,
+    "pid": 773,
+    "required": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
+  }
+}

@@ -5,9 +5,9 @@
     "error": "STALE_CORE_PIN",
     "observed": "9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7",
     "ok": false,
-    "pid": 2022,
+    "pid": 619,
     "required": "819e7cfedb0f6641dc797e7993bec79462ac8df6"
   },
   "pure_verdict": "STALE_CORE_PIN",
-  "stale_checkout": "/tmp/gate01_t_3r3r1v/core_stale_9afaddf"
+  "stale_checkout": "/tmp/gate01_cq823qs8/core_stale_9afaddf"
 }

@@ -1,0 +1,8 @@
+{
+  "clean_require_core": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+  "clean_status": "",
+  "dirty_head": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+  "dirty_require_core_BEFORE_PATCH": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+  "dirty_status": " M transport/pipeline.py\n",
+  "finding_confirmed": true
+}

@@ -25,7 +25,13 @@ Il controllo NON è stato rimosso: è stato **rafforzato** in `runtime/core_pin.
 | Core checkout a `819e7cf` | `CORE_PIN_OK` → `go` procede | T01 PASS |
 | SHA casuale (`deadbeef…`) | `CORE_PIN_MISMATCH` → nessun import del Core, nessuno store creato | T02 PASS |
 | Core checkout reale a `9afaddf` (worktree temporaneo, poi rimosso) | `STALE_CORE_PIN` → nessun import del Core | T03 PASS |
+| Core checkout a `819e7cf` con `transport/pipeline.py` modificato e non committato (HEAD invariato) | `CORE_WORKTREE_DIRTY` → nessun import del Core | T20 PASS (ADDENDUM) |
+| Core checkout a `819e7cf` con un file `.py` non tracciato dentro `adapters/` | `CORE_WORKTREE_DIRTY` → nessun import del Core | T20 PASS |
+| `git status` non disponibile sul checkout | `CORE_WORKTREE_DIRTY` (fail-closed, non verificabile = sporco) | T20 verdetto puro |
 
-Lo SHA osservato si legge dal checkout (`git rev-parse HEAD`), non da un file dichiarativo.
+Lo SHA osservato si legge dal checkout (`git rev-parse HEAD`), non da un file dichiarativo; la pulizia
+dell'albero da `git status --porcelain --untracked-files=all` sullo stesso checkout (file ignorati da
+`.gitignore`, es. `__pycache__`, non contano; ciò che sta fuori dal checkout non è visto da git).
+Ordine dei verdetti: identità prima (STALE/MISMATCH), poi pulizia (DIRTY).
 Il gate avviene **prima** di `sys.path.insert(core_path)`: un Core non autorizzato non viene
 nemmeno importato (`core_imported=False` in evidence T02/T03).

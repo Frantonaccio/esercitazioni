@@ -24,5 +24,7 @@ Esecuzione: `python3 tests/run_gate.py` (dalla directory del gate). Risultati ef
 | T17 | Core canonical unchanged | HEAD == `819e7cf`, branch main, working tree pulito | `git rev-parse` + `git status --porcelain` a fine corsa |
 | T18 | durable terminal persistence | SUCCEEDED riletto da nuovo processo; nuovo GO dopo terminale = nuovo tentativo (2 righe storiche, 0 impegnato) | spawn ×4 |
 | T19 | static: no duplicate control system | 0 findings AST; import dal Core = 4 attesi | `tests/static_checks.py` su `runtime/*.py` |
+| T20 | dirty Core must fail closed (ADDENDUM) | canonical+clean → pin PASS; canonical+file tracciato modificato (HEAD invariato) → `CORE_WORKTREE_DIRTY`, Core non importato; file non tracciato dentro il checkout → `CORE_WORKTREE_DIRTY`; wrong+clean → `CORE_PIN_MISMATCH`; stale+clean → `STALE_CORE_PIN` | worktree di laboratorio del Core reale a `819e7cf`, modifica deliberata, ripristino, rimozione a fine corsa; finding riprodotto PRIMA della patch in `evidence/T20_finding_reproduction_before_patch.json` |
 
 T19 è aggiuntivo rispetto a T01–T18: è il test statico obbligatorio del mandato §9.
+T20 è l'ADDENDUM della review indipendente del package `f7f07c5`: il pin verificava solo HEAD, non la pulizia dell'albero.

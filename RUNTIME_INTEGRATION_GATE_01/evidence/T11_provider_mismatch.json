@@ -14,11 +14,11 @@
       "provider_job_id": "pv_cc30c00d",
       "spec_key": "cc30c00d25b6e1223286c67e0a99c8a97c3ee3f64aa0f88c708b20acc7f19b6a",
       "state": "RUNNING",
-      "submitted_at": 1789564699.5793211,
-      "terminal_by": 1789564999.5793211,
+      "submitted_at": 1789567259.4542747,
+      "terminal_by": 1789567559.4542747,
       "webhook_hints": 0
     },
-    "pid": 2065,
+    "pid": 673,
     "provider": "fake_a",
     "provider_job_id": "pv_cc30c00d",
     "reservation_outcome": "RESERVED_NEW",
@@ -31,12 +31,12 @@
     "error": "ProviderMismatch",
     "message": "job res_cc30c00d25b6e122_1 appartiene al provider 'fake_a', adapter fornito 'fake_b': riconciliare con l'adapter corretto",
     "ok": false,
-    "pid": 2068,
+    "pid": 677,
     "submits": 0,
     "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 115, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 78, in run_job\n    raise ProviderMismatch(\nadapters.base.ProviderMismatch: job res_cc30c00d25b6e122_1 appartiene al provider 'fake_a', adapter fornito 'fake_b': riconciliare con l'adapter corretto\n"
   },
   "state": {
-    "pid": 2071,
+    "pid": 681,
     "reserved_units": 0,
     "rows": [
       {

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""RUNTIME INTEGRATION GATE 01 — matrice T01..T19.
+"""RUNTIME INTEGRATION GATE 01 — matrice T01..T20.
 
 MOCK ONLY · ZERO HIGGSFIELD · ZERO CREDITS · NO PRODUCTION.
 
@@ -431,6 +431,71 @@ def t18():
     return f"SUCCEEDED letto da nuovo processo; nuovo GO dopo terminale = nuovo tentativo ({len(s2['rows'])} righe storiche, 0 impegnato)", ev, ok
 
 
+def t20(stale_core_path: str):
+    """T20 — DIRTY CORE MUST FAIL CLOSED. Finding riprodotto PRIMA della patch:
+    evidence/T20_finding_reproduction_before_patch.json (finding_confirmed=true)."""
+    lab = os.path.join(os.path.dirname(stale_core_path), "core_lab_canonical")
+    subprocess.run(["git", "-C", CORE_PATH, "worktree", "add", "--detach", lab, REQUIRED_CORE_SHA],
+                   check=True, capture_output=True)
+    try:
+        def head():
+            return git("rev-parse", "HEAD", cwd=lab)
+        def status():
+            return git("status", "--porcelain", "--untracked-files=all", cwd=lab)
+        steps = {}
+        # 1-2. checkout di laboratorio al canonical, pulito -> PASS
+        steps["clean"] = {"head": head(), "status": status(),
+                          "probe": in_process(worker.pin_probe_clean, lab, None, db_for("T20a"))}
+        # 3-5. modifica deliberata di un file tracciato, HEAD invariato -> CORE_WORKTREE_DIRTY
+        with open(os.path.join(lab, "transport", "pipeline.py"), "a", encoding="utf-8") as fh:
+            fh.write("\n# T20 deliberate uncommitted modification\n")
+        steps["tracked_modified"] = {"head": head(), "status": status(),
+                                     "probe": in_process(worker.pin_probe_clean, lab, None, db_for("T20b"))}
+        git("checkout", "--", "transport/pipeline.py", cwd=lab)
+        # extra: file NON tracciato dentro il checkout (modulo estraneo importabile) -> DIRTY
+        stray = os.path.join(lab, "adapters", "stray_module.py")
+        with open(stray, "w", encoding="utf-8") as fh:
+            fh.write("# untracked module inside the Core checkout\n")
+        steps["untracked_inside"] = {"head": head(), "status": status(),
+                                     "probe": in_process(worker.pin_probe_clean, lab, None, db_for("T20c"))}
+        os.remove(stray)
+        steps["restored"] = {"head": head(), "status": status()}
+        # negative controls
+        steps["wrong_sha_clean"] = in_process(worker.pin_probe_clean, lab, "deadbeef" * 5, db_for("T20d"))
+        steps["stale_clean"] = in_process(worker.pin_probe_clean, stale_core_path, None, db_for("T20e"))
+        steps["pure_verdicts"] = {
+            "canonical_clean": verify_core_pin(REQUIRED_CORE_SHA, dirty=()).code,
+            "canonical_dirty": verify_core_pin(REQUIRED_CORE_SHA, dirty=(" M x.py",)).code,
+            "canonical_unverifiable": verify_core_pin(REQUIRED_CORE_SHA, dirty=None).code,
+            "wrong_clean": verify_core_pin("deadbeef" * 5, dirty=()).code,
+            "stale_clean": verify_core_pin(STALE_SHA, dirty=()).code,
+            "stale_dirty_identity_wins": verify_core_pin(STALE_SHA, dirty=(" M x.py",)).code,
+        }
+    finally:
+        subprocess.run(["git", "-C", CORE_PATH, "worktree", "remove", "--force", lab],
+                       capture_output=True)
+        subprocess.run(["git", "-C", CORE_PATH, "worktree", "prune"], capture_output=True)
+    c, d, u = steps["clean"], steps["tracked_modified"], steps["untracked_inside"]
+    # probe pulito: supera il pin (nessun CorePinError) e cade solo sul gate provider
+    # perche' pin_probe_clean non fornisce un adapter: e' la prova che il pin e' passato.
+    ok = (c["status"] == "" and c["probe"].get("error") == "RealProviderDisabled"
+          and c["probe"].get("core_imported") is True
+          and d["head"] == REQUIRED_CORE_SHA and d["status"].strip() == "M transport/pipeline.py"
+          and d["probe"].get("error") == "CORE_WORKTREE_DIRTY" and d["probe"].get("core_imported") is False
+          and u["probe"].get("error") == "CORE_WORKTREE_DIRTY" and u["probe"].get("core_imported") is False
+          and steps["restored"]["status"] == ""
+          and steps["wrong_sha_clean"].get("error") == "CORE_PIN_MISMATCH"
+          and steps["stale_clean"].get("error") == "STALE_CORE_PIN"
+          and steps["pure_verdicts"] == {
+              "canonical_clean": "CORE_PIN_OK", "canonical_dirty": "CORE_WORKTREE_DIRTY",
+              "canonical_unverifiable": "CORE_WORKTREE_DIRTY", "wrong_clean": "CORE_PIN_MISMATCH",
+              "stale_clean": "STALE_CORE_PIN", "stale_dirty_identity_wins": "STALE_CORE_PIN"})
+    ev = evidence("T20", "dirty_core_fail_closed", steps)
+    return (f"clean -> pin ok | tracked mod (HEAD invariato) -> {d['probe'].get('error')} core_imported={d['probe'].get('core_imported')} | "
+            f"untracked inside -> {u['probe'].get('error')} | wrong+clean -> {steps['wrong_sha_clean'].get('error')} | "
+            f"stale+clean -> {steps['stale_clean'].get('error')}"), ev, ok
+
+
 def t19():
     r = static_checks.run()
     ev = evidence("T19", "static_no_duplicate_control", r)
@@ -491,6 +556,8 @@ def main() -> int:
         record("T17", "Core canonical unchanged", "HEAD == 819e7cf, main, working tree pulito", t17)
         record("T18", "durable terminal persistence", "SUCCEEDED riletto da nuovo processo; nuovo tentativo dopo terminale", t18)
         record("T19", "static: no duplicate control system (AST)", "0 findings; import dal Core = 4 attesi", t19)
+        record("T20", "dirty Core must fail closed", "canonical+clean PASS; canonical+tracked mod -> CORE_WORKTREE_DIRTY (no import); wrong+clean -> MISMATCH; stale+clean -> STALE",
+               lambda: t20(stale_core))
     finally:
         subprocess.run(["git", "-C", CORE_PATH, "worktree", "remove", "--force", stale_core],
                        capture_output=True)
