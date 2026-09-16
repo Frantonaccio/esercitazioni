@@ -1,0 +1,173 @@
+[
+  {
+    "id": "T01",
+    "title": "correct Core pin",
+    "expected": "CORE_PIN_OK, go procede",
+    "actual": "core_sha=819e7cfedb0f verdict=CORE_PIN_OK state=SUCCEEDED",
+    "exit": 0,
+    "evidence": "evidence/T01_correct_core_pin.json",
+    "pass": true
+  },
+  {
+    "id": "T02",
+    "title": "wrong Core pin",
+    "expected": "CORE_PIN_MISMATCH, Core non importato, nessuno store",
+    "actual": "error=CORE_PIN_MISMATCH core_imported=False",
+    "exit": 0,
+    "evidence": "evidence/T02_wrong_core_pin.json",
+    "pass": true
+  },
+  {
+    "id": "T03",
+    "title": "stale old Core pin (9afaddf)",
+    "expected": "STALE_CORE_PIN, Core non importato",
+    "actual": "error=STALE_CORE_PIN observed=9afaddf core_imported=False",
+    "exit": 0,
+    "evidence": "evidence/T03_stale_core_pin.json",
+    "pass": true
+  },
+  {
+    "id": "T04",
+    "title": "deterministic spec_key",
+    "expected": "run A == run B == run C == altro processo",
+    "actual": "A==B==C==other_process: True (e355dd3ed48831f2…)",
+    "exit": 0,
+    "evidence": "evidence/T04_deterministic_spec_key.json",
+    "pass": true
+  },
+  {
+    "id": "T05",
+    "title": "spec mutation changes key",
+    "expected": "ogni mutazione semantica -> chiave diversa; dati accidentali rifiutati",
+    "actual": "6 mutazioni semantiche -> 6 chiavi diverse: True; 5 input accidentali rifiutati: True",
+    "exit": 0,
+    "evidence": "evidence/T05_spec_mutation.json",
+    "pass": true
+  },
+  {
+    "id": "T06",
+    "title": "happy path",
+    "expected": "1 submit, SUCCEEDED persistito, riletto da nuovo processo, provider=fake",
+    "actual": "state=SUCCEEDED submits=1 provider=fake restart_read=SUCCEEDED reserved_after=0",
+    "exit": 0,
+    "evidence": "evidence/T06_happy_path.json",
+    "pass": true
+  },
+  {
+    "id": "T07",
+    "title": "sequential duplicate",
+    "expected": "GO#2 = EXISTING_LIVE_JOB, 1 solo submit",
+    "actual": "GO#1=RESERVED_NEW GO#2=EXISTING_LIVE_JOB submits=1 same_job_id=True",
+    "exit": 0,
+    "evidence": "evidence/T07_sequential_duplicate.json",
+    "pass": true
+  },
+  {
+    "id": "T08",
+    "title": "concurrent duplicate (2 processi)",
+    "expected": "1 RESERVED_NEW + 1 EXISTING_LIVE_JOB, 1 submit totale",
+    "actual": "outcomes=['EXISTING_LIVE_JOB', 'RESERVED_NEW'] total_submits=1 pids=2 rows=1",
+    "exit": 0,
+    "evidence": "evidence/T08_concurrent_duplicate.json",
+    "pass": true
+  },
+  {
+    "id": "T09",
+    "title": "restart/resume",
+    "expected": "B: nessuna nuova reservation/submit, stesso job_id/provider_job_id, terminale persistito",
+    "actual": "A: RUNNING polls=1 submits=1 | B (nuovo pid): EXISTING_LIVE_JOB submits=0 same_job=True -> SUCCEEDED",
+    "exit": 0,
+    "evidence": "evidence/T09_restart_resume.json",
+    "pass": true
+  },
+  {
+    "id": "T10",
+    "title": "SUBMIT_UNKNOWN no resubmit",
+    "expected": "SUBMIT_UNKNOWN persistito; GO#2 reconciliation-required, 0 submit, budget non rilasciato",
+    "actual": "GO#1 -> SUBMIT_UNKNOWN (budget impegnato 30) | GO#2 -> EXISTING_LIVE_JOB/reconciliation-required submits=0 budget ancora 30",
+    "exit": 0,
+    "evidence": "evidence/T10_submit_unknown_no_resubmit.json",
+    "pass": true
+  },
+  {
+    "id": "T11",
+    "title": "provider mismatch",
+    "expected": "ProviderMismatch, 0 submit, reservation intatta",
+    "actual": "fake_a RUNNING | fake_b -> ProviderMismatch submits=0 reservation intatta=fake_a/RUNNING",
+    "exit": 0,
+    "evidence": "evidence/T11_provider_mismatch.json",
+    "pass": true
+  },
+  {
+    "id": "T12",
+    "title": "budget atomicity",
+    "expected": "envelope 100: 70+50 -> uno BudgetExceeded, impegnati <= 100",
+    "actual": "concorrente: ['BudgetExceeded', 'OK'] impegnati=50/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70",
+    "exit": 0,
+    "evidence": "evidence/T12_budget_atomicity.json",
+    "pass": true
+  },
+  {
+    "id": "T13",
+    "title": "invalid budget rejection",
+    "expected": "ReservationContractError, 0 submit, 0 righe",
+    "actual": "5 valori non ammessi -> ReservationContractError, 0 submit, 0 righe",
+    "exit": 0,
+    "evidence": "evidence/T13_invalid_budget_rejected.json",
+    "pass": true
+  },
+  {
+    "id": "T14",
+    "title": "fake mode blocks real provider",
+    "expected": "REAL_PROVIDER_DISABLED prima di credenziali/subprocess/rete/import Core",
+    "actual": "provider_mode=higgsfield -> REAL_PROVIDER_DISABLED violations=0 core_imported=False db_created=False",
+    "exit": 0,
+    "evidence": "evidence/T14_fake_mode_blocks_real_provider.json",
+    "pass": true
+  },
+  {
+    "id": "T15",
+    "title": "no credential read",
+    "expected": "0 violazioni in fake mode; controprova: sentinella rileva l'esca",
+    "actual": "fake go -> SUCCEEDED violations=0 | controprova: sentinella rileva ['credential_file_open', 'provider_subprocess', 'secret_env_read']",
+    "exit": 0,
+    "evidence": "evidence/T15_no_credential_read.json",
+    "pass": true
+  },
+  {
+    "id": "T16",
+    "title": "P2 hash unchanged",
+    "expected": "SHA256(hf_batch.py) before == after",
+    "actual": "BLOCKED: P2 hf_batch.py assente in questo ambiente (nessun hash calcolabile)",
+    "exit": 1,
+    "evidence": "evidence/T16_p2_hash.json",
+    "pass": false
+  },
+  {
+    "id": "T17",
+    "title": "Core canonical unchanged",
+    "expected": "HEAD == 819e7cf, main, working tree pulito",
+    "actual": "HEAD=819e7cfedb0f branch=main dirty_files=0",
+    "exit": 0,
+    "evidence": "evidence/T17_core_canonical_unchanged.json",
+    "pass": true
+  },
+  {
+    "id": "T18",
+    "title": "durable terminal persistence",
+    "expected": "SUCCEEDED riletto da nuovo processo; nuovo tentativo dopo terminale",
+    "actual": "SUCCEEDED letto da nuovo processo; nuovo GO dopo terminale = nuovo tentativo (2 righe storiche, 0 impegnato)",
+    "exit": 0,
+    "evidence": "evidence/T18_durable_terminal.json",
+    "pass": true
+  },
+  {
+    "id": "T19",
+    "title": "static: no duplicate control system (AST)",
+    "expected": "0 findings; import dal Core = 4 attesi",
+    "actual": "findings=0 core_imports=4",
+    "exit": 0,
+    "evidence": "evidence/T19_static_no_duplicate_control.json",
+    "pass": true
+  }
+]

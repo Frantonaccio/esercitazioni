@@ -1,0 +1,98 @@
+{
+  "go": {
+    "core_imported": true,
+    "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "job_id": "res_26e1a616f7633f1d_1",
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "persisted": {
+      "cost_credits": 4.0,
+      "error": null,
+      "job_id": "res_26e1a616f7633f1d_1",
+      "polls": 1,
+      "provider": "fake",
+      "provider_job_id": "pv_26e1a616",
+      "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+      "state": "SUCCEEDED",
+      "submitted_at": 1789564700.7411244,
+      "terminal_by": 1789565000.7411244,
+      "webhook_hints": 0
+    },
+    "pid": 2117,
+    "provider": "fake",
+    "provider_job_id": "pv_26e1a616",
+    "reservation_outcome": "RESERVED_NEW",
+    "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+    "state": "SUCCEEDED",
+    "submits": 1
+  },
+  "go_after_terminal": {
+    "core_imported": true,
+    "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "job_id": "res_26e1a616f7633f1d_2",
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "persisted": {
+      "cost_credits": 4.0,
+      "error": null,
+      "job_id": "res_26e1a616f7633f1d_2",
+      "polls": 1,
+      "provider": "fake",
+      "provider_job_id": "pv_26e1a616",
+      "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+      "state": "SUCCEEDED",
+      "submitted_at": 1789564700.86868,
+      "terminal_by": 1789565000.86868,
+      "webhook_hints": 0
+    },
+    "pid": 2122,
+    "provider": "fake",
+    "provider_job_id": "pv_26e1a616",
+    "reservation_outcome": "RESERVED_NEW",
+    "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+    "state": "SUCCEEDED",
+    "submits": 1
+  },
+  "history": {
+    "pid": 2125,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": 4.0,
+        "job_id": "res_26e1a616f7633f1d_1",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_26e1a616",
+        "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+        "state": "SUCCEEDED"
+      },
+      {
+        "budget_units": 0,
+        "cost_credits": 4.0,
+        "job_id": "res_26e1a616f7633f1d_2",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_26e1a616",
+        "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+        "state": "SUCCEEDED"
+      }
+    ]
+  },
+  "read_new_process": {
+    "pid": 2120,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": 4.0,
+        "job_id": "res_26e1a616f7633f1d_1",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_26e1a616",
+        "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+        "state": "SUCCEEDED"
+      }
+    ]
+  }
+}

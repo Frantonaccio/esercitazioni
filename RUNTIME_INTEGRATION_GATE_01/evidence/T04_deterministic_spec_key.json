@@ -1,0 +1,20 @@
+{
+  "run_A": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1",
+  "run_B": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1",
+  "run_C_reordered": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1",
+  "run_other_process": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1",
+  "spec": {
+    "expected_cost_credits": null,
+    "kind": "image",
+    "model": "fake_model_v1",
+    "params": {
+      "aspect_ratio": "9:16",
+      "duration_s": 5
+    },
+    "project_id": "GATE01_LAB",
+    "prompt": "deterministico",
+    "refs": [
+      "ref_element_001"
+    ]
+  }
+}

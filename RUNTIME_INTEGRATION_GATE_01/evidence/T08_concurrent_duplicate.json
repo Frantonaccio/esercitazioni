@@ -1,0 +1,74 @@
+{
+  "processes": [
+    {
+      "core_imported": true,
+      "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+      "job_id": "res_6968d4436fef21d3_1",
+      "ok": true,
+      "outcome": "RUNNING",
+      "persisted": {
+        "cost_credits": null,
+        "error": null,
+        "job_id": "res_6968d4436fef21d3_1",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_6968d443",
+        "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+        "state": "RUNNING",
+        "submitted_at": 1789564698.8981993,
+        "terminal_by": 1789564998.8981993,
+        "webhook_hints": 0
+      },
+      "pid": 2037,
+      "provider": "fake",
+      "provider_job_id": "pv_6968d443",
+      "reservation_outcome": "RESERVED_NEW",
+      "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+      "state": "RUNNING",
+      "submits": 1
+    },
+    {
+      "core_imported": true,
+      "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+      "job_id": "res_6968d4436fef21d3_1",
+      "ok": true,
+      "outcome": "EXISTING_LIVE_JOB",
+      "persisted": {
+        "cost_credits": null,
+        "error": null,
+        "job_id": "res_6968d4436fef21d3_1",
+        "polls": 2,
+        "provider": "fake",
+        "provider_job_id": "pv_6968d443",
+        "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+        "state": "RUNNING",
+        "submitted_at": 1789564698.8981993,
+        "terminal_by": 1789564998.8981993,
+        "webhook_hints": 0
+      },
+      "pid": 2038,
+      "provider": "fake",
+      "provider_job_id": "pv_6968d443",
+      "reservation_outcome": "EXISTING_LIVE_JOB",
+      "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+      "state": "RUNNING",
+      "submits": 0
+    }
+  ],
+  "state": {
+    "pid": 2043,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": null,
+        "job_id": "res_6968d4436fef21d3_1",
+        "polls": 2,
+        "provider": "fake",
+        "provider_job_id": "pv_6968d443",
+        "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+        "state": "RUNNING"
+      }
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+From 6b0eae802733ac15d6ff09d987e5bbdea13fd8d2 Mon Sep 17 00:00:00 2001
+From: Francesco Antonaccio <antonacciofrancesco@gmail.com>
+Date: Wed, 16 Sep 2026 13:12:07 +0000
+Subject: [PATCH] chore(transport): annotate run_job store as ReservationStore
+
+run_job only uses the atomic reservation contract (reserve_or_get_live,
+mark_submitted, mark_submit_unknown, put, expire). The annotation still
+named the in-memory reference class JobStore, which understates the real
+contract and hides that any ReservationStore implementation (including
+the durable SqliteReservationStore) is the intended argument.
+
+Type annotation and import only. No behavioural change.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01NDCxcR4FaGn3nfA77yDS6a
+---
+ transport/pipeline.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/transport/pipeline.py b/transport/pipeline.py
+index ea76dfd..e0f6ab1 100644
+--- a/transport/pipeline.py
++++ b/transport/pipeline.py
+@@ -14,7 +14,8 @@ import time
+ from dataclasses import dataclass
+ 
+ from adapters.base import (GeneratedAsset, GenerationAdapter, GenSpec, Job,
+-                             JobState, JobStore, ProviderMismatch, ReservationOutcome)
++                             JobState, ProviderMismatch, ReservationOutcome,
++                             ReservationStore)
+ from registry.contracts import Event, InMemoryRegistry, RegistryBinding
+ from transport.hashing import IntegrityError, StreamResult, pump, verify_three_ways
+ from transport.storage import PutResult, StoragePort, content_path
+@@ -36,7 +37,7 @@ class IngestResult:
+     operation: str
+ 
+ 
+-def run_job(adapter: GenerationAdapter, spec: GenSpec, store: JobStore, *,
++def run_job(adapter: GenerationAdapter, spec: GenSpec, store: ReservationStore, *,
+             clock=time.time, max_polls: int = 20, sleep=lambda s: None,
+             budget_units: int = 0, envelope_units: int | None = None) -> Job:
+     """RESERVE -> SUBMIT -> POLL -> TERMINAL.
+-- 
+2.43.0
+

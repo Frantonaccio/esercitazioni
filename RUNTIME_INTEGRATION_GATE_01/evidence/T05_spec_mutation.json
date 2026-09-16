@@ -1,0 +1,18 @@
+{
+  "accidental_inputs": {
+    "epoch_in_prompt": "REJECTED: prompt: valore che sembra un timestamp o un path temporaneo: 'base 1758000000'",
+    "iso_datetime": "REJECTED: params.note: valore che sembra un timestamp o un path temporaneo: '2026-09-16T12:00:00'",
+    "pid_key": "REJECTED: params.pid: chiave accidentale non ammessa nella spec",
+    "timestamp_key": "REJECTED: params.timestamp: chiave accidentale non ammessa nella spec",
+    "tmpdir_value": "REJECTED: params.out: valore che sembra un timestamp o un path temporaneo: '/tmp/tmpab12cd/x.png'"
+  },
+  "base": "a6f66b970adfdb86cb0f54c2716dfa5fb9c3145526e02c5027b792979ea2c2cf",
+  "mutations": {
+    "kind": "f2452a1761749af769b0cebabd1e012ef80574163b3cd9eb5816bf72e7d2d2fd",
+    "model": "4e707d7d10d89cc2b7b825a292a8f0d9423d6c6a725ba9c26d59ecd469984c21",
+    "param": "b535a3952fc500626b8ec14e9a5029bd3515d7c52e7f3b5cd672abf3a12ff9a4",
+    "project_id": "e8324bf2108a6fda4f07253df9a478a00a34e4ff3a1431f446cf8de7df1a05c8",
+    "prompt": "42ab2f57ef6cf91ec3c3ba49f2983fd79ecdda6e830e0b9d9763bf920d3034ea",
+    "ref": "8bfdf6a0af07c7a6eeea794b09ec33f72e064b3f6abe57871f7be90075458157"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "P2_HF_BATCH_PATH": null,
+  "reason": "hf_batch.py (P2) non disponibile in questo ambiente: nessun file da hashare. Baseline storica nota solo come prefix 637f3a80… (non verificabile).",
+  "status": "BLOCKED"
+}

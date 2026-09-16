@@ -1,0 +1,17 @@
+{
+  "core_imports": [
+    "adapters.base.GenSpec",
+    "adapters.fake.FakeAdapter",
+    "registry.reservations.SqliteReservationStore",
+    "transport.pipeline.run_job"
+  ],
+  "files": [
+    "__init__.py",
+    "core_pin.py",
+    "genspec_bridge.py",
+    "go_candidate.py",
+    "provider_gate.py"
+  ],
+  "findings": [],
+  "ok": true
+}

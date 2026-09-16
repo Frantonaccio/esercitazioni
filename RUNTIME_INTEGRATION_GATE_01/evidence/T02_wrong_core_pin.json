@@ -1,0 +1,8 @@
+{
+  "core_imported": false,
+  "error": "CORE_PIN_MISMATCH",
+  "observed": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+  "ok": false,
+  "pid": 2018,
+  "required": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
+}

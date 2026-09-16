@@ -1,0 +1,65 @@
+{
+  "go1": {
+    "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "job_id": "res_6e95ea1d3f841e65_1",
+    "persisted": {
+      "cost_credits": null,
+      "error": null,
+      "job_id": "res_6e95ea1d3f841e65_1",
+      "polls": 1,
+      "provider": "fake",
+      "provider_job_id": "pv_6e95ea1d",
+      "spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+      "state": "RUNNING",
+      "submitted_at": 1789564698.756597,
+      "terminal_by": 1789564998.756597,
+      "webhook_hints": 0
+    },
+    "provider": "fake",
+    "provider_job_id": "pv_6e95ea1d",
+    "reservation_outcome": "RESERVED_NEW",
+    "spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+    "state": "RUNNING",
+    "store_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/t07.db"
+  },
+  "go2": {
+    "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "job_id": "res_6e95ea1d3f841e65_1",
+    "persisted": {
+      "cost_credits": null,
+      "error": null,
+      "job_id": "res_6e95ea1d3f841e65_1",
+      "polls": 2,
+      "provider": "fake",
+      "provider_job_id": "pv_6e95ea1d",
+      "spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+      "state": "RUNNING",
+      "submitted_at": 1789564698.756597,
+      "terminal_by": 1789564998.756597,
+      "webhook_hints": 0
+    },
+    "provider": "fake",
+    "provider_job_id": "pv_6e95ea1d",
+    "reservation_outcome": "EXISTING_LIVE_JOB",
+    "spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+    "state": "RUNNING",
+    "store_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/t07.db"
+  },
+  "state": {
+    "pid": 2035,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": null,
+        "job_id": "res_6e95ea1d3f841e65_1",
+        "polls": 2,
+        "provider": "fake",
+        "provider_job_id": "pv_6e95ea1d",
+        "spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+        "state": "RUNNING"
+      }
+    ]
+  },
+  "submits": 1
+}

@@ -1,0 +1,70 @@
+{
+  "after_go1": {
+    "pid": 2058,
+    "reserved_units": 30,
+    "rows": [
+      {
+        "budget_units": 30,
+        "cost_credits": null,
+        "job_id": "res_8e57ea78b131d60e_1",
+        "polls": 0,
+        "provider": "",
+        "provider_job_id": null,
+        "spec_key": "8e57ea78b131d60ef8c7cf9009103b9aa1d72a2de31b3b6f756a616fb0c79bea",
+        "state": "SUBMIT_UNKNOWN"
+      }
+    ]
+  },
+  "after_go2": {
+    "pid": 2063,
+    "reserved_units": 30,
+    "rows": [
+      {
+        "budget_units": 30,
+        "cost_credits": null,
+        "job_id": "res_8e57ea78b131d60e_1",
+        "polls": 0,
+        "provider": "",
+        "provider_job_id": null,
+        "spec_key": "8e57ea78b131d60ef8c7cf9009103b9aa1d72a2de31b3b6f756a616fb0c79bea",
+        "state": "SUBMIT_UNKNOWN"
+      }
+    ]
+  },
+  "go1": {
+    "core_imported": true,
+    "error": "ConnectionResetError",
+    "message": "risposta del provider persa dopo l'invio",
+    "ok": false,
+    "pid": 2055,
+    "submits": 1,
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 78, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 115, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 83, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\nConnectionResetError: risposta del provider persa dopo l'invio\n"
+  },
+  "go2": {
+    "core_imported": true,
+    "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "job_id": "res_8e57ea78b131d60e_1",
+    "ok": true,
+    "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
+    "persisted": {
+      "cost_credits": null,
+      "error": null,
+      "job_id": "res_8e57ea78b131d60e_1",
+      "polls": 0,
+      "provider": "",
+      "provider_job_id": null,
+      "spec_key": "8e57ea78b131d60ef8c7cf9009103b9aa1d72a2de31b3b6f756a616fb0c79bea",
+      "state": "SUBMIT_UNKNOWN",
+      "submitted_at": 1789564699.299596,
+      "terminal_by": 0.0,
+      "webhook_hints": 0
+    },
+    "pid": 2060,
+    "provider": "",
+    "provider_job_id": null,
+    "reservation_outcome": "EXISTING_LIVE_JOB",
+    "spec_key": "8e57ea78b131d60ef8c7cf9009103b9aa1d72a2de31b3b6f756a616fb0c79bea",
+    "state": "SUBMIT_UNKNOWN",
+    "submits": 0
+  }
+}

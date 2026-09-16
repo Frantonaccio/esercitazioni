@@ -1,0 +1,506 @@
+#!/usr/bin/env python3
+"""RUNTIME INTEGRATION GATE 01 — matrice T01..T19.
+
+MOCK ONLY · ZERO HIGGSFIELD · ZERO CREDITS · NO PRODUCTION.
+
+Ogni test scrive la propria evidenza in evidence/Txx_*.json e una riga in
+TEST_RESULTS.md con EXPECTED / ACTUAL / EXIT / EVIDENCE / PASS-FAIL.
+I test che richiedono processi reali usano multiprocessing 'spawn' (nuovo
+interprete): la memoria Python del padre non e' condivisa.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import multiprocessing
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import traceback
+
+GATE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, GATE_ROOT)
+
+from runtime.core_pin import KNOWN_STALE_CORE_SHAS, REQUIRED_CORE_SHA, verify_core_pin  # noqa: E402
+from runtime.genspec_bridge import GenSpecBridgeError, GoInputs, build_genspec        # noqa: E402
+from tests import static_checks, worker                                               # noqa: E402
+
+CORE_PATH = os.environ.get("CREATIVE_OS_CORE_PATH", "/home/user/creative-os")
+STATE_DIR = os.path.join(GATE_ROOT, "state")
+EVIDENCE_DIR = os.path.join(GATE_ROOT, "evidence")
+P2_HF_BATCH = os.environ.get("P2_HF_BATCH_PATH", "")          # non disponibile in questo ambiente
+STALE_SHA = sorted(KNOWN_STALE_CORE_SHAS)[0]
+CTX = multiprocessing.get_context("spawn")
+
+RESULTS: list[dict] = []
+
+
+# --------------------------------------------------------------- utilita'
+def db_for(test_id: str) -> str:
+    p = os.path.join(STATE_DIR, f"{test_id.lower()}.db")
+    for suffix in ("", "-journal", "-wal", "-shm"):
+        if os.path.exists(p + suffix):
+            os.remove(p + suffix)
+    return p
+
+
+def evidence(test_id: str, name: str, payload: dict) -> str:
+    path = os.path.join(EVIDENCE_DIR, f"{test_id}_{name}.json")
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=2, ensure_ascii=False, sort_keys=True, default=str)
+    return os.path.relpath(path, GATE_ROOT)
+
+
+def in_process(fn, *args, **kwargs) -> dict:
+    """Nuovo interprete, esito via Queue. E' 'processo reale', non thread."""
+    q = CTX.Queue()
+    p = CTX.Process(target=worker._entry, args=(q, fn, args, kwargs))
+    p.start()
+    p.join(120)
+    if p.is_alive():
+        p.terminate()
+        return {"ok": False, "error": "TIMEOUT_PROCESS"}
+    return q.get(timeout=10)
+
+
+def concurrent(fns_args: list[tuple]) -> list[dict]:
+    """N processi reali, sincronizzati da una Barrier: partono insieme."""
+    barrier = CTX.Barrier(len(fns_args))
+    q = CTX.Queue()
+    ps = []
+    for fn, args, kwargs in fns_args:
+        kwargs = dict(kwargs, barrier=barrier)
+        p = CTX.Process(target=worker._entry, args=(q, fn, args, kwargs))
+        p.start()
+        ps.append(p)
+    for p in ps:
+        p.join(120)
+    return [q.get(timeout=10) for _ in ps]
+
+
+def git(*args, cwd=CORE_PATH) -> str:
+    return subprocess.run(["git", "-C", cwd, *args], capture_output=True, text=True,
+                          check=True).stdout.strip()
+
+
+def sha256_file(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def record(test_id: str, title: str, expected: str, fn):
+    try:
+        actual, ev, ok = fn()
+        exit_code = 0 if ok else 1
+    except Exception as e:                                          # noqa: BLE001
+        actual, ok, exit_code = f"EXCEPTION {type(e).__name__}: {e}", False, 2
+        ev = evidence(test_id, "exception", {"trace": traceback.format_exc()})
+    RESULTS.append({"id": test_id, "title": title, "expected": expected, "actual": actual,
+                    "exit": exit_code, "evidence": ev, "pass": ok})
+    mark = "\033[32mPASS\033[0m" if ok else "\033[31mFAIL\033[0m"
+    print(f"  {test_id} {mark}  {title}\n       \033[2m{actual}\033[0m")
+
+
+# ---------------------------------------------------------------- T01-T03
+def t01():
+    r = in_process(worker.run_go, db_for("T01"), "pin ok", max_polls=3)
+    pure = verify_core_pin(REQUIRED_CORE_SHA).code
+    ok = (r.get("ok") is True and r.get("core_sha") == REQUIRED_CORE_SHA
+          and r.get("state") == "SUCCEEDED" and pure == "CORE_PIN_OK")
+    ev = evidence("T01", "correct_core_pin", {"go": r, "pure_verdict": pure})
+    return f"core_sha={str(r.get('core_sha'))[:12]} verdict={pure} state={r.get('state')}", ev, ok
+
+
+def t02():
+    wrong = "deadbeef" * 5
+    r = in_process(worker.pin_probe_clean, CORE_PATH, wrong, db_for("T02"))
+    ok = (r.get("error") == "CORE_PIN_MISMATCH" and r.get("core_imported") is False
+          and not os.path.exists(db_for("T02")))
+    ev = evidence("T02", "wrong_core_pin", r)
+    return f"error={r.get('error')} core_imported={r.get('core_imported')}", ev, ok
+
+
+def t03(stale_core_path: str):
+    observed = git("rev-parse", "HEAD", cwd=stale_core_path)
+    r = in_process(worker.pin_probe_clean, stale_core_path, None, db_for("T03"))
+    pure = verify_core_pin(STALE_SHA).code
+    ok = (r.get("error") == "STALE_CORE_PIN" and r.get("observed") == STALE_SHA
+          and r.get("core_imported") is False and observed == STALE_SHA
+          and pure == "STALE_CORE_PIN")
+    ev = evidence("T03", "stale_core_pin", {"stale_checkout": stale_core_path,
+                                             "checkout_head": observed, "probe": r,
+                                             "pure_verdict": pure})
+    return f"error={r.get('error')} observed={str(r.get('observed'))[:7]} core_imported={r.get('core_imported')}", ev, ok
+
+
+# ---------------------------------------------------------------- T04-T05
+def _genspec_cls():
+    if CORE_PATH not in sys.path:
+        sys.path.insert(0, CORE_PATH)
+    from adapters.base import GenSpec
+    return GenSpec
+
+
+def t04():
+    G = _genspec_cls()
+    a = build_genspec(worker.make_inputs("deterministico"), G)
+    b = build_genspec(worker.make_inputs("deterministico"), G)
+    # stessa spec con params in ordine diverso e refs come lista: stessa chiave
+    c = build_genspec(GoInputs(kind="image", model="fake_model_v1", prompt="deterministico",
+                               params={"duration_s": 5, "aspect_ratio": "9:16"},
+                               refs=["ref_element_001"], project_id="GATE01_LAB"), G)
+    rb = in_process(worker.run_go, db_for("T04"), "deterministico", max_polls=1)
+    ok = a.spec_key == b.spec_key == c.spec_key == rb.get("spec_key")
+    ev = evidence("T04", "deterministic_spec_key", {
+        "run_A": a.spec_key, "run_B": b.spec_key, "run_C_reordered": c.spec_key,
+        "run_other_process": rb.get("spec_key"), "spec": a.__dict__})
+    return f"A==B==C==other_process: {ok} ({a.spec_key[:16]}…)", ev, ok
+
+
+def t05():
+    G = _genspec_cls()
+    base = build_genspec(worker.make_inputs("base"), G).spec_key
+    muts = {
+        "prompt": worker.make_inputs("base MODIFICATO"),
+        "model": worker.make_inputs("base", model="fake_model_v2"),
+        "ref": worker.make_inputs("base", refs=("ref_element_002",)),
+        "param": worker.make_inputs("base", params={"aspect_ratio": "16:9", "duration_s": 5}),
+        "project_id": worker.make_inputs("base", project_id="ALTRO"),
+        "kind": worker.make_inputs("base", kind="video"),
+    }
+    keys = {k: build_genspec(v, G).spec_key for k, v in muts.items()}
+    all_diff = all(v != base for v in keys.values()) and len(set(keys.values())) == len(keys)
+    rejected = {}
+    for label, inp in {
+        "timestamp_key": worker.make_inputs("base", params={"timestamp": 1758000000}),
+        "pid_key": worker.make_inputs("base", params={"pid": 4242}),
+        "tmpdir_value": worker.make_inputs("base", params={"out": "/tmp/tmpab12cd/x.png"}),
+        "epoch_in_prompt": worker.make_inputs("base 1758000000"),
+        "iso_datetime": worker.make_inputs("base", params={"note": "2026-09-16T12:00:00"}),
+    }.items():
+        try:
+            build_genspec(inp, G)
+            rejected[label] = "ACCEPTED (errore)"
+        except GenSpecBridgeError as e:
+            rejected[label] = f"REJECTED: {e}"
+    all_rejected = all(v.startswith("REJECTED") for v in rejected.values())
+    ok = all_diff and all_rejected
+    ev = evidence("T05", "spec_mutation", {"base": base, "mutations": keys,
+                                            "accidental_inputs": rejected})
+    return f"6 mutazioni semantiche -> 6 chiavi diverse: {all_diff}; 5 input accidentali rifiutati: {all_rejected}", ev, ok
+
+
+# ---------------------------------------------------------------- T06
+def t06():
+    db = db_for("T06")
+    r = in_process(worker.run_go, db, "happy path", adapter_kw={"latency_polls": 2},
+                   max_polls=5, budget_units=10, envelope_units=100)
+    # process/restart simulation: nuovo interprete, nuova istanza di store
+    s = in_process(worker.read_state, db, CORE_PATH)
+    rows = s.get("rows", [])
+    ok = (r.get("ok") and r.get("reservation_outcome") == "RESERVED_NEW"
+          and r.get("state") == "SUCCEEDED" and r.get("submits") == 1
+          and r.get("provider") == "fake" and r.get("provider_job_id")
+          and len(rows) == 1 and rows[0]["state"] == "SUCCEEDED"
+          and rows[0]["job_id"] == r.get("job_id") and rows[0]["spec_key"] == r.get("spec_key")
+          and s.get("reserved_units") == 0)
+    # hash dell'output fake (§21): nessun byte reale, ma la catena di hash e' in piedi
+    if CORE_PATH not in sys.path:
+        sys.path.insert(0, CORE_PATH)
+    from adapters.fake import FakeAdapter
+    fa = FakeAdapter()
+    fake_payload_sha = hashlib.sha256(fa.payload).hexdigest()
+    ev = evidence("T06", "happy_path", {"go": r, "restart_read": s,
+                                         "fake_output_sha256": fake_payload_sha,
+                                         "core_sha": r.get("core_sha")})
+    return (f"state={r.get('state')} submits={r.get('submits')} provider={r.get('provider')} "
+            f"restart_read={rows[0]['state'] if rows else None} reserved_after=0"), ev, ok
+
+
+# ---------------------------------------------------------------- T07
+def t07():
+    """Stessa spec mentre il job e' LIVE: stesso processo, stesso adapter, due GO."""
+    db = db_for("T07")
+    if CORE_PATH not in sys.path:
+        sys.path.insert(0, CORE_PATH)
+    from adapters.fake import FakeAdapter
+    from runtime.go_candidate import go
+    a = FakeAdapter(never_terminal=True)
+    inp = worker.make_inputs("sequenziale")
+    r1 = go(inp, adapter=a, provider_mode="fake", store_path=db, max_polls=1)
+    r2 = go(inp, adapter=a, provider_mode="fake", store_path=db, max_polls=1)
+    s = in_process(worker.read_state, db, CORE_PATH)
+    ok = (r1.reservation_outcome == "RESERVED_NEW" and r2.reservation_outcome == "EXISTING_LIVE_JOB"
+          and r2.outcome == "EXISTING_LIVE_JOB" and a.submits == 1
+          and r1.job_id == r2.job_id and r1.provider_job_id == r2.provider_job_id
+          and len(s.get("rows", [])) == 1)
+    ev = evidence("T07", "sequential_duplicate", {"go1": r1.__dict__, "go2": r2.__dict__,
+                                                   "submits": a.submits, "state": s})
+    return f"GO#1={r1.reservation_outcome} GO#2={r2.outcome} submits={a.submits} same_job_id={r1.job_id == r2.job_id}", ev, ok
+
+
+# ---------------------------------------------------------------- T08
+def t08():
+    db = db_for("T08")
+    outs = concurrent([
+        (worker.run_go, (db, "concorrente"), dict(adapter_kw={"never_terminal": True}, max_polls=1)),
+        (worker.run_go, (db, "concorrente"), dict(adapter_kw={"never_terminal": True}, max_polls=1)),
+    ])
+    s = in_process(worker.read_state, db, CORE_PATH)
+    outcomes = sorted(o.get("reservation_outcome", o.get("error", "?")) for o in outs)
+    submits = sum(o.get("submits") or 0 for o in outs)
+    pids = {o.get("pid") for o in outs}
+    rows = s.get("rows", [])
+    ok = (outcomes == ["EXISTING_LIVE_JOB", "RESERVED_NEW"] and submits == 1
+          and len(pids) == 2 and len(rows) == 1 and rows[0]["provider_job_id"]
+          and len({o.get("job_id") for o in outs}) == 1)
+    ev = evidence("T08", "concurrent_duplicate", {"processes": outs, "state": s})
+    return f"outcomes={outcomes} total_submits={submits} pids={len(pids)} rows={len(rows)}", ev, ok
+
+
+# ---------------------------------------------------------------- T09
+def t09():
+    db = db_for("T09")
+    a = in_process(worker.run_go, db, "restart", adapter_kw={"latency_polls": 3}, max_polls=1)
+    mid = in_process(worker.read_state, db, CORE_PATH)
+    b = in_process(worker.run_go, db, "restart", adapter_kw={"latency_polls": 3}, max_polls=5)
+    end = in_process(worker.read_state, db, CORE_PATH)
+    ok = (a.get("state") == "RUNNING" and a.get("submits") == 1 and a.get("reservation_outcome") == "RESERVED_NEW"
+          and mid["rows"][0]["state"] == "RUNNING" and mid["rows"][0]["polls"] == 1
+          and b.get("reservation_outcome") == "EXISTING_LIVE_JOB" and b.get("submits") == 0
+          and b.get("job_id") == a.get("job_id") and b.get("provider_job_id") == a.get("provider_job_id")
+          and b.get("state") == "SUCCEEDED" and end["rows"][0]["state"] == "SUCCEEDED"
+          and end["rows"][0]["polls"] == 3 and len(end["rows"]) == 1
+          and a.get("pid") != b.get("pid"))
+    ev = evidence("T09", "restart_resume", {"process_A": a, "after_A": mid,
+                                             "process_B": b, "after_B": end})
+    return (f"A: {a.get('state')} polls=1 submits=1 | B (nuovo pid): {b.get('reservation_outcome')} "
+            f"submits={b.get('submits')} same_job={a.get('job_id') == b.get('job_id')} -> {b.get('state')}"), ev, ok
+
+
+# ---------------------------------------------------------------- T10
+def t10():
+    db = db_for("T10")
+    r1 = in_process(worker.run_go, db, "submit unknown", adapter_kind="submit_unknown",
+                    budget_units=30, envelope_units=100)
+    mid = in_process(worker.read_state, db, CORE_PATH)
+    r2 = in_process(worker.run_go, db, "submit unknown", max_polls=3,
+                    budget_units=30, envelope_units=100)
+    end = in_process(worker.read_state, db, CORE_PATH)
+    ok = (r1.get("error") == "ConnectionResetError" and r1.get("submits") == 1
+          and mid["rows"][0]["state"] == "SUBMIT_UNKNOWN" and mid["reserved_units"] == 30
+          and r2.get("reservation_outcome") == "EXISTING_LIVE_JOB"
+          and r2.get("outcome") == "EXISTING_LIVE_JOB/reconciliation-required"
+          and r2.get("submits") == 0 and r2.get("state") == "SUBMIT_UNKNOWN"
+          and end["reserved_units"] == 30 and len(end["rows"]) == 1
+          and end["rows"][0]["job_id"] == mid["rows"][0]["job_id"])
+    ev = evidence("T10", "submit_unknown_no_resubmit", {"go1": r1, "after_go1": mid,
+                                                         "go2": r2, "after_go2": end})
+    return (f"GO#1 -> {mid['rows'][0]['state']} (budget impegnato {mid['reserved_units']}) | "
+            f"GO#2 -> {r2.get('outcome')} submits={r2.get('submits')} budget ancora {end['reserved_units']}"), ev, ok
+
+
+# ---------------------------------------------------------------- T11
+def t11():
+    db = db_for("T11")
+    ra = in_process(worker.run_go, db, "mismatch", adapter_kind="fake_a",
+                    adapter_kw={"never_terminal": True}, max_polls=1)
+    rb = in_process(worker.run_go, db, "mismatch", adapter_kind="fake_b",
+                    adapter_kw={"never_terminal": True}, max_polls=1)
+    end = in_process(worker.read_state, db, CORE_PATH)
+    ok = (ra.get("provider") == "fake_a" and ra.get("state") == "RUNNING"
+          and rb.get("error") == "ProviderMismatch" and rb.get("submits") == 0
+          and len(end["rows"]) == 1 and end["rows"][0]["provider"] == "fake_a"
+          and end["rows"][0]["state"] == "RUNNING")
+    ev = evidence("T11", "provider_mismatch", {"go_fake_a": ra, "go_fake_b": rb, "state": end})
+    return f"fake_a RUNNING | fake_b -> {rb.get('error')} submits={rb.get('submits')} reservation intatta={end['rows'][0]['provider']}/{end['rows'][0]['state']}", ev, ok
+
+
+# ---------------------------------------------------------------- T12
+def t12():
+    db = db_for("T12")
+    outs = concurrent([
+        (worker.run_go, (db, "budget A"), dict(adapter_kw={"never_terminal": True}, max_polls=1,
+                                               budget_units=70, envelope_units=100)),
+        (worker.run_go, (db, "budget B"), dict(adapter_kw={"never_terminal": True}, max_polls=1,
+                                               budget_units=50, envelope_units=100)),
+    ])
+    end = in_process(worker.read_state, db, CORE_PATH)
+    errors = sorted(o.get("error", "OK") for o in outs)
+    reserved = end["reserved_units"]
+    ok = (errors.count("BudgetExceeded") == 1 and errors.count("OK") == 1
+          and reserved <= 100 and reserved in (50, 70) and len(end["rows"]) == 1)
+    # variante sequenziale deterministica
+    db2 = db_for("T12b")
+    s1 = in_process(worker.run_go, db2, "budget A", adapter_kw={"never_terminal": True},
+                    max_polls=1, budget_units=70, envelope_units=100)
+    s2 = in_process(worker.run_go, db2, "budget B", adapter_kw={"never_terminal": True},
+                    max_polls=1, budget_units=50, envelope_units=100)
+    end2 = in_process(worker.read_state, db2, CORE_PATH)
+    ok = ok and s1.get("ok") and s2.get("error") == "BudgetExceeded" and end2["reserved_units"] == 70
+    ev = evidence("T12", "budget_atomicity", {"concurrent": outs, "concurrent_state": end,
+                                               "sequential": [s1, s2], "sequential_state": end2})
+    return f"concorrente: {errors} impegnati={reserved}/100 | sequenziale: A ok, B={s2.get('error')} impegnati={end2['reserved_units']}", ev, ok
+
+
+# ---------------------------------------------------------------- T13
+def t13():
+    db = db_for("T13")
+    cases = {}
+    for label, units in (("negative", -1), ("bool", True), ("float", 1.5), ("str", "10")):
+        cases[label] = in_process(worker.run_go, db, f"invalid {label}", budget_units=units,
+                                  envelope_units=100)
+    neg_env = in_process(worker.run_go, db, "invalid env", budget_units=1, envelope_units=-5)
+    cases["negative_envelope"] = neg_env
+    end = in_process(worker.read_state, db, CORE_PATH)
+    ok = (all(c.get("error") == "ReservationContractError" and c.get("submits") == 0
+              for c in cases.values()) and end["rows"] == [])
+    ev = evidence("T13", "invalid_budget_rejected", {"cases": cases, "state": end})
+    return f"{len(cases)} valori non ammessi -> ReservationContractError, 0 submit, 0 righe", ev, ok
+
+
+# ---------------------------------------------------------------- T14-T15
+def t14(canary_home: str):
+    db = db_for("T14")
+    r = in_process(worker.sentinel_run, "real", db, canary_home, CORE_PATH)
+    g = r.get("go", {})
+    ok = (g.get("error") == "REAL_PROVIDER_DISABLED" and r.get("violations") == []
+          and r.get("core_imported") is False and not os.path.exists(db))
+    ev = evidence("T14", "fake_mode_blocks_real_provider", r)
+    return f"provider_mode=higgsfield -> {g.get('error')} violations={len(r.get('violations', []))} core_imported={r.get('core_imported')} db_created={os.path.exists(db)}", ev, ok
+
+
+def t15(canary_home: str):
+    db = db_for("T15")
+    r = in_process(worker.sentinel_run, "fake", db, canary_home, CORE_PATH)
+    cp = in_process(worker.sentinel_run, "counterproof", db_for("T15cp"), canary_home, CORE_PATH)
+    g = r.get("go", {})
+    kinds = sorted({v["kind"] for v in cp.get("violations", [])})
+    ok = (g.get("state") == "SUCCEEDED" and r.get("violations") == []
+          and {"credential_file_open", "secret_env_read"} <= set(kinds))
+    ev = evidence("T15", "no_credential_read", {"fake_run": r, "counterproof": cp})
+    return f"fake go -> {g.get('state')} violations=0 | controprova: sentinella rileva {kinds}", ev, ok
+
+
+# ---------------------------------------------------------------- T16-T17
+def t16():
+    if not P2_HF_BATCH or not os.path.exists(P2_HF_BATCH):
+        ev = evidence("T16", "p2_hash", {"status": "BLOCKED", "reason":
+                      "hf_batch.py (P2) non disponibile in questo ambiente: nessun file da "
+                      "hashare. Baseline storica nota solo come prefix 637f3a80… (non verificabile).",
+                      "P2_HF_BATCH_PATH": P2_HF_BATCH or None})
+        return "BLOCKED: P2 hf_batch.py assente in questo ambiente (nessun hash calcolabile)", ev, False
+    before = json.load(open(os.path.join(EVIDENCE_DIR, "T16_p2_baseline.json")))["sha256"]
+    after = sha256_file(P2_HF_BATCH)
+    ev = evidence("T16", "p2_hash", {"before": before, "after": after})
+    return f"before={before[:12]} after={after[:12]}", ev, before == after
+
+
+def t17():
+    head = git("rev-parse", "HEAD")
+    status = git("status", "--porcelain")
+    branch = git("rev-parse", "--abbrev-ref", "HEAD")
+    ok = head == REQUIRED_CORE_SHA and status == "" and branch == "main"
+    ev = evidence("T17", "core_canonical_unchanged", {"head": head, "branch": branch,
+                                                        "status_porcelain": status})
+    return f"HEAD={head[:12]} branch={branch} dirty_files={len(status.splitlines())}", ev, ok
+
+
+# ---------------------------------------------------------------- T18-T19
+def t18():
+    """Terminale persistito: dopo SUCCEEDED, un terzo processo legge SUCCEEDED dal file."""
+    db = db_for("T18")
+    r = in_process(worker.run_go, db, "terminale", adapter_kw={"latency_polls": 1}, max_polls=3)
+    s1 = in_process(worker.read_state, db, CORE_PATH)
+    # un nuovo GO sulla stessa spec DOPO il terminale e' un NUOVO tentativo autorizzato
+    # (identita' per tentativo, C26-E): non un duplicato, non una sovrascrittura.
+    r2 = in_process(worker.run_go, db, "terminale", adapter_kw={"latency_polls": 1}, max_polls=3)
+    s2 = in_process(worker.read_state, db, CORE_PATH)
+    ok = (r.get("state") == "SUCCEEDED" and s1["rows"][0]["state"] == "SUCCEEDED"
+          and s1["rows"][0]["cost_credits"] == 4.0
+          and r2.get("reservation_outcome") == "RESERVED_NEW" and r2.get("job_id") != r.get("job_id")
+          and len(s2["rows"]) == 2 and all(x["state"] == "SUCCEEDED" for x in s2["rows"])
+          and s2["reserved_units"] == 0)
+    ev = evidence("T18", "durable_terminal", {"go": r, "read_new_process": s1,
+                                               "go_after_terminal": r2, "history": s2})
+    return f"SUCCEEDED letto da nuovo processo; nuovo GO dopo terminale = nuovo tentativo ({len(s2['rows'])} righe storiche, 0 impegnato)", ev, ok
+
+
+def t19():
+    r = static_checks.run()
+    ev = evidence("T19", "static_no_duplicate_control", r)
+    return f"findings={len(r['findings'])} core_imports={len(r['core_imports'])}", ev, r["ok"]
+
+
+# ---------------------------------------------------------------- main
+def write_results():
+    lines = ["# TEST_RESULTS — RUNTIME INTEGRATION GATE 01", "",
+             f"Core canonical: `{REQUIRED_CORE_SHA}` · provider: FakeAdapter only · "
+             "crediti spesi: 0 · rete generativa: nessuna", "",
+             "| TEST | TITLE | EXPECTED | ACTUAL | EXIT | EVIDENCE | PASS/FAIL |",
+             "|---|---|---|---|---|---|---|"]
+    for r in RESULTS:
+        lines.append(f"| {r['id']} | {r['title']} | {r['expected']} | {r['actual']} | "
+                     f"{r['exit']} | `{r['evidence']}` | {'PASS' if r['pass'] else 'FAIL'} |")
+    passed = sum(1 for r in RESULTS if r["pass"])
+    blocked = [r["id"] for r in RESULTS if not r["pass"] and r["actual"].startswith("BLOCKED")]
+    failed = [r["id"] for r in RESULTS if not r["pass"] and not r["actual"].startswith("BLOCKED")]
+    lines += ["", f"**Totale: {passed}/{len(RESULTS)} PASS · BLOCKED: {blocked or 'nessuno'} · "
+              f"FAIL: {failed or 'nessuno'}**", ""]
+    with open(os.path.join(GATE_ROOT, "TEST_RESULTS.md"), "w", encoding="utf-8") as fh:
+        fh.write("\n".join(lines))
+    with open(os.path.join(EVIDENCE_DIR, "RESULTS.json"), "w", encoding="utf-8") as fh:
+        json.dump(RESULTS, fh, indent=2, ensure_ascii=False)
+    return passed, blocked, failed
+
+
+def main() -> int:
+    os.makedirs(STATE_DIR, exist_ok=True)
+    os.makedirs(EVIDENCE_DIR, exist_ok=True)
+    print(f"RUNTIME INTEGRATION GATE 01 — Core {CORE_PATH} @ {git('rev-parse', 'HEAD')[:12]}")
+    scratch = tempfile.mkdtemp(prefix="gate01_")
+    stale_core = os.path.join(scratch, "core_stale_9afaddf")
+    canary_home = os.path.join(scratch, "canary_home")
+    subprocess.run(["git", "-C", CORE_PATH, "worktree", "add", "--detach", stale_core, STALE_SHA],
+                   check=True, capture_output=True)
+    try:
+        record("T01", "correct Core pin", "CORE_PIN_OK, go procede", t01)
+        record("T02", "wrong Core pin", "CORE_PIN_MISMATCH, Core non importato, nessuno store", t02)
+        record("T03", "stale old Core pin (9afaddf)", "STALE_CORE_PIN, Core non importato",
+               lambda: t03(stale_core))
+        record("T04", "deterministic spec_key", "run A == run B == run C == altro processo", t04)
+        record("T05", "spec mutation changes key", "ogni mutazione semantica -> chiave diversa; dati accidentali rifiutati", t05)
+        record("T06", "happy path", "1 submit, SUCCEEDED persistito, riletto da nuovo processo, provider=fake", t06)
+        record("T07", "sequential duplicate", "GO#2 = EXISTING_LIVE_JOB, 1 solo submit", t07)
+        record("T08", "concurrent duplicate (2 processi)", "1 RESERVED_NEW + 1 EXISTING_LIVE_JOB, 1 submit totale", t08)
+        record("T09", "restart/resume", "B: nessuna nuova reservation/submit, stesso job_id/provider_job_id, terminale persistito", t09)
+        record("T10", "SUBMIT_UNKNOWN no resubmit", "SUBMIT_UNKNOWN persistito; GO#2 reconciliation-required, 0 submit, budget non rilasciato", t10)
+        record("T11", "provider mismatch", "ProviderMismatch, 0 submit, reservation intatta", t11)
+        record("T12", "budget atomicity", "envelope 100: 70+50 -> uno BudgetExceeded, impegnati <= 100", t12)
+        record("T13", "invalid budget rejection", "ReservationContractError, 0 submit, 0 righe", t13)
+        record("T14", "fake mode blocks real provider", "REAL_PROVIDER_DISABLED prima di credenziali/subprocess/rete/import Core",
+               lambda: t14(canary_home))
+        record("T15", "no credential read", "0 violazioni in fake mode; controprova: sentinella rileva l'esca",
+               lambda: t15(canary_home))
+        record("T16", "P2 hash unchanged", "SHA256(hf_batch.py) before == after", t16)
+        record("T17", "Core canonical unchanged", "HEAD == 819e7cf, main, working tree pulito", t17)
+        record("T18", "durable terminal persistence", "SUCCEEDED riletto da nuovo processo; nuovo tentativo dopo terminale", t18)
+        record("T19", "static: no duplicate control system (AST)", "0 findings; import dal Core = 4 attesi", t19)
+    finally:
+        subprocess.run(["git", "-C", CORE_PATH, "worktree", "remove", "--force", stale_core],
+                       capture_output=True)
+        subprocess.run(["git", "-C", CORE_PATH, "worktree", "prune"], capture_output=True)
+        shutil.rmtree(scratch, ignore_errors=True)
+    passed, blocked, failed = write_results()
+    print(f"\n{passed}/{len(RESULTS)} PASS · BLOCKED {blocked} · FAIL {failed}")
+    print("crediti spesi: 0 · provider reali: 0 · rete generativa: 0")
+    return 0 if not failed else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

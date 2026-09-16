@@ -1,0 +1,88 @@
+{
+  "after_A": {
+    "pid": 2048,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": null,
+        "job_id": "res_29f82fa26eb391cc_1",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_29f82fa2",
+        "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+        "state": "RUNNING"
+      }
+    ]
+  },
+  "after_B": {
+    "pid": 2053,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": 4.0,
+        "job_id": "res_29f82fa26eb391cc_1",
+        "polls": 3,
+        "provider": "fake",
+        "provider_job_id": "pv_29f82fa2",
+        "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+        "state": "SUCCEEDED"
+      }
+    ]
+  },
+  "process_A": {
+    "core_imported": true,
+    "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "job_id": "res_29f82fa26eb391cc_1",
+    "ok": true,
+    "outcome": "RUNNING",
+    "persisted": {
+      "cost_credits": null,
+      "error": null,
+      "job_id": "res_29f82fa26eb391cc_1",
+      "polls": 1,
+      "provider": "fake",
+      "provider_job_id": "pv_29f82fa2",
+      "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+      "state": "RUNNING",
+      "submitted_at": 1789564699.0352643,
+      "terminal_by": 1789564999.0352643,
+      "webhook_hints": 0
+    },
+    "pid": 2045,
+    "provider": "fake",
+    "provider_job_id": "pv_29f82fa2",
+    "reservation_outcome": "RESERVED_NEW",
+    "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+    "state": "RUNNING",
+    "submits": 1
+  },
+  "process_B": {
+    "core_imported": true,
+    "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "job_id": "res_29f82fa26eb391cc_1",
+    "ok": true,
+    "outcome": "EXISTING_LIVE_JOB",
+    "persisted": {
+      "cost_credits": 4.0,
+      "error": null,
+      "job_id": "res_29f82fa26eb391cc_1",
+      "polls": 3,
+      "provider": "fake",
+      "provider_job_id": "pv_29f82fa2",
+      "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+      "state": "SUCCEEDED",
+      "submitted_at": 1789564699.0352643,
+      "terminal_by": 1789564999.0352643,
+      "webhook_hints": 0
+    },
+    "pid": 2050,
+    "provider": "fake",
+    "provider_job_id": "pv_29f82fa2",
+    "reservation_outcome": "EXISTING_LIVE_JOB",
+    "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+    "state": "SUCCEEDED",
+    "submits": 0
+  }
+}

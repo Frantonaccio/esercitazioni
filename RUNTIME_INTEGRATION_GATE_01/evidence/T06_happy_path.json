@@ -1,0 +1,47 @@
+{
+  "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+  "fake_output_sha256": "84d25eaea8fca105c0f5e9c5d5add99f6c9d67884187207067d1ecc901809a3f",
+  "go": {
+    "core_imported": true,
+    "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "job_id": "res_f155d17c47cf26f9_1",
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "persisted": {
+      "cost_credits": 4.0,
+      "error": null,
+      "job_id": "res_f155d17c47cf26f9_1",
+      "polls": 2,
+      "provider": "fake",
+      "provider_job_id": "pv_f155d17c",
+      "spec_key": "f155d17c47cf26f916db27e3654ac35e653086191136c990da2b633fb72fdd36",
+      "state": "SUCCEEDED",
+      "submitted_at": 1789564698.6721823,
+      "terminal_by": 1789564998.6721823,
+      "webhook_hints": 0
+    },
+    "pid": 2028,
+    "provider": "fake",
+    "provider_job_id": "pv_f155d17c",
+    "reservation_outcome": "RESERVED_NEW",
+    "spec_key": "f155d17c47cf26f916db27e3654ac35e653086191136c990da2b633fb72fdd36",
+    "state": "SUCCEEDED",
+    "submits": 1
+  },
+  "restart_read": {
+    "pid": 2031,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 10,
+        "cost_credits": 4.0,
+        "job_id": "res_f155d17c47cf26f9_1",
+        "polls": 2,
+        "provider": "fake",
+        "provider_job_id": "pv_f155d17c",
+        "spec_key": "f155d17c47cf26f916db27e3654ac35e653086191136c990da2b633fb72fdd36",
+        "state": "SUCCEEDED"
+      }
+    ]
+  }
+}

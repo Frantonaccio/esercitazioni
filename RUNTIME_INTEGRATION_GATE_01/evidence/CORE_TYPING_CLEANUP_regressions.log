@@ -1,0 +1,234 @@
+### run_reservation
+
+CONTRATTO DI PRENOTAZIONE ATOMICA (C26)
+==============================================================================
+
+CONTRATTO: DUE SOLI ESITI
+  [32mOK  [0m RESERVED_NEW poi EXISTING_LIVE_JOB
+       [2mRESERVED_NEW poi EXISTING_LIVE_JOB, stessa identita' res_4e5e69db1163f1f0_1[0m
+  [32mOK  [0m l'unicita' e' del database, non del chiamante
+       [2mUNIQUE INDEX ha rifiutato un secondo job vivo per la stessa spec[0m
+  [32mOK  [0m un job terminale libera l'identita'
+       [2mtentativo 2 = res_167360f8fa60ad33_2; storico di 2 righe, 1 sola viva[0m
+
+CONCORRENZA REALE
+  [32mOK  [0m due processi, un solo vincitore
+       [2mdue processi concorrenti -> ['EXISTING_LIVE_JOB', 'RESERVED_NEW'][0m
+  [32mOK  [0m run_job concorrente: 1 solo submit
+       [2m2 run_job concorrenti -> 1 sola chiamata al provider[0m
+
+BUDGET NELLA STESSA TRANSAZIONE
+  [32mOK  [0m identita' e budget insieme, o niente
+       [2menvelope 100: 70 ok, 50 rifiutato, nessun job creato[0m
+  [32mOK  [0m budget conteso fra processi
+       [2menvelope 100, due richieste da 70 concorrenti -> 1 vincitore[0m
+
+INCERTEZZA E DURABILITA'
+  [32mOK  [0m SUBMIT_UNKNOWN occupa l'identita'
+       [2mSUBMIT_UNKNOWN: non terminale, occupa l'identita', nessun secondo submit[0m
+  [32mOK  [0m lo stato sopravvive a un interprete nuovo
+       [2mun interprete nuovo rilegge RESERVED dal journal, senza chat[0m
+
+LIMITI DICHIARATI
+  [32mOK  [0m l'in-memory dichiara il proprio limite
+       [2mcontratto rispettato nel processo, limite multi-processo dichiarato[0m
+
+==============================================================================
+[32mPRENOTAZIONE ATOMICA: 10/10 test superati — 0 crediti, 0 chiamate a provider esterni.[0m
+
+exit=0
+### run_block2
+
+BLOCCO 2 — ASSET PLANE
+TENANT  /home/user/creative-os-typing-cleanup/examples/tenant_demo
+==============================================================================
+
+TRASPORTO E HASHING
+  [32mOK  [0m memoria limitata su 64 MiB
+       [2m64 MiB trasportati, picco Python 65 KiB (tetto 8 MiB) · RSS di processo 18 MiB [telemetria, non un gate][0m
+  [32mOK  [0m controprova: un pump accumulante viene bocciato
+       [2mpump accumulante rilevato: picco 65.0 MiB ≥ tetto 8 MiB -> REJECTED come previsto[0m
+  [32mOK  [0m ETag rifiutato come prova di integrita'
+       [2mmultipart e single-part rifiutati; sha256 a 64 hex accettato[0m
+  [32mOK  [0m path content-addressed
+       [2massets/sha256/ab/cc/abcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.png[0m
+
+MACCHINA A STATI DEI JOB
+  [32mOK  [0m submit idempotente sulla spec
+       [2m1 submit per 2 richieste identiche con job ancora in volo[0m
+  [32mOK  [0m webhook = suggerimento, poll = verita'
+       [2m2 webhook duplicati -> 0 transizioni; il terminale arriva dal poll[0m
+  [32mOK  [0m job che non torna mai -> TIMEOUT
+       [2mdeadline locale -> SUBMIT_UNKNOWN, identita' occupata, submits=1[0m
+  [32mOK  [0m job FAILED non produce asset
+       [2mprovider FAILED propagato senza asset[0m
+
+INGEST VERIFICATO
+  [32mOK  [0m hash a 3 vie coincidenti
+       [2m3 hash uguali (84d25eaea8fca105…), 1048576 B, etag non usato[0m
+  [32mOK  [0m corruzione: nessun residuo
+       [2mIntegrityError; stato GENERATED intatto; 1 solo evento, di fallimento[0m
+  [32mOK  [0m mime fuori allowlist rifiutato
+       [2mapplication/zip rifiutato prima di toccare i byte[0m
+
+CONTRATTI DEL REGISTRY
+  [32mOK  [0m guardia P2 su archiviazione
+       [2mAPPROVED_CLIP/verdict invariati; 1 asset.archived con from==to[0m
+  [32mOK  [0m guardia P2 rifiuta scritture creative
+       [2mtentativo di scrivere 'status' in ARCHIVE respinto dal contratto[0m
+  [32mOK  [0m conformita' allo schema live
+       [2mdemo_assets 17 col · demo_events 9 col · provenance 12 · creative 4 · dietro migration: nessuna[0m
+  [32mOK  [0m log eventi append-only
+       [2mvista immutabile; nessun costruttore di UPDATE/DELETE sul log eventi[0m
+  [32mOK  [0m from_state == to_state dove dovuto
+       [2masset.archived e asset.ingest_failed rifiutano from_state != to_state[0m
+  [32mOK  [0m SQL parametrizzato
+       [2mvalori solo nei parametri, mai interpolati nel SQL[0m
+
+SICUREZZA
+  [32mOK  [0m nessuna credenziale nel layer di trasporto
+       [2mnessun accesso all'ambiente, nessun nome di chiave nel layer di trasporto[0m
+
+==============================================================================
+[32mBLOCCO 2: 18/18 test superati — 0 crediti, 0 chiamate a provider esterni.[0m
+
+exit=0
+### run_review_pr2
+
+REVIEW PR #2 — riproduzione R1..R4 (asserisce C26, non lo stato attuale)
+==============================================================================
+  R1  [32mOK  [0m timeout locale non libera una spec incerta
+         [2mstato dopo deadline: SUBMIT_UNKNOWN; nuova reserve -> EXISTING_LIVE_JOB[0m
+  R1  [32mOK  [0m la catena non consente un secondo submit
+         [2msubmits=1 (mai piu' di 1 per spec incerta)[0m
+  R2  [32mOK  [0m EXISTING_LIVE_JOB su RESERVED non viene pollato
+         [2mB: poll su RESERVED = 0, stato visto da B = RESERVED, submits = 1[0m
+  R2  [32mOK  [0m controprova: poll senza provider_job_id rifiutata
+         [2mpoll senza identita' provider rifiutata: ValueError[0m
+  R3  [32mOK  [0m JobStore in memoria conserva lo storico dei tentativi
+         [2mattempt1=res_9d1e3df4d8be5851_1 attempt2=res_9d1e3df4d8be5851_2; storico=2; terzo -> EXISTING_LIVE_JOB[0m
+  R4  [32mOK  [0m A budget_units negativo (durevole)
+         [2mbudget_units=-10: rifiutato con errore di contratto ReservationContractError[0m
+  R4  [32mOK  [0m B envelope_units negativo (durevole)
+         [2menvelope_units=-100: rifiutato con errore di contratto ReservationContractError[0m
+  R4  [32mOK  [0m C bool/float come unita' (durevole)
+         [2mbudget=True envelope=100; budget=2.5 envelope=100; budget=1 envelope=True; budget=1 envelope=2.5[0m
+  R4  [32mOK  [0m D budget_units negativo (in memoria)
+         [2min-memory budget_units=-10: rifiutato con errore di contratto ReservationContractError[0m
+
+==============================================================================
+  R1: [32mNOT_CONFIRMED[0m
+  R2: [32mNOT_CONFIRMED[0m
+  R3: [32mNOT_CONFIRMED[0m
+  R4: [32mNOT_CONFIRMED[0m
+exit=0
+### run_review_pr2_final
+
+REVIEW PR #2 — R5/R6 (asserisce il comportamento richiesto)
+==============================================================================
+  R5  [32mOK  [0m A terminale SUCCEEDED persistito, budget liberato, spec ritentabile
+         [2mjournal=SUCCEEDED, impegnato=0, nuovo tentativo=res_3c19eede8772c5db_2[0m
+  R5  [32mOK  [0m B RUNNING intermedio e polls persistiti
+         [2mjournal=RUNNING, polls=2[0m
+  R5  [32mOK  [0m C FAILED persistito, reservation non viva
+         [2mjournal=FAILED, reservation non viva, impegnato=0[0m
+  R5  [32mOK  [0m controprova: mutazione locale senza put non e' persistenza
+         [2moggetto locale SUCCEEDED, journal RESERVED: i test distinguono le due cose[0m
+  R6  [32mOK  [0m adapter sbagliato non polla un job altrui
+         [2mprovider_b: 0 poll, 0 submit; job intatto (provider_a); rifiuto=ProviderMismatch[0m
+  R6  [32mOK  [0m controprova: adapter corretto puo' pollare
+         [2mprovider_a (altra istanza): poll=2, submit=0, stato=SUCCEEDED[0m
+
+==============================================================================
+  R5: [32mNOT_CONFIRMED[0m
+  R6: [32mNOT_CONFIRMED[0m
+exit=0
+### run_boot_paths
+
+CORE    /home/user/creative-os-typing-cleanup
+TENANT  /home/user/creative-os-typing-cleanup/examples/tenant_demo
+==============================================================================
+
+1 — DOCUMENTI COSTITUZIONALI DEL CORE
+[32mOK  [0m esiste  governance/AI_PROJECT_BIBLE.md
+[32mOK  [0m esiste  governance/PROJECT_INSTRUCTIONS.md
+[32mOK  [0m esiste  governance/PROJECT_STATE.md
+[32mOK  [0m esiste  governance/DECISIONS.md
+[32mOK  [0m verify_core_boot()
+
+2 — CONTRATTO DI BOOT DEL TENANT
+[32mOK  [0m verify_tenant_boot()
+     [2mtenant_id      DEMO[0m
+     [2mpolicy attiva  DEMO_V1[0m
+     [2mPROJECT_INSTRUCTIONS   PROJECT_INSTRUCTIONS.md[0m
+     [2mPROJECT_STATE          PROJECT_STATE.md[0m
+     [2mDECISIONS              DECISIONS.md[0m
+     [2mACTIVE_POLICY          policies/DEMO_V1.json[0m
+     [2mREGISTRY_BINDING       registry_binding.json[0m
+     [2mEVENT_LOG_APPEND_ONLY  Assenza di verbi. Il deployment di esempio non ha database: l'append-only e' garanti[0m
+
+3 — CONTROPROVA: il controllo deve saper fallire
+[32mOK  [0m documento del Core mancante  -> BootPathError
+     [2mrespinto come previsto: BOOT_PATHS_EXIST — documenti obbligatori del Core mancanti: governance/AI_PROJECT_BIBLE.md. Ness…[0m
+[32mOK  [0m TENANT_CONFIG.json assente   -> BootPathError
+     [2mrespinto come previsto: BOOT_PATHS_EXIST — il tenant non espone 'TENANT_CONFIG.json'. Il boot del Core lo richiede per n…[0m
+[32mOK  [0m chiave di boot non dichiarata -> BootPathError
+     [2mrespinto come previsto: BOOT_PATHS_EXIST — chiavi di boot non dichiarate dal tenant: PROJECT_INSTRUCTIONS…[0m
+[32mOK  [0m path dichiarato ma inesistente -> BootPathError
+     [2mrespinto come previsto: BOOT_PATHS_EXIST — path dichiarati dal tenant ma inesistenti: policies/DEMO_V1.json…[0m
+[32mOK  [0m enforcement senza evidenza    -> BootPathError
+     [2mrespinto come previsto: EVENT_LOG_APPEND_ONLY: meccanismo dichiarato ('Assenza di verbi. Il deployment di esempio non ha…[0m
+
+==============================================================================
+[32mBOOT_PATHS_EXIST — nessun riferimento obbligatorio punta nel vuoto, e il controllo sa fallire.[0m
+
+exit=0
+### run_case_collision
+
+[32mOK  [0m creative-os-typing-cleanup  — 0 collisioni su 67 path (file e directory, NFC + casefold)
+
+[32mCASE_COLLISION_PREFLIGHT PASS — nessun path collassa sullo stesso nome logico.[0m
+
+exit=0
+### run_golden
+
+TENANT  /home/user/creative-os-typing-cleanup/examples/tenant_demo
+POLICY  DEMO_V1  (tenant DEMO, v1, dal 2026-09-14)
+        pillar: P1_ESEMPIO
+        P1_ESEMPIO angoli: A_PRIMO, B_SECONDO
+==============================================================================
+
+[32mOK  [0m demo_001_pass
+     verdetto: [32mPASS[0m   blocker: 0   findings: 0
+     [2mCaso conforme: unico PASS del set di esempio.[0m
+
+[32mOK  [0m demo_002_reject
+     verdetto: [31mREJECT[0m   blocker: 4   findings: 4
+     [2mCaso di falsificazione: mondo d'epoca + garanzia + registro informale.[0m
+     BLOCKER ANGLE_NOT_SUPPORTED          script.vo
+        Il contenuto non sostiene l'angolo dichiarato 'A_PRIMO' (Primo angolo).  [nessun marker di angolo trovato]
+     BLOCKER FORBIDDEN_WORLD:EPOCA_DEMO   shotlist.shots
+        Ambientazione d'epoca  [\bd'epoca\b, \bvintage\b, \bpolveros]
+     BLOCKER FORBIDDEN_CLAIM:GARANZIE_DEMO script.vo
+        Garanzie e claim quantificati  [garantiamo]
+     BLOCKER REGISTER:REGISTER_INFORMALE  script.vo
+        Seconda persona singolare  [\btuo\b]
+
+==============================================================================
+[32mOK  [0m EDL deterministica  (3 scene, 20.0s, 7 text layer di cui 3 critici e deterministici)
+==============================================================================
+
+ESITO: 1 REJECT · 1 PASS  (atteso: 1 REJECT · 1 PASS)
+[32mBLOCCO 1 APPROVATO — costo di esecuzione: 0 crediti, 0 chiamate di rete.[0m
+
+exit=0
+### run_contamination (tenant terms)
+
+RADICE   /home/user/creative-os-typing-cleanup
+TERMINI  /home/user/vf-tenant-valorefarmacia/STRATEGY/CONTAMINATION_TERMS.json  (32 pattern)
+==============================================================================
+[2mfile testuali scansionati: 51[0m
+
+[32m0 marker di tenant su 51 file. Il Core non nomina nessun cliente, nemmeno per vietarlo.[0m
+
+exit=0
