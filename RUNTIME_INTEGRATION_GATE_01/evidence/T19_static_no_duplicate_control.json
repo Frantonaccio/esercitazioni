@@ -1,12 +1,15 @@
 {
+  "contract_drift": [],
   "core_imports": [
     "adapters.base.GenSpec",
     "adapters.fake.FakeAdapter",
     "registry.reservations.SqliteReservationStore",
+    "transport.pipeline.resume_job",
     "transport.pipeline.run_job"
   ],
   "files": [
     "__init__.py",
+    "authorization.py",
     "core_pin.py",
     "genspec_bridge.py",
     "go_candidate.py",

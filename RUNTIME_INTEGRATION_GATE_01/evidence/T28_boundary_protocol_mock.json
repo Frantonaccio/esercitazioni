@@ -1,0 +1,457 @@
+{
+  "replies": {
+    "amount_0": {
+      "ok": false,
+      "refused": "PROTOCOL: chiavi non ammesse ['amount']",
+      "served": 24,
+      "submits": 2
+    },
+    "amount_1": {
+      "ok": false,
+      "refused": "PROTOCOL: chiavi non ammesse ['amount']",
+      "served": 23,
+      "submits": 2
+    },
+    "argv": {
+      "ok": false,
+      "refused": "PROTOCOL: chiavi non ammesse ['argv']",
+      "served": 10,
+      "submits": 1
+    },
+    "bad_intent": {
+      "ok": false,
+      "refused": "PROTOCOL: INTENT_REQUIRED (intent 'start' non ammesso: resume | new_attempt)",
+      "served": 4,
+      "submits": 0
+    },
+    "budget_ne": {
+      "code": "BUDGET_NOT_QUOTED",
+      "error": "AuthorizationRefused",
+      "message": "BUDGET_NOT_QUOTED: importo presentato 3 diverso dalla quote quote_d501a4b4f99195678024c460 (10 synthetic_units)",
+      "ok": false,
+      "submits": 3
+    },
+    "first": {
+      "budget_units": 10,
+      "envelope_id": "ENV_T28",
+      "governance": "GOVERNED_LAB",
+      "job_id": "res_9cde1b88c2473749_1",
+      "legacy_resume_as_start": false,
+      "ok": true,
+      "outcome": "SUCCEEDED",
+      "permit_id": "permit_171e5eb8bd8773c0d31902c0",
+      "provider_account": "acct_172df1b5e1dc",
+      "quote_id": "quote_af4c324074894486a9fed1a6",
+      "requested_spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
+      "reservation_outcome": "RESERVED_NEW",
+      "resumed": false,
+      "spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
+      "state": "SUCCEEDED",
+      "submits": 1
+    },
+    "free": {
+      "budget_units": 0,
+      "envelope_id": "ENV_T28",
+      "governance": "GOVERNED_LAB",
+      "job_id": "res_a34c287c727bc807_1",
+      "legacy_resume_as_start": false,
+      "ok": true,
+      "outcome": "SUCCEEDED",
+      "permit_id": "permit_7f802526d7746ab26e2385d5",
+      "provider_account": "acct_172df1b5e1dc",
+      "quote_id": "quote_8c7849ea81b55bc4560b14ee",
+      "requested_spec_key": "a34c287c727bc807d45079aacc7a539a4dae2d7ac8b4fd6ae96013e80c801925",
+      "reservation_outcome": "RESERVED_NEW",
+      "resumed": false,
+      "spec_key": "a34c287c727bc807d45079aacc7a539a4dae2d7ac8b4fd6ae96013e80c801925",
+      "state": "SUCCEEDED",
+      "submits": 3
+    },
+    "lost": {
+      "error": "TimeoutError",
+      "message": "risposta persa (mock)",
+      "ok": false,
+      "submits": 1
+    },
+    "new_attempt": {
+      "budget_units": 10,
+      "envelope_id": "ENV_T28",
+      "governance": "GOVERNED_LAB",
+      "job_id": "res_9cde1b88c2473749_2",
+      "legacy_resume_as_start": false,
+      "ok": true,
+      "outcome": "SUCCEEDED",
+      "permit_id": "permit_d29a43e25354c9c8a059b165",
+      "provider_account": "acct_172df1b5e1dc",
+      "quote_id": "quote_92f33f273fdf6740d23a4d49",
+      "requested_spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
+      "reservation_outcome": "RESERVED_NEW",
+      "resumed": false,
+      "spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
+      "state": "SUCCEEDED",
+      "submits": 2
+    },
+    "no_intent": {
+      "ok": false,
+      "refused": "PROTOCOL: INTENT_REQUIRED (submit senza intent esplicito: resume | new_attempt)",
+      "served": 2,
+      "submits": 0
+    },
+    "no_intent_q": {
+      "ok": false,
+      "refused": "PROTOCOL: INTENT_REQUIRED (submit senza intent esplicito: resume | new_attempt)",
+      "served": 3,
+      "submits": 0
+    },
+    "no_operation": {
+      "code": "OPERATION_ID_REQUIRED",
+      "error": "IntentRefused",
+      "message": "OPERATION_ID_REQUIRED: operation_id obbligatorio per ogni operazione (RESUME e NEW_ATTEMPT)",
+      "ok": false,
+      "submits": 2
+    },
+    "no_price": {
+      "code": "NO_LAB_PRICE",
+      "error": "AuthorizationRefused",
+      "message": "NO_LAB_PRICE: nessun prezzo fidato per il modello 'unknown_model'",
+      "ok": false,
+      "submits": 3
+    },
+    "no_quote": {
+      "code": "QUOTE_REQUIRED",
+      "error": "AuthorizationRefused",
+      "message": "QUOTE_REQUIRED: nessuna quote fidata presentata: nessun importo, nessun submit",
+      "ok": false,
+      "submits": 2
+    },
+    "no_reason": {
+      "code": "REASON_REQUIRED",
+      "error": "IntentRefused",
+      "message": "REASON_REQUIRED: un nuovo tentativo richiede un motivo esplicito",
+      "ok": false,
+      "submits": 1
+    },
+    "nonjson": {
+      "ok": false,
+      "refused": "PROTOCOL: JSON non valido",
+      "served": 11,
+      "submits": 1
+    },
+    "on_uncertain": {
+      "code": "LIVE_OR_UNCERTAIN_ATTEMPT",
+      "error": "IntentRefused",
+      "message": "LIVE_OR_UNCERTAIN_ATTEMPT: il tentativo res_9ba5361d794f2fa3_1 e' SUBMIT_UNKNOWN: nessun nuovo submit finche' non e' concluso o riconciliato (usare RESUME)",
+      "ok": false,
+      "submits": 2
+    },
+    "permit_replay": {
+      "error": "PermitError",
+      "message": "permesso permit_d29a43e25354c9c8a059b165 gia' consumato da res_9cde1b88c2473749_2",
+      "ok": false,
+      "submits": 2
+    },
+    "quote_a": {
+      "amount": 10,
+      "envelope_id": "ENV_T28",
+      "ok": true,
+      "price_source": "LAB_PRICE_TABLE",
+      "quote_id": "quote_af4c324074894486a9fed1a6",
+      "sku": "fake_model_v1"
+    },
+    "quote_a2": {
+      "amount": 10,
+      "envelope_id": "ENV_T28",
+      "ok": true,
+      "price_source": "LAB_PRICE_TABLE",
+      "quote_id": "quote_92f33f273fdf6740d23a4d49",
+      "sku": "fake_model_v1"
+    },
+    "quote_a3": {
+      "amount": 10,
+      "envelope_id": "ENV_T28",
+      "ok": true,
+      "price_source": "LAB_PRICE_TABLE",
+      "quote_id": "quote_e10b82bb7dc7d853163e2b43",
+      "sku": "fake_model_v1"
+    },
+    "quote_b": {
+      "amount": 10,
+      "envelope_id": "ENV_T28",
+      "ok": true,
+      "price_source": "LAB_PRICE_TABLE",
+      "quote_id": "quote_e68d7702f23c77c587dfc8b5",
+      "sku": "fake_model_v1"
+    },
+    "quote_free": {
+      "amount": 0,
+      "envelope_id": "ENV_T28",
+      "ok": true,
+      "price_source": "LAB_PRICE_TABLE",
+      "quote_id": "quote_8c7849ea81b55bc4560b14ee",
+      "sku": "fake_model_free"
+    },
+    "quote_p": {
+      "amount": 10,
+      "envelope_id": "ENV_T28",
+      "ok": true,
+      "price_source": "LAB_PRICE_TABLE",
+      "quote_id": "quote_d501a4b4f99195678024c460",
+      "sku": "fake_model_v1"
+    },
+    "replay": {
+      "budget_units": null,
+      "envelope_id": null,
+      "governance": "GOVERNED_LAB",
+      "job_id": "res_9cde1b88c2473749_1",
+      "legacy_resume_as_start": false,
+      "ok": true,
+      "outcome": "RESUMED/SUCCEEDED",
+      "permit_id": null,
+      "provider_account": "acct_172df1b5e1dc",
+      "quote_id": "quote_af4c324074894486a9fed1a6",
+      "requested_spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
+      "reservation_outcome": "NONE",
+      "resumed": true,
+      "spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
+      "state": "SUCCEEDED",
+      "submits": 1
+    },
+    "resume_nohist": {
+      "code": "NO_EXISTING_ATTEMPT",
+      "error": "IntentRefused",
+      "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'T28:a': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
+      "ok": false,
+      "submits": 0
+    },
+    "shell": {
+      "ok": false,
+      "refused": "PROTOCOL: op 'shell' non ammessa (ammesse: ('submit', 'quote', 'status', 'stop'))",
+      "served": 9,
+      "submits": 1
+    },
+    "status": {
+      "latest": {
+        "attempt_token": "att_1f0599a50053616f00af8dd8",
+        "cost_credits": 4.0,
+        "error": null,
+        "job_id": "res_9cde1b88c2473749_2",
+        "operation_id": "T28:a",
+        "payload_digest": "ec22d06977e4004bf20334889ef712e51651a1ab37e4f7a826a28ee282d75274",
+        "polls": 1,
+        "provider": "fake",
+        "provider_account": "acct_172df1b5e1dc",
+        "provider_job_id": "pv_9cde1b88",
+        "quote_id": "quote_92f33f273fdf6740d23a4d49",
+        "revision": 3,
+        "spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
+        "state": "SUCCEEDED",
+        "submitted_at": 1789589649.3789842,
+        "terminal_by": 1789589949.3789842,
+        "webhook_hints": 0
+      },
+      "ok": true
+    },
+    "status_nohist": {
+      "latest": null,
+      "ok": true
+    },
+    "status_p": {
+      "latest": null,
+      "ok": true
+    }
+  },
+  "requests": {
+    "amount_0": {
+      "amount": 0,
+      "op": "quote",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok"
+    },
+    "amount_1": {
+      "amount": 1,
+      "op": "quote",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok"
+    },
+    "argv": {
+      "argv": [
+        "higgsfield",
+        "--version"
+      ],
+      "intent": "resume",
+      "op": "submit",
+      "prompt": "boundary ok"
+    },
+    "bad_intent": {
+      "intent": "start",
+      "op": "submit",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok"
+    },
+    "budget_ne": {
+      "budget_units": 3,
+      "intent": "new_attempt",
+      "op": "submit",
+      "operation_id": "T28:p",
+      "prompt": "priced",
+      "quote_id": "quote_d501a4b4f99195678024c460",
+      "reason": "INITIAL_GENERATION"
+    },
+    "first": {
+      "intent": "new_attempt",
+      "op": "submit",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok",
+      "quote_id": "quote_af4c324074894486a9fed1a6",
+      "reason": "INITIAL_GENERATION"
+    },
+    "free": {
+      "intent": "new_attempt",
+      "model": "fake_model_free",
+      "op": "submit",
+      "operation_id": "T28:z",
+      "prompt": "free clip",
+      "quote_id": "quote_8c7849ea81b55bc4560b14ee",
+      "reason": "INITIAL_GENERATION"
+    },
+    "lost": {
+      "adapter": "lost",
+      "intent": "new_attempt",
+      "op": "submit",
+      "operation_id": "T28:b",
+      "prompt": "boundary lost",
+      "quote_id": "quote_e68d7702f23c77c587dfc8b5",
+      "reason": "INITIAL_GENERATION"
+    },
+    "new_attempt": {
+      "intent": "new_attempt",
+      "op": "submit",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok",
+      "quote_id": "quote_92f33f273fdf6740d23a4d49",
+      "reason": "CREATIVE_ITERATION"
+    },
+    "no_intent": {
+      "op": "submit",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok"
+    },
+    "no_intent_q": {
+      "op": "submit",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok",
+      "quote_id": "quote_af4c324074894486a9fed1a6"
+    },
+    "no_operation": {
+      "intent": "new_attempt",
+      "op": "submit",
+      "prompt": "boundary ok",
+      "reason": "CREATIVE_ITERATION"
+    },
+    "no_price": {
+      "model": "unknown_model",
+      "op": "quote",
+      "operation_id": "T28:n",
+      "prompt": "no price"
+    },
+    "no_quote": {
+      "intent": "new_attempt",
+      "op": "submit",
+      "operation_id": "T28:c",
+      "prompt": "boundary ok",
+      "reason": "INITIAL_GENERATION"
+    },
+    "no_reason": {
+      "intent": "new_attempt",
+      "op": "submit",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok"
+    },
+    "nonjson": "non-json {{{",
+    "on_uncertain": {
+      "intent": "new_attempt",
+      "op": "submit",
+      "operation_id": "T28:b",
+      "prompt": "boundary lost",
+      "quote_id": "quote_e68d7702f23c77c587dfc8b5",
+      "reason": "TECHNICAL_FAILURE_RETRY"
+    },
+    "permit_replay": {
+      "intent": "new_attempt",
+      "op": "submit",
+      "operation_id": "T28:a",
+      "permit_id": "permit_d29a43e25354c9c8a059b165",
+      "prompt": "boundary ok",
+      "quote_id": "quote_e10b82bb7dc7d853163e2b43",
+      "reason": "CREATIVE_ITERATION"
+    },
+    "quote_a": {
+      "op": "quote",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok"
+    },
+    "quote_a2": {
+      "op": "quote",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok"
+    },
+    "quote_a3": {
+      "op": "quote",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok"
+    },
+    "quote_b": {
+      "op": "quote",
+      "operation_id": "T28:b",
+      "prompt": "boundary lost"
+    },
+    "quote_free": {
+      "model": "fake_model_free",
+      "op": "quote",
+      "operation_id": "T28:z",
+      "prompt": "free clip"
+    },
+    "quote_p": {
+      "op": "quote",
+      "operation_id": "T28:p",
+      "prompt": "priced"
+    },
+    "replay": {
+      "intent": "resume",
+      "op": "submit",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok"
+    },
+    "resume_nohist": {
+      "intent": "resume",
+      "op": "submit",
+      "operation_id": "T28:a",
+      "prompt": "boundary ok",
+      "quote_id": "quote_af4c324074894486a9fed1a6"
+    },
+    "shell": {
+      "cmd": "higgsfield generate create seedance_2_0 --prompt x",
+      "op": "shell"
+    },
+    "status": {
+      "op": "status",
+      "prompt": "boundary ok"
+    },
+    "status_nohist": {
+      "op": "status",
+      "prompt": "boundary ok"
+    },
+    "status_p": {
+      "op": "status",
+      "prompt": "priced"
+    }
+  },
+  "stop": {
+    "account_id": "acct_172df1b5e1dc",
+    "ok": true,
+    "secret_path": "/tmp/gate01_nz7iuvlu/spender_secret/worker_secret.json",
+    "served": 31,
+    "stopped": true,
+    "violations": []
+  }
+}

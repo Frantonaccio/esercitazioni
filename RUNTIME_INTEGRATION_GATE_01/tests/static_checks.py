@@ -35,7 +35,64 @@ def _iter_files():
             yield name, os.path.join(RUNTIME_DIR, name)
 
 
-def run() -> dict:
+def _protocol_contract(core_path: str) -> dict:
+    """Metodi e parametri dichiarati da ReservationStore/EconomicLedger del Core
+    e firma di transport.pipeline.run_job, letti dall'AST (nessun import del Core)."""
+    base = ast.parse(open(os.path.join(core_path, "adapters", "base.py"), encoding="utf-8").read())
+    methods: dict[str, set[str]] = {}
+    for node in base.body:
+        if isinstance(node, ast.ClassDef) and node.name in ("ReservationStore", "EconomicLedger"):
+            for fn in node.body:
+                if isinstance(fn, ast.FunctionDef):
+                    a = fn.args
+                    names = {x.arg for x in a.args + a.kwonlyargs if x.arg != "self"}
+                    methods[fn.name] = names
+    pipe = ast.parse(open(os.path.join(core_path, "transport", "pipeline.py"), encoding="utf-8").read())
+    run_job_params: set[str] = set()
+    resume_job_params: set[str] = set()
+    for node in pipe.body:
+        if isinstance(node, ast.FunctionDef) and node.name == "run_job":
+            run_job_params = {x.arg for x in node.args.args + node.args.kwonlyargs}
+        if isinstance(node, ast.FunctionDef) and node.name == "resume_job":
+            resume_job_params = {x.arg for x in node.args.args + node.args.kwonlyargs}
+    return {"methods": methods, "run_job_params": run_job_params, "resume_job_params": resume_job_params}
+
+
+def contract_drift(core_path: str) -> list[str]:
+    """CR-03: il runtime usa SOLO metodi e argomenti dichiarati dal Protocol del
+    Core. Ogni `store.<m>(...)` (o `self._inner.<m>(...)`) in runtime/ deve
+    esistere nel Protocol e ogni keyword passata deve essere un parametro
+    dichiarato; ogni keyword passata a `run_job(...)` deve esistere nella sua firma."""
+    contract = _protocol_contract(core_path)
+    findings: list[str] = []
+    for name, path in _iter_files():
+        tree = ast.parse(open(path, encoding="utf-8").read(), filename=name)
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            f = node.func
+            recv = None
+            if isinstance(f, ast.Attribute):
+                if isinstance(f.value, ast.Name) and f.value.id == "store":
+                    recv = "store"
+                elif (isinstance(f.value, ast.Attribute) and f.value.attr == "_inner"
+                      and isinstance(f.value.value, ast.Name) and f.value.value.id == "self"):
+                    recv = "self._inner"
+                if recv:
+                    if f.attr not in contract["methods"]:
+                        findings.append(f"{name}:{node.lineno}: {recv}.{f.attr} non dichiarato da ReservationStore/EconomicLedger")
+                        continue
+                    for kw in node.keywords:
+                        if kw.arg is not None and kw.arg not in contract["methods"][f.attr]:
+                            findings.append(f"{name}:{node.lineno}: {recv}.{f.attr}(..., {kw.arg}=) argomento non dichiarato")
+            elif isinstance(f, ast.Name) and f.id in ("run_job", "resume_job"):
+                for kw in node.keywords:
+                    if kw.arg is not None and kw.arg not in contract[f"{f.id}_params"]:
+                        findings.append(f"{name}:{node.lineno}: {f.id}(..., {kw.arg}=) argomento non dichiarato")
+    return findings
+
+
+def run(core_path: str | None = None) -> dict:
     findings: list[str] = []
     core_imports: set[str] = set()
     for name, path in _iter_files():
@@ -121,17 +178,20 @@ def run() -> dict:
                             findings.append(f"hf_batch_runtime.py:{sub.lineno}: run_job chiama {sub.value.id}.{sub.attr}")
     expected_core_imports = {
         "adapters.base.GenSpec", "adapters.fake.FakeAdapter",
-        "registry.reservations.SqliteReservationStore", "transport.pipeline.run_job"}
+        "registry.reservations.SqliteReservationStore", "transport.pipeline.run_job",
+        "transport.pipeline.resume_job"}      # CR-09: resume esplicito, non un secondo submit
     unexpected = sorted(core_imports - expected_core_imports)
     missing = sorted(expected_core_imports - core_imports)
     if unexpected:
         findings.append(f"import dal Core non previsti: {unexpected}")
     if missing:
         findings.append(f"import dal Core attesi ma assenti: {missing}")
+    drift = contract_drift(core_path) if core_path else ["contract drift NON verificato: core_path assente"]
+    findings.extend(drift)
     return {"files": [n for n, _ in _iter_files()], "core_imports": sorted(core_imports),
-            "findings": findings, "ok": not findings}
+            "contract_drift": drift, "findings": findings, "ok": not findings}
 
 
 if __name__ == "__main__":
     import json
-    print(json.dumps(run(), indent=2))
+    print(json.dumps(run(os.environ.get("CREATIVE_OS_CORE_PATH")), indent=2))

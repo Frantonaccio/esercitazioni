@@ -1,5 +1,7 @@
 {
-  "branch": "main",
-  "head": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+  "branch": "promote/r0-r1-hardening-2026-09-16",
+  "head": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "mode": "CANONICAL_CLEAN",
+  "required": "740ee979300fe20a9382992528604dee70cb2fcf",
   "status_porcelain": ""
 }

@@ -1,8 +1,8 @@
 {
   "after": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
   "baseline": {
-    "mtime": 1789571852.5568104,
-    "path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/hf_batch.py",
+    "mtime": 1789589279.506994,
+    "path": "/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/hf_batch.py",
     "sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
     "size": 13484
   },
@@ -17,5 +17,5 @@
   },
   "mac_original_path": "/Users/francescoantonaccio/valore_farmacia_local/VF_PILOT_OUTPUTS/P2_PRIMA_SI_PARLA/RUN_20260915_FINAL_PRODUCTION/scripts/hf_batch.py (fuori git, non in questo ambiente)",
   "note": "il file verificato e' la copia read-only del handoff; l'originale sul Mac e' attestato dalle 4 fonti",
-  "path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/hf_batch.py"
+  "path": "/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/hf_batch.py"
 }

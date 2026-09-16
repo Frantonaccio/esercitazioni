@@ -1,0 +1,362 @@
+{
+  "envelope": {
+    "ok": true,
+    "pid": 2466,
+    "result": {
+      "authorized_units": 30,
+      "envelope_id": "ENV_T27",
+      "scope": null,
+      "unit": "synthetic_units",
+      "version": 1
+    }
+  },
+  "fourth": {
+    "core_imported": true,
+    "error": "BudgetExceeded",
+    "message": "envelope ENV_T27 v1: autorizzati 30, regolati 30, esposti 0, richiesti 1",
+    "ok": false,
+    "pid": 2488,
+    "submits": 0,
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.BudgetExceeded: envelope ENV_T27 v1: autorizzati 30, regolati 30, esposti 0, richiesti 1\n",
+    "transport_sent": 0
+  },
+  "runs": [
+    {
+      "budget_units": 10,
+      "core_imported": true,
+      "core_pin": "CORE_PIN_OK",
+      "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+      "envelope_id": "ENV_T27",
+      "governance": "LEGACY_LAB",
+      "intent": "resume",
+      "job_id": "res_cd0e3788d71225b8_1",
+      "legacy_resume_as_start": true,
+      "ok": true,
+      "operation_id": "lab:ledger 0",
+      "outcome": "SUCCEEDED",
+      "permit_id": null,
+      "persisted": {
+        "attempt_token": "att_3d0850d71ac6e249fe338d78",
+        "cost_credits": 4.0,
+        "error": null,
+        "job_id": "res_cd0e3788d71225b8_1",
+        "operation_id": "lab:ledger 0",
+        "payload_digest": "d29027860d6aa7ec69c83301c1400ad984789a09e89722fdc85e9a80c8abccf4",
+        "polls": 1,
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": "pv_cd0e3788",
+        "quote_id": null,
+        "revision": 3,
+        "spec_key": "cd0e3788d71225b89ca10569c8e1d04fa4e36e73a2a6881e15acdf2a87aa10a7",
+        "state": "SUCCEEDED",
+        "submitted_at": 1789589647.7469234,
+        "terminal_by": 1789589947.7469234,
+        "webhook_hints": 0
+      },
+      "pid": 2468,
+      "provider": "fake",
+      "provider_job_id": "pv_cd0e3788",
+      "quote_id": null,
+      "requested_spec_key": "cd0e3788d71225b89ca10569c8e1d04fa4e36e73a2a6881e15acdf2a87aa10a7",
+      "reservation_outcome": "RESERVED_NEW",
+      "resumed": false,
+      "resumed_terminal": false,
+      "spec_key": "cd0e3788d71225b89ca10569c8e1d04fa4e36e73a2a6881e15acdf2a87aa10a7",
+      "state": "SUCCEEDED",
+      "submits": 1,
+      "transport_sent": 1
+    },
+    {
+      "budget_units": 10,
+      "core_imported": true,
+      "core_pin": "CORE_PIN_OK",
+      "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+      "envelope_id": "ENV_T27",
+      "governance": "LEGACY_LAB",
+      "intent": "resume",
+      "job_id": "res_75cafdf0d91d92fa_1",
+      "legacy_resume_as_start": true,
+      "ok": true,
+      "operation_id": "lab:ledger 1",
+      "outcome": "SUCCEEDED",
+      "permit_id": null,
+      "persisted": {
+        "attempt_token": "att_d9a846fab46e133009eadcf7",
+        "cost_credits": 4.0,
+        "error": null,
+        "job_id": "res_75cafdf0d91d92fa_1",
+        "operation_id": "lab:ledger 1",
+        "payload_digest": "eac0fe22a04a17c56b970c6eed2d613db5ee8d409895ba20a866dfec6384f211",
+        "polls": 1,
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": "pv_75cafdf0",
+        "quote_id": null,
+        "revision": 3,
+        "spec_key": "75cafdf0d91d92fa2af5b83f3a36515982de4a40bd3e17256a6eae6b0b4d7454",
+        "state": "SUCCEEDED",
+        "submitted_at": 1789589648.0096643,
+        "terminal_by": 1789589948.0096643,
+        "webhook_hints": 0
+      },
+      "pid": 2474,
+      "provider": "fake",
+      "provider_job_id": "pv_75cafdf0",
+      "quote_id": null,
+      "requested_spec_key": "75cafdf0d91d92fa2af5b83f3a36515982de4a40bd3e17256a6eae6b0b4d7454",
+      "reservation_outcome": "RESERVED_NEW",
+      "resumed": false,
+      "resumed_terminal": false,
+      "spec_key": "75cafdf0d91d92fa2af5b83f3a36515982de4a40bd3e17256a6eae6b0b4d7454",
+      "state": "SUCCEEDED",
+      "submits": 1,
+      "transport_sent": 1
+    },
+    {
+      "budget_units": 10,
+      "core_imported": true,
+      "core_pin": "CORE_PIN_OK",
+      "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+      "envelope_id": "ENV_T27",
+      "governance": "LEGACY_LAB",
+      "intent": "resume",
+      "job_id": "res_b69c68673b0f3de3_1",
+      "legacy_resume_as_start": true,
+      "ok": true,
+      "operation_id": "lab:ledger 2",
+      "outcome": "SUCCEEDED",
+      "permit_id": null,
+      "persisted": {
+        "attempt_token": "att_1885ad66a38568b398ef05e0",
+        "cost_credits": 4.0,
+        "error": null,
+        "job_id": "res_b69c68673b0f3de3_1",
+        "operation_id": "lab:ledger 2",
+        "payload_digest": "3fcfd2aaf2298f2bd892ce0be85606b2f42342ebf4c2ed5240f21996268c926f",
+        "polls": 1,
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": "pv_b69c6867",
+        "quote_id": null,
+        "revision": 3,
+        "spec_key": "b69c68673b0f3de374b56b46f49ae7e5bfff71efbec9eff33525c1cedbd78d2d",
+        "state": "SUCCEEDED",
+        "submitted_at": 1789589648.2507148,
+        "terminal_by": 1789589948.2507148,
+        "webhook_hints": 0
+      },
+      "pid": 2480,
+      "provider": "fake",
+      "provider_job_id": "pv_b69c6867",
+      "quote_id": null,
+      "requested_spec_key": "b69c68673b0f3de374b56b46f49ae7e5bfff71efbec9eff33525c1cedbd78d2d",
+      "reservation_outcome": "RESERVED_NEW",
+      "resumed": false,
+      "resumed_terminal": false,
+      "spec_key": "b69c68673b0f3de374b56b46f49ae7e5bfff71efbec9eff33525c1cedbd78d2d",
+      "state": "SUCCEEDED",
+      "submits": 1,
+      "transport_sent": 1
+    }
+  ],
+  "settlements": [
+    {
+      "ok": true,
+      "pid": 2472,
+      "result": {
+        "applied": true,
+        "cost_known": true,
+        "exposure_replaced": 10,
+        "job_id": "res_cd0e3788d71225b8_1",
+        "overspend": 0,
+        "settled_units": 10
+      }
+    },
+    {
+      "ok": true,
+      "pid": 2478,
+      "result": {
+        "applied": true,
+        "cost_known": true,
+        "exposure_replaced": 10,
+        "job_id": "res_75cafdf0d91d92fa_1",
+        "overspend": 0,
+        "settled_units": 10
+      }
+    },
+    {
+      "ok": true,
+      "pid": 2484,
+      "result": {
+        "applied": true,
+        "cost_known": true,
+        "exposure_replaced": 10,
+        "job_id": "res_b69c68673b0f3de3_1",
+        "overspend": 0,
+        "settled_units": 10
+      }
+    }
+  ],
+  "state": {
+    "anomalies": 0,
+    "ledger_entries": 6,
+    "ownership": [
+      {
+        "attempt_token": "att_d9a846fab46e133009eadcf7",
+        "envelope_id": "ENV_T27",
+        "job_id": "res_75cafdf0d91d92fa_1",
+        "operation_id": "lab:ledger 1",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 3,
+        "settled_units": 10
+      },
+      {
+        "attempt_token": "att_1885ad66a38568b398ef05e0",
+        "envelope_id": "ENV_T27",
+        "job_id": "res_b69c68673b0f3de3_1",
+        "operation_id": "lab:ledger 2",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 3,
+        "settled_units": 10
+      },
+      {
+        "attempt_token": "att_3d0850d71ac6e249fe338d78",
+        "envelope_id": "ENV_T27",
+        "job_id": "res_cd0e3788d71225b8_1",
+        "operation_id": "lab:ledger 0",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 3,
+        "settled_units": 10
+      }
+    ],
+    "permits": 0,
+    "permits_consumed": 0,
+    "pid": 2504,
+    "quotes_consumed": 0,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 10,
+        "cost_credits": 4.0,
+        "job_id": "res_75cafdf0d91d92fa_1",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_75cafdf0",
+        "spec_key": "75cafdf0d91d92fa2af5b83f3a36515982de4a40bd3e17256a6eae6b0b4d7454",
+        "state": "SUCCEEDED"
+      },
+      {
+        "budget_units": 10,
+        "cost_credits": 4.0,
+        "job_id": "res_b69c68673b0f3de3_1",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_b69c6867",
+        "spec_key": "b69c68673b0f3de374b56b46f49ae7e5bfff71efbec9eff33525c1cedbd78d2d",
+        "state": "SUCCEEDED"
+      },
+      {
+        "budget_units": 10,
+        "cost_credits": 4.0,
+        "job_id": "res_cd0e3788d71225b8_1",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_cd0e3788",
+        "spec_key": "cd0e3788d71225b89ca10569c8e1d04fa4e36e73a2a6881e15acdf2a87aa10a7",
+        "state": "SUCCEEDED"
+      }
+    ]
+  },
+  "totals": {
+    "ok": true,
+    "pid": 2486,
+    "result": {
+      "authorized_units": 30,
+      "envelope_id": "ENV_T27",
+      "envelope_version": 1,
+      "live_reservation_units": 0,
+      "remaining_units": 0,
+      "settled_units": 30,
+      "terminal_unsettled_jobs": 0,
+      "unit": "synthetic_units",
+      "unsettled_exposure_units": 0
+    }
+  },
+  "unsettled_control": [
+    {
+      "budget_units": 10,
+      "core_imported": true,
+      "core_pin": "CORE_PIN_OK",
+      "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+      "envelope_id": "ENV_T27b",
+      "governance": "LEGACY_LAB",
+      "intent": "resume",
+      "job_id": "res_f8ac02e6da6c3645_1",
+      "legacy_resume_as_start": true,
+      "ok": true,
+      "operation_id": "lab:unsettled 1",
+      "outcome": "SUCCEEDED",
+      "permit_id": null,
+      "persisted": {
+        "attempt_token": "att_587780aea043760d1a79fbc7",
+        "cost_credits": 4.0,
+        "error": null,
+        "job_id": "res_f8ac02e6da6c3645_1",
+        "operation_id": "lab:unsettled 1",
+        "payload_digest": "fa5b065c9f752c523c2c463a9459a5b3eb3aefe6b048c753744b8395387e3872",
+        "polls": 1,
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": "pv_f8ac02e6",
+        "quote_id": null,
+        "revision": 3,
+        "spec_key": "f8ac02e6da6c364513585a1f052b9e3372aac648d9132acb22541baaba6f5bc4",
+        "state": "SUCCEEDED",
+        "submitted_at": 1789589648.8559415,
+        "terminal_by": 1789589948.8559415,
+        "webhook_hints": 0
+      },
+      "pid": 2494,
+      "provider": "fake",
+      "provider_job_id": "pv_f8ac02e6",
+      "quote_id": null,
+      "requested_spec_key": "f8ac02e6da6c364513585a1f052b9e3372aac648d9132acb22541baaba6f5bc4",
+      "reservation_outcome": "RESERVED_NEW",
+      "resumed": false,
+      "resumed_terminal": false,
+      "spec_key": "f8ac02e6da6c364513585a1f052b9e3372aac648d9132acb22541baaba6f5bc4",
+      "state": "SUCCEEDED",
+      "submits": 1,
+      "transport_sent": 1
+    },
+    {
+      "core_imported": true,
+      "error": "BudgetExceeded",
+      "message": "envelope ENV_T27b v1: autorizzati 15, regolati 0, esposti 10, richiesti 10",
+      "ok": false,
+      "pid": 2498,
+      "submits": 0,
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.BudgetExceeded: envelope ENV_T27b v1: autorizzati 15, regolati 0, esposti 10, richiesti 10\n",
+      "transport_sent": 0
+    },
+    {
+      "ok": true,
+      "pid": 2502,
+      "result": {
+        "authorized_units": 15,
+        "envelope_id": "ENV_T27b",
+        "envelope_version": 1,
+        "live_reservation_units": 0,
+        "remaining_units": 5,
+        "settled_units": 0,
+        "terminal_unsettled_jobs": 1,
+        "unit": "units",
+        "unsettled_exposure_units": 10
+      }
+    }
+  ]
+}

@@ -30,6 +30,7 @@ if GATE_ROOT not in sys.path:
 from runtime import go_candidate                                   # noqa: E402
 from runtime.hf_batch_bridge import go_inputs_from_job             # noqa: E402
 from runtime.provider_gate import RealProviderDisabled             # noqa: E402
+from runtime.authorization import AuthorizationRefused              # noqa: E402
 
 
 def _real_cli():
@@ -77,7 +78,9 @@ def resolve(ref):
 
 class Batch:
     def __init__(self, spec_path, *, adapter=None, store_path=None, media_sha256=None,
-                 provider_mode="fake", budget_units=0, envelope_units=None, max_polls=20):
+                 provider_mode="fake", budget_units=None, envelope_units=None, max_polls=20,
+                 intent="resume", attempt_reason=None, auto_permit=False, envelope_id=None,
+                 authorization=None, quote_for=None, operation_namespace=None):
         self.spec_path = os.path.abspath(spec_path)
         self.spec = json.load(open(self.spec_path, encoding="utf-8"))
         self.name = self.spec["batch"]
@@ -88,9 +91,34 @@ class Batch:
         self.store_path = store_path                 # SqliteReservationStore in state/
         self.provider_mode = provider_mode
         self.budget_units, self.envelope_units, self.max_polls = budget_units, envelope_units, max_polls
+        # R0-R1 (RV03/P-B03): intento del batch (resume | new_attempt), motivo e delega
+        # per il permesso monouso; envelope nominato per il ledger cumulativo.
+        # DELTA 03: il default strutturale "resume" NON avvia mai un primo attempt nel
+        # percorso GOVERNATO (go() -> IntentRefused NO_EXISTING_ATTEMPT finche' il chiamante
+        # non presenta intent="new_attempt" con attempt_reason). Resume-as-start esiste
+        # SOLO LEGACY_LAB ed e' marcato nel trace (`legacy_resume_as_start`).
+        self.intent, self.attempt_reason, self.auto_permit = intent, attempt_reason, auto_permit
+        self.envelope_id = envelope_id
+        # CR-02: percorso governato = autorizzazione fidata (envelope derivato dallo scope
+        # = nome del batch) + quote fidata per asset (`quote_for(asset) -> quote_id`).
+        # Senza `authorization` il batch e' LEGACY_LAB (solo compatibilita'/test).
+        self.authorization, self.quote_for = authorization, quote_for
+        # CR-10: l'identita' dell'operazione e' "<work_order_id>:<asset>", stabile fra run
+        # tecnici e distinta fra work order. Nel percorso GOVERNATO il namespace e'
+        # obbligatorio; il fallback "<batch>:<asset>" e' SOLO LEGACY_LAB (test storici P2).
+        self.operation_namespace = operation_namespace
+        if authorization is not None and not operation_namespace:
+            raise AuthorizationRefused(
+                "OPERATION_NAMESPACE_REQUIRED",
+                "il percorso governato richiede operation_namespace (work_order_id); "
+                "'batch:asset' e' ammesso solo LEGACY_LAB")
         # sha256 dei byte inviati: in produzione e' sha_file(resolve(ref)) come nel
         # fingerprint originale; il lab inietta gli sha256_sent del RUNTIME_LOCK.
         self.media_sha256 = media_sha256 or (lambda flag, rid, ref: sha_file(resolve(ref)))
+
+    def operation_id_for(self, asset):
+        """CR-10: '<work_order_id>:<asset>' (governato) oppure '<batch>:<asset>' (LEGACY_LAB)."""
+        return f"{self.operation_namespace or self.name}:{asset}"
 
     def prompt(self, job):
         return " ".join(self.spec["prompt_blocks"][b] for b in job.get("prefix_blocks", [])) + (" " if job.get("prefix_blocks") else "") + \
@@ -216,13 +244,27 @@ class Batch:
         # non sull'identita' della generazione.
         t0 = time.time()
         inputs = go_inputs_from_job(self.spec, j, self.media_sha256)
+        # RV03: l'operazione e' identificata da batch+asset, NON dal run_id: cambiare run
+        # non crea una seconda identita' per un tentativo ancora vivo o incerto.
         res = go_candidate.go(inputs, adapter=self.adapter, provider_mode=self.provider_mode,
                               store_path=self.store_path, budget_units=self.budget_units,
-                              envelope_units=self.envelope_units, max_polls=self.max_polls)
+                              envelope_units=self.envelope_units, max_polls=self.max_polls,
+                              intent=self.intent, reason=self.attempt_reason,
+                              auto_permit=self.auto_permit, envelope_id=self.envelope_id,
+                              operation_id=self.operation_id_for(j["asset"]),
+                              quote_id=self.quote_for(j["asset"]) if self.quote_for else None,
+                              authorization=self.authorization)
         rec.update(attempt=1, seconds=round(time.time() - t0, 1), job_id=res.job_id,
                    provider_job_id=res.provider_job_id, provider=res.provider,
-                   spec_key=res.spec_key, core_sha=res.core_sha,
+                   spec_key=res.spec_key, core_sha=res.core_sha, core_pin=res.core_pin,
                    reservation_outcome=res.reservation_outcome, run_status=res.outcome,
+                   intent=res.intent, resumed_terminal=res.resumed_terminal,
+                   permit_id=res.permit_id, operation_id=res.operation_id,
+                   governance=res.governance, envelope_id=res.envelope_id,
+                   quote_id=res.quote_id, budget_units=res.budget_units,
+                   resumed=res.resumed, requested_spec_key=res.requested_spec_key,
+                   legacy_resume_as_start=res.legacy_resume_as_start,
+                   operation_namespace=self.operation_namespace or f"LEGACY_LAB:{self.name}",
                    persisted=res.persisted, qa=[])
         return rec
 

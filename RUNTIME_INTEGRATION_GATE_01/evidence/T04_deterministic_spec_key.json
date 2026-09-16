@@ -7,10 +7,7 @@
     "expected_cost_credits": null,
     "kind": "image",
     "model": "fake_model_v1",
-    "params": {
-      "aspect_ratio": "9:16",
-      "duration_s": 5
-    },
+    "params": "FrozenDict({'aspect_ratio': '9:16', 'duration_s': 5})",
     "project_id": "GATE01_LAB",
     "prompt": "deterministico",
     "refs": [

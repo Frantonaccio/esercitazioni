@@ -3,7 +3,8 @@
     "error": "REAL_PROVIDER_DISABLED",
     "message": "REAL_PROVIDER_DISABLED: provider_mode='higgsfield-cli'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
     "ok": true,
-    "pid": 1176,
+    "pid": 2373,
+    "submits": 0,
     "verb": "lock",
     "violations": []
   },
@@ -11,34 +12,55 @@
     "error": "REAL_PROVIDER_DISABLED",
     "message": "REAL_PROVIDER_DISABLED: provider_mode='higgsfield-cli'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
     "ok": true,
-    "pid": 1178,
+    "pid": 2375,
+    "submits": 0,
     "verb": "quote",
     "violations": []
   },
   "round_3_new_process": {
     "ok": true,
-    "pid": 1166,
+    "pid": 2363,
     "submits": 0,
     "traces": [
       {
         "jobs": [
           {
             "asset": "B1_NEW_CLIP",
-            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "core_pin": "CORE_PIN_OK",
+            "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+            "governance": "LEGACY_LAB",
+            "intent": "resume",
             "job_id": "res_f4076e463c1fbcd9_1",
+            "legacy_resume_as_start": false,
+            "operation_id": "MOTION_B1_B4C:B1_NEW_CLIP",
+            "operation_namespace": "LEGACY_LAB:MOTION_B1_B4C",
+            "permit_id": null,
             "provider": "fake",
             "provider_job_id": "pv_f4076e46",
+            "requested_spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
             "reservation_outcome": "EXISTING_LIVE_JOB",
+            "resumed": true,
+            "resumed_terminal": false,
             "run_status": "SUCCEEDED",
             "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db"
           },
           {
             "asset": "B4C_NEW_CLIP",
-            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "core_pin": "CORE_PIN_OK",
+            "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+            "governance": "LEGACY_LAB",
+            "intent": "resume",
             "job_id": "res_6d687b11cfaf4fd0_1",
+            "legacy_resume_as_start": false,
+            "operation_id": "MOTION_B1_B4C:B4C_NEW_CLIP",
+            "operation_namespace": "LEGACY_LAB:MOTION_B1_B4C",
+            "permit_id": null,
             "provider": "fake",
             "provider_job_id": "pv_6d687b11",
+            "requested_spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
             "reservation_outcome": "EXISTING_LIVE_JOB",
+            "resumed": true,
+            "resumed_terminal": false,
             "run_status": "SUCCEEDED",
             "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f"
           }
@@ -51,28 +73,48 @@
   },
   "rounds_1_2_live": {
     "ok": true,
-    "pid": 1150,
+    "pid": 2347,
     "submits": 2,
     "traces": [
       {
         "jobs": [
           {
             "asset": "B1_NEW_CLIP",
-            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "core_pin": "CORE_PIN_OK",
+            "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+            "governance": "LEGACY_LAB",
+            "intent": "resume",
             "job_id": "res_f4076e463c1fbcd9_1",
+            "legacy_resume_as_start": true,
+            "operation_id": "MOTION_B1_B4C:B1_NEW_CLIP",
+            "operation_namespace": "LEGACY_LAB:MOTION_B1_B4C",
+            "permit_id": null,
             "provider": "fake",
             "provider_job_id": "pv_f4076e46",
+            "requested_spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
             "reservation_outcome": "RESERVED_NEW",
+            "resumed": false,
+            "resumed_terminal": false,
             "run_status": "RUNNING",
             "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db"
           },
           {
             "asset": "B4C_NEW_CLIP",
-            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "core_pin": "CORE_PIN_OK",
+            "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+            "governance": "LEGACY_LAB",
+            "intent": "resume",
             "job_id": "res_6d687b11cfaf4fd0_1",
+            "legacy_resume_as_start": true,
+            "operation_id": "MOTION_B1_B4C:B4C_NEW_CLIP",
+            "operation_namespace": "LEGACY_LAB:MOTION_B1_B4C",
+            "permit_id": null,
             "provider": "fake",
             "provider_job_id": "pv_6d687b11",
+            "requested_spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
             "reservation_outcome": "RESERVED_NEW",
+            "resumed": false,
+            "resumed_terminal": false,
             "run_status": "RUNNING",
             "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f"
           }
@@ -83,21 +125,41 @@
         "jobs": [
           {
             "asset": "B1_NEW_CLIP",
-            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "core_pin": "CORE_PIN_OK",
+            "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+            "governance": "LEGACY_LAB",
+            "intent": "resume",
             "job_id": "res_f4076e463c1fbcd9_1",
+            "legacy_resume_as_start": false,
+            "operation_id": "MOTION_B1_B4C:B1_NEW_CLIP",
+            "operation_namespace": "LEGACY_LAB:MOTION_B1_B4C",
+            "permit_id": null,
             "provider": "fake",
             "provider_job_id": "pv_f4076e46",
+            "requested_spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
             "reservation_outcome": "EXISTING_LIVE_JOB",
+            "resumed": true,
+            "resumed_terminal": false,
             "run_status": "EXISTING_LIVE_JOB",
             "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db"
           },
           {
             "asset": "B4C_NEW_CLIP",
-            "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+            "core_pin": "CORE_PIN_OK",
+            "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+            "governance": "LEGACY_LAB",
+            "intent": "resume",
             "job_id": "res_6d687b11cfaf4fd0_1",
+            "legacy_resume_as_start": false,
+            "operation_id": "MOTION_B1_B4C:B4C_NEW_CLIP",
+            "operation_namespace": "LEGACY_LAB:MOTION_B1_B4C",
+            "permit_id": null,
             "provider": "fake",
             "provider_job_id": "pv_6d687b11",
+            "requested_spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
             "reservation_outcome": "EXISTING_LIVE_JOB",
+            "resumed": true,
+            "resumed_terminal": false,
             "run_status": "EXISTING_LIVE_JOB",
             "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f"
           }
@@ -109,7 +171,34 @@
     "violations": []
   },
   "state_after_live": {
-    "pid": 1164,
+    "anomalies": 0,
+    "ledger_entries": 2,
+    "ownership": [
+      {
+        "attempt_token": "att_7faf839a3ec58d3f0d615704",
+        "envelope_id": null,
+        "job_id": "res_6d687b11cfaf4fd0_1",
+        "operation_id": "MOTION_B1_B4C:B4C_NEW_CLIP",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 4,
+        "settled_units": null
+      },
+      {
+        "attempt_token": "att_f7e02ba5c68cbf76e75a9f17",
+        "envelope_id": null,
+        "job_id": "res_f4076e463c1fbcd9_1",
+        "operation_id": "MOTION_B1_B4C:B1_NEW_CLIP",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 4,
+        "settled_units": null
+      }
+    ],
+    "permits": 0,
+    "permits_consumed": 0,
+    "pid": 2361,
+    "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
       {
@@ -135,7 +224,34 @@
     ]
   },
   "state_final": {
-    "pid": 1174,
+    "anomalies": 0,
+    "ledger_entries": 2,
+    "ownership": [
+      {
+        "attempt_token": "att_7faf839a3ec58d3f0d615704",
+        "envelope_id": null,
+        "job_id": "res_6d687b11cfaf4fd0_1",
+        "operation_id": "MOTION_B1_B4C:B4C_NEW_CLIP",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 5,
+        "settled_units": null
+      },
+      {
+        "attempt_token": "att_f7e02ba5c68cbf76e75a9f17",
+        "envelope_id": null,
+        "job_id": "res_f4076e463c1fbcd9_1",
+        "operation_id": "MOTION_B1_B4C:B1_NEW_CLIP",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 5,
+        "settled_units": null
+      }
+    ],
+    "permits": 0,
+    "permits_consumed": 0,
+    "pid": 2371,
+    "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
       {

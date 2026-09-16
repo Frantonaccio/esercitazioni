@@ -1,6 +1,23 @@
 {
   "after_A": {
-    "pid": 1018,
+    "anomalies": 0,
+    "ledger_entries": 1,
+    "ownership": [
+      {
+        "attempt_token": "att_c23e2c0239039b020de28b36",
+        "envelope_id": null,
+        "job_id": "res_29f82fa26eb391cc_1",
+        "operation_id": "lab:restart",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 3,
+        "settled_units": null
+      }
+    ],
+    "permits": 0,
+    "permits_consumed": 0,
+    "pid": 2209,
+    "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
       {
@@ -16,7 +33,24 @@
     ]
   },
   "after_B": {
-    "pid": 1024,
+    "anomalies": 0,
+    "ledger_entries": 1,
+    "ownership": [
+      {
+        "attempt_token": "att_c23e2c0239039b020de28b36",
+        "envelope_id": null,
+        "job_id": "res_29f82fa26eb391cc_1",
+        "operation_id": "lab:restart",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 5,
+        "settled_units": null
+      }
+    ],
+    "permits": 0,
+    "permits_consumed": 0,
+    "pid": 2215,
+    "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
       {
@@ -32,57 +66,95 @@
     ]
   },
   "process_A": {
+    "budget_units": 0,
     "core_imported": true,
-    "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "core_pin": "CORE_PIN_OK",
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "envelope_id": null,
+    "governance": "LEGACY_LAB",
+    "intent": "resume",
     "job_id": "res_29f82fa26eb391cc_1",
+    "legacy_resume_as_start": true,
     "ok": true,
+    "operation_id": "lab:restart",
     "outcome": "RUNNING",
+    "permit_id": null,
     "persisted": {
+      "attempt_token": "att_c23e2c0239039b020de28b36",
       "cost_credits": null,
       "error": null,
       "job_id": "res_29f82fa26eb391cc_1",
+      "operation_id": "lab:restart",
+      "payload_digest": "0bd0ec4f48cddc55422309f05177e427b47dd4f48f50088868d822faf216d801",
       "polls": 1,
       "provider": "fake",
+      "provider_account": "fake_acct_a",
       "provider_job_id": "pv_29f82fa2",
+      "quote_id": null,
+      "revision": 3,
       "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
       "state": "RUNNING",
-      "submitted_at": 1789572129.9710345,
-      "terminal_by": 1789572429.9710345,
+      "submitted_at": 1789589638.5621743,
+      "terminal_by": 1789589938.5621743,
       "webhook_hints": 0
     },
-    "pid": 1014,
+    "pid": 2205,
     "provider": "fake",
     "provider_job_id": "pv_29f82fa2",
+    "quote_id": null,
+    "requested_spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
     "reservation_outcome": "RESERVED_NEW",
+    "resumed": false,
+    "resumed_terminal": false,
     "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
     "state": "RUNNING",
-    "submits": 1
+    "submits": 1,
+    "transport_sent": 1
   },
   "process_B": {
+    "budget_units": null,
     "core_imported": true,
-    "core_sha": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "core_pin": "CORE_PIN_OK",
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "envelope_id": null,
+    "governance": "LEGACY_LAB",
+    "intent": "resume",
     "job_id": "res_29f82fa26eb391cc_1",
+    "legacy_resume_as_start": false,
     "ok": true,
+    "operation_id": "lab:restart",
     "outcome": "SUCCEEDED",
+    "permit_id": null,
     "persisted": {
+      "attempt_token": "att_c23e2c0239039b020de28b36",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_29f82fa26eb391cc_1",
+      "operation_id": "lab:restart",
+      "payload_digest": "0bd0ec4f48cddc55422309f05177e427b47dd4f48f50088868d822faf216d801",
       "polls": 3,
       "provider": "fake",
+      "provider_account": "fake_acct_a",
       "provider_job_id": "pv_29f82fa2",
+      "quote_id": null,
+      "revision": 5,
       "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
       "state": "SUCCEEDED",
-      "submitted_at": 1789572129.9710345,
-      "terminal_by": 1789572429.9710345,
+      "submitted_at": 1789589638.5621743,
+      "terminal_by": 1789589938.5621743,
       "webhook_hints": 0
     },
-    "pid": 1020,
+    "pid": 2211,
     "provider": "fake",
     "provider_job_id": "pv_29f82fa2",
+    "quote_id": null,
+    "requested_spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
     "reservation_outcome": "EXISTING_LIVE_JOB",
+    "resumed": true,
+    "resumed_terminal": false,
     "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
     "state": "SUCCEEDED",
-    "submits": 0
+    "submits": 0,
+    "transport_sent": 0
   }
 }

@@ -1,0 +1,173 @@
+{
+  "after_crash": {
+    "anomalies": 0,
+    "ledger_entries": 1,
+    "ownership": [
+      {
+        "attempt_token": "att_441e75cc9f45142d40cc6554",
+        "envelope_id": null,
+        "job_id": "res_b157c035497bf6f8_1",
+        "operation_id": "T30:asset",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 1,
+        "settled_units": null
+      }
+    ],
+    "permits": 0,
+    "permits_consumed": 0,
+    "pid": 2632,
+    "quotes_consumed": 0,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": null,
+        "job_id": "res_b157c035497bf6f8_1",
+        "polls": 0,
+        "provider": "fake",
+        "provider_job_id": null,
+        "spec_key": "b157c035497bf6f89b0f104cb341f68b7298a2105bfdce563c059c758c184b17",
+        "state": "RESERVED"
+      }
+    ]
+  },
+  "after_recovery": {
+    "anomalies": 1,
+    "ledger_entries": 1,
+    "ownership": [
+      {
+        "attempt_token": "att_441e75cc9f45142d40cc6554",
+        "envelope_id": null,
+        "job_id": "res_b157c035497bf6f8_1",
+        "operation_id": "T30:asset",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 2,
+        "settled_units": null
+      }
+    ],
+    "permits": 0,
+    "permits_consumed": 0,
+    "pid": 2636,
+    "quotes_consumed": 0,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": null,
+        "job_id": "res_b157c035497bf6f8_1",
+        "polls": 0,
+        "provider": "fake",
+        "provider_job_id": null,
+        "spec_key": "b157c035497bf6f89b0f104cb341f68b7298a2105bfdce563c059c758c184b17",
+        "state": "SUBMIT_UNKNOWN"
+      }
+    ]
+  },
+  "crash_exitcode": 4,
+  "end": {
+    "anomalies": 1,
+    "ledger_entries": 1,
+    "ownership": [
+      {
+        "attempt_token": "att_441e75cc9f45142d40cc6554",
+        "envelope_id": null,
+        "job_id": "res_b157c035497bf6f8_1",
+        "operation_id": "T30:asset",
+        "permit_id": null,
+        "provider_account": "fake_acct_a",
+        "revision": 2,
+        "settled_units": null
+      }
+    ],
+    "permits": 0,
+    "permits_consumed": 0,
+    "pid": 2642,
+    "quotes_consumed": 0,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 0,
+        "cost_credits": null,
+        "job_id": "res_b157c035497bf6f8_1",
+        "polls": 0,
+        "provider": "fake",
+        "provider_job_id": null,
+        "spec_key": "b157c035497bf6f89b0f104cb341f68b7298a2105bfdce563c059c758c184b17",
+        "state": "SUBMIT_UNKNOWN"
+      }
+    ]
+  },
+  "recovery": {
+    "ok": true,
+    "pid": 2634,
+    "result": [
+      {
+        "attempt_token": "att_441e75cc9f45142d40cc6554",
+        "cost_credits": null,
+        "error": "intento di submit registrato senza esito: riconciliazione richiesta",
+        "job_id": "res_b157c035497bf6f8_1",
+        "operation_id": "T30:asset",
+        "payload_digest": "4e3c85e59d9fb7e57ac064090393cc811fea3eb389df9325bba4d01c3885c97e",
+        "polls": 0,
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 2,
+        "spec_key": "b157c035497bf6f89b0f104cb341f68b7298a2105bfdce563c059c758c184b17",
+        "state": "SUBMIT_UNKNOWN",
+        "submitted_at": 1789589653.206121,
+        "terminal_by": 0.0,
+        "webhook_hints": 0
+      }
+    ]
+  },
+  "replay": {
+    "budget_units": null,
+    "core_imported": true,
+    "core_pin": "CORE_PIN_OK",
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "envelope_id": null,
+    "governance": "LEGACY_LAB",
+    "intent": "resume",
+    "job_id": "res_b157c035497bf6f8_1",
+    "legacy_resume_as_start": false,
+    "ok": true,
+    "operation_id": "T30:asset",
+    "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
+    "permit_id": null,
+    "persisted": {
+      "attempt_token": "att_441e75cc9f45142d40cc6554",
+      "cost_credits": null,
+      "error": "intento di submit registrato senza esito: riconciliazione richiesta",
+      "job_id": "res_b157c035497bf6f8_1",
+      "operation_id": "T30:asset",
+      "payload_digest": "4e3c85e59d9fb7e57ac064090393cc811fea3eb389df9325bba4d01c3885c97e",
+      "polls": 0,
+      "provider": "fake",
+      "provider_account": "fake_acct_a",
+      "provider_job_id": null,
+      "quote_id": null,
+      "revision": 2,
+      "spec_key": "b157c035497bf6f89b0f104cb341f68b7298a2105bfdce563c059c758c184b17",
+      "state": "SUBMIT_UNKNOWN",
+      "submitted_at": 1789589653.206121,
+      "terminal_by": 0.0,
+      "webhook_hints": 0
+    },
+    "pid": 2638,
+    "provider": "fake",
+    "provider_job_id": null,
+    "quote_id": null,
+    "requested_spec_key": "b157c035497bf6f89b0f104cb341f68b7298a2105bfdce563c059c758c184b17",
+    "reservation_outcome": "EXISTING_LIVE_JOB",
+    "resumed": true,
+    "resumed_terminal": false,
+    "spec_key": "b157c035497bf6f89b0f104cb341f68b7298a2105bfdce563c059c758c184b17",
+    "state": "SUBMIT_UNKNOWN",
+    "submits": 0,
+    "transport_sent": 0
+  }
+}

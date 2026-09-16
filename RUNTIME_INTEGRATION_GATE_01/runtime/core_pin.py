@@ -10,6 +10,12 @@ modulo del Core. Quattro esiti, nessun fallback:
     CORE_WORKTREE_DIRTY  SHA corretto ma il checkout ha modifiche non committate
                          o file non tracciati (T20): canonical SHA + exact tree
 
+CONTROLLED PROMOTION (2026-09-16): l'esito LAB-only CORE_CANDIDATE_OK, che
+accettava un tree sporco identificato da (SHA base, digest del delta dichiarato
+via CREATIVE_OS_CORE_CANDIDATE_DELTA), e' stato RIMOSSO. Il runtime promosso
+pinna SOLO un commit reale del Core: SHA esatto + working tree pulito. Nessun
+digest sostituisce lo SHA.
+
 Lo SHA osservato si legge dal checkout reale (`git rev-parse HEAD`), non da un
 file di dichiarazione: un file puo' mentire, il checkout no. Lo stesso vale per
 la pulizia: `git status --porcelain` sul checkout che verra' importato. Un HEAD
@@ -22,8 +28,10 @@ import os
 import subprocess
 from dataclasses import dataclass
 
-# Core canonical richiesto da questo gate (PR #2 merged, C26 canonical).
-REQUIRED_CORE_SHA = "819e7cfedb0f6641dc797e7993bec79462ac8df6"
+# Core richiesto da questo runtime: commit reale della controlled promotion R0-R1
+# (Frantonaccio/creative-os, branch promote/r0-r1-hardening-2026-09-16), figlio
+# della baseline 819e7cfedb0f6641dc797e7993bec79462ac8df6 (PR #2 merged, C26).
+REQUIRED_CORE_SHA = "740ee979300fe20a9382992528604dee70cb2fcf"
 
 # Pin storici noti: un Core a questo SHA NON e' un Core sconosciuto, e' un Core
 # VECCHIO. Va rifiutato con un esito che lo dica.
@@ -53,6 +61,11 @@ class CorePinVerdict:
 
     @property
     def ok(self) -> bool:
+        return self.code == "CORE_PIN_OK"
+
+    @property
+    def canonical(self) -> bool:
+        """Vero SOLO per il Core canonical pulito (unico esito che supera il pin)."""
         return self.code == "CORE_PIN_OK"
 
 
@@ -92,6 +105,8 @@ def verify_core_pin(observed: str | None, required: str = REQUIRED_CORE_SHA,
 
     Ordine: prima l'identita' (STALE / MISMATCH vincono), poi la pulizia.
     `dirty=None` (stato non verificabile) e' trattato come sporco: fail-closed.
+    Un tree sporco sullo SHA giusto e' SEMPRE CORE_WORKTREE_DIRTY: nessun digest
+    dichiarato dal chiamante puo' trasformarlo in un esito positivo.
     """
     if observed is None:
         return CorePinVerdict("CORE_PIN_MISMATCH", observed, required)
@@ -115,10 +130,14 @@ def require_core(core_path: str, required: str = REQUIRED_CORE_SHA) -> str:
     B. working tree clean (altrimenti CORE_WORKTREE_DIRTY)
     Va chiamata PRIMA di aggiungere `core_path` a sys.path.
     """
+    return require_core_verdict(core_path, required).observed
+
+
+def require_core_verdict(core_path: str, required: str = REQUIRED_CORE_SHA) -> CorePinVerdict:
     if not os.path.isdir(core_path):
         raise CorePinError("CORE_PIN_MISMATCH", None, required)
-    v = verify_core_pin(resolve_core_sha(core_path), required,
-                        resolve_core_dirty(core_path))
+    dirty = resolve_core_dirty(core_path)
+    v = verify_core_pin(resolve_core_sha(core_path), required, dirty)
     if not v.ok:
         raise CorePinError(v.code, v.observed, v.required, v.dirty)
-    return v.observed
+    return v

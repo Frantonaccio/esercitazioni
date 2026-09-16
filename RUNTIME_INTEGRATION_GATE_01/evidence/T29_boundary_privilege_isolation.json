@@ -1,0 +1,37 @@
+{
+  "attempts": {
+    "direct_dispatch_on_worker_store": "BYPASS_POSSIBLE",
+    "read_worker_secret": "BYPASS_POSSIBLE",
+    "write_worker_code": "BYPASS_POSSIBLE",
+    "write_worker_store": "BYPASS_POSSIBLE"
+  },
+  "protocol_reply": [
+    {
+      "amount": 10,
+      "envelope_id": "ENV_T29",
+      "ok": true,
+      "price_source": "LAB_PRICE_TABLE",
+      "quote_id": "quote_466880d3ed8353e891beb08f",
+      "sku": "fake_model_v1"
+    },
+    {
+      "ok": false,
+      "refused": "PROTOCOL: INTENT_REQUIRED (submit senza intent esplicito: resume | new_attempt)",
+      "served": 2,
+      "submits": 0
+    }
+  ],
+  "stop": {
+    "account_id": "acct_eb4affbe2a85",
+    "ok": true,
+    "secret_path": "/tmp/gate01_nz7iuvlu/spender_secret/worker_secret.json",
+    "served": 3,
+    "stopped": true,
+    "violations": []
+  },
+  "uids": {
+    "orchestrator_uid": 0,
+    "worker_uid": 0
+  },
+  "verdict": "BLOCKED_ENVIRONMENT"
+}

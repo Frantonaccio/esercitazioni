@@ -1,0 +1,682 @@
+{
+  "boundary": {
+    "quote_id": "quote_82e30ef4282a55a0a93e66a6",
+    "replies": [
+      {
+        "ok": false,
+        "refused": "PROTOCOL: INTENT_REQUIRED (submit senza intent esplicito: resume | new_attempt)",
+        "served": 1,
+        "submits": 0
+      },
+      {
+        "code": "NO_EXISTING_ATTEMPT",
+        "error": "IntentRefused",
+        "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'T37:b': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
+        "ok": false,
+        "submits": 0
+      },
+      {
+        "latest": null,
+        "ok": true
+      },
+      {
+        "budget_units": 10,
+        "envelope_id": "ENV_T37",
+        "governance": "GOVERNED_LAB",
+        "job_id": "res_c4c42ed9c4b95879_1",
+        "legacy_resume_as_start": false,
+        "ok": true,
+        "outcome": "SUCCEEDED",
+        "permit_id": "permit_81ecf5bcf370a1db7cf9e48f",
+        "provider_account": "acct_718d9fba7bca",
+        "quote_id": "quote_82e30ef4282a55a0a93e66a6",
+        "requested_spec_key": "c4c42ed9c4b95879f4950d2e4036283061bda643401badb069851a8335059ae5",
+        "reservation_outcome": "RESERVED_NEW",
+        "resumed": false,
+        "spec_key": "c4c42ed9c4b95879f4950d2e4036283061bda643401badb069851a8335059ae5",
+        "state": "SUCCEEDED",
+        "submits": 1
+      },
+      {
+        "budget_units": null,
+        "envelope_id": null,
+        "governance": "GOVERNED_LAB",
+        "job_id": "res_c4c42ed9c4b95879_1",
+        "legacy_resume_as_start": false,
+        "ok": true,
+        "outcome": "RESUMED/SUCCEEDED",
+        "permit_id": null,
+        "provider_account": "acct_718d9fba7bca",
+        "quote_id": "quote_82e30ef4282a55a0a93e66a6",
+        "requested_spec_key": "c4c42ed9c4b95879f4950d2e4036283061bda643401badb069851a8335059ae5",
+        "reservation_outcome": "NONE",
+        "resumed": true,
+        "spec_key": "c4c42ed9c4b95879f4950d2e4036283061bda643401badb069851a8335059ae5",
+        "state": "SUCCEEDED",
+        "submits": 1
+      }
+    ],
+    "state": {
+      "anomalies": 0,
+      "ledger_entries": 1,
+      "ownership": [
+        {
+          "attempt_token": "att_77085aa6afb18e591cb30d20",
+          "envelope_id": "ENV_T37",
+          "job_id": "res_c4c42ed9c4b95879_1",
+          "operation_id": "T37:b",
+          "permit_id": "permit_81ecf5bcf370a1db7cf9e48f",
+          "provider_account": "acct_718d9fba7bca",
+          "revision": 3,
+          "settled_units": null
+        }
+      ],
+      "permits": 1,
+      "permits_consumed": 1,
+      "pid": 2599,
+      "quotes_consumed": 1,
+      "reserved_units": 0,
+      "rows": [
+        {
+          "budget_units": 10,
+          "cost_credits": 4.0,
+          "job_id": "res_c4c42ed9c4b95879_1",
+          "polls": 1,
+          "provider": "fake",
+          "provider_job_id": "pv_c4c42ed9",
+          "spec_key": "c4c42ed9c4b95879f4950d2e4036283061bda643401badb069851a8335059ae5",
+          "state": "SUCCEEDED"
+        }
+      ]
+    },
+    "stop": {
+      "account_id": "acct_718d9fba7bca",
+      "ok": true,
+      "secret_path": "/tmp/gate01_nz7iuvlu/spender_secret/worker_secret.json",
+      "served": 6,
+      "stopped": true,
+      "violations": []
+    }
+  },
+  "first_spend_new_attempt": {
+    "budget_units": 10,
+    "core_imported": true,
+    "core_pin": "CORE_PIN_OK",
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "envelope_id": "ENV_T37",
+    "governance": "GOVERNED_LAB",
+    "intent": "new_attempt",
+    "job_id": "res_594750f98732949d_1",
+    "legacy_resume_as_start": false,
+    "ok": true,
+    "operation_id": "T37:a",
+    "outcome": "SUCCEEDED",
+    "permit_id": "permit_eda28dc45784e352623f33ef",
+    "persisted": {
+      "attempt_token": "att_7cd687aa94aaf30add1ce191",
+      "cost_credits": 4.0,
+      "error": null,
+      "job_id": "res_594750f98732949d_1",
+      "operation_id": "T37:a",
+      "payload_digest": "d190404b421ced90cd9822a29fc5a319bd59bd32ef25f4f824dcb1de84c82fbc",
+      "polls": 1,
+      "provider": "fake",
+      "provider_account": "fake_acct_a",
+      "provider_job_id": "pv_594750f9",
+      "quote_id": "quote_2015380875d6330f7df66c59",
+      "revision": 3,
+      "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+      "state": "SUCCEEDED",
+      "submitted_at": 1789589650.415499,
+      "terminal_by": 1789589950.415499,
+      "webhook_hints": 0
+    },
+    "pid": 2548,
+    "provider": "fake",
+    "provider_job_id": "pv_594750f9",
+    "quote_id": "quote_2015380875d6330f7df66c59",
+    "requested_spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+    "reservation_outcome": "RESERVED_NEW",
+    "resumed": false,
+    "resumed_terminal": false,
+    "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+    "state": "SUCCEEDED",
+    "submits": 1,
+    "transport_sent": 1
+  },
+  "first_spend_without_quote": {
+    "code": "QUOTE_REQUIRED",
+    "core_imported": true,
+    "error": "AuthorizationRefused",
+    "message": "QUOTE_REQUIRED: nessuna quote fidata presentata: nessun importo, nessun submit",
+    "ok": false,
+    "pid": 2580,
+    "submits": 0,
+    "transport_sent": 0
+  },
+  "governed_resume_without_attempt": [
+    {
+      "code": "NO_EXISTING_ATTEMPT",
+      "core_imported": true,
+      "error": "IntentRefused",
+      "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'T37:a': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
+      "ok": false,
+      "pid": 2536,
+      "submits": 0,
+      "transport_sent": 0
+    },
+    {
+      "code": "NO_EXISTING_ATTEMPT",
+      "core_imported": true,
+      "error": "IntentRefused",
+      "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'T37:a': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
+      "ok": false,
+      "pid": 2540,
+      "submits": 0,
+      "transport_sent": 0
+    }
+  ],
+  "hf_batch_governed_default_resume": {
+    "code": "NO_EXISTING_ATTEMPT",
+    "error": "IntentRefused",
+    "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'WO_A:B1_NEW_CLIP': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
+    "ok": false,
+    "pid": 2601,
+    "submits": 0,
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 331, in hf_batch_runtime_go\n    traces.append(b.go())\n                  ^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 275, in go\n    recs = list(ex.map(lambda j: self.run_job(j, lock), self.spec[\"jobs\"]))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/concurrent/futures/_base.py\", line 619, in result_iterator\n    yield _result_or_cancel(fs.pop())\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/concurrent/futures/_base.py\", line 317, in _result_or_cancel\n    return fut.result(timeout)\n           ^^^^^^^^^^^^^^^^^^^\nruntime.go_candidate.IntentRefused: NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'WO_A:B1_NEW_CLIP': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)\n",
+    "verb": "go",
+    "violations": []
+  },
+  "hf_batch_governed_new_attempt_no_quote": {
+    "code": "QUOTE_REQUIRED",
+    "error": "AuthorizationRefused",
+    "message": "QUOTE_REQUIRED: nessuna quote fidata presentata: nessun importo, nessun submit",
+    "ok": false,
+    "pid": 2611,
+    "submits": 0,
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 331, in hf_batch_runtime_go\n    traces.append(b.go())\n                  ^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 275, in go\n    recs = list(ex.map(lambda j: self.run_job(j, lock), self.spec[\"jobs\"]))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/concurrent/futures/_base.py\", line 619, in result_iterator\n    yield _result_or_cancel(fs.pop())\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/concurrent/futures/_base.py\", line 317, in _result_or_cancel\n    return fut.result(timeout)\n           ^^^^^^^^^^^^^^^^^^^\nruntime.authorization.AuthorizationRefused: QUOTE_REQUIRED: nessuna quote fidata presentata: nessun importo, nessun submit\n",
+    "verb": "go",
+    "violations": []
+  },
+  "hf_batch_governed_new_attempt_state": {
+    "anomalies": 0,
+    "ledger_entries": 0,
+    "ownership": [],
+    "permits": 0,
+    "permits_consumed": 0,
+    "pid": 2619,
+    "quotes_consumed": 0,
+    "reserved_units": 0,
+    "rows": []
+  },
+  "hf_batch_governed_no_namespace": {
+    "code": "OPERATION_NAMESPACE_REQUIRED",
+    "error": "AuthorizationRefused",
+    "message": "OPERATION_NAMESPACE_REQUIRED: il percorso governato richiede operation_namespace (work_order_id); 'batch:asset' e' ammesso solo LEGACY_LAB",
+    "ok": false,
+    "pid": 2609,
+    "submits": 0,
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 308, in hf_batch_runtime_go\n    b = hb.Batch(os.path.join(HANDOFF, \"SPECS\", spec_name), adapter=adapter,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 111, in __init__\n    raise AuthorizationRefused(\nruntime.authorization.AuthorizationRefused: OPERATION_NAMESPACE_REQUIRED: il percorso governato richiede operation_namespace (work_order_id); 'batch:asset' e' ammesso solo LEGACY_LAB\n",
+    "verb": "go",
+    "violations": []
+  },
+  "hf_batch_legacy": {
+    "ok": true,
+    "pid": 2621,
+    "submits": 2,
+    "traces": [
+      {
+        "jobs": [
+          {
+            "asset": "B1_NEW_CLIP",
+            "core_pin": "CORE_PIN_OK",
+            "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+            "governance": "LEGACY_LAB",
+            "intent": "resume",
+            "job_id": "res_f4076e463c1fbcd9_1",
+            "legacy_resume_as_start": true,
+            "operation_id": "MOTION_B1_B4C:B1_NEW_CLIP",
+            "operation_namespace": "LEGACY_LAB:MOTION_B1_B4C",
+            "permit_id": null,
+            "provider": "fake",
+            "provider_job_id": "pv_f4076e46",
+            "requested_spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+            "reservation_outcome": "RESERVED_NEW",
+            "resumed": false,
+            "resumed_terminal": false,
+            "run_status": "SUCCEEDED",
+            "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db"
+          },
+          {
+            "asset": "B4C_NEW_CLIP",
+            "core_pin": "CORE_PIN_OK",
+            "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+            "governance": "LEGACY_LAB",
+            "intent": "resume",
+            "job_id": "res_6d687b11cfaf4fd0_1",
+            "legacy_resume_as_start": true,
+            "operation_id": "MOTION_B1_B4C:B4C_NEW_CLIP",
+            "operation_namespace": "LEGACY_LAB:MOTION_B1_B4C",
+            "permit_id": null,
+            "provider": "fake",
+            "provider_job_id": "pv_6d687b11",
+            "requested_spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
+            "reservation_outcome": "RESERVED_NEW",
+            "resumed": false,
+            "resumed_terminal": false,
+            "run_status": "SUCCEEDED",
+            "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f"
+          }
+        ],
+        "run_verdict": "LOCK_HELD"
+      }
+    ],
+    "verb": "go",
+    "violations": []
+  },
+  "legacy_resume_as_start": {
+    "budget_units": 0,
+    "core_imported": true,
+    "core_pin": "CORE_PIN_OK",
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "envelope_id": null,
+    "governance": "LEGACY_LAB",
+    "intent": "resume",
+    "job_id": "res_dd40b12fc2ffe171_1",
+    "legacy_resume_as_start": true,
+    "ok": true,
+    "operation_id": "lab:d03 legacy",
+    "outcome": "SUCCEEDED",
+    "permit_id": null,
+    "persisted": {
+      "attempt_token": "att_bb8d5ff3a223c1d606895cdd",
+      "cost_credits": 4.0,
+      "error": null,
+      "job_id": "res_dd40b12fc2ffe171_1",
+      "operation_id": "lab:d03 legacy",
+      "payload_digest": "4045d78c65f4affec55d5c3a5bf442d467fe1a31b929baf33c25cf9a1829d5ef",
+      "polls": 1,
+      "provider": "fake",
+      "provider_account": "fake_acct_a",
+      "provider_job_id": "pv_dd40b12f",
+      "quote_id": null,
+      "revision": 3,
+      "spec_key": "dd40b12fc2ffe1716e18ecc4b81a648625414be6fefcc43f6768f4cc09191233",
+      "state": "SUCCEEDED",
+      "submitted_at": 1789589651.9909334,
+      "terminal_by": 1789589951.9909334,
+      "webhook_hints": 0
+    },
+    "pid": 2586,
+    "provider": "fake",
+    "provider_job_id": "pv_dd40b12f",
+    "quote_id": null,
+    "requested_spec_key": "dd40b12fc2ffe1716e18ecc4b81a648625414be6fefcc43f6768f4cc09191233",
+    "reservation_outcome": "RESERVED_NEW",
+    "resumed": false,
+    "resumed_terminal": false,
+    "spec_key": "dd40b12fc2ffe1716e18ecc4b81a648625414be6fefcc43f6768f4cc09191233",
+    "state": "SUCCEEDED",
+    "submits": 1,
+    "transport_sent": 1
+  },
+  "quote_after_first": {
+    "ok": true,
+    "pid": 2554,
+    "result": {
+      "amount": 10,
+      "consumed_at": 1789589650.4109943,
+      "consumed_by": "res_594750f98732949d_1",
+      "envelope_id": "ENV_T37",
+      "expires_at": null,
+      "issued_at": 1789589649.8272939,
+      "operation_id": "T37:a",
+      "quote_id": "quote_2015380875d6330f7df66c59",
+      "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+      "unit": "synthetic_units",
+      "version": 1
+    }
+  },
+  "quote_after_refusals": {
+    "ok": true,
+    "pid": 2546,
+    "result": {
+      "amount": 10,
+      "consumed_at": null,
+      "consumed_by": null,
+      "envelope_id": "ENV_T37",
+      "expires_at": null,
+      "issued_at": 1789589649.8272939,
+      "operation_id": "T37:a",
+      "quote_id": "quote_2015380875d6330f7df66c59",
+      "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+      "unit": "synthetic_units",
+      "version": 1
+    }
+  },
+  "quote_after_resume": {
+    "ok": true,
+    "pid": 2562,
+    "result": {
+      "amount": 10,
+      "consumed_at": 1789589650.4109943,
+      "consumed_by": "res_594750f98732949d_1",
+      "envelope_id": "ENV_T37",
+      "expires_at": null,
+      "issued_at": 1789589649.8272939,
+      "operation_id": "T37:a",
+      "quote_id": "quote_2015380875d6330f7df66c59",
+      "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+      "unit": "synthetic_units",
+      "version": 1
+    }
+  },
+  "reserved_orphan": [
+    {
+      "job_id": "res_8302fe5dde49e863_1",
+      "ok": true,
+      "pid": 2574,
+      "result": "RESERVED_NEW"
+    },
+    {
+      "budget_units": null,
+      "core_imported": true,
+      "core_pin": "CORE_PIN_OK",
+      "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+      "envelope_id": null,
+      "governance": "GOVERNED_LAB",
+      "intent": "resume",
+      "job_id": "res_8302fe5dde49e863_1",
+      "legacy_resume_as_start": false,
+      "ok": true,
+      "operation_id": "T37:o",
+      "outcome": "EXISTING_LIVE_JOB/reserved-no-dispatch",
+      "permit_id": null,
+      "persisted": {
+        "attempt_token": null,
+        "cost_credits": null,
+        "error": null,
+        "job_id": "res_8302fe5dde49e863_1",
+        "operation_id": "T37:o",
+        "payload_digest": null,
+        "polls": 0,
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 0,
+        "spec_key": "8302fe5dde49e8637d1e72b03678b8551732ad0993126fe6ce85f4e5040bf873",
+        "state": "RESERVED",
+        "submitted_at": 1.0,
+        "terminal_by": 0.0,
+        "webhook_hints": 0
+      },
+      "pid": 2576,
+      "provider": "",
+      "provider_job_id": null,
+      "quote_id": null,
+      "requested_spec_key": "8302fe5dde49e8637d1e72b03678b8551732ad0993126fe6ce85f4e5040bf873",
+      "reservation_outcome": "EXISTING_LIVE_JOB",
+      "resumed": true,
+      "resumed_terminal": false,
+      "spec_key": "8302fe5dde49e8637d1e72b03678b8551732ad0993126fe6ce85f4e5040bf873",
+      "state": "RESERVED",
+      "submits": 0,
+      "transport_sent": 0
+    }
+  ],
+  "resume_after_first": {
+    "budget_units": null,
+    "core_imported": true,
+    "core_pin": "CORE_PIN_OK",
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "envelope_id": null,
+    "governance": "GOVERNED_LAB",
+    "intent": "resume",
+    "job_id": "res_594750f98732949d_1",
+    "legacy_resume_as_start": false,
+    "ok": true,
+    "operation_id": "T37:a",
+    "outcome": "RESUMED/SUCCEEDED",
+    "permit_id": null,
+    "persisted": {
+      "attempt_token": "att_7cd687aa94aaf30add1ce191",
+      "cost_credits": 4.0,
+      "error": null,
+      "job_id": "res_594750f98732949d_1",
+      "operation_id": "T37:a",
+      "payload_digest": "d190404b421ced90cd9822a29fc5a319bd59bd32ef25f4f824dcb1de84c82fbc",
+      "polls": 1,
+      "provider": "fake",
+      "provider_account": "fake_acct_a",
+      "provider_job_id": "pv_594750f9",
+      "quote_id": "quote_2015380875d6330f7df66c59",
+      "revision": 3,
+      "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+      "state": "SUCCEEDED",
+      "submitted_at": 1789589650.415499,
+      "terminal_by": 1789589950.415499,
+      "webhook_hints": 0
+    },
+    "pid": 2556,
+    "provider": "fake",
+    "provider_job_id": "pv_594750f9",
+    "quote_id": "quote_2015380875d6330f7df66c59",
+    "requested_spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+    "reservation_outcome": "NONE",
+    "resumed": true,
+    "resumed_terminal": true,
+    "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+    "state": "SUCCEEDED",
+    "submits": 0,
+    "transport_sent": 0
+  },
+  "state_after_first": {
+    "anomalies": 0,
+    "ledger_entries": 1,
+    "ownership": [
+      {
+        "attempt_token": "att_7cd687aa94aaf30add1ce191",
+        "envelope_id": "ENV_T37",
+        "job_id": "res_594750f98732949d_1",
+        "operation_id": "T37:a",
+        "permit_id": "permit_eda28dc45784e352623f33ef",
+        "provider_account": "fake_acct_a",
+        "revision": 3,
+        "settled_units": null
+      }
+    ],
+    "permits": 1,
+    "permits_consumed": 1,
+    "pid": 2552,
+    "quotes_consumed": 1,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 10,
+        "cost_credits": 4.0,
+        "job_id": "res_594750f98732949d_1",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_594750f9",
+        "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+        "state": "SUCCEEDED"
+      }
+    ]
+  },
+  "state_after_refusals": {
+    "anomalies": 0,
+    "ledger_entries": 0,
+    "ownership": [],
+    "permits": 0,
+    "permits_consumed": 0,
+    "pid": 2544,
+    "quotes_consumed": 0,
+    "reserved_units": 0,
+    "rows": []
+  },
+  "state_after_resume": {
+    "anomalies": 0,
+    "ledger_entries": 1,
+    "ownership": [
+      {
+        "attempt_token": "att_7cd687aa94aaf30add1ce191",
+        "envelope_id": "ENV_T37",
+        "job_id": "res_594750f98732949d_1",
+        "operation_id": "T37:a",
+        "permit_id": "permit_eda28dc45784e352623f33ef",
+        "provider_account": "fake_acct_a",
+        "revision": 3,
+        "settled_units": null
+      }
+    ],
+    "permits": 1,
+    "permits_consumed": 1,
+    "pid": 2560,
+    "quotes_consumed": 1,
+    "reserved_units": 0,
+    "rows": [
+      {
+        "budget_units": 10,
+        "cost_credits": 4.0,
+        "job_id": "res_594750f98732949d_1",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_594750f9",
+        "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+        "state": "SUCCEEDED"
+      }
+    ]
+  },
+  "state_end": {
+    "anomalies": 0,
+    "ledger_entries": 3,
+    "ownership": [
+      {
+        "attempt_token": "att_7cd687aa94aaf30add1ce191",
+        "envelope_id": "ENV_T37",
+        "job_id": "res_594750f98732949d_1",
+        "operation_id": "T37:a",
+        "permit_id": "permit_eda28dc45784e352623f33ef",
+        "provider_account": "fake_acct_a",
+        "revision": 3,
+        "settled_units": null
+      },
+      {
+        "attempt_token": "att_8a5d46e93a6a58f1c9b1854f",
+        "envelope_id": "ENV_T37",
+        "job_id": "res_77da2a93988886ed_1",
+        "operation_id": "T37:u",
+        "permit_id": "permit_a1d06a63ab8559215f0a9174",
+        "provider_account": "fake_acct_a",
+        "revision": 2,
+        "settled_units": null
+      },
+      {
+        "attempt_token": null,
+        "envelope_id": null,
+        "job_id": "res_8302fe5dde49e863_1",
+        "operation_id": "T37:o",
+        "permit_id": null,
+        "provider_account": "",
+        "revision": 0,
+        "settled_units": null
+      }
+    ],
+    "permits": 2,
+    "permits_consumed": 2,
+    "pid": 2584,
+    "quotes_consumed": 2,
+    "reserved_units": 10,
+    "rows": [
+      {
+        "budget_units": 10,
+        "cost_credits": 4.0,
+        "job_id": "res_594750f98732949d_1",
+        "polls": 1,
+        "provider": "fake",
+        "provider_job_id": "pv_594750f9",
+        "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+        "state": "SUCCEEDED"
+      },
+      {
+        "budget_units": 10,
+        "cost_credits": null,
+        "job_id": "res_77da2a93988886ed_1",
+        "polls": 0,
+        "provider": "fake",
+        "provider_job_id": null,
+        "spec_key": "77da2a93988886edd98e267480422c61048999b28346c580189e8b283611d369",
+        "state": "SUBMIT_UNKNOWN"
+      },
+      {
+        "budget_units": 0,
+        "cost_credits": null,
+        "job_id": "res_8302fe5dde49e863_1",
+        "polls": 0,
+        "provider": "",
+        "provider_job_id": null,
+        "spec_key": "8302fe5dde49e8637d1e72b03678b8551732ad0993126fe6ce85f4e5040bf873",
+        "state": "RESERVED"
+      }
+    ]
+  },
+  "submit_unknown": [
+    {
+      "core_imported": true,
+      "error": "ConnectionResetError",
+      "message": "risposta del provider persa dopo l'invio",
+      "ok": false,
+      "pid": 2566,
+      "submits": 1,
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\nConnectionResetError: risposta del provider persa dopo l'invio\n",
+      "transport_sent": 0
+    },
+    {
+      "budget_units": null,
+      "core_imported": true,
+      "core_pin": "CORE_PIN_OK",
+      "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+      "envelope_id": null,
+      "governance": "GOVERNED_LAB",
+      "intent": "resume",
+      "job_id": "res_77da2a93988886ed_1",
+      "legacy_resume_as_start": false,
+      "ok": true,
+      "operation_id": "T37:u",
+      "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
+      "permit_id": null,
+      "persisted": {
+        "attempt_token": "att_8a5d46e93a6a58f1c9b1854f",
+        "cost_credits": null,
+        "error": null,
+        "job_id": "res_77da2a93988886ed_1",
+        "operation_id": "T37:u",
+        "payload_digest": "66c636112a4c083cfbfbe4bcf8c163f2b0bd87c9def6a9f5181000e682ad37bb",
+        "polls": 0,
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_0c543bdbb9679a48da7e975e",
+        "revision": 2,
+        "spec_key": "77da2a93988886edd98e267480422c61048999b28346c580189e8b283611d369",
+        "state": "SUBMIT_UNKNOWN",
+        "submitted_at": 1789589651.2249243,
+        "terminal_by": 0.0,
+        "webhook_hints": 0
+      },
+      "pid": 2570,
+      "provider": "fake",
+      "provider_job_id": null,
+      "quote_id": "quote_0c543bdbb9679a48da7e975e",
+      "requested_spec_key": "77da2a93988886edd98e267480422c61048999b28346c580189e8b283611d369",
+      "reservation_outcome": "EXISTING_LIVE_JOB",
+      "resumed": true,
+      "resumed_terminal": false,
+      "spec_key": "77da2a93988886edd98e267480422c61048999b28346c580189e8b283611d369",
+      "state": "SUBMIT_UNKNOWN",
+      "submits": 0,
+      "transport_sent": 0
+    }
+  ]
+}

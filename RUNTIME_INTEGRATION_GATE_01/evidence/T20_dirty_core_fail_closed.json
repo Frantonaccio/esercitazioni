@@ -1,12 +1,12 @@
 {
   "clean": {
-    "head": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "head": "740ee979300fe20a9382992528604dee70cb2fcf",
     "probe": {
       "core_imported": true,
       "error": "RealProviderDisabled",
       "message": "REAL_PROVIDER_DISABLED: provider_mode='adapter:builtins.NoneType'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
       "ok": false,
-      "pid": 1119
+      "pid": 2316
     },
     "status": ""
   },
@@ -19,7 +19,7 @@
     "wrong_clean": "CORE_PIN_MISMATCH"
   },
   "restored": {
-    "head": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "head": "740ee979300fe20a9382992528604dee70cb2fcf",
     "status": ""
   },
   "stale_clean": {
@@ -27,39 +27,39 @@
     "error": "STALE_CORE_PIN",
     "observed": "9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7",
     "ok": false,
-    "pid": 1142,
-    "required": "819e7cfedb0f6641dc797e7993bec79462ac8df6"
+    "pid": 2339,
+    "required": "740ee979300fe20a9382992528604dee70cb2fcf"
   },
   "tracked_modified": {
-    "head": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "head": "740ee979300fe20a9382992528604dee70cb2fcf",
     "probe": {
       "core_imported": false,
       "error": "CORE_WORKTREE_DIRTY",
-      "observed": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+      "observed": "740ee979300fe20a9382992528604dee70cb2fcf",
       "ok": false,
-      "pid": 1125,
-      "required": "819e7cfedb0f6641dc797e7993bec79462ac8df6"
+      "pid": 2322,
+      "required": "740ee979300fe20a9382992528604dee70cb2fcf"
     },
     "status": "M transport/pipeline.py"
   },
   "untracked_inside": {
-    "head": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "head": "740ee979300fe20a9382992528604dee70cb2fcf",
     "probe": {
       "core_imported": false,
       "error": "CORE_WORKTREE_DIRTY",
-      "observed": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+      "observed": "740ee979300fe20a9382992528604dee70cb2fcf",
       "ok": false,
-      "pid": 1132,
-      "required": "819e7cfedb0f6641dc797e7993bec79462ac8df6"
+      "pid": 2329,
+      "required": "740ee979300fe20a9382992528604dee70cb2fcf"
     },
     "status": "?? adapters/stray_module.py"
   },
   "wrong_sha_clean": {
     "core_imported": false,
     "error": "CORE_PIN_MISMATCH",
-    "observed": "819e7cfedb0f6641dc797e7993bec79462ac8df6",
+    "observed": "740ee979300fe20a9382992528604dee70cb2fcf",
     "ok": false,
-    "pid": 1138,
+    "pid": 2335,
     "required": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
   }
 }

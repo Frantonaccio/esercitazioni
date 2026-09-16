@@ -6,13 +6,7 @@
       "genspec": {
         "kind": "video",
         "model": "seedance_2_0",
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 13,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 13, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION"
       },
       "prompt_sha_matches_lock": true,
@@ -26,13 +20,7 @@
       "genspec": {
         "kind": "video",
         "model": "seedance_2_0",
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 5,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 5, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION"
       },
       "prompt_sha_matches_lock": true,
@@ -56,7 +44,7 @@
       "B1_NEW_CLIP": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
       "B4C_NEW_CLIP": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f"
     },
-    "pid": 1148
+    "pid": 2345
   },
   "specs": {
     "spec_B1_B4C_stills.json": [
@@ -65,11 +53,7 @@
         "kind": "image",
         "model": "gpt_image_2",
         "n_refs": 4,
-        "params": {
-          "aspect_ratio": "9:16",
-          "quality": "high",
-          "resolution": "2k"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'quality': 'high', 'resolution': '2k'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "30a4740b2ca3143b048e6460bf8fb6019c3bfd01031a770edd4cde20cbd47be5",
         "same_media_order": true,
@@ -80,11 +64,7 @@
         "kind": "image",
         "model": "gpt_image_2",
         "n_refs": 4,
-        "params": {
-          "aspect_ratio": "9:16",
-          "quality": "high",
-          "resolution": "2k"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'quality': 'high', 'resolution': '2k'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "d37a6ad385e8673149c43bcedf166b6cdfa643f35c2ee3b24f1754cc26f00749",
         "same_media_order": true,
@@ -97,13 +77,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 13,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 13, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "e4dd1090baca6a90a9090bc796f754c26354643ca9e0e3d268d8b641bffd7bfc",
         "same_media_order": true,
@@ -116,13 +90,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 13,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 13, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "2db7f0346ea846c2e033e7efa479ffa3ffb4a9cb4f6a12bf1142ebd915cf8953",
         "same_media_order": true,
@@ -135,11 +103,7 @@
         "kind": "image",
         "model": "gpt_image_2",
         "n_refs": 4,
-        "params": {
-          "aspect_ratio": "9:16",
-          "quality": "high",
-          "resolution": "2k"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'quality': 'high', 'resolution': '2k'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "1eb7dea3e389d13f427935659316917f0d81c6126711c0867fe401b6f10c2444",
         "same_media_order": true,
@@ -152,11 +116,7 @@
         "kind": "image",
         "model": "gpt_image_2",
         "n_refs": 3,
-        "params": {
-          "aspect_ratio": "9:16",
-          "quality": "high",
-          "resolution": "2k"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'quality': 'high', 'resolution': '2k'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "edd44130e8ffc104cb6d5457fd687dbb1b0aa20b732356798e9f79d60d5c4b5f",
         "same_media_order": true,
@@ -167,11 +127,7 @@
         "kind": "image",
         "model": "gpt_image_2",
         "n_refs": 2,
-        "params": {
-          "aspect_ratio": "9:16",
-          "quality": "high",
-          "resolution": "2k"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'quality': 'high', 'resolution': '2k'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "e39f10e6b7065a71d6957a8fd926cbe8818c4e501f876effb5a9ed62d3398f19",
         "same_media_order": true,
@@ -182,11 +138,7 @@
         "kind": "image",
         "model": "gpt_image_2",
         "n_refs": 2,
-        "params": {
-          "aspect_ratio": "9:16",
-          "quality": "high",
-          "resolution": "2k"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'quality': 'high', 'resolution': '2k'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "31f8e0641c8dba51cffa538cad6795fcbca7e610c98c942b4bc11ba0400e732a",
         "same_media_order": true,
@@ -199,11 +151,7 @@
         "kind": "image",
         "model": "gpt_image_2",
         "n_refs": 4,
-        "params": {
-          "aspect_ratio": "9:16",
-          "quality": "high",
-          "resolution": "2k"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'quality': 'high', 'resolution': '2k'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "a24852feb5e34b0a67c9872688ea2222525f32bb3aca4aaa34842d4493b93357",
         "same_media_order": true,
@@ -216,11 +164,7 @@
         "kind": "image",
         "model": "gpt_image_2",
         "n_refs": 4,
-        "params": {
-          "aspect_ratio": "9:16",
-          "quality": "high",
-          "resolution": "2k"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'quality': 'high', 'resolution': '2k'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "f86fb9f8c8aea45135db9ed7e5a0b19741e8db6d941485822dd9b360a1bfa305",
         "same_media_order": true,
@@ -233,11 +177,7 @@
         "kind": "image",
         "model": "gpt_image_2",
         "n_refs": 3,
-        "params": {
-          "aspect_ratio": "1:1",
-          "quality": "high",
-          "resolution": "2k"
-        },
+        "params": "FrozenDict({'aspect_ratio': '1:1', 'quality': 'high', 'resolution': '2k'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "aa183da42127a249d7d24f8c4b680dd34b2c0b34421764d0e319b80d01c6717d",
         "same_media_order": true,
@@ -248,11 +188,7 @@
         "kind": "image",
         "model": "gpt_image_2",
         "n_refs": 2,
-        "params": {
-          "aspect_ratio": "1:1",
-          "quality": "high",
-          "resolution": "2k"
-        },
+        "params": "FrozenDict({'aspect_ratio': '1:1', 'quality': 'high', 'resolution': '2k'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "67a3dcc0161df769568c98d0833232ba8fc4e11a035567f2967b2534ef1d315c",
         "same_media_order": true,
@@ -265,13 +201,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 13,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 13, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "9691175c35772085df308a5408f91b5524fbd11b9facd44933cf87949c3f73f3",
         "same_media_order": true,
@@ -282,13 +212,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 5,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 5, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "ec9868099f84bcc33ed3e7b1f2c22ee19f08c798eefe424f984e3909c3b9faaf",
         "same_media_order": true,
@@ -299,13 +223,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 5,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 5, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "e83166abd8510a955f584424e4583ca148f053ad338422482cdbd3ce4be8bca8",
         "same_media_order": true,
@@ -316,13 +234,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 5,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 5, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "6ac8ed43d0666619dbf121b97cffcecf55ca2d8d137e1d280f29bd1f23ee69ef",
         "same_media_order": true,
@@ -333,13 +245,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 8,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 8, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "c8125254a6cf3d85df413293622d6e9fe8ad8570ee6b938ee53065c827939ae6",
         "same_media_order": true,
@@ -350,13 +256,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "1:1",
-          "duration": 6,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '1:1', 'duration': 6, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "91413a5dec2cad0b5f1b0e740a32ae3eab10c3bd815056695fa6d83550265b2d",
         "same_media_order": true,
@@ -367,13 +267,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "1:1",
-          "duration": 6,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '1:1', 'duration': 6, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "6d813958880e15edecd2bf5fd869f4bc5e97e098950dc1736afa8feaa6348a92",
         "same_media_order": true,
@@ -384,13 +278,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 8,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 8, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "b1a7072c1ea7deb8280521e25ac0098989468f479eb8c1479eebbb50868a5d2d",
         "same_media_order": true,
@@ -401,13 +289,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 6,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 6, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "b8dc5df3ca3f961b9262cd509478cbf8dbe16dee9645a16b727505eb55c4fc4c",
         "same_media_order": true,
@@ -420,13 +302,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 13,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 13, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "61ca18ac37b57d43a89fd8b8d61d05b569e9cea5d90a63bde09c5446c647fb47",
         "same_media_order": true,
@@ -437,13 +313,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 5,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 5, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "aa01c4cda378ca49bc740340664a850021a2b0f68e1468f43a70bbd8a39f80b6",
         "same_media_order": true,
@@ -456,13 +326,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 6,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 6, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "fd3baf425b4f1b36dceaf65368a71d7a5df8253821e565c912482bc73bf6b308",
         "same_media_order": true,
@@ -473,13 +337,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 6,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 6, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "9a069294aeac3177f859922622b1793eb27ad4c5e85017abfee82e4a3ea2e126",
         "same_media_order": true,
@@ -490,13 +348,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 6,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 6, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "41746f8850d2898e21c495acf2c07b6575ee5e24d47705c75dcc4c71c2413a18",
         "same_media_order": true,
@@ -507,13 +359,7 @@
         "kind": "video",
         "model": "seedance_2_0",
         "n_refs": 1,
-        "params": {
-          "aspect_ratio": "9:16",
-          "duration": 6,
-          "generate_audio": false,
-          "mode": "std",
-          "resolution": "1080p"
-        },
+        "params": "FrozenDict({'aspect_ratio': '9:16', 'duration': 6, 'generate_audio': False, 'mode': 'std', 'resolution': '1080p'})",
         "project_id": "P2_PRIMA_SI_PARLA_RUN_20260915_FINAL_PRODUCTION",
         "prompt_sha256": "134dfd03aa4251b6bc72b9768889cb03d6727cdba90c89cae039a16e230e03cf",
         "same_media_order": true,
