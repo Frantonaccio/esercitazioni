@@ -1,0 +1,94 @@
+{
+  "package_name": "VF_PROVIDER_EXECUTION_BOUNDARY_HARDENING_EVIDENCE_01",
+  "created_date": "2026-09-17",
+  "phase": "PROVIDER / EXECUTION BOUNDARY HARDENING",
+  "declared_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW",
+  "not_implied": [
+    "provider ready",
+    "production ready",
+    "P-B01 verified beyond LAB uid boundary",
+    "credentials authorized",
+    "spend authorized",
+    "merge authorized",
+    "R2 authorized"
+  ],
+  "canonical": {
+    "core_repo": "Frantonaccio/creative-os",
+    "core_branch": "main",
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "runtime_repo": "Frantonaccio/esercitazioni",
+    "runtime_branch": "main",
+    "runtime_sha": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e",
+    "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
+  },
+  "candidate": {
+    "runtime_branch": "claude/provider-boundary-hardening-c1k77q",
+    "runtime_candidate_sha": "9aafe9b16f10861846ec7527191009c6e0dabbd6",
+    "core_branch_created": false,
+    "core_changed": false,
+    "main_touched": false
+  },
+  "gate": {
+    "runner": "pbgate/run_boundary_gate.py",
+    "inventory": [
+      "B00",
+      "B01",
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B09",
+      "B10",
+      "B11"
+    ],
+    "pass": 12,
+    "fail": 0,
+    "blocked": 0,
+    "gate_decision": "LAB_GATE_COMPLETE_ALL_VERIFIED",
+    "readiness": {
+      "lab_mock": true,
+      "real_provider": "NOT_DECLARED",
+      "production": "NOT_DECLARED",
+      "security_boundary_p_b01": "LAB_VERIFIED_UID_BOUNDARY",
+      "p_b02_authenticated_reconciliation": "LAB_VERIFIED",
+      "p_b04_exact_byte_snapshot": "LAB_VERIFIED",
+      "legacy_spend_paths": "INVENTORIED_SWITCH_VERIFIED_RESIDUAL_BLOCKED_PROVIDER_GATE",
+      "orphan_reserved_lease": "STILL_OPEN (riprodotto, classificato, nessuna reclaim)",
+      "authorization_pricing": "LAB_ONLY",
+      "max_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW"
+    }
+  },
+  "regression_r0_r1": {
+    "pass": 36,
+    "total": 37,
+    "fail": 0,
+    "blocked_tests": [
+      {
+        "id": "T29",
+        "reason_code": "BLOCKED_ENVIRONMENT"
+      }
+    ],
+    "gate_decision": "LAB_GATE_COMPLETE_WITH_ALLOWED_BLOCKED",
+    "inventory_valid": true
+  },
+  "gap_status": {
+    "P-B01": "LAB_VERIFIED_UID_BOUNDARY (same-uid mode stays BLOCKED_ENVIRONMENT)",
+    "P-B02": "LAB_VERIFIED",
+    "P-B04": "LAB_VERIFIED",
+    "LEGACY_SPEND_PATHS": "INVENTORIED + SWITCH_VERIFIED; residual BLOCKED_PROVIDER_GATE",
+    "ORPHAN_RESERVED_LEASE": "STILL_OPEN",
+    "AUTHORIZATION_PRICING": "LAB_ONLY (real: NOT_VERIFIED)",
+    "G-N02": "STILL_OPEN",
+    "RV07": "STILL_OPEN",
+    "run_contamination": "NOT_RUN"
+  },
+  "credits_spent": 0,
+  "real_providers": 0,
+  "real_credentials": 0,
+  "generative_network_calls": 0,
+  "checksums": "SHA256SUMS (this manifest included; SHA256SUMS itself excluded)"
+}
