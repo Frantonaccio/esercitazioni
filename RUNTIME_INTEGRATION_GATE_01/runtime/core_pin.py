@@ -30,23 +30,32 @@ from dataclasses import dataclass
 
 # Core richiesto da questo runtime.
 #
-# COORDINATED CORE + RUNTIME INTEGRATION — NG-05 (2026-09-17). Il runtime consuma ora
-# `store.mark_refused_pre_submit(...)`, l'API additiva del Core candidate approvato da
-# Human Review (`APPROVED_PROPOSAL`), quindi il pin si sposta su quel commit: un runtime
-# che pretende quell'API non puo' dichiararsi compatibile con un Core che non ce l'ha.
+# LEGACY SPEND PATH CLOSURE (2026-09-18). Il runtime pretende ora il CONFINE DELLO
+# SPENDER del Core (`adapters.base.SpendCapableAdapter`, `authorize_dispatch`,
+# `grant_dispatch`, `require_governed_dispatch_inputs`): senza quel confine, un adapter
+# capace di raggiungere un provider reale sarebbe dispacciabile da
+# `transport.pipeline.run_job` e da `adapter.submit` diretto, cioe' la garanzia che
+# questo runtime dichiara non esisterebbe. Il pin si sposta quindi sul commit che la
+# porta: un runtime che pretende quell'invariante non puo' dichiararsi compatibile con
+# un Core che non ce l'ha.
 # Core candidate: Frantonaccio/creative-os, branch
-# harden/provider-boundary-core-atomicity-2026-09-17, figlio diretto della baseline
-# 740ee979300fe20a9382992528604dee70cb2fcf.
-REQUIRED_CORE_SHA = "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
+# harden/legacy-spend-core-2026-09-18, figlio diretto della baseline canonica
+# 9cf9cee1a751f7a2ad6c768574ff5aa38d8db515.
+REQUIRED_CORE_SHA = "44f9ea29cea112dfb30c752e5519498e25044c19"
 
 # Pin storici noti: un Core a questo SHA NON e' un Core sconosciuto, e' un Core
 # VECCHIO. Va rifiutato con un esito che lo dica.
 KNOWN_STALE_CORE_SHAS = frozenset({
     "9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7",   # commit iniziale del Core
-    # Baseline canonica precedente: e' il PADRE del candidate. Un runtime che consuma
+    # Baseline canonica di COORDINATED CORE + RUNTIME INTEGRATION. Un runtime che consuma
     # `mark_refused_pre_submit` contro questo Core fallirebbe con AttributeError a meta'
     # percorso; qui fallisce PRIMA dell'import, con un codice che dice perche'.
     "740ee979300fe20a9382992528604dee70cb2fcf",
+    # Baseline canonica PROVIDER_BOUNDARY_CORE_RUNTIME_PAIR_MERGED: e' il PADRE del
+    # candidate di LEGACY SPEND PATH CLOSURE. Ha `mark_refused_pre_submit` ma NON ha il
+    # confine dello spender: un adapter spendibile vi sarebbe dispacciabile. Non e' un
+    # Core sconosciuto, e' un Core VECCHIO, e va rifiutato con un esito che lo dica.
+    "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
 })
 
 

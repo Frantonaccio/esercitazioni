@@ -164,20 +164,74 @@ def read_state(db: str, core_path: str) -> dict:
             "reserved_units": store.reserved_units()}
 
 
+# ---------------------------------------------------------------------------
+# LEGACY #7 — SUPERFICIE DI AUTORITA' DICHIARATA (LEGACY SPEND PATH CLOSURE, 2026-09-18)
+#
+# `store_call` dispacciava QUALUNQUE metodo dello store (`getattr(store, method)`).
+# Non era un percorso di spesa — non esiste adapter qui, quindi non esiste submit —
+# ma era una superficie APERTA: qualunque nome passasse di li' veniva eseguito.
+#
+# Da qui in avanti la superficie e' CHIUSA e DICHIARATA. Tre insiemi, nessun altro
+# nome ammesso (`STORE_CALL_METHOD_NOT_ALLOWED`, prima di aprire lo store):
+#
+#   READ_ONLY   letture del journal e della contabilita';
+#   AUTHORITY   cio' che in produzione appartiene al lato AUTORITA' (aprire un
+#               envelope, emettere una quote o un permesso, regolare un costo,
+#               recuperare un submit orfano): e' il ruolo che i test simulano;
+#   CORE_PROBE  due sonde esplicite su una primitive del Core (prenotazione con
+#               permesso / con operazione). Creano una RESERVED e nulla piu': con il
+#               confine dello spender del Core una riga cosi' non e' dispacciabile
+#               (nessuna quote consumata -> DISPATCH_QUOTE_REQUIRED), quindi non e'
+#               un percorso di spesa. Restano dichiarate come sonde, non nascoste.
+#
+# Cio' che NON e' ammesso, e che prima lo era per omissione: transizioni di stato
+# (`put`, `reconcile`, `mark_*`, `expire`) e qualunque altro metodo. Un test che
+# volesse provarle prova il CORE direttamente (tests/run_*.py del Core), senza
+# passare per un helper del Runtime.
+# ---------------------------------------------------------------------------
+STORE_CALL_READ_ONLY = frozenset({
+    "get", "find_live_by_spec", "find_latest_by_spec", "find_latest_by_operation",
+    "find_live_by_operation", "history", "reserved_units", "anomalies",
+    "ledger", "ledger_totals", "permit", "quote", "due_for_reconcile",
+})
+STORE_CALL_AUTHORITY = frozenset({
+    "open_envelope", "issue_permit", "issue_quote", "settle", "recover_orphaned_submits",
+    "record_anomaly",
+})
+STORE_CALL_CORE_PROBE = frozenset({
+    "spec_key_of", "issue_lab_quote",
+    "reserve_or_get_live_by_prompt", "reserve_or_get_live_by_prompt_op",
+})
+STORE_CALL_ALLOWED = STORE_CALL_READ_ONLY | STORE_CALL_AUTHORITY | STORE_CALL_CORE_PROBE
+
+
 def store_call(db: str, core_path: str, method: str, *args, **kwargs) -> dict:
-    """Nuovo interprete: invoca un metodo dello store durevole (recovery, ledger, permessi, quote).
-    Due helper di test: `spec_key_of(prompt, over)` e `reserve_or_get_live_by_prompt(prompt, permit_id)`.
+    """Nuovo interprete: invoca UNO dei metodi DICHIARATI dello store durevole
+    (lettura, autorita' economica/recovery, due sonde esplicite sul Core).
 
     LEGACY #7 (OPEN-GAP CLOSURE 2026-09-17): questo helper dispaccia DIRETTAMENTE sullo store,
     fuori dal percorso governato, nello stesso UID del chiamante. E' ammesso solo mentre la
     modalita' Provider Boundary e' disingaggiata (suite storica R0-R1). Ingaggiata, rifiuta
-    PRIMA di importare il Core e prima di aprire lo store: nessun effetto di alcun tipo."""
+    PRIMA di importare il Core e prima di aprire lo store: nessun effetto di alcun tipo.
+
+    LEGACY SPEND PATH CLOSURE (2026-09-18): il dispatch non e' piu' arbitrario. Un
+    metodo fuori da `STORE_CALL_ALLOWED` e' rifiutato PRIMA dell'import del Core e
+    PRIMA di aprire lo store, come il rifiuto di modalita'."""
     from runtime.provider_gate import ProviderBoundaryModeEngaged, refuse_if_provider_boundary_mode
     try:
         refuse_if_provider_boundary_mode("tests.worker.store_call")
     except ProviderBoundaryModeEngaged as e:
         return {"pid": os.getpid(), "ok": False, "error": type(e).__name__, "code": e.code,
                 "message": str(e), "core_imported": "registry.reservations" in sys.modules,
+                "store_created": False}
+    if method not in STORE_CALL_ALLOWED:
+        return {"pid": os.getpid(), "ok": False, "error": "StoreCallMethodNotAllowed",
+                "code": "STORE_CALL_METHOD_NOT_ALLOWED",
+                "message": (f"{method!r} non e' nella superficie dichiarata di store_call "
+                            f"(lettura / autorita' / sonda del Core). Una transizione di stato "
+                            f"si prova sul Core, non da un helper del Runtime."),
+                "allowed": sorted(STORE_CALL_ALLOWED),
+                "core_imported": "registry.reservations" in sys.modules,
                 "store_created": False}
     if core_path not in sys.path:
         sys.path.insert(0, core_path)

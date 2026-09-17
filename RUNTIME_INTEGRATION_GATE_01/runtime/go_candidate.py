@@ -28,6 +28,12 @@
       1b. LEGACY SPEND PATH       -> authorization=None (LEGACY_LAB) e' ammesso SOLO se
                                      provider_gate.LEGACY_LAB_SPEND_PATH lo consente
                                      (LEGACY_SPEND_PATH_DISABLED altrimenti, prima di ogni effetto)
+                                     e SOLO per un adapter NON spendibile: un adapter che
+                                     dichiara `spend_capable` e' rifiutato sempre, in entrambe
+                                     le modalita', con LEGACY_LAB_NOT_PROVIDER_CAPABLE, prima
+                                     del pin e prima dell'import del Core (2026-09-18). Lo
+                                     stesso confine e' imposto in modo indipendente dal Core
+                                     (`adapters.base.SpendCapableAdapter`).
       7c. SNAPSHOT (P-B04)        -> byte canonici del payload persistiti write-once e sigillati
                                      (runtime/payload_snapshot.py); a mark_submitting legati
                                      all'attempt; riverificati byte per byte prima del send.
@@ -287,7 +293,9 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
     #     fail-closed (provider_gate.LEGACY_LAB_SPEND_PATH). Verificato PRIMA di pin, import,
     #     store: se chiuso, nessun effetto di alcun tipo (LEGACY_SPEND_PATH_DISABLED).
     if authorization is None:
-        require_legacy_lab_spend_path()
+        # LEGACY SPEND PATH CLOSURE (2026-09-18): il rifiuto di uno SPENDER e' qui,
+        # prima del pin e prima dell'import del Core (e' un `getattr`, non un isinstance).
+        require_legacy_lab_spend_path(adapter)
     # 2) CORE PIN: il Core non autorizzato non viene nemmeno importato.
     verdict = require_core_verdict(core_path, required_core_sha)
     core_sha = verdict.observed

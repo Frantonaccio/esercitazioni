@@ -74,13 +74,45 @@ def require_fake_adapter(adapter, fake_adapter_cls) -> None:
 # esplicito, verificato e fail-closed, PRIMA di qualunque effetto:
 #
 #   LEGACY_LAB_SPEND_PATH = "ENABLED_LAB_ONLY"   (stato attuale, LAB)
+#       dal 2026-09-18: LAB_ONLY_NON_PROVIDER_CAPABLE (vedi sotto)
 #   LEGACY_LAB_SPEND_PATH = "DISABLED"           (Provider Boundary Gate: obbligatorio)
 #
 # L'ambiente puo' solo CHIUDERE (CREATIVE_OS_LEGACY_LAB_SPEND_PATH=disabled), mai
 # riaprire un percorso chiuso in codice.
 # ---------------------------------------------------------------------------
+#
+# LEGACY SPEND PATH CLOSURE (2026-09-18). Lo stato del percorso non e' piu'
+# "abilitato": e' `LAB_ONLY_NON_PROVIDER_CAPABLE`, e il nome dice esattamente cio'
+# che il codice impone. Il percorso resta percorribile per il LABORATORIO (adapter
+# deterministici, nessun provider: e' cio' che la suite storica R0-R1 usa e che il
+# mandato autorizza a conservare), ma NON e' piu' un percorso spendibile:
+#
+#   - `require_legacy_lab_spend_path(adapter)` rifiuta un adapter SPENDIBILE
+#     (`spend_capable`) SEMPRE, in entrambe le modalita', PRIMA del pin, PRIMA
+#     dell'import del Core, PRIMA dello store: nessuna reservation, nessun permit,
+#     nessuna quote, nessuno snapshot, nessun submit;
+#   - il controllo e' un `getattr` sull'oggetto adapter, quindi non richiede il
+#     Core in `sys.path`: non c'e' un ordine di import da azzeccare;
+#   - a valle, il CORE impone lo stesso confine in modo indipendente
+#     (`adapters.base.SpendCapableAdapter` + `transport.pipeline.run_job`): un
+#     adapter spendibile non si dispaccia senza operazione, quote fidata ed
+#     envelope. Due lati, la stessa invariante: cambiare adapter/mode/config non
+#     riapre un percorso di spesa.
+#
+# Cio' che questo NON significa: non significa provider reale verificato, ne'
+# credenziali autorizzate, ne' spend autorizzato.
+# Il VALORE dell'interruttore resta quello canonico: i gate approvati
+# (PROVIDER_BOUNDARY_HARDENING_01, PROVIDER_BOUNDARY_GATE_02) lo asseriscono
+# LETTERALMENTE, e rinominarlo indebolirebbe un controllo storico senza aggiungere
+# una sola garanzia. Cio' che cambia non e' il nome dello stato: e' la CAPABILITY,
+# dichiarata a parte e imposta dal codice.
 LEGACY_LAB_SPEND_PATH = "ENABLED_LAB_ONLY"
 LEGACY_SPEND_PATH_ENV = "CREATIVE_OS_LEGACY_LAB_SPEND_PATH"
+SPEND_CAPABLE_ATTR = "spend_capable"
+
+# Fatto machine-readable di QUESTA fase: il percorso LEGACY_LAB non e' un percorso
+# capace di provider. Non e' un'etichetta: `require_legacy_lab_spend_path` la impone.
+LEGACY_LAB_PROVIDER_CAPABILITY = "LAB_ONLY_NON_PROVIDER_CAPABLE"
 
 
 class LegacySpendPathDisabled(RuntimeError):
@@ -94,6 +126,30 @@ class LegacySpendPathDisabled(RuntimeError):
             f"{self.code}: percorso LEGACY_LAB (authorization=None) chiuso ({state}); "
             "solo il percorso governato (envelope derivato + quote fidata + permit) puo' spendere. "
             "Nessuna reservation, nessun permit, nessun submit.")
+
+
+class LegacyPathNotProviderCapable(RuntimeError):
+    """Un adapter capace di raggiungere un provider reale ha chiesto il percorso
+    LEGACY_LAB. Rifiuto strutturale, non condizionato dalla modalita'."""
+
+    code = "LEGACY_LAB_NOT_PROVIDER_CAPABLE"
+
+    def __init__(self, adapter_repr: str):
+        self.adapter = adapter_repr
+        super().__init__(
+            f"{self.code}: {adapter_repr} dichiara `spend_capable` e il percorso LEGACY_LAB "
+            f"(authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa "
+            f"ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + "
+            f"permit). Nessun pin letto, nessun Core importato, nessuno store aperto, "
+            f"nessuna reservation, nessun submit.")
+
+
+def adapter_is_spend_capable(adapter) -> bool:
+    """Vero se l'adapter dichiara di poter raggiungere un provider reale.
+
+    Deliberatamente un `getattr`: non importa il Core e non isinstance-a nulla,
+    cosi' il rifiuto puo' precedere il gate di pin e l'import."""
+    return bool(getattr(adapter, SPEND_CAPABLE_ATTR, False))
 
 
 # ---------------------------------------------------------------------------
@@ -155,6 +211,11 @@ def refuse_if_provider_boundary_mode(entry_point: str) -> str:
     return state
 
 
+def legacy_lab_provider_capability() -> str:
+    """Costante dichiarata + verificabile: vedi `require_legacy_lab_spend_path`."""
+    return LEGACY_LAB_PROVIDER_CAPABILITY
+
+
 def legacy_spend_path_state() -> str:
     if LEGACY_LAB_SPEND_PATH != "ENABLED_LAB_ONLY":
         return "DISABLED"
@@ -167,8 +228,19 @@ def legacy_spend_path_state() -> str:
     return "ENABLED_LAB_ONLY"
 
 
-def require_legacy_lab_spend_path() -> str:
-    """Chiamata da `go()` quando authorization is None, PRIMA di pin/import/store."""
+def require_legacy_lab_spend_path(adapter=None) -> str:
+    """Chiamata da `go()` quando authorization is None, PRIMA di pin/import/store.
+
+    Due rifiuti, in quest'ordine:
+      1. adapter SPENDIBILE -> LEGACY_LAB_NOT_PROVIDER_CAPABLE. Incondizionato: non
+         dipende dalla modalita', dall'ambiente o dalla configurazione. E' il senso
+         del nome `LAB_ONLY_NON_PROVIDER_CAPABLE`;
+      2. percorso chiuso del tutto (modalita' ingaggiata o ambiente) ->
+         LEGACY_SPEND_PATH_DISABLED, come prima.
+    """
+    if adapter_is_spend_capable(adapter):
+        raise LegacyPathNotProviderCapable(
+            f"{type(adapter).__module__}.{type(adapter).__qualname__}")
     state = legacy_spend_path_state()
     if state != "ENABLED_LAB_ONLY":
         raise LegacySpendPathDisabled(state)
