@@ -33,7 +33,9 @@
                                      all'attempt; riverificati byte per byte prima del send.
                                      Un rifiuto a mark_submitting (pre-authorize, pre-send) chiude
                                      il tentativo con provenance RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED
-                                     + settlement 0, MAI con l'attestazione del trasporto (NG-03)
+                                     + settlement 0, MAI con l'attestazione del trasporto (NG-03),
+                                     in UNA SOLA transazione del Core (NG-05:
+                                     `store.mark_refused_pre_submit`, Core candidate 9cf9cee1)
       7. AUTORIZZAZIONE (CR-02)   -> percorso GOVERNATO (authorization dato): envelope DERIVATO dallo
                                      scope dell'operazione (un envelope presentato viene solo
                                      validato); importo DERIVATO da una quote fidata (quote_id),
@@ -157,20 +159,25 @@ class ReservationObserver:
     chiamato e il Core non ha letto sent_before/sent_after (quelle letture stanno attorno ad
     `adapter.submit`, che non verra' mai raggiunto). Percio' il runtime NON usa
     `mark_refused_before_send`, che scriverebbe `TRANSPORT_ATTESTED_NOT_SENT` — una
-    provenance mai prodotta. Usa invece i due percorsi espliciti del Core con una provenance
-    veritiera e i fatti osservati allegati:
+    provenance mai prodotta.
 
-        1. `store.reconcile(job, FAILED, evidence)` con `source=RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED`
-           e `remote_ref=none:never_dispatched`: transizione RESERVED -> FAILED ammessa dal
-           contratto di riconciliazione, CAS sulla revisione, evidenza registrata;
-        2. `store.settle(job_id, units=0, source=<stessa provenance>)`: settlement 0 con la
-           stessa fonte, riga di ledger coerente.
+    ATOMICITA' (NG-05, COORDINATED CORE + RUNTIME INTEGRATION 2026-09-17). Fino al Core
+    `740ee979` l'unico modo di essere veritieri era comporre DUE percorsi espliciti —
+    `store.reconcile(job, FAILED, evidence)` e poi `store.settle(job_id, units=0, source=…)` —
+    cioe' due transazioni, con una finestra in cui il tentativo era terminale ma non regolato
+    (conservativa: l'esposizione restava impegnata, visibile in `terminal_unsettled_jobs` e
+    riparabile perche' `settle` e' idempotente).
 
-    L'ordine e' deliberato: se il processo muore fra 1 e 2 il tentativo e' terminale ma NON
-    regolato, quindi l'esposizione resta impegnata (comportamento conservativo del Core:
-    "costo ignoto resta ignoto") ed e' visibile in `terminal_unsettled_jobs`; `settle` e'
-    idempotente, quindi la chiusura e' ripetibile. L'ordine inverso avrebbe scaricato
-    l'esposizione lasciando la riga viva.
+    Il Core candidate approvato offre la primitive che mancava, e il runtime la consuma:
+
+        store.mark_refused_pre_submit(job, reason, source=RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED,
+                                      evidence=<fatti osservati>, now=now)
+
+    UNA sola transazione per stato terminale, settlement zero, riga di ledger e anomalia di
+    riconciliazione, con provenance PARAMETRICA e veritiera, CAS sulla revisione letta. La
+    finestra non esiste piu': un arresto prima del COMMIT non lascia nulla. Il Core rifiuta
+    esplicitamente `TRANSPORT_ATTESTED_NOT_SENT` come `source` di questo percorso, quindi
+    l'invariante NG-03 e' ora imposta da entrambi i lati.
 
     Se i fatti osservati NON dimostrano che nessun invio e' possibile, il runtime non
     terminalizza e non regola nulla: registra `PRE_SUBMIT_REFUSAL_NOT_PROVABLE` e lascia la
@@ -210,7 +217,8 @@ class ReservationObserver:
                   f"del payload, nessun invio, nessuna attestazione del trasporto)")
         report = {"code": error.code, "message": str(error), "reason": reason,
                   "provenance": PRE_SUBMIT_REFUSAL_SOURCE, "observed": observed,
-                  "not_dispatched_provable": provable, "terminalized": False, "settled": False}
+                  "not_dispatched_provable": provable, "terminalized": False, "settled": False,
+                  "atomic": False, "core_api": "mark_refused_pre_submit"}
         extra_kind = None
         if not provable:
             # Fail-closed: senza prova non si regola e non si terminalizza.
@@ -220,26 +228,19 @@ class ReservationObserver:
                         "reason": reason, "refusal_code": error.code, "observed": observed,
                         "attested_by": "runtime_snapshot_guard", "transport_attestation": None}
             try:
-                # lo stato terminale si ricava dall'enum del Job persistito: nessun import
-                # aggiuntivo del Core nel runtime (l'inventario degli import resta chiuso).
-                self._inner.reconcile(job, type(job.state)("FAILED"), evidence, now=now)
-                report["terminalized"] = True
+                # NG-05: UNA transazione. Stato terminale, settlement zero, ledger e anomalia
+                # nascono o non nascono insieme. La provenance e' quella osservata, e il Core
+                # rifiuta esplicitamente `TRANSPORT_ATTESTED_NOT_SENT` su questo percorso.
+                self._inner.mark_refused_pre_submit(
+                    job, reason, source=PRE_SUBMIT_REFUSAL_SOURCE, evidence=evidence,
+                    now=now if now is not None else self._snapshot.clock())
+                report.update(terminalized=True, settled=True, atomic=True)
             except Exception as e:                              # noqa: BLE001
-                # StaleWrite / TransitionRefused: un altro scrittore ha gia' cambiato la riga.
-                # Il journal autorevole vince; nessun settlement viene tentato su una
-                # terminalizzazione che non e' nostra.
+                # StaleWrite / TransitionRefused: un altro scrittore ha gia' cambiato la riga,
+                # oppure il tentativo non e' piu' pre-submit. Il journal autorevole vince e
+                # NULLA e' stato applicato: non c'e' un passo intermedio da riparare.
                 report["terminalize_error"] = f"{type(e).__name__}: {e}"
                 extra_kind = "PRE_SUBMIT_TERMINALIZE_REFUSED"
-            if report["terminalized"]:
-                try:
-                    report["settlement"] = self._inner.settle(job.job_id, units=0,
-                                                              source=PRE_SUBMIT_REFUSAL_SOURCE, now=now)
-                    report["settled"] = True
-                except Exception as e:                          # noqa: BLE001
-                    # SettlementConflict: qualcuno ha gia' regolato con un altro importo.
-                    # Il Core non applica nulla; qui resta registrato.
-                    report["settle_error"] = f"{type(e).__name__}: {e}"
-                    extra_kind = "PRE_SUBMIT_SETTLEMENT_REFUSED"
         # UNA anomalia con l'esito COMPLETO (rifiuto + fatti osservati + terminalizzazione +
         # settlement): registrata alla fine, cosi' non afferma nulla prima di averlo prodotto.
         self._inner.record_anomaly(job.job_id, "SNAPSHOT_REFUSED_PRE_SUBMIT", report, now)

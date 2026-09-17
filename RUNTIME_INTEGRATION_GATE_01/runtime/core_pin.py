@@ -28,15 +28,25 @@ import os
 import subprocess
 from dataclasses import dataclass
 
-# Core richiesto da questo runtime: commit reale della controlled promotion R0-R1
-# (Frantonaccio/creative-os, branch promote/r0-r1-hardening-2026-09-16), figlio
-# della baseline 819e7cfedb0f6641dc797e7993bec79462ac8df6 (PR #2 merged, C26).
-REQUIRED_CORE_SHA = "740ee979300fe20a9382992528604dee70cb2fcf"
+# Core richiesto da questo runtime.
+#
+# COORDINATED CORE + RUNTIME INTEGRATION — NG-05 (2026-09-17). Il runtime consuma ora
+# `store.mark_refused_pre_submit(...)`, l'API additiva del Core candidate approvato da
+# Human Review (`APPROVED_PROPOSAL`), quindi il pin si sposta su quel commit: un runtime
+# che pretende quell'API non puo' dichiararsi compatibile con un Core che non ce l'ha.
+# Core candidate: Frantonaccio/creative-os, branch
+# harden/provider-boundary-core-atomicity-2026-09-17, figlio diretto della baseline
+# 740ee979300fe20a9382992528604dee70cb2fcf.
+REQUIRED_CORE_SHA = "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
 
 # Pin storici noti: un Core a questo SHA NON e' un Core sconosciuto, e' un Core
 # VECCHIO. Va rifiutato con un esito che lo dica.
 KNOWN_STALE_CORE_SHAS = frozenset({
     "9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7",   # commit iniziale del Core
+    # Baseline canonica precedente: e' il PADRE del candidate. Un runtime che consuma
+    # `mark_refused_pre_submit` contro questo Core fallirebbe con AttributeError a meta'
+    # percorso; qui fallisce PRIMA dell'import, con un codice che dice perche'.
+    "740ee979300fe20a9382992528604dee70cb2fcf",
 })
 
 
