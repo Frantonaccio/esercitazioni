@@ -14,7 +14,7 @@
     "outcome": "RUNNING",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_ae6640cd96e6a7e289865db0",
+      "attempt_token": "att_d618f65ce8d3be3d700b6e90",
       "cost_credits": null,
       "error": null,
       "job_id": "res_cc30c00d25b6e122_1",
@@ -28,11 +28,11 @@
       "revision": 3,
       "spec_key": "cc30c00d25b6e1223286c67e0a99c8a97c3ee3f64aa0f88c708b20acc7f19b6a",
       "state": "RUNNING",
-      "submitted_at": 1789589639.5868022,
-      "terminal_by": 1789589939.5868022,
+      "submitted_at": 1789626862.1900675,
+      "terminal_by": 1789627162.1900675,
       "webhook_hints": 0
     },
-    "pid": 2229,
+    "pid": 541,
     "provider": "fake_a",
     "provider_job_id": "pv_cc30c00d",
     "quote_id": null,
@@ -50,7 +50,7 @@
     "error": "ProviderMismatch",
     "message": "job res_cc30c00d25b6e122_1 appartiene al provider 'fake_a', adapter fornito 'fake_b': riconciliare con l'adapter corretto",
     "ok": false,
-    "pid": 2233,
+    "pid": 545,
     "submits": 0,
     "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 200, in go\n    job = resume_job(adapter, latest.job_id, store, clock=clock, max_polls=max_polls)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 257, in resume_job\n    _check_ownership(adapter, job, account)\nadapters.base.ProviderMismatch: job res_cc30c00d25b6e122_1 appartiene al provider 'fake_a', adapter fornito 'fake_b': riconciliare con l'adapter corretto\n",
     "transport_sent": 0
@@ -60,7 +60,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_ae6640cd96e6a7e289865db0",
+        "attempt_token": "att_d618f65ce8d3be3d700b6e90",
         "envelope_id": null,
         "job_id": "res_cc30c00d25b6e122_1",
         "operation_id": "lab:mismatch",
@@ -72,7 +72,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 2237,
+    "pid": 549,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [

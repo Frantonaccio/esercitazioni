@@ -5,10 +5,10 @@
     "error": "REAL_PROVIDER_DISABLED",
     "message": "REAL_PROVIDER_DISABLED: provider_mode='higgsfield'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
     "ok": false,
-    "pid": 2281,
+    "pid": 593,
     "submits": null
   },
   "mode": "real",
-  "pid": 2281,
+  "pid": 593,
   "violations": []
 }

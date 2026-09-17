@@ -14,7 +14,7 @@
     "outcome": "SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_dfbd691f95cad1375a39d499",
+      "attempt_token": "att_5d684227e0ff199384b111d5",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_5a5a1b7379a3ad18_1",
@@ -28,11 +28,11 @@
       "revision": 3,
       "spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf",
       "state": "SUCCEEDED",
-      "submitted_at": 1789589645.174711,
-      "terminal_by": 1789589945.174711,
+      "submitted_at": 1789626866.382574,
+      "terminal_by": 1789627166.382574,
       "webhook_hints": 0
     },
-    "pid": 2404,
+    "pid": 716,
     "provider": "fake",
     "provider_job_id": "pv_5a5a1b73",
     "quote_id": null,
@@ -58,9 +58,9 @@
     "ok": true,
     "operation_id": "T25:asset",
     "outcome": "SUCCEEDED",
-    "permit_id": "permit_3e57625b1da8a5e9331ff186",
+    "permit_id": "permit_64d162ee0e5e0f881a881b10",
     "persisted": {
-      "attempt_token": "att_4a32b4c974adb9015b01cecc",
+      "attempt_token": "att_b66419e67931b7e78a701889",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_5a5a1b7379a3ad18_2",
@@ -74,11 +74,11 @@
       "revision": 3,
       "spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf",
       "state": "SUCCEEDED",
-      "submitted_at": 1789589645.6817703,
-      "terminal_by": 1789589945.6817703,
+      "submitted_at": 1789626866.7741096,
+      "terminal_by": 1789627166.7741096,
       "webhook_hints": 0
     },
-    "pid": 2418,
+    "pid": 730,
     "provider": "fake",
     "provider_job_id": "pv_5a5a1b73",
     "quote_id": null,
@@ -97,7 +97,7 @@
     "error": "IntentRefused",
     "message": "OPERATION_ID_REQUIRED: operation_id obbligatorio per ogni operazione (RESUME e NEW_ATTEMPT)",
     "ok": false,
-    "pid": 2416,
+    "pid": 728,
     "submits": 0,
     "transport_sent": 0
   },
@@ -107,7 +107,7 @@
     "error": "IntentRefused",
     "message": "PERMIT_REQUIRED: nuovo tentativo senza permesso e senza delega automatica",
     "ok": false,
-    "pid": 2412,
+    "pid": 724,
     "submits": 0,
     "transport_sent": 0
   },
@@ -117,47 +117,47 @@
     "error": "IntentRefused",
     "message": "REASON_REQUIRED: un nuovo tentativo richiede un motivo esplicito",
     "ok": false,
-    "pid": 2408,
+    "pid": 720,
     "submits": 0,
     "transport_sent": 0
   },
   "permit": {
     "ok": true,
-    "pid": 2434,
+    "pid": 746,
     "result": {
-      "consumed_at": 1789589645.6777897,
+      "consumed_at": 1789626866.771581,
       "consumed_by": "res_5a5a1b7379a3ad18_2",
-      "issued_at": 1789589645.6758928,
+      "issued_at": 1789626866.7701435,
       "operation_id": "T25:asset",
-      "permit_id": "permit_3e57625b1da8a5e9331ff186",
+      "permit_id": "permit_64d162ee0e5e0f881a881b10",
       "reason": "CREATIVE_ITERATION",
       "spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf"
     }
   },
   "permit_no_operation": {
     "error": "PermitError",
-    "message": "permesso permit_48700c5bad05c2ed03f1acda riferito a un'altra spec",
+    "message": "permesso permit_71b77e14a1dcbb95c11f73fe riferito a un'altra spec",
     "ok": false,
-    "pid": 2432
+    "pid": 744
   },
   "permit_other_operation": {
     "core_imported": true,
     "error": "PermitError",
-    "message": "permesso permit_48700c5bad05c2ed03f1acda riferito a un'altra spec",
+    "message": "permesso permit_71b77e14a1dcbb95c11f73fe riferito a un'altra spec",
     "ok": false,
-    "pid": 2428,
+    "pid": 740,
     "submits": 0,
-    "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.PermitError: permesso permit_48700c5bad05c2ed03f1acda riferito a un'altra spec\n",
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.PermitError: permesso permit_71b77e14a1dcbb95c11f73fe riferito a un'altra spec\n",
     "transport_sent": 0
   },
   "permit_replay": {
     "core_imported": true,
     "error": "PermitError",
-    "message": "permesso permit_3e57625b1da8a5e9331ff186 gia' consumato da res_5a5a1b7379a3ad18_2",
+    "message": "permesso permit_64d162ee0e5e0f881a881b10 gia' consumato da res_5a5a1b7379a3ad18_2",
     "ok": false,
-    "pid": 2422,
+    "pid": 734,
     "submits": 0,
-    "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.PermitError: permesso permit_3e57625b1da8a5e9331ff186 gia' consumato da res_5a5a1b7379a3ad18_2\n",
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.PermitError: permesso permit_64d162ee0e5e0f881a881b10 gia' consumato da res_5a5a1b7379a3ad18_2\n",
     "transport_sent": 0
   },
   "state": {
@@ -165,7 +165,7 @@
     "ledger_entries": 2,
     "ownership": [
       {
-        "attempt_token": "att_dfbd691f95cad1375a39d499",
+        "attempt_token": "att_5d684227e0ff199384b111d5",
         "envelope_id": null,
         "job_id": "res_5a5a1b7379a3ad18_1",
         "operation_id": "T25:asset",
@@ -175,11 +175,11 @@
         "settled_units": null
       },
       {
-        "attempt_token": "att_4a32b4c974adb9015b01cecc",
+        "attempt_token": "att_b66419e67931b7e78a701889",
         "envelope_id": null,
         "job_id": "res_5a5a1b7379a3ad18_2",
         "operation_id": "T25:asset",
-        "permit_id": "permit_3e57625b1da8a5e9331ff186",
+        "permit_id": "permit_64d162ee0e5e0f881a881b10",
         "provider_account": "fake_acct_a",
         "revision": 3,
         "settled_units": null
@@ -187,7 +187,7 @@
     ],
     "permits": 2,
     "permits_consumed": 1,
-    "pid": 2436,
+    "pid": 748,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [

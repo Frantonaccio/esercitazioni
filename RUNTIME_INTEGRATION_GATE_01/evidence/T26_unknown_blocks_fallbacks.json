@@ -4,7 +4,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_a319e42fe60f9c63ff07f695",
+        "attempt_token": "att_4ff1fc22dc938bcd46ea6987",
         "envelope_id": null,
         "job_id": "res_dfa211197f228e3c_1",
         "operation_id": "T26:asset",
@@ -16,7 +16,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 2442,
+    "pid": 754,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
@@ -37,7 +37,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_a319e42fe60f9c63ff07f695",
+        "attempt_token": "att_4ff1fc22dc938bcd46ea6987",
         "envelope_id": null,
         "job_id": "res_dfa211197f228e3c_1",
         "operation_id": "T26:asset",
@@ -49,7 +49,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 2464,
+    "pid": 776,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
@@ -70,7 +70,7 @@
     "error": "ConnectionResetError",
     "message": "risposta del provider persa dopo l'invio",
     "ok": false,
-    "pid": 2438,
+    "pid": 750,
     "submits": 1,
     "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\nConnectionResetError: risposta del provider persa dopo l'invio\n",
     "transport_sent": 0
@@ -81,7 +81,7 @@
     "error": "IntentRefused",
     "message": "LIVE_OR_UNCERTAIN_ATTEMPT: il tentativo res_dfa211197f228e3c_1 e' SUBMIT_UNKNOWN: nessun nuovo submit finche' non e' concluso o riconciliato (usare RESUME)",
     "ok": false,
-    "pid": 2456,
+    "pid": 768,
     "submits": 0,
     "transport_sent": 0
   },
@@ -91,7 +91,7 @@
     "error": "IntentRefused",
     "message": "OPERATION_ID_REQUIRED: operation_id obbligatorio per ogni operazione (RESUME e NEW_ATTEMPT)",
     "ok": false,
-    "pid": 2460,
+    "pid": 772,
     "submits": 0,
     "transport_sent": 0
   },
@@ -101,7 +101,7 @@
     "error": "IntentRefused",
     "message": "OPERATION_ID_REQUIRED: operation_id obbligatorio per ogni operazione (RESUME e NEW_ATTEMPT)",
     "ok": false,
-    "pid": 2462,
+    "pid": 774,
     "submits": 0,
     "transport_sent": 0
   },
@@ -120,7 +120,7 @@
     "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_a319e42fe60f9c63ff07f695",
+      "attempt_token": "att_4ff1fc22dc938bcd46ea6987",
       "cost_credits": null,
       "error": null,
       "job_id": "res_dfa211197f228e3c_1",
@@ -134,11 +134,11 @@
       "revision": 2,
       "spec_key": "dfa211197f228e3cd311525f0cd3300aadffcb6b79f7d702cc6b350cab6c845b",
       "state": "SUBMIT_UNKNOWN",
-      "submitted_at": 1789589646.5200088,
+      "submitted_at": 1789626867.4396255,
       "terminal_by": 0.0,
       "webhook_hints": 0
     },
-    "pid": 2452,
+    "pid": 764,
     "provider": "fake",
     "provider_job_id": null,
     "quote_id": null,
@@ -166,7 +166,7 @@
     "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_a319e42fe60f9c63ff07f695",
+      "attempt_token": "att_4ff1fc22dc938bcd46ea6987",
       "cost_credits": null,
       "error": null,
       "job_id": "res_dfa211197f228e3c_1",
@@ -180,11 +180,11 @@
       "revision": 2,
       "spec_key": "dfa211197f228e3cd311525f0cd3300aadffcb6b79f7d702cc6b350cab6c845b",
       "state": "SUBMIT_UNKNOWN",
-      "submitted_at": 1789589646.5200088,
+      "submitted_at": 1789626867.4396255,
       "terminal_by": 0.0,
       "webhook_hints": 0
     },
-    "pid": 2448,
+    "pid": 760,
     "provider": "fake",
     "provider_job_id": null,
     "quote_id": null,
@@ -212,7 +212,7 @@
     "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_a319e42fe60f9c63ff07f695",
+      "attempt_token": "att_4ff1fc22dc938bcd46ea6987",
       "cost_credits": null,
       "error": null,
       "job_id": "res_dfa211197f228e3c_1",
@@ -226,11 +226,11 @@
       "revision": 2,
       "spec_key": "dfa211197f228e3cd311525f0cd3300aadffcb6b79f7d702cc6b350cab6c845b",
       "state": "SUBMIT_UNKNOWN",
-      "submitted_at": 1789589646.5200088,
+      "submitted_at": 1789626867.4396255,
       "terminal_by": 0.0,
       "webhook_hints": 0
     },
-    "pid": 2444,
+    "pid": 756,
     "provider": "fake",
     "provider_job_id": null,
     "quote_id": null,

@@ -5,13 +5,14 @@
     "write_worker_code": "BYPASS_POSSIBLE",
     "write_worker_store": "BYPASS_POSSIBLE"
   },
+  "environment_precondition_same_uid": true,
   "protocol_reply": [
     {
       "amount": 10,
       "envelope_id": "ENV_T29",
       "ok": true,
       "price_source": "LAB_PRICE_TABLE",
-      "quote_id": "quote_466880d3ed8353e891beb08f",
+      "quote_id": "quote_62ba1da3e264c9afc697decd",
       "sku": "fake_model_v1"
     },
     {
@@ -21,10 +22,13 @@
       "submits": 0
     }
   ],
+  "reason_code": "BLOCKED_ENVIRONMENT",
+  "requirement_verified": false,
+  "status": "BLOCKED",
   "stop": {
-    "account_id": "acct_eb4affbe2a85",
+    "account_id": "acct_aa35f08708f1",
     "ok": true,
-    "secret_path": "/tmp/gate01_nz7iuvlu/spender_secret/worker_secret.json",
+    "secret_path": "/tmp/gate01_9qeokf8r/spender_secret/worker_secret.json",
     "served": 3,
     "stopped": true,
     "violations": []
@@ -32,6 +36,5 @@
   "uids": {
     "orchestrator_uid": 0,
     "worker_uid": 0
-  },
-  "verdict": "BLOCKED_ENVIRONMENT"
+  }
 }

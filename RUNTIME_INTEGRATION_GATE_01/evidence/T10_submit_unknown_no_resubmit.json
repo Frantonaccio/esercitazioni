@@ -4,7 +4,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_36d97f1ce2d9ae71c665fc1e",
+        "attempt_token": "att_545623235ea19cde17f360e4",
         "envelope_id": null,
         "job_id": "res_8e57ea78b131d60e_1",
         "operation_id": "lab:submit unknown",
@@ -16,7 +16,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 2221,
+    "pid": 533,
     "quotes_consumed": 0,
     "reserved_units": 30,
     "rows": [
@@ -37,7 +37,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_36d97f1ce2d9ae71c665fc1e",
+        "attempt_token": "att_545623235ea19cde17f360e4",
         "envelope_id": null,
         "job_id": "res_8e57ea78b131d60e_1",
         "operation_id": "lab:submit unknown",
@@ -49,7 +49,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 2227,
+    "pid": 539,
     "quotes_consumed": 0,
     "reserved_units": 30,
     "rows": [
@@ -70,7 +70,7 @@
     "error": "ConnectionResetError",
     "message": "risposta del provider persa dopo l'invio",
     "ok": false,
-    "pid": 2217,
+    "pid": 529,
     "submits": 1,
     "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\nConnectionResetError: risposta del provider persa dopo l'invio\n",
     "transport_sent": 0
@@ -90,7 +90,7 @@
     "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_36d97f1ce2d9ae71c665fc1e",
+      "attempt_token": "att_545623235ea19cde17f360e4",
       "cost_credits": null,
       "error": null,
       "job_id": "res_8e57ea78b131d60e_1",
@@ -104,11 +104,11 @@
       "revision": 2,
       "spec_key": "8e57ea78b131d60ef8c7cf9009103b9aa1d72a2de31b3b6f756a616fb0c79bea",
       "state": "SUBMIT_UNKNOWN",
-      "submitted_at": 1789589639.0929499,
+      "submitted_at": 1789626861.7968402,
       "terminal_by": 0.0,
       "webhook_hints": 0
     },
-    "pid": 2223,
+    "pid": 535,
     "provider": "fake",
     "provider_job_id": null,
     "quote_id": null,

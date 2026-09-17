@@ -1,7 +1,7 @@
 {
   "envelope": {
     "ok": true,
-    "pid": 2466,
+    "pid": 778,
     "result": {
       "authorized_units": 30,
       "envelope_id": "ENV_T27",
@@ -15,7 +15,7 @@
     "error": "BudgetExceeded",
     "message": "envelope ENV_T27 v1: autorizzati 30, regolati 30, esposti 0, richiesti 1",
     "ok": false,
-    "pid": 2488,
+    "pid": 800,
     "submits": 0,
     "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.BudgetExceeded: envelope ENV_T27 v1: autorizzati 30, regolati 30, esposti 0, richiesti 1\n",
     "transport_sent": 0
@@ -36,7 +36,7 @@
       "outcome": "SUCCEEDED",
       "permit_id": null,
       "persisted": {
-        "attempt_token": "att_3d0850d71ac6e249fe338d78",
+        "attempt_token": "att_707ea93c82c0988013d2cdc0",
         "cost_credits": 4.0,
         "error": null,
         "job_id": "res_cd0e3788d71225b8_1",
@@ -50,11 +50,11 @@
         "revision": 3,
         "spec_key": "cd0e3788d71225b89ca10569c8e1d04fa4e36e73a2a6881e15acdf2a87aa10a7",
         "state": "SUCCEEDED",
-        "submitted_at": 1789589647.7469234,
-        "terminal_by": 1789589947.7469234,
+        "submitted_at": 1789626868.3720572,
+        "terminal_by": 1789627168.3720572,
         "webhook_hints": 0
       },
-      "pid": 2468,
+      "pid": 780,
       "provider": "fake",
       "provider_job_id": "pv_cd0e3788",
       "quote_id": null,
@@ -82,7 +82,7 @@
       "outcome": "SUCCEEDED",
       "permit_id": null,
       "persisted": {
-        "attempt_token": "att_d9a846fab46e133009eadcf7",
+        "attempt_token": "att_88c8e7ccfa37947b58bd4c91",
         "cost_credits": 4.0,
         "error": null,
         "job_id": "res_75cafdf0d91d92fa_1",
@@ -96,11 +96,11 @@
         "revision": 3,
         "spec_key": "75cafdf0d91d92fa2af5b83f3a36515982de4a40bd3e17256a6eae6b0b4d7454",
         "state": "SUCCEEDED",
-        "submitted_at": 1789589648.0096643,
-        "terminal_by": 1789589948.0096643,
+        "submitted_at": 1789626868.566249,
+        "terminal_by": 1789627168.566249,
         "webhook_hints": 0
       },
-      "pid": 2474,
+      "pid": 786,
       "provider": "fake",
       "provider_job_id": "pv_75cafdf0",
       "quote_id": null,
@@ -128,7 +128,7 @@
       "outcome": "SUCCEEDED",
       "permit_id": null,
       "persisted": {
-        "attempt_token": "att_1885ad66a38568b398ef05e0",
+        "attempt_token": "att_0601114e91578d67c685354e",
         "cost_credits": 4.0,
         "error": null,
         "job_id": "res_b69c68673b0f3de3_1",
@@ -142,11 +142,11 @@
         "revision": 3,
         "spec_key": "b69c68673b0f3de374b56b46f49ae7e5bfff71efbec9eff33525c1cedbd78d2d",
         "state": "SUCCEEDED",
-        "submitted_at": 1789589648.2507148,
-        "terminal_by": 1789589948.2507148,
+        "submitted_at": 1789626868.764273,
+        "terminal_by": 1789627168.764273,
         "webhook_hints": 0
       },
-      "pid": 2480,
+      "pid": 792,
       "provider": "fake",
       "provider_job_id": "pv_b69c6867",
       "quote_id": null,
@@ -163,7 +163,7 @@
   "settlements": [
     {
       "ok": true,
-      "pid": 2472,
+      "pid": 784,
       "result": {
         "applied": true,
         "cost_known": true,
@@ -175,7 +175,7 @@
     },
     {
       "ok": true,
-      "pid": 2478,
+      "pid": 790,
       "result": {
         "applied": true,
         "cost_known": true,
@@ -187,7 +187,7 @@
     },
     {
       "ok": true,
-      "pid": 2484,
+      "pid": 796,
       "result": {
         "applied": true,
         "cost_known": true,
@@ -203,7 +203,7 @@
     "ledger_entries": 6,
     "ownership": [
       {
-        "attempt_token": "att_d9a846fab46e133009eadcf7",
+        "attempt_token": "att_88c8e7ccfa37947b58bd4c91",
         "envelope_id": "ENV_T27",
         "job_id": "res_75cafdf0d91d92fa_1",
         "operation_id": "lab:ledger 1",
@@ -213,7 +213,7 @@
         "settled_units": 10
       },
       {
-        "attempt_token": "att_1885ad66a38568b398ef05e0",
+        "attempt_token": "att_0601114e91578d67c685354e",
         "envelope_id": "ENV_T27",
         "job_id": "res_b69c68673b0f3de3_1",
         "operation_id": "lab:ledger 2",
@@ -223,7 +223,7 @@
         "settled_units": 10
       },
       {
-        "attempt_token": "att_3d0850d71ac6e249fe338d78",
+        "attempt_token": "att_707ea93c82c0988013d2cdc0",
         "envelope_id": "ENV_T27",
         "job_id": "res_cd0e3788d71225b8_1",
         "operation_id": "lab:ledger 0",
@@ -235,7 +235,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 2504,
+    "pid": 816,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
@@ -273,7 +273,7 @@
   },
   "totals": {
     "ok": true,
-    "pid": 2486,
+    "pid": 798,
     "result": {
       "authorized_units": 30,
       "envelope_id": "ENV_T27",
@@ -302,7 +302,7 @@
       "outcome": "SUCCEEDED",
       "permit_id": null,
       "persisted": {
-        "attempt_token": "att_587780aea043760d1a79fbc7",
+        "attempt_token": "att_8ca1293c2fc1d878417db439",
         "cost_credits": 4.0,
         "error": null,
         "job_id": "res_f8ac02e6da6c3645_1",
@@ -316,11 +316,11 @@
         "revision": 3,
         "spec_key": "f8ac02e6da6c364513585a1f052b9e3372aac648d9132acb22541baaba6f5bc4",
         "state": "SUCCEEDED",
-        "submitted_at": 1789589648.8559415,
-        "terminal_by": 1789589948.8559415,
+        "submitted_at": 1789626869.2500644,
+        "terminal_by": 1789627169.2500644,
         "webhook_hints": 0
       },
-      "pid": 2494,
+      "pid": 806,
       "provider": "fake",
       "provider_job_id": "pv_f8ac02e6",
       "quote_id": null,
@@ -338,14 +338,14 @@
       "error": "BudgetExceeded",
       "message": "envelope ENV_T27b v1: autorizzati 15, regolati 0, esposti 10, richiesti 10",
       "ok": false,
-      "pid": 2498,
+      "pid": 810,
       "submits": 0,
       "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.BudgetExceeded: envelope ENV_T27b v1: autorizzati 15, regolati 0, esposti 10, richiesti 10\n",
       "transport_sent": 0
     },
     {
       "ok": true,
-      "pid": 2502,
+      "pid": 814,
       "result": {
         "authorized_units": 15,
         "envelope_id": "ENV_T27b",

@@ -1,335 +1,521 @@
-[
-  {
-    "id": "T01",
-    "title": "correct Core pin",
-    "expected": "CORE_PIN_OK, go procede",
-    "actual": "core_sha=740ee979300f verdict=CORE_PIN_OK state=SUCCEEDED",
-    "exit": 0,
-    "evidence": "evidence/T01_correct_core_pin.json",
-    "pass": true
-  },
-  {
-    "id": "T02",
-    "title": "wrong Core pin",
-    "expected": "CORE_PIN_MISMATCH, Core non importato, nessuno store",
-    "actual": "error=CORE_PIN_MISMATCH core_imported=False",
-    "exit": 0,
-    "evidence": "evidence/T02_wrong_core_pin.json",
-    "pass": true
-  },
-  {
-    "id": "T03",
-    "title": "stale old Core pin (9afaddf)",
-    "expected": "STALE_CORE_PIN, Core non importato",
-    "actual": "error=STALE_CORE_PIN observed=9afaddf core_imported=False",
-    "exit": 0,
-    "evidence": "evidence/T03_stale_core_pin.json",
-    "pass": true
-  },
-  {
-    "id": "T04",
-    "title": "deterministic spec_key",
-    "expected": "run A == run B == run C == altro processo",
-    "actual": "A==B==C==other_process: True (e355dd3ed48831f2…)",
-    "exit": 0,
-    "evidence": "evidence/T04_deterministic_spec_key.json",
-    "pass": true
-  },
-  {
-    "id": "T05",
-    "title": "spec mutation changes key",
-    "expected": "ogni mutazione semantica -> chiave diversa; dati accidentali rifiutati",
-    "actual": "6 mutazioni semantiche -> 6 chiavi diverse: True; 5 input accidentali rifiutati: True",
-    "exit": 0,
-    "evidence": "evidence/T05_spec_mutation.json",
-    "pass": true
-  },
-  {
-    "id": "T06",
-    "title": "happy path",
-    "expected": "1 submit, SUCCEEDED persistito, riletto da nuovo processo, provider=fake",
-    "actual": "state=SUCCEEDED submits=1 provider=fake restart_read=SUCCEEDED reserved_after=0",
-    "exit": 0,
-    "evidence": "evidence/T06_happy_path.json",
-    "pass": true
-  },
-  {
-    "id": "T07",
-    "title": "sequential duplicate",
-    "expected": "GO#2 = EXISTING_LIVE_JOB, 1 solo submit",
-    "actual": "GO#1=RESERVED_NEW GO#2=EXISTING_LIVE_JOB submits=1 same_job_id=True",
-    "exit": 0,
-    "evidence": "evidence/T07_sequential_duplicate.json",
-    "pass": true
-  },
-  {
-    "id": "T08",
-    "title": "concurrent duplicate (2 processi)",
-    "expected": "1 RESERVED_NEW + 1 EXISTING_LIVE_JOB, 1 submit totale",
-    "actual": "outcomes=['EXISTING_LIVE_JOB', 'RESERVED_NEW'] total_submits=1 pids=2 rows=1",
-    "exit": 0,
-    "evidence": "evidence/T08_concurrent_duplicate.json",
-    "pass": true
-  },
-  {
-    "id": "T09",
-    "title": "restart/resume",
-    "expected": "B: nessuna nuova reservation/submit, stesso job_id/provider_job_id, terminale persistito",
-    "actual": "A: RUNNING polls=1 submits=1 | B (nuovo pid): EXISTING_LIVE_JOB submits=0 same_job=True -> SUCCEEDED",
-    "exit": 0,
-    "evidence": "evidence/T09_restart_resume.json",
-    "pass": true
-  },
-  {
-    "id": "T10",
-    "title": "SUBMIT_UNKNOWN no resubmit",
-    "expected": "SUBMIT_UNKNOWN persistito; GO#2 reconciliation-required, 0 submit, budget non rilasciato",
-    "actual": "GO#1 -> SUBMIT_UNKNOWN (budget impegnato 30) | GO#2 -> EXISTING_LIVE_JOB/reconciliation-required submits=0 budget ancora 30",
-    "exit": 0,
-    "evidence": "evidence/T10_submit_unknown_no_resubmit.json",
-    "pass": true
-  },
-  {
-    "id": "T11",
-    "title": "provider mismatch",
-    "expected": "ProviderMismatch, 0 submit, reservation intatta",
-    "actual": "fake_a RUNNING | fake_b -> ProviderMismatch submits=0 reservation intatta=fake_a/RUNNING",
-    "exit": 0,
-    "evidence": "evidence/T11_provider_mismatch.json",
-    "pass": true
-  },
-  {
-    "id": "T12",
-    "title": "budget atomicity",
-    "expected": "envelope 100: 70+50 -> uno BudgetExceeded, impegnati <= 100",
-    "actual": "concorrente: ['BudgetExceeded', 'OK'] impegnati=70/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70",
-    "exit": 0,
-    "evidence": "evidence/T12_budget_atomicity.json",
-    "pass": true
-  },
-  {
-    "id": "T13",
-    "title": "invalid budget rejection",
-    "expected": "ReservationContractError, 0 submit, 0 righe",
-    "actual": "5 valori non ammessi -> ReservationContractError, 0 submit, 0 righe",
-    "exit": 0,
-    "evidence": "evidence/T13_invalid_budget_rejected.json",
-    "pass": true
-  },
-  {
-    "id": "T14",
-    "title": "fake mode blocks real provider",
-    "expected": "REAL_PROVIDER_DISABLED prima di credenziali/subprocess/rete/import Core",
-    "actual": "provider_mode=higgsfield -> REAL_PROVIDER_DISABLED violations=0 core_imported=False db_created=False",
-    "exit": 0,
-    "evidence": "evidence/T14_fake_mode_blocks_real_provider.json",
-    "pass": true
-  },
-  {
-    "id": "T15",
-    "title": "no credential read",
-    "expected": "0 violazioni in fake mode; controprova: sentinella rileva l'esca",
-    "actual": "fake go -> SUCCEEDED violations=0 | controprova: sentinella rileva ['credential_file_open', 'provider_subprocess', 'secret_env_read']",
-    "exit": 0,
-    "evidence": "evidence/T15_no_credential_read.json",
-    "pass": true
-  },
-  {
-    "id": "T16",
-    "title": "P2 hash unchanged",
-    "expected": "SHA256(hf_batch.py) before == after",
-    "actual": "before=637f3a803ee3 after=637f3a803ee3 declared=637f3a803ee3 sources_agree=True",
-    "exit": 0,
-    "evidence": "evidence/T16_p2_hash.json",
-    "pass": true
-  },
-  {
-    "id": "T17",
-    "title": "Core canonical unchanged",
-    "expected": "HEAD == 740ee97 (Core promosso), working tree pulito",
-    "actual": "CANONICAL_CLEAN: HEAD=740ee979300f required=740ee979300f branch=promote/r0-r1-hardening-2026-09-16 dirty_files=0",
-    "exit": 0,
-    "evidence": "evidence/T17_core_canonical_unchanged.json",
-    "pass": true
-  },
-  {
-    "id": "T18",
-    "title": "durable terminal persistence",
-    "expected": "SUCCEEDED riletto da nuovo processo; nuovo tentativo dopo terminale",
-    "actual": "SUCCEEDED letto da nuovo processo; replay = RESUMED/SUCCEEDED (0 submit, 1 riga); new_attempt con permesso = RESERVED_NEW (2 righe, 0 impegnato)",
-    "exit": 0,
-    "evidence": "evidence/T18_durable_terminal.json",
-    "pass": true
-  },
-  {
-    "id": "T19",
-    "title": "static: no duplicate control system (AST)",
-    "expected": "0 findings; import dal Core = 4 attesi",
-    "actual": "findings=0 core_imports=5 contract_drift=0",
-    "exit": 0,
-    "evidence": "evidence/T19_static_no_duplicate_control.json",
-    "pass": true
-  },
-  {
-    "id": "T20",
-    "title": "dirty Core must fail closed",
-    "expected": "canonical+clean PASS; canonical+tracked mod -> CORE_WORKTREE_DIRTY (no import); wrong+clean -> MISMATCH; stale+clean -> STALE",
-    "actual": "clean -> pin ok | tracked mod (HEAD invariato) -> CORE_WORKTREE_DIRTY core_imported=False | untracked inside -> CORE_WORKTREE_DIRTY | wrong+clean -> CORE_PIN_MISMATCH | stale+clean -> STALE_CORE_PIN",
-    "exit": 0,
-    "evidence": "evidence/T20_dirty_core_fail_closed.json",
-    "pass": true
-  },
-  {
-    "id": "T21",
-    "title": "real hf_batch go -> GenSpec mapping",
-    "expected": "27 job reali: prompt/media identici all'originale; lock: prompt_sha256 e sha256_sent combaciano; spec_key deterministico; mutazioni reali cambiano chiave",
-    "actual": "27 job reali in 11 spec: prompt/media == originale True; lock: prompt_sha e sha256_sent combaciano; spec_key stabile in altro processo True; 4 mutazioni reali -> chiave diversa, metadati QA -> stessa chiave True; media MISSING rifiutato True",
-    "exit": 0,
-    "evidence": "evidence/T21_real_genspec_mapping.json",
-    "pass": true
-  },
-  {
-    "id": "T22",
-    "title": "hf_batch_runtime.go on real spec via Core",
-    "expected": "2 RESERVED_NEW + 2 submit; GO#2 EXISTING_LIVE_JOB 0 submit; nuovo processo completa SUCCEEDED; lock/quote REAL_PROVIDER_DISABLED; 0 violazioni",
-    "actual": "spec reale MOTION_B1_B4C: GO#1 2x RESERVED_NEW (2 submit) · GO#2 2x EXISTING_LIVE_JOB (0 submit) · GO#3 nuovo processo -> 2x SUCCEEDED (0 submit) · lock/quote -> REAL_PROVIDER_DISABLED · violazioni sentinella 0",
-    "exit": 0,
-    "evidence": "evidence/T22_hf_batch_runtime_go_real_spec.json",
-    "pass": true
-  },
-  {
-    "id": "T23",
-    "title": "P2 handoff integrity",
-    "expected": "manifest 0 mismatch; ZIP hash registrati",
-    "actual": "handoff SHA256SUMS: 35 file, rc=0 (0 mismatch); 2 ZIP hash registrati",
-    "exit": 0,
-    "evidence": "evidence/T23_handoff_integrity.json",
-    "pass": true
-  },
-  {
-    "id": "T24",
-    "title": "RV03 resume after terminal",
-    "expected": "replay dopo SUCCEEDED/FAILED (anche nuovo processo) = stesso attempt, 0 submit",
-    "actual": "GO#1 SUCCEEDED (1 submit) · replay nuovo processo -> RESUMED/SUCCEEDED submits=0 · altro run stessa operazione -> RESUMED/SUCCEEDED submits=0 · altra operazione -> RESERVED_NEW · FAILED replay -> RESUMED/FAILED submits=0",
-    "exit": 0,
-    "evidence": "evidence/T24_resume_after_terminal.json",
-    "pass": true
-  },
-  {
-    "id": "T25",
-    "title": "RV03 new attempt needs reason + one-shot permit",
-    "expected": "senza motivo/permesso rifiutato; con permesso 1 nuovo tentativo; replay permesso rifiutato",
-    "actual": "senza motivo -> REASON_REQUIRED · senza permesso -> PERMIT_REQUIRED · senza operazione -> OPERATION_ID_REQUIRED · con permesso -> RESERVED_NEW · replay permesso -> PermitError · permit(OP_A) con OP_B/None -> PermitError/PermitError · storico 2",
-    "exit": 0,
-    "evidence": "evidence/T25_new_attempt_permit.json",
-    "pass": true
-  },
-  {
-    "id": "T26",
-    "title": "RV03 unknown blocks run/model fallbacks",
-    "expected": "SUBMIT_UNKNOWN: stessa spec reconciliation-required; altro run/modello OperationBusy; 0 submit",
-    "actual": "SUBMIT_UNKNOWN · stessa spec -> EXISTING_LIVE_JOB/reconciliation-required · altro run (RESUME) -> EXISTING_LIVE_JOB/reconciliation-required spec_key=latest · altro modello (RESUME) -> EXISTING_LIVE_JOB/reconciliation-required · new_attempt -> LIVE_OR_UNCERTAIN_ATTEMPT · senza operation_id (modello/run) -> OPERATION_ID_REQUIRED/OPERATION_ID_REQUIRED · submit totali 1",
-    "exit": 0,
-    "evidence": "evidence/T26_unknown_blocks_fallbacks.json",
-    "pass": true
-  },
-  {
-    "id": "T27",
-    "title": "P-B03 cumulative ledger via runtime",
-    "expected": "3 job regolati saturano l'envelope; quarto BudgetExceeded con 0 vivi; non regolato resta esposto",
-    "actual": "3x10 regolati = 30/30 (vivi 0) · quarto (1) -> BudgetExceeded · controprova: terminale non regolato tiene esposti 10 -> BudgetExceeded",
-    "exit": 0,
-    "evidence": "evidence/T27_ledger_cumulative_via_runtime.json",
-    "pass": true
-  },
-  {
-    "id": "T28",
-    "title": "P-B01 spender boundary mock (protocol)",
-    "expected": "solo intenti strutturati ED ESPLICITI; resume senza attempt rifiutato; shell rifiutata; permesso monouso; segreto mai nel canale",
-    "actual": "senza intent -> PROTOCOL: INTENT_REQUIRED  (×2, anche con quote) · intent estraneo -> PROTOCOL · resume senza attempt -> NO_EXISTING_ATTEMPT (0 submit, nessuna riga) · prima spesa new_attempt/INITIAL_GENERATION -> SUCCEEDED · resume=RESUMED/SUCCEEDED · quote fidata 10u (LAB_PRICE_TABLE) · amount dal client -> PROTOCOL ×2 · fixture zero -> SUCCEEDED/0 · budget≠quote -> BUDGET_NOT_QUOTED · shell/argv/non-JSON -> PROTOCOL · new_attempt (quote nuova)=RESERVED_NEW · permit replay -> PermitError · su incerto -> LIVE_OR_UNCERTAIN_ATTEMPT · senza quote -> QUOTE_REQUIRED · senza operazione -> OPERATION_ID_REQUIRED · violazioni sentinella 0 · segreto nel canale: no",
-    "exit": 0,
-    "evidence": "evidence/T28_boundary_protocol_mock.json",
-    "pass": true
-  },
-  {
-    "id": "T29",
-    "title": "P-B01 privilege isolation",
-    "expected": "orchestrator non puo' leggere il segreto, scrivere il worker, fare dispatch diretto",
-    "actual": "BLOCKED_ENVIRONMENT: stesso uid (0) per orchestrator e worker; tentativi di bypass: {'read_worker_secret': 'BYPASS_POSSIBLE', 'write_worker_code': 'BYPASS_POSSIBLE', 'write_worker_store': 'BYPASS_POSSIBLE', 'direct_dispatch_on_worker_store': 'BYPASS_POSSIBLE'}",
-    "exit": 1,
-    "evidence": "evidence/T29_boundary_privilege_isolation.json",
-    "pass": false
-  },
-  {
-    "id": "T37",
-    "title": "DELTA 03 intent fail-closed",
-    "expected": "governed resume senza attempt -> NO_EXISTING_ATTEMPT (0 effetti); prima spesa solo new_attempt+INITIAL_GENERATION; boundary senza intent -> PROTOCOL; resume-as-start solo LEGACY_LAB marcato",
-    "actual": "governed resume senza attempt -> NO_EXISTING_ATTEMPT (anche con quote; 0 righe/ledger/permit/submit, quote libera) · new_attempt+INITIAL_GENERATION -> RESERVED_NEW/SUCCEEDED (1 submit) · resume -> RESUMED/SUCCEEDED (0 submit, quote/permit/ledger invariati) · UNKNOWN -> EXISTING_LIVE_JOB/reconciliation-required · RESERVED orfana -> EXISTING_LIVE_JOB/reserved-no-dispatch · prima spesa senza quote -> QUOTE_REQUIRED (0 permessi) · boundary: senza intent -> PROTOCOL INTENT_REQUIRED, resume senza attempt -> NO_EXISTING_ATTEMPT, new_attempt -> SUCCEEDED, resume -> RESUMED/SUCCEEDED · hf_batch governato: default resume -> NO_EXISTING_ATTEMPT, senza namespace -> OPERATION_NAMESPACE_REQUIRED, new_attempt senza quote -> QUOTE_REQUIRED · LEGACY_LAB resume-as-start marcato (True)",
-    "exit": 0,
-    "evidence": "evidence/T37_intent_fail_closed.json",
-    "pass": true
-  },
-  {
-    "id": "T30",
-    "title": "recovery mock: crash after send before journal",
-    "expected": "RESERVED con ownership; recovery -> SUBMIT_UNKNOWN; replay 0 submit",
-    "actual": "crash exit=4 dopo l'invio: RESERVED con ownership/token persistiti · recovery -> SUBMIT_UNKNOWN · replay -> EXISTING_LIVE_JOB/reconciliation-required submits=0",
-    "exit": 0,
-    "evidence": "evidence/T30_restart_recovery_mock.json",
-    "pass": true
-  },
-  {
-    "id": "T31",
-    "title": "CR-02 envelope authorization binding",
-    "expected": "envelope derivato dallo scope; fuori scope/altro envelope/scope non autorizzato rifiutati; envelope_units vietato nel governato",
-    "actual": "in scope -> SUCCEEDED (ENV_T31) · fuori scope -> ENVELOPE_OUT_OF_SCOPE · altro envelope valido -> ENVELOPE_OUT_OF_SCOPE · scope non autorizzato -> ENVELOPE_NOT_AUTHORIZED · quote di altra op/spec -> QUOTE_BINDING · envelope_units nel governato -> LEGACY_ENVELOPE_UNITS_FORBIDDEN",
-    "exit": 0,
-    "evidence": "evidence/T31_envelope_authorization_binding.json",
-    "pass": true
-  },
-  {
-    "id": "T32",
-    "title": "CR-02 quote binding",
-    "expected": "quote omessa/inferiore/diversa/altra spec/altra op rifiutate prima dell'invio; zero attestato PASS; budget omesso = quote",
-    "actual": "omessa -> QUOTE_REQUIRED (sent 0) · inferiore/diversa -> BUDGET_NOT_QUOTED · altra spec/op -> QUOTE_BINDING · budget omesso -> prenotati 10 dalla quote · zero attestato -> SUCCEEDED (0)",
-    "exit": 0,
-    "evidence": "evidence/T32_quote_binding.json",
-    "pass": true
-  },
-  {
-    "id": "T33",
-    "title": "CR-01 cross-operation identity",
-    "expected": "spec viva di OP_A non restituita a OP_B; RESUME(OP_A) != RESUME(OP_B) su spec uguale",
-    "actual": "OP_B su spec viva di OP_A -> OperationConflict (0 submit) · OP_A riprende res_0a2d7cb6976713d7_1 · RESUME(OP_A)=res_0a2d7cb6976713d7_1 != RESUME(OP_B)=res_0a2d7cb6976713d7_2",
-    "exit": 0,
-    "evidence": "evidence/T33_cross_operation_identity.json",
-    "pass": true
-  },
-  {
-    "id": "T34",
-    "title": "CR-10 work-order operation namespace",
-    "expected": "'<wo>:<asset>' stabile fra run; distinto fra WO; spec distinta non bloccata; stessa spec viva OperationConflict; spec_key intatta",
-    "actual": "WO_A nuovo run -> RESUMED/SUCCEEDED · WO_B stesso asset -> RESERVED_NEW (spec_key identica) · WO_B spec distinta su asset incerto di WO_A -> SUCCEEDED · WO_B stessa spec viva -> OperationConflict · replay WO_A -> attempt A · hf_batch namespaced ops ['WO_A:B1_NEW_CLIP', 'WO_A:B4C_NEW_CLIP'] stabili in 2 round (resumed) · senza namespace = LEGACY_LAB",
-    "exit": 0,
-    "evidence": "evidence/T34_work_order_namespace.json",
-    "pass": true
-  },
-  {
-    "id": "T35",
-    "title": "CR-09 resume is not new spend/dispatch",
-    "expected": "quote scaduta/consumata non blocca il resume; UNKNOWN/RESERVED 0 submit; spec_key=latest; ledger/permit/quote invariati; ownership",
-    "actual": "RUNNING+quote scaduta -> SUCCEEDED (0 submit, ledger invariato) · nuova spesa con quella quote -> QUOTE_ALREADY_CONSUMED · UNKNOWN -> EXISTING_LIVE_JOB/reconciliation-required · RESERVED orfana -> EXISTING_LIVE_JOB/reserved-no-dispatch · terminale+spec diversa -> RESUMED/SUCCEEDED spec_key=latest · RESERVE nel ledger: 3 (solo spese) · op errata -> NO_EXISTING_ATTEMPT · altro conto -> ProviderMismatch",
-    "exit": 0,
-    "evidence": "evidence/T35_resume_not_new_spend.json",
-    "pass": true
-  },
-  {
-    "id": "T36",
-    "title": "quote lifecycle (atomic single use) via runtime",
-    "expected": "Q1 consumata; riuso rifiutato; Q2 nuovo attempt; resume non riconsuma; rifiuti pre-reservation non consumano",
-    "actual": "Q1 consumata da attempt1 · Q1 riusata -> QUOTE_ALREADY_CONSUMED · Q2 -> RESERVED_NEW · resume -> attempt2, Q1/Q2 non riconsumate · rifiuto pre-reservation -> quote libera",
-    "exit": 0,
-    "evidence": "evidence/T36_quote_lifecycle_runtime.json",
-    "pass": true
+{
+  "schema": "runtime-gate-results/2",
+  "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "results": [
+    {
+      "id": "T01",
+      "title": "correct Core pin",
+      "expected": "CORE_PIN_OK, go procede",
+      "actual": "core_sha=740ee979300f verdict=CORE_PIN_OK state=SUCCEEDED",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T01_correct_core_pin.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T02",
+      "title": "wrong Core pin",
+      "expected": "CORE_PIN_MISMATCH, Core non importato, nessuno store",
+      "actual": "error=CORE_PIN_MISMATCH core_imported=False",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T02_wrong_core_pin.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T03",
+      "title": "stale old Core pin (9afaddf)",
+      "expected": "STALE_CORE_PIN, Core non importato",
+      "actual": "error=STALE_CORE_PIN observed=9afaddf core_imported=False",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T03_stale_core_pin.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T04",
+      "title": "deterministic spec_key",
+      "expected": "run A == run B == run C == altro processo",
+      "actual": "A==B==C==other_process: True (e355dd3ed48831f2…)",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T04_deterministic_spec_key.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T05",
+      "title": "spec mutation changes key",
+      "expected": "ogni mutazione semantica -> chiave diversa; dati accidentali rifiutati",
+      "actual": "6 mutazioni semantiche -> 6 chiavi diverse: True; 5 input accidentali rifiutati: True",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T05_spec_mutation.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T06",
+      "title": "happy path",
+      "expected": "1 submit, SUCCEEDED persistito, riletto da nuovo processo, provider=fake",
+      "actual": "state=SUCCEEDED submits=1 provider=fake restart_read=SUCCEEDED reserved_after=0",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T06_happy_path.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T07",
+      "title": "sequential duplicate",
+      "expected": "GO#2 = EXISTING_LIVE_JOB, 1 solo submit",
+      "actual": "GO#1=RESERVED_NEW GO#2=EXISTING_LIVE_JOB submits=1 same_job_id=True",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T07_sequential_duplicate.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T08",
+      "title": "concurrent duplicate (2 processi)",
+      "expected": "1 RESERVED_NEW + 1 EXISTING_LIVE_JOB, 1 submit totale",
+      "actual": "outcomes=['EXISTING_LIVE_JOB', 'RESERVED_NEW'] total_submits=1 pids=2 rows=1",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T08_concurrent_duplicate.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T09",
+      "title": "restart/resume",
+      "expected": "B: nessuna nuova reservation/submit, stesso job_id/provider_job_id, terminale persistito",
+      "actual": "A: RUNNING polls=1 submits=1 | B (nuovo pid): EXISTING_LIVE_JOB submits=0 same_job=True -> SUCCEEDED",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T09_restart_resume.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T10",
+      "title": "SUBMIT_UNKNOWN no resubmit",
+      "expected": "SUBMIT_UNKNOWN persistito; GO#2 reconciliation-required, 0 submit, budget non rilasciato",
+      "actual": "GO#1 -> SUBMIT_UNKNOWN (budget impegnato 30) | GO#2 -> EXISTING_LIVE_JOB/reconciliation-required submits=0 budget ancora 30",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T10_submit_unknown_no_resubmit.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T11",
+      "title": "provider mismatch",
+      "expected": "ProviderMismatch, 0 submit, reservation intatta",
+      "actual": "fake_a RUNNING | fake_b -> ProviderMismatch submits=0 reservation intatta=fake_a/RUNNING",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T11_provider_mismatch.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T12",
+      "title": "budget atomicity",
+      "expected": "envelope 100: 70+50 -> uno BudgetExceeded, impegnati <= 100",
+      "actual": "concorrente: ['BudgetExceeded', 'OK'] impegnati=50/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T12_budget_atomicity.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T13",
+      "title": "invalid budget rejection",
+      "expected": "ReservationContractError, 0 submit, 0 righe",
+      "actual": "5 valori non ammessi -> ReservationContractError, 0 submit, 0 righe",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T13_invalid_budget_rejected.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T14",
+      "title": "fake mode blocks real provider",
+      "expected": "REAL_PROVIDER_DISABLED prima di credenziali/subprocess/rete/import Core",
+      "actual": "provider_mode=higgsfield -> REAL_PROVIDER_DISABLED violations=0 core_imported=False db_created=False",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T14_fake_mode_blocks_real_provider.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T15",
+      "title": "no credential read",
+      "expected": "0 violazioni in fake mode; controprova: sentinella rileva l'esca",
+      "actual": "fake go -> SUCCEEDED violations=0 | controprova: sentinella rileva ['credential_file_open', 'provider_subprocess', 'secret_env_read']",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T15_no_credential_read.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T16",
+      "title": "P2 hash unchanged",
+      "expected": "SHA256(hf_batch.py) before == after",
+      "actual": "before=637f3a803ee3 after=637f3a803ee3 declared=637f3a803ee3 sources_agree=True",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T16_p2_hash.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T17",
+      "title": "Core canonical unchanged",
+      "expected": "HEAD == 740ee97 (Core promosso), working tree pulito",
+      "actual": "CANONICAL_CLEAN: HEAD=740ee979300f required=740ee979300f branch=promote/r0-r1-hardening-2026-09-16 dirty_files=0",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T17_core_canonical_unchanged.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T18",
+      "title": "durable terminal persistence",
+      "expected": "SUCCEEDED riletto da nuovo processo; nuovo tentativo dopo terminale",
+      "actual": "SUCCEEDED letto da nuovo processo; replay = RESUMED/SUCCEEDED (0 submit, 1 riga); new_attempt con permesso = RESERVED_NEW (2 righe, 0 impegnato)",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T18_durable_terminal.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T19",
+      "title": "static: no duplicate control system (AST)",
+      "expected": "0 findings; import dal Core = 4 attesi",
+      "actual": "findings=0 core_imports=5 contract_drift=0",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T19_static_no_duplicate_control.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T20",
+      "title": "dirty Core must fail closed",
+      "expected": "canonical+clean PASS; canonical+tracked mod -> CORE_WORKTREE_DIRTY (no import); wrong+clean -> MISMATCH; stale+clean -> STALE",
+      "actual": "clean -> pin ok | tracked mod (HEAD invariato) -> CORE_WORKTREE_DIRTY core_imported=False | untracked inside -> CORE_WORKTREE_DIRTY | wrong+clean -> CORE_PIN_MISMATCH | stale+clean -> STALE_CORE_PIN",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T20_dirty_core_fail_closed.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T21",
+      "title": "real hf_batch go -> GenSpec mapping",
+      "expected": "27 job reali: prompt/media identici all'originale; lock: prompt_sha256 e sha256_sent combaciano; spec_key deterministico; mutazioni reali cambiano chiave",
+      "actual": "27 job reali in 11 spec: prompt/media == originale True; lock: prompt_sha e sha256_sent combaciano; spec_key stabile in altro processo True; 4 mutazioni reali -> chiave diversa, metadati QA -> stessa chiave True; media MISSING rifiutato True",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T21_real_genspec_mapping.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T22",
+      "title": "hf_batch_runtime.go on real spec via Core",
+      "expected": "2 RESERVED_NEW + 2 submit; GO#2 EXISTING_LIVE_JOB 0 submit; nuovo processo completa SUCCEEDED; lock/quote REAL_PROVIDER_DISABLED; 0 violazioni",
+      "actual": "spec reale MOTION_B1_B4C: GO#1 2x RESERVED_NEW (2 submit) · GO#2 2x EXISTING_LIVE_JOB (0 submit) · GO#3 nuovo processo -> 2x SUCCEEDED (0 submit) · lock/quote -> REAL_PROVIDER_DISABLED · violazioni sentinella 0",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T22_hf_batch_runtime_go_real_spec.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T23",
+      "title": "P2 handoff integrity",
+      "expected": "manifest 0 mismatch; ZIP hash registrati",
+      "actual": "handoff SHA256SUMS: 35 file, rc=0 (0 mismatch); 2 ZIP hash registrati",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T23_handoff_integrity.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T24",
+      "title": "RV03 resume after terminal",
+      "expected": "replay dopo SUCCEEDED/FAILED (anche nuovo processo) = stesso attempt, 0 submit",
+      "actual": "GO#1 SUCCEEDED (1 submit) · replay nuovo processo -> RESUMED/SUCCEEDED submits=0 · altro run stessa operazione -> RESUMED/SUCCEEDED submits=0 · altra operazione -> RESERVED_NEW · FAILED replay -> RESUMED/FAILED submits=0",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T24_resume_after_terminal.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T25",
+      "title": "RV03 new attempt needs reason + one-shot permit",
+      "expected": "senza motivo/permesso rifiutato; con permesso 1 nuovo tentativo; replay permesso rifiutato",
+      "actual": "senza motivo -> REASON_REQUIRED · senza permesso -> PERMIT_REQUIRED · senza operazione -> OPERATION_ID_REQUIRED · con permesso -> RESERVED_NEW · replay permesso -> PermitError · permit(OP_A) con OP_B/None -> PermitError/PermitError · storico 2",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T25_new_attempt_permit.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T26",
+      "title": "RV03 unknown blocks run/model fallbacks",
+      "expected": "SUBMIT_UNKNOWN: stessa spec reconciliation-required; altro run/modello OperationBusy; 0 submit",
+      "actual": "SUBMIT_UNKNOWN · stessa spec -> EXISTING_LIVE_JOB/reconciliation-required · altro run (RESUME) -> EXISTING_LIVE_JOB/reconciliation-required spec_key=latest · altro modello (RESUME) -> EXISTING_LIVE_JOB/reconciliation-required · new_attempt -> LIVE_OR_UNCERTAIN_ATTEMPT · senza operation_id (modello/run) -> OPERATION_ID_REQUIRED/OPERATION_ID_REQUIRED · submit totali 1",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T26_unknown_blocks_fallbacks.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T27",
+      "title": "P-B03 cumulative ledger via runtime",
+      "expected": "3 job regolati saturano l'envelope; quarto BudgetExceeded con 0 vivi; non regolato resta esposto",
+      "actual": "3x10 regolati = 30/30 (vivi 0) · quarto (1) -> BudgetExceeded · controprova: terminale non regolato tiene esposti 10 -> BudgetExceeded",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T27_ledger_cumulative_via_runtime.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T28",
+      "title": "P-B01 spender boundary mock (protocol)",
+      "expected": "solo intenti strutturati ED ESPLICITI; resume senza attempt rifiutato; shell rifiutata; permesso monouso; segreto mai nel canale",
+      "actual": "senza intent -> PROTOCOL: INTENT_REQUIRED  (×2, anche con quote) · intent estraneo -> PROTOCOL · resume senza attempt -> NO_EXISTING_ATTEMPT (0 submit, nessuna riga) · prima spesa new_attempt/INITIAL_GENERATION -> SUCCEEDED · resume=RESUMED/SUCCEEDED · quote fidata 10u (LAB_PRICE_TABLE) · amount dal client -> PROTOCOL ×2 · fixture zero -> SUCCEEDED/0 · budget≠quote -> BUDGET_NOT_QUOTED · shell/argv/non-JSON -> PROTOCOL · new_attempt (quote nuova)=RESERVED_NEW · permit replay -> PermitError · su incerto -> LIVE_OR_UNCERTAIN_ATTEMPT · senza quote -> QUOTE_REQUIRED · senza operazione -> OPERATION_ID_REQUIRED · violazioni sentinella 0 · segreto nel canale: no",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T28_boundary_protocol_mock.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T29",
+      "title": "P-B01 privilege isolation",
+      "expected": "orchestrator non puo' leggere il segreto, scrivere il worker, fare dispatch diretto",
+      "actual": "stesso uid (0) per orchestrator e worker; tentativi di bypass: {'read_worker_secret': 'BYPASS_POSSIBLE', 'write_worker_code': 'BYPASS_POSSIBLE', 'write_worker_store': 'BYPASS_POSSIBLE', 'direct_dispatch_on_worker_store': 'BYPASS_POSSIBLE'}",
+      "status": "BLOCKED",
+      "reason_code": "BLOCKED_ENVIRONMENT",
+      "evidence": "evidence/T29_boundary_privilege_isolation.json",
+      "diagnostic_exit": 1,
+      "pass": false,
+      "raw": null
+    },
+    {
+      "id": "T37",
+      "title": "DELTA 03 intent fail-closed",
+      "expected": "governed resume senza attempt -> NO_EXISTING_ATTEMPT (0 effetti); prima spesa solo new_attempt+INITIAL_GENERATION; boundary senza intent -> PROTOCOL; resume-as-start solo LEGACY_LAB marcato",
+      "actual": "governed resume senza attempt -> NO_EXISTING_ATTEMPT (anche con quote; 0 righe/ledger/permit/submit, quote libera) · new_attempt+INITIAL_GENERATION -> RESERVED_NEW/SUCCEEDED (1 submit) · resume -> RESUMED/SUCCEEDED (0 submit, quote/permit/ledger invariati) · UNKNOWN -> EXISTING_LIVE_JOB/reconciliation-required · RESERVED orfana -> EXISTING_LIVE_JOB/reserved-no-dispatch · prima spesa senza quote -> QUOTE_REQUIRED (0 permessi) · boundary: senza intent -> PROTOCOL INTENT_REQUIRED, resume senza attempt -> NO_EXISTING_ATTEMPT, new_attempt -> SUCCEEDED, resume -> RESUMED/SUCCEEDED · hf_batch governato: default resume -> NO_EXISTING_ATTEMPT, senza namespace -> OPERATION_NAMESPACE_REQUIRED, new_attempt senza quote -> QUOTE_REQUIRED · LEGACY_LAB resume-as-start marcato (True)",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T37_intent_fail_closed.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T30",
+      "title": "recovery mock: crash after send before journal",
+      "expected": "RESERVED con ownership; recovery -> SUBMIT_UNKNOWN; replay 0 submit",
+      "actual": "crash exit=4 dopo l'invio: RESERVED con ownership/token persistiti · recovery -> SUBMIT_UNKNOWN · replay -> EXISTING_LIVE_JOB/reconciliation-required submits=0",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T30_restart_recovery_mock.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T31",
+      "title": "CR-02 envelope authorization binding",
+      "expected": "envelope derivato dallo scope; fuori scope/altro envelope/scope non autorizzato rifiutati; envelope_units vietato nel governato",
+      "actual": "in scope -> SUCCEEDED (ENV_T31) · fuori scope -> ENVELOPE_OUT_OF_SCOPE · altro envelope valido -> ENVELOPE_OUT_OF_SCOPE · scope non autorizzato -> ENVELOPE_NOT_AUTHORIZED · quote di altra op/spec -> QUOTE_BINDING · envelope_units nel governato -> LEGACY_ENVELOPE_UNITS_FORBIDDEN",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T31_envelope_authorization_binding.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T32",
+      "title": "CR-02 quote binding",
+      "expected": "quote omessa/inferiore/diversa/altra spec/altra op rifiutate prima dell'invio; zero attestato PASS; budget omesso = quote",
+      "actual": "omessa -> QUOTE_REQUIRED (sent 0) · inferiore/diversa -> BUDGET_NOT_QUOTED · altra spec/op -> QUOTE_BINDING · budget omesso -> prenotati 10 dalla quote · zero attestato -> SUCCEEDED (0)",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T32_quote_binding.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T33",
+      "title": "CR-01 cross-operation identity",
+      "expected": "spec viva di OP_A non restituita a OP_B; RESUME(OP_A) != RESUME(OP_B) su spec uguale",
+      "actual": "OP_B su spec viva di OP_A -> OperationConflict (0 submit) · OP_A riprende res_0a2d7cb6976713d7_1 · RESUME(OP_A)=res_0a2d7cb6976713d7_1 != RESUME(OP_B)=res_0a2d7cb6976713d7_2",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T33_cross_operation_identity.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T34",
+      "title": "CR-10 work-order operation namespace",
+      "expected": "'<wo>:<asset>' stabile fra run; distinto fra WO; spec distinta non bloccata; stessa spec viva OperationConflict; spec_key intatta",
+      "actual": "WO_A nuovo run -> RESUMED/SUCCEEDED · WO_B stesso asset -> RESERVED_NEW (spec_key identica) · WO_B spec distinta su asset incerto di WO_A -> SUCCEEDED · WO_B stessa spec viva -> OperationConflict · replay WO_A -> attempt A · hf_batch namespaced ops ['WO_A:B1_NEW_CLIP', 'WO_A:B4C_NEW_CLIP'] stabili in 2 round (resumed) · senza namespace = LEGACY_LAB",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T34_work_order_namespace.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T35",
+      "title": "CR-09 resume is not new spend/dispatch",
+      "expected": "quote scaduta/consumata non blocca il resume; UNKNOWN/RESERVED 0 submit; spec_key=latest; ledger/permit/quote invariati; ownership",
+      "actual": "RUNNING+quote scaduta -> SUCCEEDED (0 submit, ledger invariato) · nuova spesa con quella quote -> QUOTE_ALREADY_CONSUMED · UNKNOWN -> EXISTING_LIVE_JOB/reconciliation-required · RESERVED orfana -> EXISTING_LIVE_JOB/reserved-no-dispatch · terminale+spec diversa -> RESUMED/SUCCEEDED spec_key=latest · RESERVE nel ledger: 3 (solo spese) · op errata -> NO_EXISTING_ATTEMPT · altro conto -> ProviderMismatch",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T35_resume_not_new_spend.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "T36",
+      "title": "quote lifecycle (atomic single use) via runtime",
+      "expected": "Q1 consumata; riuso rifiutato; Q2 nuovo attempt; resume non riconsuma; rifiuti pre-reservation non consumano",
+      "actual": "Q1 consumata da attempt1 · Q1 riusata -> QUOTE_ALREADY_CONSUMED · Q2 -> RESERVED_NEW · resume -> attempt2, Q1/Q2 non riconsumate · rifiuto pre-reservation -> quote libera",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/T36_quote_lifecycle_runtime.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    }
+  ],
+  "summary": {
+    "total": 37,
+    "pass": 36,
+    "fail": 0,
+    "blocked": 1,
+    "pass_ids": [
+      "T01",
+      "T02",
+      "T03",
+      "T04",
+      "T05",
+      "T06",
+      "T07",
+      "T08",
+      "T09",
+      "T10",
+      "T11",
+      "T12",
+      "T13",
+      "T14",
+      "T15",
+      "T16",
+      "T17",
+      "T18",
+      "T19",
+      "T20",
+      "T21",
+      "T22",
+      "T23",
+      "T24",
+      "T25",
+      "T26",
+      "T27",
+      "T28",
+      "T37",
+      "T30",
+      "T31",
+      "T32",
+      "T33",
+      "T34",
+      "T35",
+      "T36"
+    ],
+    "fail_ids": [],
+    "blocked_tests": [
+      {
+        "id": "T29",
+        "reason_code": "BLOCKED_ENVIRONMENT"
+      }
+    ],
+    "blocked_not_allowed_by_policy": [],
+    "invalid": [],
+    "policy_allowed_blocked": {
+      "T29": [
+        "BLOCKED_ENVIRONMENT"
+      ]
+    },
+    "gate_decision": "LAB_GATE_COMPLETE_WITH_ALLOWED_BLOCKED",
+    "runner_exit": 0,
+    "runner_exit_meaning": "raccolta e report completati; nessun FAIL; nessun BLOCKED fuori policy LAB. NON significa 'tutti i requisiti verificati'.",
+    "all_requirements_verified": false,
+    "unverified_requirements": [
+      "T29"
+    ],
+    "readiness": {
+      "lab_mock": true,
+      "real_provider": "NOT_DECLARED",
+      "production": "NOT_DECLARED",
+      "security_boundary_p_b01": "NOT_VERIFIED"
+    }
   }
-]
+}

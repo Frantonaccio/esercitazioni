@@ -4,7 +4,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_150da18f330e4173cee989b6",
+        "attempt_token": "att_fc49571a80f980de1ae77c9f",
         "envelope_id": null,
         "job_id": "res_26e1a616f7633f1d_1",
         "operation_id": "lab:terminale",
@@ -16,7 +16,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 2303,
+    "pid": 615,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
@@ -47,7 +47,7 @@
     "outcome": "SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_150da18f330e4173cee989b6",
+      "attempt_token": "att_fc49571a80f980de1ae77c9f",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_26e1a616f7633f1d_1",
@@ -61,11 +61,11 @@
       "revision": 3,
       "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
       "state": "SUCCEEDED",
-      "submitted_at": 1789589641.8327634,
-      "terminal_by": 1789589941.8327634,
+      "submitted_at": 1789626863.840514,
+      "terminal_by": 1789627163.840514,
       "webhook_hints": 0
     },
-    "pid": 2293,
+    "pid": 605,
     "provider": "fake",
     "provider_job_id": "pv_26e1a616",
     "quote_id": null,
@@ -91,9 +91,9 @@
     "ok": true,
     "operation_id": "lab:terminale",
     "outcome": "SUCCEEDED",
-    "permit_id": "permit_c0c51c3d34a5173ec4aba8f1",
+    "permit_id": "permit_c61d6d38ab2853cbbb6d7649",
     "persisted": {
-      "attempt_token": "att_3ce7a20b6b92c5d6319c5c50",
+      "attempt_token": "att_51da949bde0b95d17beef1ca",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_26e1a616f7633f1d_2",
@@ -107,11 +107,11 @@
       "revision": 3,
       "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
       "state": "SUCCEEDED",
-      "submitted_at": 1789589642.327546,
-      "terminal_by": 1789589942.327546,
+      "submitted_at": 1789626864.2260954,
+      "terminal_by": 1789627164.2260954,
       "webhook_hints": 0
     },
-    "pid": 2305,
+    "pid": 617,
     "provider": "fake",
     "provider_job_id": "pv_26e1a616",
     "quote_id": null,
@@ -139,7 +139,7 @@
     "outcome": "RESUMED/SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_150da18f330e4173cee989b6",
+      "attempt_token": "att_fc49571a80f980de1ae77c9f",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_26e1a616f7633f1d_1",
@@ -153,11 +153,11 @@
       "revision": 3,
       "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
       "state": "SUCCEEDED",
-      "submitted_at": 1789589641.8327634,
-      "terminal_by": 1789589941.8327634,
+      "submitted_at": 1789626863.840514,
+      "terminal_by": 1789627163.840514,
       "webhook_hints": 0
     },
-    "pid": 2299,
+    "pid": 611,
     "provider": "fake",
     "provider_job_id": "pv_26e1a616",
     "quote_id": null,
@@ -175,7 +175,7 @@
     "ledger_entries": 2,
     "ownership": [
       {
-        "attempt_token": "att_150da18f330e4173cee989b6",
+        "attempt_token": "att_fc49571a80f980de1ae77c9f",
         "envelope_id": null,
         "job_id": "res_26e1a616f7633f1d_1",
         "operation_id": "lab:terminale",
@@ -185,11 +185,11 @@
         "settled_units": null
       },
       {
-        "attempt_token": "att_3ce7a20b6b92c5d6319c5c50",
+        "attempt_token": "att_51da949bde0b95d17beef1ca",
         "envelope_id": null,
         "job_id": "res_26e1a616f7633f1d_2",
         "operation_id": "lab:terminale",
-        "permit_id": "permit_c0c51c3d34a5173ec4aba8f1",
+        "permit_id": "permit_c61d6d38ab2853cbbb6d7649",
         "provider_account": "fake_acct_a",
         "revision": 3,
         "settled_units": null
@@ -197,7 +197,7 @@
     ],
     "permits": 1,
     "permits_consumed": 1,
-    "pid": 2309,
+    "pid": 621,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
@@ -228,7 +228,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_150da18f330e4173cee989b6",
+        "attempt_token": "att_fc49571a80f980de1ae77c9f",
         "envelope_id": null,
         "job_id": "res_26e1a616f7633f1d_1",
         "operation_id": "lab:terminale",
@@ -240,7 +240,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 2297,
+    "pid": 609,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [

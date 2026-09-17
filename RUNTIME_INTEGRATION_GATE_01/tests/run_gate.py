@@ -29,7 +29,7 @@ sys.path.insert(0, GATE_ROOT)
 
 from runtime.core_pin import KNOWN_STALE_CORE_SHAS, REQUIRED_CORE_SHA, verify_core_pin  # noqa: E402
 from runtime.genspec_bridge import GenSpecBridgeError, GoInputs, build_genspec        # noqa: E402
-from tests import boundary_mock, static_checks, worker                                # noqa: E402
+from tests import boundary_mock, gate_report, static_checks, worker                   # noqa: E402
 
 CORE_PATH = os.environ.get("CREATIVE_OS_CORE_PATH", "/home/user/creative-os")
 STATE_DIR = os.path.join(GATE_ROOT, "state")
@@ -102,16 +102,12 @@ def sha256_file(path: str) -> str:
 
 
 def record(test_id: str, title: str, expected: str, fn):
-    try:
-        actual, ev, ok = fn()
-        exit_code = 0 if ok else 1
-    except Exception as e:                                          # noqa: BLE001
-        actual, ok, exit_code = f"EXCEPTION {type(e).__name__}: {e}", False, 2
-        ev = evidence(test_id, "exception", {"trace": traceback.format_exc()})
-    RESULTS.append({"id": test_id, "title": title, "expected": expected, "actual": actual,
-                    "exit": exit_code, "evidence": ev, "pass": ok})
-    mark = "\033[32mPASS\033[0m" if ok else "\033[31mFAIL\033[0m"
-    print(f"  {test_id} {mark}  {title}\n       \033[2m{actual}\033[0m")
+    """Classificazione strutturata (tests/gate_report.py): PASS | FAIL | BLOCKED con reason_code,
+    evidence e exit diagnostico. BLOCKED solo via GateBlocked sollevata dal test."""
+    r = gate_report.run_and_classify(test_id, title, expected, fn, evidence_root=GATE_ROOT,
+                                     exception_evidence=lambda tid, payload: evidence(tid, "exception", payload))
+    RESULTS.append(r)
+    print(gate_report.console_line(r))
 
 
 # ---------------------------------------------------------------- T01-T03
@@ -960,15 +956,25 @@ def t29(canary_home: str, secret_dir: str):
     direct = in_process(worker.run_go, db, "privilege direct", max_polls=3, operation_id="T29:direct")
     attempts["direct_dispatch_on_worker_store"] = ("BYPASS_POSSIBLE" if direct.get("state") == "SUCCEEDED"
                                                    else f"BLOCKED ({direct.get('error')})")
-    uid = {"orchestrator_uid": os.getuid(), "worker_uid": os.stat(secret_path).st_uid if secret_path else None}
+    uid = {"orchestrator_uid": os.getuid(), "worker_uid": os.stat(secret_path).st_uid}
     isolated = all(v == "BLOCKED" or v.startswith("BLOCKED") for v in attempts.values())
+    # Precondizione ambientale RICONOSCIUTA: orchestrator e worker girano con lo stesso uid, quindi
+    # nessuna separazione di privilegio e' disponibile e il requisito NON e' verificabile qui.
+    same_uid = uid["orchestrator_uid"] == uid["worker_uid"]
+    status = "PASS" if isolated else ("BLOCKED" if same_uid else "FAIL")
+    reason = {"PASS": "VERIFIED", "BLOCKED": "BLOCKED_ENVIRONMENT", "FAIL": "ASSERTION_FAILED"}[status]
     ev = evidence("T29", "boundary_privilege_isolation", {"attempts": attempts, "uids": uid,
                                                           "protocol_reply": replies, "stop": stop,
-                                                          "verdict": "VERIFIED" if isolated else "BLOCKED_ENVIRONMENT"})
+                                                          "status": status, "reason_code": reason,
+                                                          "environment_precondition_same_uid": same_uid,
+                                                          "requirement_verified": isolated})
     if isolated:
         return f"confine di privilegio dimostrato: {attempts}", ev, True
-    return (f"BLOCKED_ENVIRONMENT: stesso uid ({uid['orchestrator_uid']}) per orchestrator e worker; "
-            f"tentativi di bypass: {attempts}"), ev, False
+    detail = (f"stesso uid ({uid['orchestrator_uid']}) per orchestrator e worker; "
+              f"tentativi di bypass: {attempts}")
+    if same_uid:
+        raise gate_report.GateBlocked("BLOCKED_ENVIRONMENT", detail, ev)
+    return f"confine di privilegio NON dimostrato con uid distinti {uid}; tentativi di bypass: {attempts}", ev, False
 
 
 def t30():
@@ -1372,25 +1378,12 @@ def t37(canary_home: str, secret_dir: str):
 
 
 # ---------------------------------------------------------------- main
-def write_results():
-    lines = ["# TEST_RESULTS — RUNTIME INTEGRATION GATE 01", "",
-             f"Core canonical: `{REQUIRED_CORE_SHA}` · provider: FakeAdapter only · "
-             "crediti spesi: 0 · rete generativa: nessuna", "",
-             "| TEST | TITLE | EXPECTED | ACTUAL | EXIT | EVIDENCE | PASS/FAIL |",
-             "|---|---|---|---|---|---|---|"]
-    for r in RESULTS:
-        lines.append(f"| {r['id']} | {r['title']} | {r['expected']} | {r['actual']} | "
-                     f"{r['exit']} | `{r['evidence']}` | {'PASS' if r['pass'] else 'FAIL'} |")
-    passed = sum(1 for r in RESULTS if r["pass"])
-    blocked = [r["id"] for r in RESULTS if not r["pass"] and r["actual"].startswith("BLOCKED")]
-    failed = [r["id"] for r in RESULTS if not r["pass"] and not r["actual"].startswith("BLOCKED")]
-    lines += ["", f"**Totale: {passed}/{len(RESULTS)} PASS · BLOCKED: {blocked or 'nessuno'} · "
-              f"FAIL: {failed or 'nessuno'}**", ""]
-    with open(os.path.join(GATE_ROOT, "TEST_RESULTS.md"), "w", encoding="utf-8") as fh:
-        fh.write("\n".join(lines))
-    with open(os.path.join(EVIDENCE_DIR, "RESULTS.json"), "w", encoding="utf-8") as fh:
-        json.dump(RESULTS, fh, indent=2, ensure_ascii=False)
-    return passed, blocked, failed
+def write_results() -> dict:
+    """Console, RESULTS.json e TEST_RESULTS.md derivano dalla stessa struttura (gate_report.summarize)."""
+    summary = gate_report.summarize(RESULTS)
+    gate_report.write(RESULTS, summary, gate_root=GATE_ROOT, evidence_dir=EVIDENCE_DIR,
+                      required_core_sha=REQUIRED_CORE_SHA)
+    return summary
 
 
 def main() -> int:
@@ -1460,10 +1453,10 @@ def main() -> int:
                        capture_output=True)
         subprocess.run(["git", "-C", CORE_PATH, "worktree", "prune"], capture_output=True)
         shutil.rmtree(scratch, ignore_errors=True)
-    passed, blocked, failed = write_results()
-    print(f"\n{passed}/{len(RESULTS)} PASS · BLOCKED {blocked} · FAIL {failed}")
+    summary = write_results()
+    print(gate_report.console_summary(summary))
     print("crediti spesi: 0 · provider reali: 0 · rete generativa: 0")
-    return 0 if not failed else 1
+    return summary["runner_exit"]
 
 
 if __name__ == "__main__":
