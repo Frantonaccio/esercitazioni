@@ -63,8 +63,18 @@
     "ok": true,
     "protocol_has_new_api": false
   },
+  "core_review_state": "APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED",
   "decision": "CORE_CHANGE_REQUIRED",
   "note": "il delta e' prodotto e verificato su branch dedicato, NON mergiato. Core main resta 740ee979 e il Runtime resta pinnato a quello, sul percorso conservativo a due transazioni. Il requisito NON e' chiuso: serve Human Review e un merge del Core.",
+  "pair_facts": {
+    "core_branch_all_suites_pass": true,
+    "core_branch_based_on_canonical": true,
+    "core_branch_clean": true,
+    "core_candidate_branch": "harden/provider-boundary-core-atomicity-2026-09-17",
+    "core_candidate_sha": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+    "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "runtime_uses_new_core_api": false
+  },
   "requirement_closed": false,
   "runtime_path": {
     "ok": true,

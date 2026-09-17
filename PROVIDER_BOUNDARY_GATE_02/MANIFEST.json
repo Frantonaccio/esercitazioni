@@ -1,25 +1,30 @@
 {
-  "candidates": {
-    "core_branch": "harden/provider-boundary-core-atomicity-2026-09-17",
-    "core_branch_base": "740ee979300fe20a9382992528604dee70cb2fcf",
-    "core_commit": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
-    "deployed": false,
-    "merged": false,
-    "runtime_branch": "claude/provider-boundary-gate-closure-gd6b3g",
-    "runtime_commit": "e845b744a4af3a143b1b1e710016726c57ad6c39",
-    "tagged": false
-  },
   "canonical_baseline": {
+    "canonical_runtime_base_sha": "0698279703ab959625ac4e84ee636bc5b93b45fd",
     "core_branch": "main",
     "core_repo": "Frantonaccio/creative-os",
     "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
     "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
     "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
-    "runtime_main_sha": "0698279703ab959625ac4e84ee636bc5b93b45fd",
     "runtime_repo": "Frantonaccio/esercitazioni"
   },
+  "canonical_runtime_base_sha": "0698279703ab959625ac4e84ee636bc5b93b45fd",
+  "core_candidate": {
+    "base": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "branch": "harden/provider-boundary-core-atomicity-2026-09-17",
+    "consumed_by_runtime_candidate": false,
+    "repo": "Frantonaccio/creative-os",
+    "review_state": "APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED",
+    "sha": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
+  },
+  "corrective_delta": "HUMAN_REVIEW_01 — EVIDENCE_CHAIN_AND_CORE_RUNTIME_PAIR_NOT_READY (reporting/evidence-only: nessuna modifica funzionale al Runtime)",
   "date": "2026-09-17",
-  "files": 43,
+  "external_provenance": {
+    "checksums": "SHA256SUMS.EXTERNAL",
+    "committed": false,
+    "file": "PROVENANCE.json"
+  },
+  "files_covered_by_sha256sums": 50,
   "gap_status": {
     "GAP_MATRIX_PHASE_A": "VERIFIED_LAB",
     "G_N02_SEMANTIC_CLAIM_PARAPHRASE": "STILL_OPEN",
@@ -42,6 +47,35 @@
     "RUN_CONTAMINATION": "NOT_RUN",
     "RV07_SCHEDULER_RECOVERY_RESIDUAL": "STILL_OPEN"
   },
+  "merge_readiness": {
+    "blockers": [
+      "RUNTIME_DOES_NOT_CONSUME_CORE_CANDIDATE",
+      "REQUIRED_CORE_SHA_PINNED_TO_BASELINE_NOT_CANDIDATE",
+      "OPEN_REQUIREMENTS",
+      "HUMAN_MERGE_AUTHORIZATION_ABSENT"
+    ],
+    "core_candidate_ready": true,
+    "core_candidate_sha": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+    "core_review_state": "APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED",
+    "core_runtime_pair_ready": false,
+    "human_merge_authorization": false,
+    "meaning": "la coppia Core+Runtime e' promuovibile? Il Runtime candidate resta pinnato alla baseline e usa ancora reconcile -> settle; il Core candidate introduce mark_refused_pre_submit ma non e' consumato. Non esiste ancora una coppia coerente: portare Core main al candidate renderebbe la baseline incoerente per costruzione.",
+    "merge_authorized": false,
+    "next_integration_required": [
+      "partire dal Core candidate approvato",
+      "aggiornare il Runtime perche' consumi mark_refused_pre_submit",
+      "aggiornare REQUIRED_CORE_SHA al nuovo Core candidate SHA",
+      "rimuovere il percorso reconcile -> settle per il caso NG-05",
+      "dimostrare atomicita' end-to-end Runtime -> Core",
+      "rieseguire NG-03, NG-05, P-B04, P-B01/P-B02, R0-R1, P2 freeze",
+      "produrre una coppia candidate Core+Runtime indivisibile per Human Review"
+    ],
+    "not_implemented_here": "questo delta e' reporting/evidence-only: l'integrazione coordinata NON e' iniziata.",
+    "pin_points_to_core_candidate": false,
+    "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "runtime_candidate_ready": true,
+    "runtime_consumes_core_candidate": false
+  },
   "next": "Human Review separata. Nessun merge, nessun tag, nessun deploy, nessun R2.",
   "not_implied": [
     "provider reale verificato",
@@ -52,12 +86,6 @@
     "merge autorizzato",
     "R2 autorizzato"
   ],
-  "observed_at_manifest_time": {
-    "core_branch": "main",
-    "core_head": "740ee979300fe20a9382992528604dee70cb2fcf",
-    "core_worktree_clean": true,
-    "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
-  },
   "perimeter": "MOCK ONLY · ZERO PROVIDER REALE · ZERO CREDENZIALI · ZERO CREDITI · NO PRODUCTION · NO DEPLOY · NO TAG · NO RELEASE · NO MERGE",
   "phase": "PROVIDER BOUNDARY GATE — OPEN-GAP CLOSURE / PRE-REAL-PROVIDER",
   "phase_readiness": {
@@ -67,6 +95,7 @@
       "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY"
     ],
     "max_state": "PROVIDER_BOUNDARY_GATE_PRE_REAL_READY_FOR_HUMAN_REVIEW",
+    "max_state_meaning": "stato di LAVORO con open gaps. NON e' un'autorizzazione al merge.",
     "open_requirements_blocking_all_verified": [
       "RECONCILIATION_FRESHNESS_NG04_POLICY",
       "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
@@ -86,14 +115,20 @@
       "REAL_PROVIDER_RECONCILIATION"
     ]
   },
-  "schema": "provider-boundary-gate-open-gap-closure-manifest/1",
+  "runtime_branch": "claude/provider-boundary-gate-closure-gd6b3g",
+  "runtime_code_sha": "e845b744a4af3a143b1b1e710016726c57ad6c39",
+  "runtime_code_sha_meaning": "commit che porta il diff FUNZIONALE del Runtime, quello revisionato dalla Human Review. Invariato da questo delta correttivo.",
+  "runtime_evidence_head_sha": "DECLARED_IN_EXTERNAL_PROVENANCE",
+  "runtime_evidence_head_sha_meaning": "commit che aggiunge MANIFEST.json + SHA256SUMS (e i documenti del delta correttivo). Un manifest committato non puo' dichiarare lo SHA del commit che lo contiene: il valore vive in PROVENANCE.json, generata DOPO quel commit e mai committata, insieme a SHA256SUMS.EXTERNAL.",
+  "schema": "provider-boundary-gate-open-gap-closure-manifest/2",
   "sha256sums": "SHA256SUMS",
+  "sha256sums_scope": "ogni file committato del bundle, incluso MANIFEST.json, escluso soltanto SHA256SUMS stesso",
   "test_suite": {
     "all_tests_passed": true,
     "blocked": 0,
     "fail": 0,
-    "pass": 10,
+    "pass": 12,
     "test_suite_decision": "ALL_TESTS_PASS",
-    "total": 10
+    "total": 12
   }
 }

@@ -10,8 +10,12 @@
   "p2_sha256_before": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
   "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
   "runtime_branch": "claude/provider-boundary-gate-closure-gd6b3g",
-  "runtime_commits_beyond_canonical": [],
-  "runtime_head": "0698279703ab959625ac4e84ee636bc5b93b45fd",
+  "runtime_commits_beyond_canonical": [
+    "2b99e28 evidence(provider-boundary-gate): corrective delta HUMAN_REVIEW_01 — unambiguous evidence chain + machine-readable merge_readiness",
+    "555e1f4 evidence(provider-boundary-gate): MANIFEST.json + SHA256SUMS, code sha e845b744a4af3a143b1b1e710016726c57ad6c39",
+    "e845b74 harden(runtime): provider boundary open-gap closure — P-B01+P-B02 composition, NG-04 freshness mechanism, orphan lease mechanism, provider boundary mode"
+  ],
+  "runtime_head": "2b99e28f3e3df9261f79a993202a619bba8bb63b",
   "runtime_head_descends_from_canonical": true,
   "runtime_origin_main": "0698279703ab959625ac4e84ee636bc5b93b45fd"
 }

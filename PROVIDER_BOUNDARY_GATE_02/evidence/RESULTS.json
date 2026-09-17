@@ -5,6 +5,35 @@
     "runtime_main_sha": "0698279703ab959625ac4e84ee636bc5b93b45fd"
   },
   "report": {
+    "merge_readiness": {
+      "blockers": [
+        "RUNTIME_DOES_NOT_CONSUME_CORE_CANDIDATE",
+        "REQUIRED_CORE_SHA_PINNED_TO_BASELINE_NOT_CANDIDATE",
+        "OPEN_REQUIREMENTS",
+        "HUMAN_MERGE_AUTHORIZATION_ABSENT"
+      ],
+      "core_candidate_ready": true,
+      "core_candidate_sha": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+      "core_review_state": "APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED",
+      "core_runtime_pair_ready": false,
+      "human_merge_authorization": false,
+      "meaning": "la coppia Core+Runtime e' promuovibile? Il Runtime candidate resta pinnato alla baseline e usa ancora reconcile -> settle; il Core candidate introduce mark_refused_pre_submit ma non e' consumato. Non esiste ancora una coppia coerente: portare Core main al candidate renderebbe la baseline incoerente per costruzione.",
+      "merge_authorized": false,
+      "next_integration_required": [
+        "partire dal Core candidate approvato",
+        "aggiornare il Runtime perche' consumi mark_refused_pre_submit",
+        "aggiornare REQUIRED_CORE_SHA al nuovo Core candidate SHA",
+        "rimuovere il percorso reconcile -> settle per il caso NG-05",
+        "dimostrare atomicita' end-to-end Runtime -> Core",
+        "rieseguire NG-03, NG-05, P-B04, P-B01/P-B02, R0-R1, P2 freeze",
+        "produrre una coppia candidate Core+Runtime indivisibile per Human Review"
+      ],
+      "not_implemented_here": "questo delta e' reporting/evidence-only: l'integrazione coordinata NON e' iniziata.",
+      "pin_points_to_core_candidate": false,
+      "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+      "runtime_candidate_ready": true,
+      "runtime_consumes_core_candidate": false
+    },
     "phase_readiness": {
       "all_requirements_verified": false,
       "blocked_provider_gate": [],
@@ -13,6 +42,7 @@
         "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY"
       ],
       "max_state": "PROVIDER_BOUNDARY_GATE_PRE_REAL_READY_FOR_HUMAN_REVIEW",
+      "max_state_meaning": "stato di LAVORO con open gaps. NON e' un'autorizzazione al merge: vedi `merge_readiness`.",
       "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto e tutti i test sono PASS.",
       "not_implied": [
         "provider reale verificato",
@@ -54,7 +84,7 @@
         },
         {
           "id": "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
-          "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica (verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e verificato 8/8 su branch Core dedicato, NON mergiato: Core main invariato e il Runtime resta sul percorso conservativo a due transazioni finche' la modifica non e' approvata.",
+          "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica (verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e verificato 8/8 su branch Core dedicato. Human Review 01: APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED. Il Runtime candidate resta pinnato alla baseline e usa ancora reconcile -> settle: non esiste ancora una coppia Core+Runtime coerente, quindi portare Core main al candidate renderebbe la baseline incoerente per costruzione. Chiusura = delta coordinato separato, vedi `merge_readiness.next_integration_required`.",
           "scope": "this_phase",
           "state": "CORE_CHANGE_REQUIRED",
           "title": "NG-05 — atomicita' della terminalizzazione pre-submit"
@@ -285,7 +315,7 @@
           ],
           "evidence_tests_not_passed": [],
           "id": "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
-          "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica (verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e verificato 8/8 su branch Core dedicato, NON mergiato: Core main invariato e il Runtime resta sul percorso conservativo a due transazioni finche' la modifica non e' approvata.",
+          "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica (verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e verificato 8/8 su branch Core dedicato. Human Review 01: APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED. Il Runtime candidate resta pinnato alla baseline e usa ancora reconcile -> settle: non esiste ancora una coppia Core+Runtime coerente, quindi portare Core main al candidate renderebbe la baseline incoerente per costruzione. Chiusura = delta coordinato separato, vedi `merge_readiness.next_integration_required`.",
           "open": true,
           "reason_code": "EVIDENCE_TESTS_PASSED",
           "scope": "this_phase",
@@ -434,14 +464,14 @@
       "fail_ids": [],
       "inventory": {
         "duplicates": [],
-        "expected_count": 10,
+        "expected_count": 12,
         "missing": [],
-        "observed_count": 10,
+        "observed_count": 12,
         "unexpected": [],
         "valid": true
       },
       "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO.",
-      "pass": 10,
+      "pass": 12,
       "pass_ids": [
         "C00",
         "C01",
@@ -452,16 +482,18 @@
         "C06",
         "C07",
         "C08",
-        "C09"
+        "C09",
+        "C10",
+        "C11"
       ],
       "test_suite_decision": "ALL_TESTS_PASS",
-      "total": 10
+      "total": 12
     }
   },
   "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
   "results": [
     {
-      "actual": "Core 740ee979300f (main) clean=True · Runtime origin/main 0698279703ab (HEAD 0698279703ab discende=True) · pin 740ee979300f · P2 637f3a803ee38d04",
+      "actual": "Core 740ee979300f (main) clean=True · Runtime origin/main 0698279703ab (HEAD 2b99e28f3e3d discende=True) · pin 740ee979300f · P2 637f3a803ee38d04",
       "diagnostic_exit": 0,
       "evidence": "evidence/C00_reality_lock.json",
       "expected": "Core 740ee979 clean · Runtime origin/main 0698279 · pin == Core · P2 637f3a80",
@@ -569,7 +601,7 @@
       "title": "P2 freeze e Core pin invariati a fine fase"
     },
     {
-      "actual": "6 controprove del reporting tutte sollevate: True · report reale: all_requirements_verified=False, decisione LAB_GATE_COMPLETE_WITH_OPEN_GAPS, stato massimo PROVIDER_BOUNDARY_GATE_PRE_REAL_READY_FOR_HUMAN_REVIEW · POLICY_DECISION_REQUIRED ['RECONCILIATION_FRESHNESS_NG04_POLICY', 'ORPHAN_RESERVED_LEASE_POLICY'] · REAL_PROVIDER_REQUIRED ['REAL_AUTHORIZATION_AND_PRICING', 'REAL_PROVIDER_RECONCILIATION'] · CORE_CHANGE_REQUIRED ['LEGACY_SPEND_PATHS_CORE_PRIMITIVES', 'NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY']",
+      "actual": "11 controprove del reporting tutte sollevate: True · report reale: all_requirements_verified=False, decisione LAB_GATE_COMPLETE_WITH_OPEN_GAPS, stato massimo PROVIDER_BOUNDARY_GATE_PRE_REAL_READY_FOR_HUMAN_REVIEW · POLICY_DECISION_REQUIRED ['RECONCILIATION_FRESHNESS_NG04_POLICY', 'ORPHAN_RESERVED_LEASE_POLICY'] · REAL_PROVIDER_REQUIRED ['REAL_AUTHORIZATION_AND_PRICING', 'REAL_PROVIDER_RECONCILIATION'] · CORE_CHANGE_REQUIRED ['LEGACY_SPEND_PATHS_CORE_PRIMITIVES', 'NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY']",
       "diagnostic_exit": 0,
       "evidence": "evidence/C09_reporting_phase_readiness.json",
       "expected": "6 controprove sollevano; all_requirements_verified=false con gap aperti",
@@ -579,6 +611,30 @@
       "reason_code": "VERIFIED",
       "status": "PASS",
       "title": "Reporting: test suite result e phase readiness separati"
+    },
+    {
+      "actual": "12 controprove della catena di provenance · scarti: nessuno · bundle valido -> 0 problemi · MANIFEST non coperto -> ['MANIFEST_NOT_COVERED', 'MISSING_FROM_SUMS'] · code_sha == evidence_head -> ['CODE_SHA_EQUALS_EVIDENCE_HEAD'] · HEAD != evidence_head -> ['HEAD_NOT_EVIDENCE_HEAD'] · merge_authorized senza coppia -> ['MERGE_AUTHORIZED_WITHOUT_PAIR']",
+      "diagnostic_exit": 0,
+      "evidence": "evidence/C10_evidence_chain_verifier.json",
+      "expected": "12 controprove: copertura, extra, mismatch, MANIFEST non coperto, chiave ambigua, code_sha == evidence_head, HEAD divergente, merge_readiness",
+      "id": "C10",
+      "pass": true,
+      "raw": null,
+      "reason_code": "VERIFIED",
+      "status": "PASS",
+      "title": "Catena di provenance del bundle: verificatore fail-closed"
+    },
+    {
+      "actual": "runtime_code_sha e845b744a4af · diff funzionale Runtime dopo quel commit: 0 byte (invariato=True) · Core candidate 9cf9cee1a751 == atteso · Core main 740ee979300f pulito · Runtime origin/main 0698279703ab · P2 637f3a803ee38d04 · 0 tag · provider reale disabilitato · 0 credenziali nel bundle · check falliti: nessuno",
+      "diagnostic_exit": 0,
+      "evidence": "evidence/C11_corrective_delta_regression.json",
+      "expected": "diff funzionale Runtime invariato, Core candidate identico, main e P2 invariati, 0 tag, 0 credenziali",
+      "id": "C11",
+      "pass": true,
+      "raw": null,
+      "reason_code": "VERIFIED",
+      "status": "PASS",
+      "title": "Regressione del delta correttivo (reporting/evidence-only)"
     }
   ],
   "schema": "provider-boundary-gate-open-gap-closure/1"

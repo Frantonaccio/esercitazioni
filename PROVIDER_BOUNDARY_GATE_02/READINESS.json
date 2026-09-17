@@ -22,6 +22,35 @@
     "RV07_SCHEDULER_RECOVERY_RESIDUAL": "STILL_OPEN"
   },
   "report": {
+    "merge_readiness": {
+      "blockers": [
+        "RUNTIME_DOES_NOT_CONSUME_CORE_CANDIDATE",
+        "REQUIRED_CORE_SHA_PINNED_TO_BASELINE_NOT_CANDIDATE",
+        "OPEN_REQUIREMENTS",
+        "HUMAN_MERGE_AUTHORIZATION_ABSENT"
+      ],
+      "core_candidate_ready": true,
+      "core_candidate_sha": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+      "core_review_state": "APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED",
+      "core_runtime_pair_ready": false,
+      "human_merge_authorization": false,
+      "meaning": "la coppia Core+Runtime e' promuovibile? Il Runtime candidate resta pinnato alla baseline e usa ancora reconcile -> settle; il Core candidate introduce mark_refused_pre_submit ma non e' consumato. Non esiste ancora una coppia coerente: portare Core main al candidate renderebbe la baseline incoerente per costruzione.",
+      "merge_authorized": false,
+      "next_integration_required": [
+        "partire dal Core candidate approvato",
+        "aggiornare il Runtime perche' consumi mark_refused_pre_submit",
+        "aggiornare REQUIRED_CORE_SHA al nuovo Core candidate SHA",
+        "rimuovere il percorso reconcile -> settle per il caso NG-05",
+        "dimostrare atomicita' end-to-end Runtime -> Core",
+        "rieseguire NG-03, NG-05, P-B04, P-B01/P-B02, R0-R1, P2 freeze",
+        "produrre una coppia candidate Core+Runtime indivisibile per Human Review"
+      ],
+      "not_implemented_here": "questo delta e' reporting/evidence-only: l'integrazione coordinata NON e' iniziata.",
+      "pin_points_to_core_candidate": false,
+      "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+      "runtime_candidate_ready": true,
+      "runtime_consumes_core_candidate": false
+    },
     "phase_readiness": {
       "all_requirements_verified": false,
       "blocked_provider_gate": [],
@@ -30,6 +59,7 @@
         "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY"
       ],
       "max_state": "PROVIDER_BOUNDARY_GATE_PRE_REAL_READY_FOR_HUMAN_REVIEW",
+      "max_state_meaning": "stato di LAVORO con open gaps. NON e' un'autorizzazione al merge: vedi `merge_readiness`.",
       "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto e tutti i test sono PASS.",
       "not_implied": [
         "provider reale verificato",
@@ -71,7 +101,7 @@
         },
         {
           "id": "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
-          "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica (verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e verificato 8/8 su branch Core dedicato, NON mergiato: Core main invariato e il Runtime resta sul percorso conservativo a due transazioni finche' la modifica non e' approvata.",
+          "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica (verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e verificato 8/8 su branch Core dedicato. Human Review 01: APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED. Il Runtime candidate resta pinnato alla baseline e usa ancora reconcile -> settle: non esiste ancora una coppia Core+Runtime coerente, quindi portare Core main al candidate renderebbe la baseline incoerente per costruzione. Chiusura = delta coordinato separato, vedi `merge_readiness.next_integration_required`.",
           "scope": "this_phase",
           "state": "CORE_CHANGE_REQUIRED",
           "title": "NG-05 — atomicita' della terminalizzazione pre-submit"
@@ -302,7 +332,7 @@
           ],
           "evidence_tests_not_passed": [],
           "id": "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
-          "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica (verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e verificato 8/8 su branch Core dedicato, NON mergiato: Core main invariato e il Runtime resta sul percorso conservativo a due transazioni finche' la modifica non e' approvata.",
+          "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica (verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e verificato 8/8 su branch Core dedicato. Human Review 01: APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED. Il Runtime candidate resta pinnato alla baseline e usa ancora reconcile -> settle: non esiste ancora una coppia Core+Runtime coerente, quindi portare Core main al candidate renderebbe la baseline incoerente per costruzione. Chiusura = delta coordinato separato, vedi `merge_readiness.next_integration_required`.",
           "open": true,
           "reason_code": "EVIDENCE_TESTS_PASSED",
           "scope": "this_phase",
@@ -451,14 +481,14 @@
       "fail_ids": [],
       "inventory": {
         "duplicates": [],
-        "expected_count": 10,
+        "expected_count": 12,
         "missing": [],
-        "observed_count": 10,
+        "observed_count": 12,
         "unexpected": [],
         "valid": true
       },
       "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO.",
-      "pass": 10,
+      "pass": 12,
       "pass_ids": [
         "C00",
         "C01",
@@ -469,10 +499,12 @@
         "C06",
         "C07",
         "C08",
-        "C09"
+        "C09",
+        "C10",
+        "C11"
       ],
       "test_suite_decision": "ALL_TESTS_PASS",
-      "total": 10
+      "total": 12
     }
   }
 }

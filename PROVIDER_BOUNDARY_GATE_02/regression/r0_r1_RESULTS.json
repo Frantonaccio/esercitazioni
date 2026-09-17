@@ -138,7 +138,7 @@
       "id": "T12",
       "title": "budget atomicity",
       "expected": "envelope 100: 70+50 -> uno BudgetExceeded, impegnati <= 100",
-      "actual": "concorrente: ['BudgetExceeded', 'OK'] impegnati=70/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70",
+      "actual": "concorrente: ['BudgetExceeded', 'OK'] impegnati=50/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70",
       "status": "PASS",
       "reason_code": "VERIFIED",
       "evidence": "evidence/T12_budget_atomicity.json",

@@ -52,14 +52,15 @@ os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
 from runtime.core_pin import REQUIRED_CORE_SHA                      # noqa: E402
 from tests import gate_report, static_checks                        # noqa: E402
 from pbgate import pb_worker                                        # noqa: E402
-from pbg2 import gate_workers, readiness                            # noqa: E402
+from pbg2 import bundle_provenance, gate_workers, readiness         # noqa: E402
 
 CANON = {"core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
          "runtime_main_sha": "0698279703ab959625ac4e84ee636bc5b93b45fd",
          "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"}
 P2_PATH = os.path.join(GATE01, "p2_handoff", "VF_RUNTIME_T16_HANDOFF_2026-09-16",
                        "P2_RUNTIME", "hf_batch.py")
-EXPECTED_IDS = frozenset(f"C{i:02d}" for i in range(0, 10))
+EXPECTED_IDS = frozenset(f"C{i:02d}" for i in range(0, 12))
+CORE_CANDIDATE_SHA = "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
 POLICY = {"C02": frozenset({"BLOCKED_ENVIRONMENT"})}
 CTX = multiprocessing.get_context("spawn")
 RESULTS: list[dict] = []
@@ -561,8 +562,20 @@ def c06():
         "patch_exported": os.path.exists(patch),
     }
     ok = all(checks.values())
+    # fatti osservati per `merge_readiness` (BLOCKER 2): nessuno di questi e' asserito a mano
+    SHARED["pair_facts"] = {
+        "core_branch_all_suites_pass": checks["core_branch_all_suites_pass"],
+        "core_branch_based_on_canonical": checks["core_branch_based_on_canonical"],
+        "core_branch_clean": checks["core_branch_clean"],
+        "runtime_uses_new_core_api": bool(runtime_path.get("uses_new_core_api")),
+        "required_core_sha": REQUIRED_CORE_SHA,
+        "core_candidate_sha": branch.get("head"),
+        "core_candidate_branch": branch.get("branch"),
+    }
     ev = evidence("C06", "ng05_decision_and_core_delta", {
         "core_main_surface": main_surface, "runtime_path": runtime_path, "core_branch": branch,
+        "pair_facts": SHARED["pair_facts"],
+        "core_review_state": readiness.CORE_REVIEW_STATE,
         "checks": checks, "decision": "CORE_CHANGE_REQUIRED",
         "requirement_closed": False,
         "note": "il delta e' prodotto e verificato su branch dedicato, NON mergiato. Core main resta "
@@ -639,11 +652,12 @@ def c08():
 def c09():
     """Il reporting non puo' dichiarare 'tutto verificato' mentre un requisito e' aperto,
     per NESSUNO dei nuovi stati. Cinque controprove, come nella fase precedente."""
-    base_suite = {"inventory": {"expected_count": 10, "observed_count": 10, "missing": [],
+    n = len(EXPECTED_IDS)
+    base_suite = {"inventory": {"expected_count": n, "observed_count": n, "missing": [],
                                 "unexpected": [], "duplicates": [], "valid": True},
-                  "total": 10, "pass": 10, "fail": 0, "blocked": 0, "invalid": []}
-    all_pass = [{"id": f"C{i:02d}", "status": "PASS", "reason_code": "VERIFIED"} for i in range(10)]
-    real = readiness.build(all_pass, base_suite)
+                  "total": n, "pass": n, "fail": 0, "blocked": 0, "invalid": []}
+    all_pass = [{"id": f"C{i:02d}", "status": "PASS", "reason_code": "VERIFIED"} for i in range(n)]
+    real = readiness.build(all_pass, base_suite, pair_facts=SHARED.get("pair_facts"))
     C: dict = {}
 
     def expect_inconsistent(label, mutate):
@@ -673,12 +687,32 @@ def c09():
     expect_inconsistent("all_tests_passed_with_blocked", lambda r: (
         r["test_suite"].update(all_tests_passed=True,
                                blocked_tests=[{"id": "C02", "reason_code": "BLOCKED_ENVIRONMENT"}])))
+    # --- merge readiness: nessuna scorciatoia verso il merge (BLOCKER 2) -----------------
+    expect_inconsistent("merge_authorized_without_pair",
+                        lambda r: r["merge_readiness"].update(merge_authorized=True))
+    expect_inconsistent("merge_authorized_with_open_requirements", lambda r: (
+        r["merge_readiness"].update(merge_authorized=True, core_runtime_pair_ready=True,
+                                    runtime_consumes_core_candidate=True,
+                                    pin_points_to_core_candidate=True)))
+    expect_inconsistent("merge_authorized_without_human", lambda r: (
+        r["merge_readiness"].update(merge_authorized=True, core_runtime_pair_ready=True,
+                                    runtime_consumes_core_candidate=True,
+                                    pin_points_to_core_candidate=True,
+                                    human_merge_authorization=False),
+        r["phase_readiness"].update(all_requirements_verified=True,
+                                    open_requirements_blocking_all_verified=[],
+                                    open_requirements=[], requirements=[])))
+    expect_inconsistent("pair_ready_without_consumption",
+                        lambda r: r["merge_readiness"].update(core_runtime_pair_ready=True,
+                                                              runtime_consumes_core_candidate=False))
+    expect_inconsistent("no_blockers_without_authorization",
+                        lambda r: r["merge_readiness"].update(blockers=[]))
     # e un caso POSITIVO: con un test BLOCKED la suite non e' all-pass e i requisiti degradano
-    blocked_suite = dict(base_suite, blocked=1, **{"pass": 9})
+    blocked_suite = dict(base_suite, blocked=1, **{"pass": n - 1})
     blocked_results = [r if r["id"] != "C02" else
                        {"id": "C02", "status": "BLOCKED", "reason_code": "BLOCKED_ENVIRONMENT"}
                        for r in all_pass]
-    degraded = readiness.build(blocked_results, blocked_suite)
+    degraded = readiness.build(blocked_results, blocked_suite, pair_facts=SHARED.get("pair_facts"))
     comp = next(r for r in degraded["phase_readiness"]["requirements"]
                 if r["id"] == "P_B02_P_B01_COMPOSITION")
     checks = {
@@ -695,6 +729,14 @@ def c09():
         "blocked_test_degrades_requirement": (comp["state"] == readiness.NOT_VERIFIED
                                               and degraded["test_suite"]["all_tests_passed"] is False),
         "not_implied_present": (real["phase_readiness"]["not_implied"] == readiness.NOT_IMPLIED),
+        # --- BLOCKER 2: la merge readiness e' presente, calcolata e negativa --------------
+        "merge_readiness_present": all(isinstance(real["merge_readiness"].get(k), bool)
+                                       for k in readiness.MERGE_READINESS_KEYS),
+        "core_runtime_pair_not_ready": real["merge_readiness"]["core_runtime_pair_ready"] is False,
+        "merge_not_authorized": real["merge_readiness"]["merge_authorized"] is False,
+        "merge_blockers_declared": bool(real["merge_readiness"]["blockers"]),
+        "core_review_state_declared": (real["merge_readiness"]["core_review_state"]
+                                       == readiness.CORE_REVIEW_STATE),
     }
     ok = all(checks.values())
     ev = evidence("C09", "reporting_phase_readiness", {
@@ -710,10 +752,213 @@ def c09():
             f"{real['phase_readiness']['core_change_required']}"), ev, ok
 
 
+# ------------------------------------------------------------------ C10
+def _fixture_manifest(**over) -> dict:
+    m = {"schema": "test", "runtime_branch": "b", "runtime_code_sha": "a" * 40,
+         "runtime_evidence_head_sha": bundle_provenance.EXTERNAL_ONLY,
+         "canonical_runtime_base_sha": "c" * 40,
+         "merge_readiness": {"runtime_candidate_ready": True, "core_candidate_ready": True,
+                             "core_runtime_pair_ready": False, "merge_authorized": False}}
+    m.update(over)
+    return m
+
+
+def _make_fixture(root: str, manifest: dict | None = None) -> str:
+    """Bundle finto, minimo ma con la stessa forma di quello vero."""
+    os.makedirs(os.path.join(root, "evidence"), exist_ok=True)
+    with open(os.path.join(root, "README.md"), "w", encoding="utf-8") as fh:
+        fh.write("fixture\n")
+    with open(os.path.join(root, "evidence", "E.json"), "w", encoding="utf-8") as fh:
+        fh.write('{"x": 1}\n')
+    with open(os.path.join(root, bundle_provenance.MANIFEST_NAME), "w", encoding="utf-8") as fh:
+        json.dump(manifest or _fixture_manifest(), fh, indent=2, ensure_ascii=False)
+    bundle_provenance.write_sums(root)
+    return root
+
+
+def c10(scratch: str):                                              # noqa: C901
+    """La catena di provenance deve essere verificata da un test che FALLISCE nei casi che la
+    Human Review ha elencato. Si costruisce un bundle finto valido, poi lo si rompe in un modo
+    per volta: ogni rottura deve produrre il codice atteso."""
+    codes = lambda r: sorted({p["code"] for p in r["problems"]})     # noqa: E731
+    C: dict = {}
+
+    def fixture(name, manifest=None):
+        root = os.path.join(scratch, "c10", name)
+        shutil.rmtree(root, ignore_errors=True)
+        os.makedirs(root, exist_ok=True)
+        return _make_fixture(root, manifest)
+
+    # 0. baseline: un bundle ben formato passa
+    base = fixture("ok")
+    C["valid_bundle"] = {"codes": codes(bundle_provenance.verify(base, expect_committed=False))}
+
+    # 1. file presente ma NON coperto da SHA256SUMS
+    f1 = fixture("missing")
+    with open(os.path.join(f1, "EXTRA.md"), "w", encoding="utf-8") as fh:
+        fh.write("non coperto\n")
+    C["file_not_in_sums"] = {"codes": codes(bundle_provenance.verify(f1, expect_committed=False))}
+
+    # 2. checksum EXTRA, per un file che non esiste
+    f2 = fixture("extra")
+    with open(os.path.join(f2, bundle_provenance.SUMS_NAME), "a", encoding="utf-8") as fh:
+        fh.write(f"{'0' * 64}  GHOST.md\n")
+    C["extra_checksum"] = {"codes": codes(bundle_provenance.verify(f2, expect_committed=False))}
+
+    # 3. MISMATCH
+    f3 = fixture("mismatch")
+    with open(os.path.join(f3, "README.md"), "w", encoding="utf-8") as fh:
+        fh.write("alterato dopo il checksum\n")
+    C["checksum_mismatch"] = {"codes": codes(bundle_provenance.verify(f3, expect_committed=False))}
+
+    # 4. MANIFEST.json non coperto (il difetto esatto del package v1)
+    f4 = fixture("manifest_uncovered")
+    sums_path = os.path.join(f4, bundle_provenance.SUMS_NAME)
+    kept = [ln for ln in open(sums_path, encoding="utf-8")
+            if not ln.rstrip("\n").endswith(bundle_provenance.MANIFEST_NAME)]
+    open(sums_path, "w", encoding="utf-8").writelines(kept)
+    C["manifest_not_covered"] = {"codes": codes(bundle_provenance.verify(f4, expect_committed=False))}
+
+    # 5. chiave ambigua `runtime_commit` (il nome bandito dalla review)
+    f5 = fixture("ambiguous", _fixture_manifest(runtime_commit="d" * 40))
+    C["ambiguous_runtime_commit_key"] = {
+        "codes": codes(bundle_provenance.verify(f5, expect_committed=False))}
+
+    # 6. chiave disambiguata mancante
+    m6 = _fixture_manifest()
+    m6.pop("canonical_runtime_base_sha")
+    f6 = fixture("key_missing", m6)
+    C["manifest_key_missing"] = {"codes": codes(bundle_provenance.verify(f6, expect_committed=False))}
+
+    # 7. code_sha == evidence_head_sha, con il commit evidence esistente
+    f7 = fixture("same_sha")
+    head = git("rev-parse", "HEAD", cwd=REPO)
+    prov_same = {"runtime_code_sha": "a" * 40, "runtime_evidence_head_sha": "a" * 40}
+    C["code_sha_equals_evidence_head"] = {
+        "codes": codes(bundle_provenance.verify(f7, expect_committed=False, provenance=prov_same))}
+
+    # 8. HEAD del branch diverso dall'evidence head dichiarato. Gli SHA sono REALI e in
+    #    relazione di discendenza, cosi' l'unico difetto misurato e' la deriva di HEAD.
+    older, prev = git("rev-parse", "HEAD~2", cwd=REPO), git("rev-parse", "HEAD~1", cwd=REPO)
+    f8 = fixture("head_drift", _fixture_manifest(runtime_code_sha=older))
+    prov_drift = {"runtime_code_sha": older, "runtime_evidence_head_sha": prev}
+    C["head_not_evidence_head"] = {
+        "codes": codes(bundle_provenance.verify(f8, expect_committed=False, repo=REPO,
+                                                provenance=prov_drift))}
+
+    # 9. provenance coerente con HEAD reale: nessun problema di catena
+    f9 = fixture("consistent", _fixture_manifest(runtime_code_sha=prev))
+    prov_ok = {"runtime_code_sha": prev, "runtime_evidence_head_sha": head}
+    C["provenance_consistent_with_head"] = {
+        "codes": codes(bundle_provenance.verify(f9, expect_committed=False, repo=REPO,
+                                                provenance=prov_ok))}
+
+    # 10. merge_readiness assente
+    m10 = _fixture_manifest()
+    m10.pop("merge_readiness")
+    f10 = fixture("no_merge_readiness", m10)
+    C["merge_readiness_missing"] = {
+        "codes": codes(bundle_provenance.verify(f10, expect_committed=False))}
+
+    # 11. merge_authorized=true senza coppia pronta
+    m11 = _fixture_manifest(merge_readiness={"runtime_candidate_ready": True,
+                                             "core_candidate_ready": True,
+                                             "core_runtime_pair_ready": False,
+                                             "merge_authorized": True})
+    f11 = fixture("merge_without_pair", m11)
+    C["merge_authorized_without_pair"] = {
+        "codes": codes(bundle_provenance.verify(f11, expect_committed=False))}
+
+    expected = {
+        "valid_bundle": [],
+        "file_not_in_sums": ["MISSING_FROM_SUMS"],
+        "extra_checksum": ["EXTRA_IN_SUMS"],
+        "checksum_mismatch": ["CHECKSUM_MISMATCH"],
+        "manifest_not_covered": ["MANIFEST_NOT_COVERED", "MISSING_FROM_SUMS"],
+        "ambiguous_runtime_commit_key": ["AMBIGUOUS_MANIFEST_KEY"],
+        "manifest_key_missing": ["MANIFEST_KEY_MISSING"],
+        "code_sha_equals_evidence_head": ["CODE_SHA_EQUALS_EVIDENCE_HEAD"],
+        "head_not_evidence_head": ["HEAD_NOT_EVIDENCE_HEAD"],
+        "provenance_consistent_with_head": [],
+        "merge_readiness_missing": ["MERGE_READINESS_MISSING"],
+        "merge_authorized_without_pair": ["MERGE_AUTHORIZED_WITHOUT_PAIR"],
+    }
+    mismatches = {k: {"got": C[k]["codes"], "expected": v}
+                  for k, v in expected.items() if C[k]["codes"] != v}
+    # il verificatore deve anche essere quello REALMENTE usato per il bundle vero
+    real = bundle_provenance.verify(BUNDLE, repo=REPO, bundle_rel="PROVIDER_BOUNDARY_GATE_02",
+                                    expect_committed=True)
+    ok = not mismatches
+    ev = evidence("C10", "evidence_chain_verifier", {
+        "counterproofs": C, "expected": expected, "mismatches": mismatches,
+        "verifier": "pbg2/bundle_provenance.py:verify",
+        "real_bundle_at_gate_time": {
+            "note": "il bundle reale viene verificato DOPO il commit evidence da "
+                    "pbg2/make_bundle.py; qui si registra solo lo stato al momento del gate, "
+                    "quando MANIFEST.json e SHA256SUMS del nuovo package non esistono ancora",
+            "result": real},
+        "chain_design": "runtime_code_sha (commit codice) -> runtime_evidence_head_sha (commit "
+                        "manifest+checksum, dichiarato solo nella PROVENANCE esterna) -> "
+                        "PROVENANCE.json + SHA256SUMS.EXTERNAL"})
+    return (f"{len(expected)} controprove della catena di provenance · scarti: "
+            f"{mismatches or 'nessuno'} · bundle valido -> 0 problemi · MANIFEST non coperto -> "
+            f"{C['manifest_not_covered']['codes']} · code_sha == evidence_head -> "
+            f"{C['code_sha_equals_evidence_head']['codes']} · HEAD != evidence_head -> "
+            f"{C['head_not_evidence_head']['codes']} · merge_authorized senza coppia -> "
+            f"{C['merge_authorized_without_pair']['codes']}"), ev, ok
+
+
+# ------------------------------------------------------------------ C11
+def c11():
+    """Regressione del DELTA CORRETTIVO (Human Review 01). Questo delta e'
+    reporting/evidence-only: se una sola di queste verifiche cade, non lo e'."""
+    code_sha = bundle_provenance.runtime_code_sha(REPO)
+    unchanged = bundle_provenance.runtime_code_unchanged_since(REPO, code_sha)
+    core_head = git("rev-parse", "HEAD", cwd=CORE_PATH)
+    core_status = git("status", "--porcelain", "--untracked-files=all")
+    core_candidate = git("rev-parse", "HEAD", cwd=CORE_BRANCH_PATH)
+    subprocess.run(["git", "-C", REPO, "fetch", "origin", "main"], capture_output=True, text=True)
+    origin_main = git("rev-parse", "origin/main", cwd=REPO)
+    p2 = sha256_file(P2_PATH)
+    tags = {"core": git("tag", "--list", cwd=CORE_PATH).split(),
+            "runtime": git("tag", "--list", cwd=REPO).split()}
+    # nessuna credenziale, in nessun file del bundle
+    scan = bundle_provenance.scan_credentials(BUNDLE)
+    from runtime import provider_gate as pg
+    checks = {
+        "runtime_functional_diff_unchanged": unchanged["unchanged"],
+        "runtime_code_sha_is_not_head": code_sha != git("rev-parse", "HEAD"),
+        "core_candidate_identical": core_candidate == CORE_CANDIDATE_SHA,
+        "core_main_unchanged": core_head == CANON["core_sha"] and core_status == "",
+        "runtime_main_unchanged": origin_main == CANON["runtime_main_sha"],
+        "p2_unchanged": p2 == CANON["p2_sha256"],
+        "pin_unchanged": REQUIRED_CORE_SHA == CANON["core_sha"],
+        "no_tags_created": not tags["core"] and not tags["runtime"],
+        "real_provider_still_disabled": pg.ALLOWED_PROVIDER_MODE == "fake",
+        "no_credential_material_in_bundle": scan["hits"] == [],
+    }
+    ok = all(checks.values())
+    ev = evidence("C11", "corrective_delta_regression", {
+        "runtime_code_sha": code_sha, "runtime_code_unchanged": unchanged,
+        "core_candidate_sha": core_candidate, "core_candidate_expected": CORE_CANDIDATE_SHA,
+        "core_main": {"head": core_head, "status_porcelain": core_status},
+        "runtime_origin_main": origin_main, "p2_sha256": p2, "tags": tags,
+        "credential_scan": scan,
+        "checks": checks,
+        "scope": "questo delta corregge SOLO evidence chain e reporting: nessuna riga "
+                 "funzionale del Runtime, nessun merge, nessuna integrazione Core+Runtime"})
+    failed = [k for k, v in checks.items() if not v]
+    return (f"runtime_code_sha {code_sha[:12]} · diff funzionale Runtime dopo quel commit: "
+            f"{unchanged['diff_bytes']} byte (invariato={unchanged['unchanged']}) · Core "
+            f"candidate {core_candidate[:12]} == atteso · Core main {core_head[:12]} pulito · "
+            f"Runtime origin/main {origin_main[:12]} · P2 {p2[:16]} · 0 tag · provider reale "
+            f"disabilitato · 0 credenziali nel bundle · check falliti: {failed or 'nessuno'}"), ev, ok
+
+
 # ------------------------------------------------------------------ report
 def build_report() -> dict:
     suite = gate_report.summarize(RESULTS, policy=POLICY, expected_ids=EXPECTED_IDS)
-    return readiness.build(RESULTS, suite)
+    return readiness.build(RESULTS, suite, pair_facts=SHARED.get("pair_facts"))
 
 
 def write_results(report: dict) -> dict:
@@ -786,6 +1031,13 @@ def main() -> int:
                "P2 before == after == canonico; Core main pulito a 740ee979", c08)
         record("C09", "Reporting: test suite result e phase readiness separati",
                "6 controprove sollevano; all_requirements_verified=false con gap aperti", c09)
+        record("C10", "Catena di provenance del bundle: verificatore fail-closed",
+               "12 controprove: copertura, extra, mismatch, MANIFEST non coperto, chiave "
+               "ambigua, code_sha == evidence_head, HEAD divergente, merge_readiness",
+               lambda: c10(scratch))
+        record("C11", "Regressione del delta correttivo (reporting/evidence-only)",
+               "diff funzionale Runtime invariato, Core candidate identico, main e P2 "
+               "invariati, 0 tag, 0 credenziali", c11)
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
 

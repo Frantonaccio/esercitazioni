@@ -66,6 +66,27 @@ la usa. È il comportamento fail-closed richiesto.
 | `regression/r0_r1_RESULTS.json`, `regression/r0_r1_run_gate.log` | regressione R0-R1 |
 | `MANIFEST.json`, `SHA256SUMS` | integrità del bundle |
 
+### Aggiunti dal delta correttivo della Human Review 01 (reporting/evidence-only)
+
+| percorso | contenuto |
+|---|---|
+| `pbg2/bundle_provenance.py` | generatore e **verificatore fail-closed** della catena di provenance; scansione credenziali |
+| `pbg2/make_bundle.py` | confezionamento in due passi: `manifest` (pre-commit) e `package` (post-commit) |
+| `HUMAN_REVIEW_01_CORRECTIVE_DELTA.md` | risposta puntuale ai due blocker |
+| `evidence/C10_evidence_chain_verifier.json` | 12 controprove della catena |
+| `evidence/C11_corrective_delta_regression.json` | regressione del delta correttivo |
+
+Modificati in questo delta (nessun file del **codice funzionale** del Runtime):
+
+| file | cosa cambia |
+|---|---|
+| `pbg2/readiness.py` | sezione `merge_readiness` calcolata + invarianti fail-closed sul merge |
+| `pbg2/run_gate2.py` | C10, C11, `pair_facts` verso la readiness, 5 controprove di merge in C09 |
+| `NG05_ATOMICITY.md`, `OPEN_REQUIREMENTS.md`, `README.md`, `CHANGED_FILES.md` | stato `APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED`, merge readiness, catena di provenance |
+
+Gli artefatti **esterni** `PROVENANCE.json` e `SHA256SUMS.EXTERNAL` non sono committati:
+sono gli unici a conoscere `runtime_evidence_head_sha`.
+
 ## CORE — `Frantonaccio/creative-os`, branch `harden/provider-boundary-core-atomicity-2026-09-17`
 
 `main` **non toccato**: resta `740ee979300fe20a9382992528604dee70cb2fcf`, working tree pulito
@@ -88,9 +109,15 @@ la usa. È il comportamento fail-closed richiesto.
 
 ## Branch e SHA candidati
 
-| repo | branch | SHA |
-|---|---|---|
-| `Frantonaccio/esercitazioni` | `claude/provider-boundary-gate-closure-gd6b3g` | vedi `MANIFEST.json` → `runtime_commit` |
-| `Frantonaccio/creative-os` | `harden/provider-boundary-core-atomicity-2026-09-17` | `9cf9cee1a751f7a2ad6c768574ff5aa38d8db515` |
+| repo | branch | SHA | significato |
+|---|---|---|---|
+| `Frantonaccio/esercitazioni` | `claude/provider-boundary-gate-closure-gd6b3g` | `MANIFEST.json` → **`runtime_code_sha`** | commit con il diff **funzionale** del Runtime |
+| `Frantonaccio/esercitazioni` | idem | `PROVENANCE.json` → **`runtime_evidence_head_sha`** | commit che aggiunge manifest e checksum |
+| `Frantonaccio/esercitazioni` | baseline | **`canonical_runtime_base_sha`** = `0698279703ab959625ac4e84ee636bc5b93b45fd` | da cui il branch parte |
+| `Frantonaccio/creative-os` | `harden/provider-boundary-core-atomicity-2026-09-17` | `9cf9cee1a751f7a2ad6c768574ff5aa38d8db515` | `APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED` |
+
+La chiave generica `runtime_commit` **non esiste più**: era ambigua e il verificatore la
+rifiuta con `AMBIGUOUS_MANIFEST_KEY`.
 
 Nessun merge, nessun force-push, nessun tag, nessuna release, nessun deploy.
+`merge_authorized = false`, `core_runtime_pair_ready = false`.

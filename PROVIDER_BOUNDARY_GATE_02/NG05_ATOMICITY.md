@@ -176,5 +176,30 @@ finché il pin del Runtime non è spostato di conseguenza, la finestra a due tra
 in esercizio. Un test PASS su questo requisito significa che il gate ha verificato che il requisito
 **resta aperto**, non che è chiuso.
 
+### Human Review 01: `APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED`
+
+L'API è stata **accettata come proposta**. Il merge **non** è autorizzato, e il motivo è
+strutturale, non procedurale: il Runtime candidate resta pinnato a `740ee979`, continua a usare
+`reconcile → settle` e non consuma `mark_refused_pre_submit`. Portare Core `main` a `9cf9cee1`
+renderebbe la baseline **incoerente per costruzione** — il Runtime canonico pretenderebbe ancora
+il vecchio SHA.
+
+Non esiste ancora una coppia Core+Runtime promuovibile. `merge_readiness` lo dice a macchina:
+
+```
+core_candidate_ready    = true
+runtime_candidate_ready = true
+core_runtime_pair_ready = false
+merge_authorized        = false
+blockers = [RUNTIME_DOES_NOT_CONSUME_CORE_CANDIDATE,
+            REQUIRED_CORE_SHA_PINNED_TO_BASELINE_NOT_CANDIDATE,
+            OPEN_REQUIREMENTS,
+            HUMAN_MERGE_AUTHORIZATION_ABSENT]
+```
+
+La chiusura richiede un **delta coordinato separato**, elencato in
+`merge_readiness.next_integration_required` e in `HUMAN_REVIEW_01_CORRECTIVE_DELTA.md`.
+Non è stato iniziato.
+
 Nulla qui significa provider ready, production ready, credenziali autorizzate, spend autorizzato,
 merge autorizzato o R2 autorizzato.

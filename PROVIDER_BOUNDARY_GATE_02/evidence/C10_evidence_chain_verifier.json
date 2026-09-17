@@ -1,0 +1,189 @@
+{
+  "chain_design": "runtime_code_sha (commit codice) -> runtime_evidence_head_sha (commit manifest+checksum, dichiarato solo nella PROVENANCE esterna) -> PROVENANCE.json + SHA256SUMS.EXTERNAL",
+  "counterproofs": {
+    "ambiguous_runtime_commit_key": {
+      "codes": [
+        "AMBIGUOUS_MANIFEST_KEY"
+      ]
+    },
+    "checksum_mismatch": {
+      "codes": [
+        "CHECKSUM_MISMATCH"
+      ]
+    },
+    "code_sha_equals_evidence_head": {
+      "codes": [
+        "CODE_SHA_EQUALS_EVIDENCE_HEAD"
+      ]
+    },
+    "extra_checksum": {
+      "codes": [
+        "EXTRA_IN_SUMS"
+      ]
+    },
+    "file_not_in_sums": {
+      "codes": [
+        "MISSING_FROM_SUMS"
+      ]
+    },
+    "head_not_evidence_head": {
+      "codes": [
+        "HEAD_NOT_EVIDENCE_HEAD"
+      ]
+    },
+    "manifest_key_missing": {
+      "codes": [
+        "MANIFEST_KEY_MISSING"
+      ]
+    },
+    "manifest_not_covered": {
+      "codes": [
+        "MANIFEST_NOT_COVERED",
+        "MISSING_FROM_SUMS"
+      ]
+    },
+    "merge_authorized_without_pair": {
+      "codes": [
+        "MERGE_AUTHORIZED_WITHOUT_PAIR"
+      ]
+    },
+    "merge_readiness_missing": {
+      "codes": [
+        "MERGE_READINESS_MISSING"
+      ]
+    },
+    "provenance_consistent_with_head": {
+      "codes": []
+    },
+    "valid_bundle": {
+      "codes": []
+    }
+  },
+  "expected": {
+    "ambiguous_runtime_commit_key": [
+      "AMBIGUOUS_MANIFEST_KEY"
+    ],
+    "checksum_mismatch": [
+      "CHECKSUM_MISMATCH"
+    ],
+    "code_sha_equals_evidence_head": [
+      "CODE_SHA_EQUALS_EVIDENCE_HEAD"
+    ],
+    "extra_checksum": [
+      "EXTRA_IN_SUMS"
+    ],
+    "file_not_in_sums": [
+      "MISSING_FROM_SUMS"
+    ],
+    "head_not_evidence_head": [
+      "HEAD_NOT_EVIDENCE_HEAD"
+    ],
+    "manifest_key_missing": [
+      "MANIFEST_KEY_MISSING"
+    ],
+    "manifest_not_covered": [
+      "MANIFEST_NOT_COVERED",
+      "MISSING_FROM_SUMS"
+    ],
+    "merge_authorized_without_pair": [
+      "MERGE_AUTHORIZED_WITHOUT_PAIR"
+    ],
+    "merge_readiness_missing": [
+      "MERGE_READINESS_MISSING"
+    ],
+    "provenance_consistent_with_head": [],
+    "valid_bundle": []
+  },
+  "mismatches": {},
+  "real_bundle_at_gate_time": {
+    "note": "il bundle reale viene verificato DOPO il commit evidence da pbg2/make_bundle.py; qui si registra solo lo stato al momento del gate, quando MANIFEST.json e SHA256SUMS del nuovo package non esistono ancora",
+    "result": {
+      "checks": {
+        "expected_files": 50,
+        "file_set_source": "git ls-files",
+        "manifest_evidence_head_field": "DECLARED_IN_EXTERNAL_PROVENANCE",
+        "manifest_keys_ok": true,
+        "merge_readiness": {
+          "blockers": [
+            "RUNTIME_DOES_NOT_CONSUME_CORE_CANDIDATE",
+            "REQUIRED_CORE_SHA_PINNED_TO_BASELINE_NOT_CANDIDATE",
+            "OPEN_REQUIREMENTS",
+            "HUMAN_MERGE_AUTHORIZATION_ABSENT"
+          ],
+          "core_candidate_ready": true,
+          "core_candidate_sha": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+          "core_review_state": "APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED",
+          "core_runtime_pair_ready": false,
+          "human_merge_authorization": false,
+          "meaning": "la coppia Core+Runtime e' promuovibile? Il Runtime candidate resta pinnato alla baseline e usa ancora reconcile -> settle; il Core candidate introduce mark_refused_pre_submit ma non e' consumato. Non esiste ancora una coppia coerente: portare Core main al candidate renderebbe la baseline incoerente per costruzione.",
+          "merge_authorized": false,
+          "next_integration_required": [
+            "partire dal Core candidate approvato",
+            "aggiornare il Runtime perche' consumi mark_refused_pre_submit",
+            "aggiornare REQUIRED_CORE_SHA al nuovo Core candidate SHA",
+            "rimuovere il percorso reconcile -> settle per il caso NG-05",
+            "dimostrare atomicita' end-to-end Runtime -> Core",
+            "rieseguire NG-03, NG-05, P-B04, P-B01/P-B02, R0-R1, P2 freeze",
+            "produrre una coppia candidate Core+Runtime indivisibile per Human Review"
+          ],
+          "not_implemented_here": "questo delta e' reporting/evidence-only: l'integrazione coordinata NON e' iniziata.",
+          "pin_points_to_core_candidate": false,
+          "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+          "runtime_candidate_ready": true,
+          "runtime_consumes_core_candidate": false
+        },
+        "mismatches": [
+          "evidence/C00_reality_lock.json",
+          "evidence/C02_pb01_pb02_composition.json",
+          "evidence/C03_ng04_freshness_mechanism.json",
+          "evidence/C04_legacy_spend_paths_v2.json",
+          "evidence/C07_regression_r0_r1.json",
+          "regression/r0_r1_run_gate.log"
+        ],
+        "missing_from_sums": [],
+        "runtime_code_sha": "e845b744a4af3a143b1b1e710016726c57ad6c39",
+        "sums_entries": 50
+      },
+      "ok": false,
+      "problems": [
+        {
+          "actual": "4c4e3961b54da8b817c913ba4581efa7684ecdbe9c36410910a383b4700bf684",
+          "code": "CHECKSUM_MISMATCH",
+          "declared": "f40701f6972aefffcabfa4bf2c3b43abea76713de5148f40cab18e5a413c06cb",
+          "detail": "evidence/C00_reality_lock.json"
+        },
+        {
+          "actual": "922f932f388a040fe423e29e96ab5601025928c8a0d28aa3645c4fa99b274ef1",
+          "code": "CHECKSUM_MISMATCH",
+          "declared": "d84f6a2e91a5a1e4b105d3fa9c3f26ee21076a302a44c4c2eba7e91051612df5",
+          "detail": "evidence/C02_pb01_pb02_composition.json"
+        },
+        {
+          "actual": "2159739228d5209226ed50bf9eed379b24cce4355d145301808a78aae86365a5",
+          "code": "CHECKSUM_MISMATCH",
+          "declared": "56cc60d8d7e8446c0b33dcc8779610b4b6f983f87a1f674cb5beeb0d8e75370a",
+          "detail": "evidence/C03_ng04_freshness_mechanism.json"
+        },
+        {
+          "actual": "2cee90f7bbe7e29b9e2472a83817866b7b8645245f9072745312ff95336d3372",
+          "code": "CHECKSUM_MISMATCH",
+          "declared": "761223bbf9b1675ef573ae0c8b84ee7fc91addeb6f12f3b03e03ceebe27f0935",
+          "detail": "evidence/C04_legacy_spend_paths_v2.json"
+        },
+        {
+          "actual": "e85a2df0d98f70261090caa50fa4a4994a939066c16bb9eecba1c4eb09b3494c",
+          "code": "CHECKSUM_MISMATCH",
+          "declared": "b8f380022d4801eba060426851c0c70c278004a039861dcc0ea55b5d291eebf0",
+          "detail": "evidence/C07_regression_r0_r1.json"
+        },
+        {
+          "actual": "9c7c6ed2fa4dc1de9c7bd0e54e49000027599751766519c9a9d2fbe0c738d941",
+          "code": "CHECKSUM_MISMATCH",
+          "declared": "01fd6210ebca471998e12fe05fc62d86d0dab58e473fcb7f89167b5faa777b6d",
+          "detail": "regression/r0_r1_run_gate.log"
+        }
+      ]
+    }
+  },
+  "verifier": "pbg2/bundle_provenance.py:verify"
+}

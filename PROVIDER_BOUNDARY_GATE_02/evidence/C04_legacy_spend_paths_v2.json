@@ -29,8 +29,8 @@
         "governance": "GOVERNED_LAB",
         "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_c04_open.db.snapshots",
         "ok": true,
-        "permit_id": "permit_4761b519fbe2d2e6e19fa4d3",
-        "quote_id": "quote_9aef50210cb99efc182178c5",
+        "permit_id": "permit_8a44265e0d4377bbd1328ba4",
+        "quote_id": "quote_f9c18e30dd13c9c23b2e1cfd",
         "send_verified": true,
         "state": "SUCCEEDED",
         "submits": 1
@@ -58,7 +58,7 @@
     "ok": true,
     "rows": [
       {
-        "attempt_token": "att_655d287cc686553cc4548a2d",
+        "attempt_token": "att_25594c5e3afdc2f06140692d",
         "budget_units": 0,
         "envelope_id": null,
         "error": null,
@@ -75,7 +75,7 @@
         "settlement_source": null,
         "spec_key": "9f38ed3d8c5ec45f6e3a1b8380aab25d8d0aa0422b069a5ebca0608c2fa469d9",
         "state": "SUCCEEDED",
-        "submit_intent_at": 1789663086.9725041
+        "submit_intent_at": 1789680233.9473476
       },
       {
         "attempt_token": null,
@@ -98,27 +98,27 @@
         "submit_intent_at": null
       },
       {
-        "attempt_token": "att_dd49970e39f08179c9f230aa",
+        "attempt_token": "att_ffca511e46189727cb052e71",
         "budget_units": 10,
         "envelope_id": "ENV_LAB",
         "error": null,
         "job_id": "res_3dc579b0748f59b3_1",
         "operation_id": "lab:e1",
         "payload_digest": "4fe9f9648308302e92b87604e57c0a331be7e472630d9671b07f8476a2d90039",
-        "permit_id": "permit_4761b519fbe2d2e6e19fa4d3",
+        "permit_id": "permit_8a44265e0d4377bbd1328ba4",
         "provider": "fake",
         "provider_account": "fake_acct_governed",
         "provider_job_id": "pv_3dc579b0",
-        "quote_id": "quote_9aef50210cb99efc182178c5",
+        "quote_id": "quote_f9c18e30dd13c9c23b2e1cfd",
         "revision": 3,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "3dc579b0748f59b3d896080e8f5cdb7ff3c2683b87baac292c1c218662b7c095",
         "state": "SUCCEEDED",
-        "submit_intent_at": 1789663086.9938898
+        "submit_intent_at": 1789680233.9684792
       },
       {
-        "attempt_token": "att_526b9d87e1044ff64b060f0e",
+        "attempt_token": "att_67e70143332c5085a975f9c6",
         "budget_units": 0,
         "envelope_id": null,
         "error": null,
@@ -178,8 +178,8 @@
         "governance": "GOVERNED_LAB",
         "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_c04_closed.db.snapshots",
         "ok": true,
-        "permit_id": "permit_ece9a9eef64070bd5df497a1",
-        "quote_id": "quote_bd666591298fad915d788ad0",
+        "permit_id": "permit_9b8791b4d7ab60a52450ec3b",
+        "quote_id": "quote_759ae87e4c6f556056b21ee0",
         "send_verified": true,
         "state": "SUCCEEDED",
         "submits": 1
@@ -206,27 +206,27 @@
     "ok": true,
     "rows": [
       {
-        "attempt_token": "att_1c724ffec3b6b1dd99db9e08",
+        "attempt_token": "att_f2fd8a581147c862d176ca7e",
         "budget_units": 10,
         "envelope_id": "ENV_LAB",
         "error": null,
         "job_id": "res_3dc579b0748f59b3_1",
         "operation_id": "lab:e1",
         "payload_digest": "4fe9f9648308302e92b87604e57c0a331be7e472630d9671b07f8476a2d90039",
-        "permit_id": "permit_ece9a9eef64070bd5df497a1",
+        "permit_id": "permit_9b8791b4d7ab60a52450ec3b",
         "provider": "fake",
         "provider_account": "fake_acct_governed",
         "provider_job_id": "pv_3dc579b0",
-        "quote_id": "quote_bd666591298fad915d788ad0",
+        "quote_id": "quote_759ae87e4c6f556056b21ee0",
         "revision": 3,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "3dc579b0748f59b3d896080e8f5cdb7ff3c2683b87baac292c1c218662b7c095",
         "state": "SUCCEEDED",
-        "submit_intent_at": 1789663087.1189992
+        "submit_intent_at": 1789680234.1264343
       },
       {
-        "attempt_token": "att_2e90508ca779e71666b2eae9",
+        "attempt_token": "att_1d364c0ff3cbfa74b12acb0d",
         "budget_units": 0,
         "envelope_id": null,
         "error": null,

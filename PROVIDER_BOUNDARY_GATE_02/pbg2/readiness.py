@@ -63,6 +63,83 @@ class ReportingInconsistent(RuntimeError):
     """Il report afferma insieme cose incompatibili. Fail-closed: il report e' invalido."""
 
 
+# ---------------------------------------------------------------- merge readiness
+# BLOCKER 2 della Human Review 01: «PROVIDER_BOUNDARY_GATE_PRE_REAL_READY_FOR_HUMAN_REVIEW
+# puo' restare solo come stato di LAVORO con open gaps, NON come merge authorization».
+# Qui la distinzione diventa machine-readable. Ogni campo e' CALCOLATO da fatti osservati,
+# nessuno e' asserito a mano.
+MERGE_READINESS_KEYS = ("runtime_candidate_ready", "core_candidate_ready",
+                        "core_runtime_pair_ready", "merge_authorized")
+CORE_REVIEW_STATE = "APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED"
+
+
+def build_merge_readiness(*, all_tests_passed: bool, all_requirements_verified: bool,
+                          reqs: list[dict], pair_facts: dict | None) -> dict:
+    """`merge_authorized` non puo' diventare vero da solo: pretende una coppia Core+Runtime
+    coerente, zero requisiti aperti E un'autorizzazione umana esplicita, che il codice non
+    si concede mai (`human_merge_authorization` non viene mai impostata qui)."""
+    f = dict(pair_facts or {})
+    verified = {r["id"] for r in reqs if not r["open"]}
+
+    runtime_candidate_ready = bool(
+        all_tests_passed
+        and {"REALITY_LOCK_CANONICAL", "R0_R1_NO_REGRESSION", "P2_FREEZE_AND_CORE_PIN"} <= verified)
+    core_candidate_ready = bool(f.get("core_branch_all_suites_pass")
+                                and f.get("core_branch_based_on_canonical")
+                                and f.get("core_branch_clean"))
+    runtime_consumes_core_candidate = bool(f.get("runtime_uses_new_core_api"))
+    pin_points_to_core_candidate = bool(
+        f.get("required_core_sha") and f.get("required_core_sha") == f.get("core_candidate_sha"))
+    core_runtime_pair_ready = bool(core_candidate_ready and runtime_consumes_core_candidate
+                                   and pin_points_to_core_candidate)
+    merge_authorized = bool(core_runtime_pair_ready and all_requirements_verified
+                            and f.get("human_merge_authorization") is True)
+
+    blockers = []
+    if not runtime_candidate_ready:
+        blockers.append("RUNTIME_CANDIDATE_NOT_READY")
+    if not core_candidate_ready:
+        blockers.append("CORE_CANDIDATE_NOT_READY")
+    if not runtime_consumes_core_candidate:
+        blockers.append("RUNTIME_DOES_NOT_CONSUME_CORE_CANDIDATE")
+    if not pin_points_to_core_candidate:
+        blockers.append("REQUIRED_CORE_SHA_PINNED_TO_BASELINE_NOT_CANDIDATE")
+    if not all_requirements_verified:
+        blockers.append("OPEN_REQUIREMENTS")
+    if f.get("human_merge_authorization") is not True:
+        blockers.append("HUMAN_MERGE_AUTHORIZATION_ABSENT")
+
+    return {
+        "runtime_candidate_ready": runtime_candidate_ready,
+        "core_candidate_ready": core_candidate_ready,
+        "core_runtime_pair_ready": core_runtime_pair_ready,
+        "merge_authorized": merge_authorized,
+        "core_review_state": CORE_REVIEW_STATE,
+        "runtime_consumes_core_candidate": runtime_consumes_core_candidate,
+        "pin_points_to_core_candidate": pin_points_to_core_candidate,
+        "required_core_sha": f.get("required_core_sha"),
+        "core_candidate_sha": f.get("core_candidate_sha"),
+        "human_merge_authorization": f.get("human_merge_authorization", False),
+        "blockers": blockers,
+        "meaning": "la coppia Core+Runtime e' promuovibile? Il Runtime candidate resta pinnato "
+                   "alla baseline e usa ancora reconcile -> settle; il Core candidate introduce "
+                   "mark_refused_pre_submit ma non e' consumato. Non esiste ancora una coppia "
+                   "coerente: portare Core main al candidate renderebbe la baseline incoerente "
+                   "per costruzione.",
+        "next_integration_required": [
+            "partire dal Core candidate approvato",
+            "aggiornare il Runtime perche' consumi mark_refused_pre_submit",
+            "aggiornare REQUIRED_CORE_SHA al nuovo Core candidate SHA",
+            "rimuovere il percorso reconcile -> settle per il caso NG-05",
+            "dimostrare atomicita' end-to-end Runtime -> Core",
+            "rieseguire NG-03, NG-05, P-B04, P-B01/P-B02, R0-R1, P2 freeze",
+            "produrre una coppia candidate Core+Runtime indivisibile per Human Review",
+        ],
+        "not_implemented_here": "questo delta e' reporting/evidence-only: l'integrazione "
+                                "coordinata NON e' iniziata.",
+    }
+
+
 # ---------------------------------------------------------------- registro dei requisiti
 # `scope`: this_phase | future_gate | other_phase. Contano per `all_requirements_verified`
 # sia `this_phase` sia `future_gate`. `declared`: stato se TUTTI i test in `evidence_tests`
@@ -126,8 +203,11 @@ REQUIREMENTS: tuple[dict, ...] = (
      "title": "NG-05 — atomicita' della terminalizzazione pre-submit",
      "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica "
              "(verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e "
-             "verificato 8/8 su branch Core dedicato, NON mergiato: Core main invariato e il Runtime resta "
-             "sul percorso conservativo a due transazioni finche' la modifica non e' approvata."},
+             "verificato 8/8 su branch Core dedicato. Human Review 01: APPROVED_PROPOSAL — "
+             "NOT_MERGE_AUTHORIZED. Il Runtime candidate resta pinnato alla baseline e usa ancora "
+             "reconcile -> settle: non esiste ancora una coppia Core+Runtime coerente, quindi portare "
+             "Core main al candidate renderebbe la baseline incoerente per costruzione. Chiusura = "
+             "delta coordinato separato, vedi `merge_readiness.next_integration_required`."},
     {"id": "REAL_AUTHORIZATION_AND_PRICING", "scope": "future_gate", "evidence_tests": ("C09",),
      "declared": REAL_PROVIDER_REQUIRED, "fallback": REAL_PROVIDER_REQUIRED,
      "title": "Authorization / pricing reali del provider",
@@ -189,8 +269,9 @@ def classify_requirements(passed_ids) -> list[dict]:
     return out
 
 
-def build(results: list[dict], suite: dict) -> dict:
-    """UNICO punto in cui nascono le due decisioni. Da `suite` si prendono SOLO fatti sui test."""
+def build(results: list[dict], suite: dict, pair_facts: dict | None = None) -> dict:
+    """UNICO punto in cui nascono le due decisioni. Da `suite` si prendono SOLO fatti sui test.
+    `pair_facts` porta i fatti osservati su Core candidate e pin, per `merge_readiness`."""
     passed = [r["id"] for r in results if r.get("status") == "PASS"]
     failed = [r["id"] for r in results if r.get("status") == "FAIL"]
     blocked = [{"id": r["id"], "reason_code": r.get("reason_code")} for r in results
@@ -255,8 +336,13 @@ def build(results: list[dict], suite: dict) -> dict:
             "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se "
                        "nessun requisito di questa fase o del Provider Boundary Gate e' aperto e tutti i "
                        "test sono PASS.",
+            "max_state_meaning": "stato di LAVORO con open gaps. NON e' un'autorizzazione al "
+                                 "merge: vedi `merge_readiness`.",
             "not_implied": NOT_IMPLIED,
         },
+        "merge_readiness": build_merge_readiness(
+            all_tests_passed=all_tests_passed, all_requirements_verified=all_requirements_verified,
+            reqs=reqs, pair_facts=pair_facts),
         "runner_exit": 0 if all_tests_passed else (2 if test_decision == TEST_SUITE_INVALID else 1),
     }
     report["runner_exit_meaning"] = {
@@ -297,6 +383,27 @@ def validate(report: dict) -> dict:
     # Nessuno stato puo' implicitamente promettere provider/produzione.
     if pr.get("max_state") not in (MAX_STATE, NOT_READY):
         raise ReportingInconsistent(f"max_state sconosciuto: {pr.get('max_state')!r}")
+    # --- merge readiness: nessuna scorciatoia verso il merge (BLOCKER 2) -----------------
+    mr = report.get("merge_readiness")
+    if not isinstance(mr, dict):
+        raise ReportingInconsistent("merge_readiness assente")
+    for k in MERGE_READINESS_KEYS:
+        if not isinstance(mr.get(k), bool):
+            raise ReportingInconsistent(f"merge_readiness.{k} assente o non booleano")
+    if mr["merge_authorized"] and not mr["core_runtime_pair_ready"]:
+        raise ReportingInconsistent(
+            "merge_authorized=true con core_runtime_pair_ready=false: coppia incoerente")
+    if mr["merge_authorized"] and not pr.get("all_requirements_verified"):
+        raise ReportingInconsistent("merge_authorized=true con requisiti aperti")
+    if mr["merge_authorized"] and mr.get("human_merge_authorization") is not True:
+        raise ReportingInconsistent("merge_authorized=true senza autorizzazione umana esplicita")
+    if mr["core_runtime_pair_ready"] and not (mr.get("runtime_consumes_core_candidate")
+                                              and mr.get("pin_points_to_core_candidate")):
+        raise ReportingInconsistent(
+            "core_runtime_pair_ready=true mentre il Runtime non consuma il Core candidate "
+            "o il pin non punta al candidate")
+    if not mr["merge_authorized"] and not mr.get("blockers"):
+        raise ReportingInconsistent("merge_authorized=false senza blockers dichiarati")
     return report
 
 
@@ -306,7 +413,7 @@ def machine_readable_gaps(report: dict) -> dict:
 
 
 def console(report: dict) -> str:
-    ts, pr = report["test_suite"], report["phase_readiness"]
+    ts, pr, mr = report["test_suite"], report["phase_readiness"], report["merge_readiness"]
     return "\n".join([
         "",
         f"A. TEST SUITE   {ts['pass']}/{ts['total']} PASS · FAIL {ts['fail_ids'] or 'nessuno'} · "
@@ -325,7 +432,14 @@ def console(report: dict) -> str:
         f"   REAL_PROVIDER_REQUIRED:   {pr['real_provider_required'] or 'nessuno'}",
         f"   CORE_CHANGE_REQUIRED:     {pr['core_change_required'] or 'nessuno'}",
         f"   di altre fasi (elencati, non imputati): {pr['open_requirements_other_phase'] or 'nessuno'}",
-        f"   stato massimo: {pr['max_state']}",
+        f"   stato massimo: {pr['max_state']}  (stato di LAVORO, non merge authorization)",
+        "",
+        f"C. MERGE READINESS   runtime_candidate_ready = {str(mr['runtime_candidate_ready']).lower()} · "
+        f"core_candidate_ready = {str(mr['core_candidate_ready']).lower()}",
+        f"   core_runtime_pair_ready = {str(mr['core_runtime_pair_ready']).lower()} · "
+        f"merge_authorized = {str(mr['merge_authorized']).lower()}",
+        f"   Core candidate: {mr['core_review_state']}",
+        f"   blockers: {mr['blockers']}",
         "",
         f"runner exit {report['runner_exit']}: {report['runner_exit_meaning']}",
     ])
@@ -358,5 +472,25 @@ def markdown(report: dict) -> list[str]:
               f"- `POLICY_DECISION_REQUIRED`: {pr['policy_decision_required'] or 'nessuno'}",
               f"- `REAL_PROVIDER_REQUIRED`: {pr['real_provider_required'] or 'nessuno'}",
               f"- `CORE_CHANGE_REQUIRED`: {pr['core_change_required'] or 'nessuno'}", "",
+              "## C. MERGE READINESS", "",
+              "| campo | valore |", "|---|---|"]
+    mr = report["merge_readiness"]
+    for k in MERGE_READINESS_KEYS:
+        lines.append(f"| `{k}` | **`{str(mr[k]).lower()}`** |")
+    lines += [f"| `core_review_state` | `{mr['core_review_state']}` |",
+              f"| `runtime_consumes_core_candidate` | `{str(mr['runtime_consumes_core_candidate']).lower()}` |",
+              f"| `pin_points_to_core_candidate` | `{str(mr['pin_points_to_core_candidate']).lower()}` |",
+              f"| `required_core_sha` | `{mr['required_core_sha']}` |",
+              f"| `core_candidate_sha` | `{mr['core_candidate_sha']}` |",
+              f"| `human_merge_authorization` | `{str(mr['human_merge_authorization']).lower()}` |",
+              "",
+              f"Blockers: {', '.join('`' + b + '`' for b in mr['blockers']) or 'nessuno'}.", "",
+              f"_{mr['meaning']}_", "",
+              "Integrazione coordinata necessaria prima di qualunque merge (NON iniziata in "
+              "questo delta):", ""]
+    lines += [f"{i}. {s}" for i, s in enumerate(mr["next_integration_required"], 1)]
+    lines += ["",
+              f"`{pr['max_state']}` e' uno stato di LAVORO con open gaps. "
+              "**Non e' un'autorizzazione al merge.**", "",
               "Nulla di quanto sopra significa " + ", ".join(NOT_IMPLIED) + ".", ""]
     return lines

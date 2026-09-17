@@ -23,7 +23,7 @@ RUNTIME INTEGRATION GATE 01 — Core /home/user/creative-os @ 740ee979300f (requ
   T11 [32mPASS[0m  provider mismatch  [VERIFIED exit=0]
        [2mfake_a RUNNING | fake_b -> ProviderMismatch submits=0 reservation intatta=fake_a/RUNNING[0m
   T12 [32mPASS[0m  budget atomicity  [VERIFIED exit=0]
-       [2mconcorrente: ['BudgetExceeded', 'OK'] impegnati=70/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70[0m
+       [2mconcorrente: ['BudgetExceeded', 'OK'] impegnati=50/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70[0m
   T13 [32mPASS[0m  invalid budget rejection  [VERIFIED exit=0]
        [2m5 valori non ammessi -> ReservationContractError, 0 submit, 0 righe[0m
   T14 [32mPASS[0m  fake mode blocks real provider  [VERIFIED exit=0]
