@@ -1,0 +1,232 @@
+{
+  "AUTHORIZATION_PRICING": {
+    "envelope_by_scope": {
+      "MOTION_B1_B4C": "ENV_LAB_MOTION_B1_B4C",
+      "T24": "ENV_T24",
+      "T25": "ENV_T25",
+      "T26": "ENV_T26",
+      "T28": "ENV_T28",
+      "T29": "ENV_T29",
+      "T30": "ENV_T30",
+      "T31": "ENV_T31",
+      "T32": "ENV_T32",
+      "T35": "ENV_T35",
+      "T36": "ENV_T36",
+      "T37": "ENV_T37",
+      "WOA": "ENV_LAB_WO",
+      "WOB": "ENV_LAB_WO",
+      "WO_A": "ENV_LAB_WO",
+      "WO_B": "ENV_LAB_WO",
+      "lab": "ENV_LAB"
+    },
+    "finding": "authority = in-code LAB constants (runtime/authorization.py); quotes issued by test/worker side; no real provider pricing, no real envelope; in same-UID mode the orchestrator can issue its own quotes on the worker store",
+    "label": "LAB_ONLY",
+    "price_table": {
+      "fake_model_free": 0,
+      "fake_model_v1": 10,
+      "fake_model_v2": 12
+    },
+    "status": "LAB_ONLY_VERIFIED"
+  },
+  "LEGACY_SPEND_PATH": {
+    "envelopes": 0,
+    "finding": "go(authorization=None) [LEGACY_LAB] submits with intent=resume on an empty operation (resume-as-start), budget_units=0, no envelope, no quote, no permit: bypasses authorization/quote/envelope/permit; reachable by any same-UID caller; ledger RESERVE row with envelope NULL",
+    "ledger": [
+      {
+        "envelope_id": null,
+        "kind": "RESERVE",
+        "units": 0
+      }
+    ],
+    "permits": 0,
+    "quotes": 0,
+    "result": {
+      "budget_units": 0,
+      "envelope_id": null,
+      "governance": "LEGACY_LAB",
+      "legacy_resume_as_start": true,
+      "permit_id": null,
+      "quote_id": null,
+      "state": "SUCCEEDED",
+      "submits": 1
+    },
+    "rows": [
+      {
+        "attempt_token": "att_ee042c6417255cbef01c71ea",
+        "budget_units": 0,
+        "envelope_id": null,
+        "job_id": "res_89a1d30652aab084_1",
+        "operation_id": "LEGACY:a",
+        "payload_digest": "16356575b61aac8064776b1341b4a937d7040f3a51a02c467adfad09f92c00d7",
+        "permit_id": null,
+        "provider": "fake",
+        "provider_account": "acct_owner",
+        "provider_job_id": "pv_89a1d306",
+        "quote_id": null,
+        "state": "SUCCEEDED",
+        "submit_intent_at": 1789634527.9457095
+      }
+    ],
+    "status": "REPRODUCED"
+  },
+  "ORPHAN_RESERVED": {
+    "due_for_reconcile": [
+      "res_6b00c13ae5c1b353_1"
+    ],
+    "finding": "RESERVED row without submit_intent_at (reservation committed, process died before mark_submitting): resume -> reserved-no-dispatch forever; new_attempt on same operation -> LIVE_OR_UNCERTAIN_ATTEMPT; recover_orphaned_submits ignores it (no intent); due_for_reconcile lists it but nothing consumes it; no lease/timeout authority exists in Core or Runtime",
+    "new_attempt_same_operation": "IntentRefused: LIVE_OR_UNCERTAIN_ATTEMPT: il tentativo res_6b00c13ae5c1b353_1 e' RESERVED: nessun nuovo submit finche' non e' concluso o riconciliato (usare RESUME)",
+    "orphan_row": [
+      {
+        "attempt_token": null,
+        "budget_units": 0,
+        "envelope_id": null,
+        "job_id": "res_6b00c13ae5c1b353_1",
+        "operation_id": "ORPH:a",
+        "payload_digest": null,
+        "permit_id": null,
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": null,
+        "state": "RESERVED",
+        "submit_intent_at": null
+      }
+    ],
+    "recover_orphaned_submits": [],
+    "reserved_units_locked": 0,
+    "resume_outcome": "EXISTING_LIVE_JOB/reserved-no-dispatch",
+    "resume_submits": 0,
+    "status": "REPRODUCED"
+  },
+  "P-B02": {
+    "finding": "store.reconcile accepts any mapping with non-empty source/remote_ref: no provider/account/job/attempt binding, no authentication, no replay protection",
+    "job_after_unrelated_reconcile": {
+      "attempt_token": "att_0f6969b7ea8e14dbc21f2e77",
+      "cost_credits": null,
+      "error": null,
+      "job_id": "res_1d0633359777e661_1",
+      "operation_id": "PB02:a",
+      "payload_digest": "b70a380e822731cc75ab0678147b90e3e1eb98881fc41c25caeae8ba47f026a2",
+      "polls": 0,
+      "provider": "fake",
+      "provider_account": "acct_owner",
+      "provider_job_id": "pv_other",
+      "quote_id": null,
+      "revision": 3,
+      "spec_key": "1d0633359777e661f56cb302d80ffb36bc56f8808d9439b077d5ca17dcfca161",
+      "state": "SUCCEEDED",
+      "submitted_at": 1789634527.8940272,
+      "terminal_by": 0.0,
+      "webhook_hints": 0
+    },
+    "job_before": {
+      "attempt_token": "att_0f6969b7ea8e14dbc21f2e77",
+      "cost_credits": null,
+      "error": null,
+      "job_id": "res_1d0633359777e661_1",
+      "operation_id": "PB02:a",
+      "payload_digest": "b70a380e822731cc75ab0678147b90e3e1eb98881fc41c25caeae8ba47f026a2",
+      "polls": 0,
+      "provider": "fake",
+      "provider_account": "acct_owner",
+      "provider_job_id": null,
+      "quote_id": null,
+      "revision": 2,
+      "spec_key": "1d0633359777e661f56cb302d80ffb36bc56f8808d9439b077d5ca17dcfca161",
+      "state": "SUBMIT_UNKNOWN",
+      "submitted_at": 1789634527.8940272,
+      "terminal_by": 0.0,
+      "webhook_hints": 0
+    },
+    "reconcile_signature": "(self, job: 'Job', state: 'JobState', evidence: 'Mapping', *, now: 'float | None' = None) -> 'Job'",
+    "runtime_callers_of_reconcile": [],
+    "second_job_after_replayed_evidence": {
+      "attempt_token": "att_262ff7459f0c1d9d2ea3c3fa",
+      "cost_credits": null,
+      "error": null,
+      "job_id": "res_bc9149dbcd204e6c_1",
+      "operation_id": "PB02:b",
+      "payload_digest": "4e2d6f24072a804e0f4437be3901ab8dd3fdd420c29a9e787357f1d5320e575f",
+      "polls": 0,
+      "provider": "fake",
+      "provider_account": "acct_owner",
+      "provider_job_id": "pv_other",
+      "quote_id": null,
+      "revision": 3,
+      "spec_key": "bc9149dbcd204e6caec11be34483989d3e1a6dcc8e13ae5129bd7f5c713008be",
+      "state": "FAILED",
+      "submitted_at": 1789634527.902679,
+      "terminal_by": 0.0,
+      "webhook_hints": 0
+    },
+    "status": "REPRODUCED"
+  },
+  "P-B04": {
+    "authorized_bytes_len": 175,
+    "authorized_bytes_persisted_under_state": [],
+    "authorized_bytes_sha256": "b596321fafc2633036305b31ad8437090bf75ec601b159d58f34812cc989d5b3",
+    "drift_case": {
+      "anomalies": [
+        {
+          "at": 1789634527.924381,
+          "detail": {
+            "authorized": "adc6dd4c68ad2825e73e0f6aabb651edd12a93b474c2942ba1a4b32a79307fde",
+            "sent": "aebdb68109cb889bdd78b8155039b8578ed28851ebccffa2915a3d3ab27e4614"
+          },
+          "job_id": "res_7741052a859c2a0d_1",
+          "kind": "PAYLOAD_DIGEST_MISMATCH",
+          "seq": 1
+        }
+      ],
+      "error": "PayloadBindingError: res_7741052a859c2a0d_1: digest inviato aebdb68109cb889b\u2026 != autorizzato adc6dd4c68ad2825\u2026: richiesta diversa da quella autorizzata",
+      "job": {
+        "attempt_token": "att_82d69bfef4634f2458962f38",
+        "cost_credits": null,
+        "error": null,
+        "job_id": "res_7741052a859c2a0d_1",
+        "operation_id": "PB04:b",
+        "payload_digest": "adc6dd4c68ad2825e73e0f6aabb651edd12a93b474c2942ba1a4b32a79307fde",
+        "polls": 0,
+        "provider": "fake",
+        "provider_account": "acct_owner",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 2,
+        "spec_key": "7741052a859c2a0df84b321ffb78706c3b02ee3f09a13748f99fc1e74abb24c4",
+        "state": "SUBMIT_UNKNOWN",
+        "submitted_at": 1789634527.9214146,
+        "terminal_by": 0.0,
+        "webhook_hints": 0
+      },
+      "transport_sent": [
+        "aebdb68109cb889bdd78b8155039b8578ed28851ebccffa2915a3d3ab27e4614"
+      ],
+      "transport_sent_count": 1
+    },
+    "finding": "only sha256 digest persisted (reservations.payload_digest); authorized bytes exist nowhere on disk; authorization set lives in MockTransport memory (same privilege domain): a drifting adapter reaches the send marker with different bytes and the mismatch is detected only AFTER the send (SUBMIT_UNKNOWN), not before",
+    "persisted_job": {
+      "attempt_token": "att_82c4ed142297c64bb715fb90",
+      "cost_credits": 4.0,
+      "error": null,
+      "job_id": "res_abb9bca7914a9896_1",
+      "operation_id": "PB04:a",
+      "payload_digest": "b596321fafc2633036305b31ad8437090bf75ec601b159d58f34812cc989d5b3",
+      "polls": 1,
+      "provider": "fake",
+      "provider_account": "acct_owner",
+      "provider_job_id": "pv_abb9bca7",
+      "quote_id": null,
+      "revision": 3,
+      "spec_key": "abb9bca7914a989635ac23db62ca05c063dc5653cf80c24d12530d259a75daf7",
+      "state": "SUCCEEDED",
+      "submitted_at": 1789634527.9168952,
+      "terminal_by": 1789634827.9168952,
+      "webhook_hints": 0
+    },
+    "status": "REPRODUCED"
+  },
+  "baseline": {
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "runtime_sha": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e"
+  }
+}

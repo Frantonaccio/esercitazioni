@@ -1,0 +1,34 @@
+{
+  "distinct_uid_all_blocked": [
+    "PASS",
+    "VERIFIED"
+  ],
+  "distinct_uid_one_bypass": [
+    "FAIL",
+    "ASSERTION_FAILED"
+  ],
+  "distinct_uid_three_of_four": [
+    "FAIL",
+    "ASSERTION_FAILED"
+  ],
+  "historic_T29": {
+    "reason_code": "BLOCKED_ENVIRONMENT",
+    "status": "BLOCKED",
+    "uids": {
+      "orchestrator_uid": 0,
+      "worker_uid": 0
+    }
+  },
+  "regression_T29_this_phase": {
+    "reason_code": "BLOCKED_ENVIRONMENT",
+    "status": "BLOCKED"
+  },
+  "same_uid_all_blocked": [
+    "BLOCKED",
+    "BLOCKED_ENVIRONMENT"
+  ],
+  "same_uid_all_bypass": [
+    "BLOCKED",
+    "BLOCKED_ENVIRONMENT"
+  ]
+}

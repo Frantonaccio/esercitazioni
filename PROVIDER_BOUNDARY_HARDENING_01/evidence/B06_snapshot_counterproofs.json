@@ -1,0 +1,548 @@
+{
+  "anomalies": [
+    {
+      "detail": {
+        "code": "SERIALIZATION_DRIFT",
+        "core_digest": "a3b1277cbdb84c8ac456ea20733f9d16d3aef0ee125e0096ec7b73af5dbc9fd5",
+        "message": "SERIALIZATION_DRIFT: digest calcolato dal Core a3b1277cbdb84c8a… != snapshot sigillato 47f3fff9d87c587b…: l'adapter ha serializzato byte diversi fra sigillo e submit",
+        "sealed_digest": "47f3fff9d87c587b9b8c660ae7ea9055a47663837e47a045ed20fc1a28c40e3e"
+      },
+      "job_id": "res_cc9bd02cee66d009_1",
+      "kind": "SNAPSHOT_REFUSED_BEFORE_SEND",
+      "seq": 1
+    },
+    {
+      "detail": {
+        "evidence": {
+          "reason": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core a3b1277cbdb84c8a… != snapshot sigillato 47f3fff9d87c587b…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato prima di autorizzare/inviare)",
+          "remote_ref": "none:not_sent",
+          "source": "TRANSPORT_ATTESTED_NOT_SENT"
+        },
+        "from": "RESERVED",
+        "to": "FAILED"
+      },
+      "job_id": "res_cc9bd02cee66d009_1",
+      "kind": "RECONCILIATION",
+      "seq": 2
+    },
+    {
+      "detail": {
+        "code": "SERIALIZATION_DRIFT",
+        "core_digest": "e70b81e46a4e6748526bf7a41e1f4cbf5c77278e3f288adee10908a1ca1cb1f7",
+        "message": "SERIALIZATION_DRIFT: digest calcolato dal Core e70b81e46a4e6748… != snapshot sigillato df7837ce53da9b6b…: l'adapter ha serializzato byte diversi fra sigillo e submit",
+        "sealed_digest": "df7837ce53da9b6be25f3146d94b6073b8e606c19e00415f95c98f041cd11ba3"
+      },
+      "job_id": "res_c48afbfa5fa62b86_1",
+      "kind": "SNAPSHOT_REFUSED_BEFORE_SEND",
+      "seq": 3
+    },
+    {
+      "detail": {
+        "evidence": {
+          "reason": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core e70b81e46a4e6748… != snapshot sigillato df7837ce53da9b6b…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato prima di autorizzare/inviare)",
+          "remote_ref": "none:not_sent",
+          "source": "TRANSPORT_ATTESTED_NOT_SENT"
+        },
+        "from": "RESERVED",
+        "to": "FAILED"
+      },
+      "job_id": "res_c48afbfa5fa62b86_1",
+      "kind": "RECONCILIATION",
+      "seq": 4
+    },
+    {
+      "detail": {
+        "authorized_digest": "aa261e03be4e856e7aa12840bdf4cd4bff5fa7dfb5c41901c9077a100ae1e2f5",
+        "error": "PayloadBindingError",
+        "message": "snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest d280cb72eb16c5ed…; nessun invio",
+        "transport_sent_count": 0
+      },
+      "job_id": "res_e2c9f4fef89eb2bd_1",
+      "kind": "REFUSED_BEFORE_SEND",
+      "seq": 5
+    },
+    {
+      "detail": {
+        "evidence": {
+          "reason": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest d280cb72eb16c5ed…; nessun invio",
+          "remote_ref": "none:not_sent",
+          "source": "TRANSPORT_ATTESTED_NOT_SENT"
+        },
+        "from": "RESERVED",
+        "to": "FAILED"
+      },
+      "job_id": "res_e2c9f4fef89eb2bd_1",
+      "kind": "RECONCILIATION",
+      "seq": 6
+    },
+    {
+      "detail": {
+        "authorized_digest": "3e594c916a12822bc12402aa0ec853f19a2029a30771e5cf2efba5da3be501df",
+        "error": "PayloadBindingError",
+        "message": "snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 65804606b7ef8132…; nessun invio",
+        "transport_sent_count": 0
+      },
+      "job_id": "res_a1685a75d39740db_1",
+      "kind": "REFUSED_BEFORE_SEND",
+      "seq": 7
+    },
+    {
+      "detail": {
+        "evidence": {
+          "reason": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 65804606b7ef8132…; nessun invio",
+          "remote_ref": "none:not_sent",
+          "source": "TRANSPORT_ATTESTED_NOT_SENT"
+        },
+        "from": "RESERVED",
+        "to": "FAILED"
+      },
+      "job_id": "res_a1685a75d39740db_1",
+      "kind": "RECONCILIATION",
+      "seq": 8
+    },
+    {
+      "detail": {
+        "authorized_digest": "0079e88930b6277945a56b002715dbaae947edf9aaea55426e0a71cf38ce6f2a",
+        "error": "PayloadBindingError",
+        "message": "snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 0079e88930b62779…; nessun invio",
+        "transport_sent_count": 0
+      },
+      "job_id": "res_ba3785337e23a7e5_1",
+      "kind": "REFUSED_BEFORE_SEND",
+      "seq": 9
+    },
+    {
+      "detail": {
+        "evidence": {
+          "reason": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 0079e88930b62779…; nessun invio",
+          "remote_ref": "none:not_sent",
+          "source": "TRANSPORT_ATTESTED_NOT_SENT"
+        },
+        "from": "RESERVED",
+        "to": "FAILED"
+      },
+      "job_id": "res_ba3785337e23a7e5_1",
+      "kind": "RECONCILIATION",
+      "seq": 10
+    },
+    {
+      "detail": {
+        "authorized_digest": "10ddc078c8d9346b66ef9177c17bfc459e570c462f00afc31a2edd7dbca5cdb4",
+        "error": "PayloadBindingError",
+        "message": "snapshot guard: DIGEST_MISMATCH: i byte persistiti di 10ddc078c8d9346b… non hanno quel digest: snapshot corrotto; nessun invio",
+        "transport_sent_count": 0
+      },
+      "job_id": "res_4508d85a29e27fcf_1",
+      "kind": "REFUSED_BEFORE_SEND",
+      "seq": 11
+    },
+    {
+      "detail": {
+        "evidence": {
+          "reason": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: DIGEST_MISMATCH: i byte persistiti di 10ddc078c8d9346b… non hanno quel digest: snapshot corrotto; nessun invio",
+          "remote_ref": "none:not_sent",
+          "source": "TRANSPORT_ATTESTED_NOT_SENT"
+        },
+        "from": "RESERVED",
+        "to": "FAILED"
+      },
+      "job_id": "res_4508d85a29e27fcf_1",
+      "kind": "RECONCILIATION",
+      "seq": 12
+    }
+  ],
+  "checks": {
+    "control_correct_adapter_succeeds": true,
+    "digest_mismatch_refused_before_send": true,
+    "drift_cases_never_bound": true,
+    "field_reorder_refused_before_send": true,
+    "nested_mutation_refused_before_send": true,
+    "no_submit_unknown_anywhere": true,
+    "pre_fix_same_case_reached_send_marker": true,
+    "serialization_drift_refused_before_send": true,
+    "snapshot_missing_refused_before_send": true,
+    "substituted_after_authorization_refused_before_send": true
+  },
+  "ledger": [
+    {
+      "cost_known": 0,
+      "job_id": "res_cc9bd02cee66d009_1",
+      "kind": "RESERVE",
+      "source": "reserve_or_get_live",
+      "units": 10
+    },
+    {
+      "cost_known": 1,
+      "job_id": "res_cc9bd02cee66d009_1",
+      "kind": "SETTLE",
+      "source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "units": 0
+    },
+    {
+      "cost_known": 0,
+      "job_id": "res_c48afbfa5fa62b86_1",
+      "kind": "RESERVE",
+      "source": "reserve_or_get_live",
+      "units": 10
+    },
+    {
+      "cost_known": 1,
+      "job_id": "res_c48afbfa5fa62b86_1",
+      "kind": "SETTLE",
+      "source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "units": 0
+    },
+    {
+      "cost_known": 0,
+      "job_id": "res_e2c9f4fef89eb2bd_1",
+      "kind": "RESERVE",
+      "source": "reserve_or_get_live",
+      "units": 10
+    },
+    {
+      "cost_known": 1,
+      "job_id": "res_e2c9f4fef89eb2bd_1",
+      "kind": "SETTLE",
+      "source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "units": 0
+    },
+    {
+      "cost_known": 0,
+      "job_id": "res_a1685a75d39740db_1",
+      "kind": "RESERVE",
+      "source": "reserve_or_get_live",
+      "units": 10
+    },
+    {
+      "cost_known": 1,
+      "job_id": "res_a1685a75d39740db_1",
+      "kind": "SETTLE",
+      "source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "units": 0
+    },
+    {
+      "cost_known": 0,
+      "job_id": "res_ba3785337e23a7e5_1",
+      "kind": "RESERVE",
+      "source": "reserve_or_get_live",
+      "units": 10
+    },
+    {
+      "cost_known": 1,
+      "job_id": "res_ba3785337e23a7e5_1",
+      "kind": "SETTLE",
+      "source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "units": 0
+    },
+    {
+      "cost_known": 0,
+      "job_id": "res_4508d85a29e27fcf_1",
+      "kind": "RESERVE",
+      "source": "reserve_or_get_live",
+      "units": 10
+    },
+    {
+      "cost_known": 1,
+      "job_id": "res_4508d85a29e27fcf_1",
+      "kind": "SETTLE",
+      "source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "units": 0
+    }
+  ],
+  "pre_fix_reference": {
+    "anomalies": [
+      {
+        "at": 1789634527.924381,
+        "detail": {
+          "authorized": "adc6dd4c68ad2825e73e0f6aabb651edd12a93b474c2942ba1a4b32a79307fde",
+          "sent": "aebdb68109cb889bdd78b8155039b8578ed28851ebccffa2915a3d3ab27e4614"
+        },
+        "job_id": "res_7741052a859c2a0d_1",
+        "kind": "PAYLOAD_DIGEST_MISMATCH",
+        "seq": 1
+      }
+    ],
+    "error": "PayloadBindingError: res_7741052a859c2a0d_1: digest inviato aebdb68109cb889b… != autorizzato adc6dd4c68ad2825…: richiesta diversa da quella autorizzata",
+    "job": {
+      "attempt_token": "att_82d69bfef4634f2458962f38",
+      "cost_credits": null,
+      "error": null,
+      "job_id": "res_7741052a859c2a0d_1",
+      "operation_id": "PB04:b",
+      "payload_digest": "adc6dd4c68ad2825e73e0f6aabb651edd12a93b474c2942ba1a4b32a79307fde",
+      "polls": 0,
+      "provider": "fake",
+      "provider_account": "acct_owner",
+      "provider_job_id": null,
+      "quote_id": null,
+      "revision": 2,
+      "spec_key": "7741052a859c2a0df84b321ffb78706c3b02ee3f09a13748f99fc1e74abb24c4",
+      "state": "SUBMIT_UNKNOWN",
+      "submitted_at": 1789634527.9214146,
+      "terminal_by": 0.0,
+      "webhook_hints": 0
+    },
+    "transport_sent": [
+      "aebdb68109cb889bdd78b8155039b8578ed28851ebccffa2915a3d3ab27e4614"
+    ],
+    "transport_sent_count": 1
+  },
+  "results": {
+    "control_ok": {
+      "job_id": "res_c48afbfa5fa62b86_2",
+      "ok": true,
+      "outcome": "SUCCEEDED",
+      "payload_snapshot": {
+        "bytes": 178,
+        "digest": "df7837ce53da9b6be25f3146d94b6073b8e606c19e00415f95c98f041cd11ba3",
+        "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb_b06.db.snapshots",
+        "opkey": "2dca6a9b715b2aebd3baebc6",
+        "persisted_mode": "0o444",
+        "sealed_at": 1789635833.363711,
+        "send_attestation": {
+          "attempt_token": "att_1ae1d1417bdec905fe3662a7",
+          "bytes": 178,
+          "digest": "df7837ce53da9b6be25f3146d94b6073b8e606c19e00415f95c98f041cd11ba3",
+          "exact_bytes_equal": true,
+          "job_id": "res_c48afbfa5fa62b86_2",
+          "opkey": "2dca6a9b715b2aebd3baebc6",
+          "schema": "payload-snapshot-send-attestation/1",
+          "verified_at": 1789635833.3689601
+        },
+        "send_verified": true
+      },
+      "persisted": {
+        "attempt_token": "att_1ae1d1417bdec905fe3662a7",
+        "cost_credits": 4.0,
+        "error": null,
+        "job_id": "res_c48afbfa5fa62b86_2",
+        "operation_id": "T32:control",
+        "payload_digest": "df7837ce53da9b6be25f3146d94b6073b8e606c19e00415f95c98f041cd11ba3",
+        "polls": 1,
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": "pv_c48afbfa",
+        "quote_id": "quote_21be41a42a1b9c26743ee03b",
+        "revision": 3,
+        "spec_key": "c48afbfa5fa62b86bdc217925212d489d59a390e9eb6b243c6d2943a63e3ddac",
+        "state": "SUCCEEDED",
+        "submitted_at": 1789635833.3695166,
+        "terminal_by": 1789636133.3695166,
+        "webhook_hints": 0
+      },
+      "pid": 3788,
+      "quote_id": "quote_21be41a42a1b9c26743ee03b",
+      "reservation_outcome": "RESERVED_NEW",
+      "resumed": false,
+      "spec_key": "c48afbfa5fa62b86bdc217925212d489d59a390e9eb6b243c6d2943a63e3ddac",
+      "state": "SUCCEEDED",
+      "submits": 1,
+      "transport_guarded": "SnapshotGuardedTransport",
+      "transport_refused": [],
+      "transport_sent": [
+        "df7837ce53da9b6be25f3146d94b6073b8e606c19e00415f95c98f041cd11ba3"
+      ],
+      "transport_sent_count": 1
+    },
+    "drift_nested": {
+      "code": "SERIALIZATION_DRIFT",
+      "error": "PayloadSnapshotError",
+      "message": "SERIALIZATION_DRIFT: digest calcolato dal Core a3b1277cbdb84c8a… != snapshot sigillato 47f3fff9d87c587b…: l'adapter ha serializzato byte diversi fra sigillo e submit",
+      "ok": false,
+      "pid": 3763,
+      "submits": 0,
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 168, in go_governed\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 345, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 124, in run_job\n    job = store.mark_submitting(job, provider=adapter.name, provider_account=account,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 170, in mark_submitting\n    self._snapshot.bind(job, kw)\nruntime.payload_snapshot.PayloadSnapshotError: SERIALIZATION_DRIFT: digest calcolato dal Core a3b1277cbdb84c8a… != snapshot sigillato 47f3fff9d87c587b…: l'adapter ha serializzato byte diversi fra sigillo e submit\n",
+      "transport_guarded": "SnapshotGuardedTransport",
+      "transport_refused": [],
+      "transport_sent": [],
+      "transport_sent_count": 0
+    },
+    "drift_top": {
+      "code": "SERIALIZATION_DRIFT",
+      "error": "PayloadSnapshotError",
+      "message": "SERIALIZATION_DRIFT: digest calcolato dal Core e70b81e46a4e6748… != snapshot sigillato df7837ce53da9b6b…: l'adapter ha serializzato byte diversi fra sigillo e submit",
+      "ok": false,
+      "pid": 3768,
+      "submits": 0,
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 168, in go_governed\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 345, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 124, in run_job\n    job = store.mark_submitting(job, provider=adapter.name, provider_account=account,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 170, in mark_submitting\n    self._snapshot.bind(job, kw)\nruntime.payload_snapshot.PayloadSnapshotError: SERIALIZATION_DRIFT: digest calcolato dal Core e70b81e46a4e6748… != snapshot sigillato df7837ce53da9b6b…: l'adapter ha serializzato byte diversi fra sigillo e submit\n",
+      "transport_guarded": "SnapshotGuardedTransport",
+      "transport_refused": [],
+      "transport_sent": [],
+      "transport_sent_count": 0
+    },
+    "reorder": {
+      "code": null,
+      "error": "PayloadBindingError",
+      "message": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest d280cb72eb16c5ed…; nessun invio",
+      "ok": false,
+      "pid": 3772,
+      "submits": 1,
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 356, in send\n    proof = b[\"ledger\"].verify_before_send(\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 246, in verify_before_send\n    proof = self.check(payload, operation_id=operation_id, provider=provider,\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 222, in check\n    seal = self._require_sealed(digest, key, operation_id, provider, provider_account)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 199, in _require_sealed\n    raise PayloadSnapshotError(\"SNAPSHOT_MISSING\", f\"nessun snapshot per il digest {digest[:16]}…\")\nruntime.payload_snapshot.PayloadSnapshotError: SNAPSHOT_MISSING: nessun snapshot per il digest d280cb72eb16c5ed…\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/user/creative-os/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 105, in submit\n    digest = self.transport.send(b\" \".join(head) + b\" \" + reordered)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 361, in send\n    raise PayloadBindingError(f\"snapshot guard: {e}; nessun invio\") from e\nadapters.base.PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest d280cb72eb16c5ed…; nessun invio\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 168, in go_governed\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 345, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 144, in run_job\n    raise PayloadBindingError(reason) from exc\nadapters.base.PayloadBindingError: rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest d280cb72eb16c5ed…; nessun invio\n",
+      "transport_guarded": "SnapshotGuardedTransport",
+      "transport_refused": [],
+      "transport_sent": [],
+      "transport_sent_count": 0
+    },
+    "snapshot_corrupt": {
+      "code": null,
+      "error": "PayloadBindingError",
+      "message": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: DIGEST_MISMATCH: i byte persistiti di 10ddc078c8d9346b… non hanno quel digest: snapshot corrotto; nessun invio",
+      "ok": false,
+      "pid": 3784,
+      "submits": 1,
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 356, in send\n    proof = b[\"ledger\"].verify_before_send(\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 246, in verify_before_send\n    proof = self.check(payload, operation_id=operation_id, provider=provider,\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 222, in check\n    seal = self._require_sealed(digest, key, operation_id, provider, provider_account)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 202, in _require_sealed\n    raise PayloadSnapshotError(\nruntime.payload_snapshot.PayloadSnapshotError: DIGEST_MISMATCH: i byte persistiti di 10ddc078c8d9346b… non hanno quel digest: snapshot corrotto\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/user/creative-os/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 141, in submit\n    digest = self.transport.send(payload)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 361, in send\n    raise PayloadBindingError(f\"snapshot guard: {e}; nessun invio\") from e\nadapters.base.PayloadBindingError: snapshot guard: DIGEST_MISMATCH: i byte persistiti di 10ddc078c8d9346b… non hanno quel digest: snapshot corrotto; nessun invio\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 168, in go_governed\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 345, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 144, in run_job\n    raise PayloadBindingError(reason) from exc\nadapters.base.PayloadBindingError: rifiutato prima dell'invio: PayloadBindingError: snapshot guard: DIGEST_MISMATCH: i byte persistiti di 10ddc078c8d9346b… non hanno quel digest: snapshot corrotto; nessun invio\n",
+      "transport_guarded": "SnapshotGuardedTransport",
+      "transport_refused": [],
+      "transport_sent": [],
+      "transport_sent_count": 0
+    },
+    "snapshot_missing": {
+      "code": null,
+      "error": "PayloadBindingError",
+      "message": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 0079e88930b62779…; nessun invio",
+      "ok": false,
+      "pid": 3780,
+      "submits": 1,
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 356, in send\n    proof = b[\"ledger\"].verify_before_send(\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 246, in verify_before_send\n    proof = self.check(payload, operation_id=operation_id, provider=provider,\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 222, in check\n    seal = self._require_sealed(digest, key, operation_id, provider, provider_account)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 199, in _require_sealed\n    raise PayloadSnapshotError(\"SNAPSHOT_MISSING\", f\"nessun snapshot per il digest {digest[:16]}…\")\nruntime.payload_snapshot.PayloadSnapshotError: SNAPSHOT_MISSING: nessun snapshot per il digest 0079e88930b62779…\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/user/creative-os/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 141, in submit\n    digest = self.transport.send(payload)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 361, in send\n    raise PayloadBindingError(f\"snapshot guard: {e}; nessun invio\") from e\nadapters.base.PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 0079e88930b62779…; nessun invio\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 168, in go_governed\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 345, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 144, in run_job\n    raise PayloadBindingError(reason) from exc\nadapters.base.PayloadBindingError: rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 0079e88930b62779…; nessun invio\n",
+      "transport_guarded": "SnapshotGuardedTransport",
+      "transport_refused": [],
+      "transport_sent": [],
+      "transport_sent_count": 0
+    },
+    "substitute": {
+      "code": null,
+      "error": "PayloadBindingError",
+      "message": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 65804606b7ef8132…; nessun invio",
+      "ok": false,
+      "pid": 3776,
+      "submits": 1,
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 356, in send\n    proof = b[\"ledger\"].verify_before_send(\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 246, in verify_before_send\n    proof = self.check(payload, operation_id=operation_id, provider=provider,\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 222, in check\n    seal = self._require_sealed(digest, key, operation_id, provider, provider_account)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 199, in _require_sealed\n    raise PayloadSnapshotError(\"SNAPSHOT_MISSING\", f\"nessun snapshot per il digest {digest[:16]}…\")\nruntime.payload_snapshot.PayloadSnapshotError: SNAPSHOT_MISSING: nessun snapshot per il digest 65804606b7ef8132…\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/user/creative-os/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 119, in submit\n    digest = self.transport.send(other)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py\", line 361, in send\n    raise PayloadBindingError(f\"snapshot guard: {e}; nessun invio\") from e\nadapters.base.PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 65804606b7ef8132…; nessun invio\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 168, in go_governed\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 345, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 144, in run_job\n    raise PayloadBindingError(reason) from exc\nadapters.base.PayloadBindingError: rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 65804606b7ef8132…; nessun invio\n",
+      "transport_guarded": "SnapshotGuardedTransport",
+      "transport_refused": [],
+      "transport_sent": [],
+      "transport_sent_count": 0
+    }
+  },
+  "rows": [
+    {
+      "attempt_token": null,
+      "budget_units": 10,
+      "envelope_id": "ENV_T32",
+      "error": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core a3b1277cbdb84c8a… != snapshot sigillato 47f3fff9d87c587b…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato prima di autorizzare/inviare)",
+      "job_id": "res_cc9bd02cee66d009_1",
+      "operation_id": "T32:nested",
+      "payload_digest": null,
+      "permit_id": "permit_cdd2154f4a26c170b44df3f6",
+      "provider": "",
+      "provider_account": "",
+      "provider_job_id": null,
+      "quote_id": "quote_8e499365928043eb97321c7e",
+      "revision": 1,
+      "settled_units": 0,
+      "settlement_source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "spec_key": "cc9bd02cee66d0098007b2093bb89e7160545a00d6d1a117cd7cc18857fe4930",
+      "state": "FAILED",
+      "submit_intent_at": null
+    },
+    {
+      "attempt_token": null,
+      "budget_units": 10,
+      "envelope_id": "ENV_T32",
+      "error": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core e70b81e46a4e6748… != snapshot sigillato df7837ce53da9b6b…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato prima di autorizzare/inviare)",
+      "job_id": "res_c48afbfa5fa62b86_1",
+      "operation_id": "T32:drift",
+      "payload_digest": null,
+      "permit_id": "permit_b462ef5f34d7a96732ee04bb",
+      "provider": "",
+      "provider_account": "",
+      "provider_job_id": null,
+      "quote_id": "quote_d16da65b18aa2f8d6918cb52",
+      "revision": 1,
+      "settled_units": 0,
+      "settlement_source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "spec_key": "c48afbfa5fa62b86bdc217925212d489d59a390e9eb6b243c6d2943a63e3ddac",
+      "state": "FAILED",
+      "submit_intent_at": null
+    },
+    {
+      "attempt_token": "att_35698417df98792f38881b7d",
+      "budget_units": 10,
+      "envelope_id": "ENV_T32",
+      "error": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest d280cb72eb16c5ed…; nessun invio",
+      "job_id": "res_e2c9f4fef89eb2bd_1",
+      "operation_id": "T32:reorder",
+      "payload_digest": "aa261e03be4e856e7aa12840bdf4cd4bff5fa7dfb5c41901c9077a100ae1e2f5",
+      "permit_id": "permit_31108a0e0f6a1d2359fd20a6",
+      "provider": "fake",
+      "provider_account": "fake_acct_a",
+      "provider_job_id": null,
+      "quote_id": "quote_eeebafdc4330fa7fe28fe790",
+      "revision": 2,
+      "settled_units": 0,
+      "settlement_source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "spec_key": "e2c9f4fef89eb2bd321f88c981f0ac6bbe3d0b93f2bd031a12fb6d6d33266812",
+      "state": "FAILED",
+      "submit_intent_at": 1789635832.8823876
+    },
+    {
+      "attempt_token": "att_3e5f618964c60413d301e209",
+      "budget_units": 10,
+      "envelope_id": "ENV_T32",
+      "error": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 65804606b7ef8132…; nessun invio",
+      "job_id": "res_a1685a75d39740db_1",
+      "operation_id": "T32:subst",
+      "payload_digest": "3e594c916a12822bc12402aa0ec853f19a2029a30771e5cf2efba5da3be501df",
+      "permit_id": "permit_355df8a0ae7cd58acd74c5ca",
+      "provider": "fake",
+      "provider_account": "fake_acct_a",
+      "provider_job_id": null,
+      "quote_id": "quote_5f21f3f2aa9f9a49e1d641db",
+      "revision": 2,
+      "settled_units": 0,
+      "settlement_source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "spec_key": "a1685a75d39740dbba107cbfbcf9f4d529754b959fb217a23e0b7291494daf58",
+      "state": "FAILED",
+      "submit_intent_at": 1789635833.004511
+    },
+    {
+      "attempt_token": "att_e87ada7246b93fb18246b4bc",
+      "budget_units": 10,
+      "envelope_id": "ENV_T32",
+      "error": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 0079e88930b62779…; nessun invio",
+      "job_id": "res_ba3785337e23a7e5_1",
+      "operation_id": "T32:missing",
+      "payload_digest": "0079e88930b6277945a56b002715dbaae947edf9aaea55426e0a71cf38ce6f2a",
+      "permit_id": "permit_8992d08c1ee927484d1eb3e2",
+      "provider": "fake",
+      "provider_account": "fake_acct_a",
+      "provider_job_id": null,
+      "quote_id": "quote_9366ffb9f899b9d0eaeb8a2c",
+      "revision": 2,
+      "settled_units": 0,
+      "settlement_source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "spec_key": "ba3785337e23a7e542c76a07e10f11321500e686f3faf4a25b73f30e01703b29",
+      "state": "FAILED",
+      "submit_intent_at": 1789635833.1161804
+    },
+    {
+      "attempt_token": "att_3aa2a96cfce7c1f2b3e0f330",
+      "budget_units": 10,
+      "envelope_id": "ENV_T32",
+      "error": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: DIGEST_MISMATCH: i byte persistiti di 10ddc078c8d9346b… non hanno quel digest: snapshot corrotto; nessun invio",
+      "job_id": "res_4508d85a29e27fcf_1",
+      "operation_id": "T32:corrupt",
+      "payload_digest": "10ddc078c8d9346b66ef9177c17bfc459e570c462f00afc31a2edd7dbca5cdb4",
+      "permit_id": "permit_14e22dc792b6521d021a4377",
+      "provider": "fake",
+      "provider_account": "fake_acct_a",
+      "provider_job_id": null,
+      "quote_id": "quote_2e6adb6615b881866f4e9e47",
+      "revision": 2,
+      "settled_units": 0,
+      "settlement_source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "spec_key": "4508d85a29e27fcfc6bb225620d75d1ce9a952e820912d0c1ebaac2a8df3e3b7",
+      "state": "FAILED",
+      "submit_intent_at": 1789635833.238847
+    }
+  ]
+}

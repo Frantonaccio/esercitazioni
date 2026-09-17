@@ -1,0 +1,28 @@
+# LEGACY SPEND PATH INVENTORY — ricerca reale (testo + AST) dei percorsi che possono produrre submit/spend
+
+Fonte: `evidence/B07_legacy_spend_paths.json["static"]` (hit per file: `run_job(`, `.submit(`, `subprocess.*`, `higgsfield`,
+`go_candidate.go(`, `reserve_or_get_live(`, `.reconcile(`) + verifica dinamica B07. Target: nessun percorso spendibile
+deve poter bypassare il percorso governato (pin → intent → operation → envelope derivato → quote fidata → permit →
+reservation atomica → snapshot exact-byte → send).
+
+| # | Entry point | File / funzione | Puo' raggiungere provider/spender? | Passa dal governed path? | Stato |
+|---|---|---|---|---|---|
+| 1 | `go(..., authorization=<LabAuthorization>)` | `runtime/go_candidate.py:go` | si' (FakeAdapter; provider reale → `REAL_PROVIDER_DISABLED`) | **SI'**: e' il governed path | GOVERNED (unico percorso ammesso a regime) |
+| 2 | `go(..., authorization=None)` — LEGACY_LAB | `runtime/go_candidate.py:go` (budget/envelope_units grezzi, resume-as-start) | si' (FakeAdapter) | **NO**: bypassa envelope derivato, quote, permit su prima spesa (riprodotto pre-fix) | **BLOCKED_PROVIDER_GATE**: reso chiudibile fail-closed da `provider_gate.LEGACY_LAB_SPEND_PATH` / env `CREATIVE_OS_LEGACY_LAB_SPEND_PATH=disabled` (verificato B07: rifiuto `LEGACY_SPEND_PATH_DISABLED` PRIMA di import Core e store). Non eliminato in questa fase: usato dai test storici T01-T27. Da chiudere (costante = `"DISABLED"`) come precondizione del Provider Boundary Gate. |
+| 3 | `Batch.run_job` → `go` (governato, `operation_namespace` obbligatorio) | `runtime/hf_batch_runtime.py:Batch.run_job` | si' (via #1) | SI' | GOVERNED |
+| 4 | `Batch.run_job` → `go` con `authorization=None` | `runtime/hf_batch_runtime.py:Batch.run_job` | si' (via #2) | NO | **BLOCKED_PROVIDER_GATE** (stesso interruttore di #2; B07: con interruttore chiuso 0 submit, `LEGACY_SPEND_PATH_DISABLED`; aperto: marcato `LEGACY_LAB` + `legacy_resume_as_start`) |
+| 5 | `python3 hf_batch_runtime.py <spec> go` (`__main__`, adapter=None) | `runtime/hf_batch_runtime.py:__main__` → `Batch.require` | no: senza lock si ferma (`NO LOCK`); con lock stubbato `go` rifiuta `adapter=None` (`REAL_PROVIDER_DISABLED`) | n/a | FAIL-CLOSED (B07) |
+| 6 | `Batch.lock` / `Batch.quote` (CLI provider reale nell'originale) | `runtime/hf_batch_runtime.py` | no: prima istruzione `_real_cli()` → `REAL_PROVIDER_DISABLED` (T19 statico + T22 + B07) | n/a | FAIL-CLOSED |
+| 7 | `worker.run_go` / `worker.store_call` (helper di test) | `RUNTIME_INTEGRATION_GATE_01/tests/worker.py` | si' in-process (FakeAdapter); `store_call` invoca QUALUNQUE metodo dello store (reserve, reconcile, settle) | `run_go` via #1/#2; `store_call` NO (dispatch diretto sullo store) | TEST-ONLY. Con P-B01 l'orchestrator (UID distinto) NON puo' aprire lo store dello spender: `direct_dispatch_on_worker_store` e `issue_quote_on_worker_store` BLOCKED (B01). Resta un percorso same-UID: **BLOCKED_PROVIDER_GATE** (mai in un processo con credenziali reali). |
+| 8 | `boundary_mock.worker_main` (mock storico, stesso UID) | `tests/boundary_mock.py` | si' (governato) | SI' | GOVERNED, ma confine non dimostrato (T29 BLOCKED_ENVIRONMENT, per policy) |
+| 9 | `spender_daemon.py` (P-B01, UID distinto, SO_PEERCRED) | `PROVIDER_BOUNDARY_HARDENING_01/pbgate/spender_daemon.py` | si' (governato, unico detentore del segreto) | SI' | GOVERNED + confine LAB verificato (B01) |
+| 10 | Core `transport.pipeline.run_job` / `adapter.submit` diretti | `creative-os/transport/pipeline.py`, `adapters/fake.py` | si': primitive del Core, invocabili da qualunque codice con il Core in `sys.path` e un adapter | NO (pin, intent, authorization sono del Runtime) | **BLOCKED_PROVIDER_GATE**: strutturale. Mitigazione P-B01: solo il processo spender possiede l'adapter/segreto; senza segreto una `run_job` diretta spende solo sul proprio store con il proprio conto fittizio (`own_store_dispatch`, B01). Per un provider reale: adapter costruibile SOLO nello spender. |
+| 11 | `store.reconcile` diretto (evidenza arbitraria) | `creative-os/registry/reservations.py:reconcile` | non spende, ma LIBERA l'identita' della spec (nuovo attempt possibile) | NO | Runtime: unico chiamante `runtime/reconciliation.py` (autenticato, B04). Il percorso raw del Core resta permissivo (B04 `raw_core_reconcile_still_permissive`): **BLOCKED_PROVIDER_GATE** per chi ha accesso in scrittura allo store (fuori threat model del Core, dichiarato). |
+| 12 | P2 `hf_batch.py` frozen (`subprocess higgsfield generate create`) | `p2_handoff/…/P2_RUNTIME/hf_batch.py`, `LAB/hf_batch_ORIGINAL.py` | **si', provider REALE via CLI** (se eseguito con CLI e credenziali) | NO | **FROZEN / FUORI RUNTIME**: SHA `637f3a80…` invariato; non importato ne' eseguito dal runtime (B07 `p2_frozen_not_imported_by_runtime`); T21 lo carica read-only per confrontare `prompt`/`media`. Migrazione retroattiva vietata dal mandato. |
+| 13 | Strumenti MCP Higgsfield disponibili alla sessione Claude Code | (ambiente della sessione, non repository) | si', provider reale | NO | NON usati in questa fase (0 chiamate). Non sono un percorso del runtime; annotati per completezza. |
+
+Sintesi: il solo percorso spendibile governato e' #1 (e #3/#9 che lo consumano). I percorsi #2/#4 sono ora chiudibili con un
+interruttore verificato; #7/#10/#11 sono percorsi same-UID/Core-primitive che il confine P-B01 rende irraggiungibili
+dall'orchestrator ma che restano aperti a chi condivide il dominio dello spender: tutti `BLOCKED_PROVIDER_GATE`, da
+chiudere prima del Provider Boundary Gate (precondizioni: `LEGACY_LAB_SPEND_PATH="DISABLED"`, test storici migrati al
+governato, adapter reale costruibile solo nello spender).

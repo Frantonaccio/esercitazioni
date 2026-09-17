@@ -25,6 +25,12 @@
                                      (OperationConflict) e un'operazione incerta con spec diversa
                                      (OperationBusy): cambiare run/modello/spec senza operation_id
                                      non e' possibile, perche' senza operation_id non si parte.
+      1b. LEGACY SPEND PATH       -> authorization=None (LEGACY_LAB) e' ammesso SOLO se
+                                     provider_gate.LEGACY_LAB_SPEND_PATH lo consente
+                                     (LEGACY_SPEND_PATH_DISABLED altrimenti, prima di ogni effetto)
+      7c. SNAPSHOT (P-B04)        -> byte canonici del payload persistiti write-once e sigillati
+                                     (runtime/payload_snapshot.py); a mark_submitting legati
+                                     all'attempt; riverificati byte per byte prima del send
       7. AUTORIZZAZIONE (CR-02)   -> percorso GOVERNATO (authorization dato): envelope DERIVATO dallo
                                      scope dell'operazione (un envelope presentato viene solo
                                      validato); importo DERIVATO da una quote fidata (quote_id),
@@ -62,7 +68,10 @@ from typing import Any
 from runtime.authorization import AuthorizationRefused, LabAuthorization
 from runtime.core_pin import REQUIRED_CORE_SHA, require_core_verdict
 from runtime.genspec_bridge import GoInputs, build_genspec
-from runtime.provider_gate import require_fake_adapter, require_fake_mode
+from runtime.payload_snapshot import (PayloadSnapshotError, SnapshotBinding, SnapshotLedger,
+                                      install_snapshot_guard, ledger_dir_for)
+from runtime.provider_gate import (require_fake_adapter, require_fake_mode,
+                                   require_legacy_lab_spend_path)
 
 GATE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATE_DIR = os.path.join(GATE_ROOT, "state")
@@ -110,6 +119,9 @@ class GoResult:
     # accade SOLO nel percorso LEGACY_LAB (compatibilita' T01-T23/P2) ed e' marcato qui;
     # nel percorso GOVERNED e' un rifiuto fail-closed (NO_EXISTING_ATTEMPT), mai un avvio.
     legacy_resume_as_start: bool = False
+    # P-B04: snapshot exact-byte del payload autorizzato (sigillo + attestazione pre-send), se
+    # questa chiamata ha raggiunto il trasporto. None su resume/EXISTING_LIVE_JOB.
+    payload_snapshot: dict | None = None
 
     @property
     def outcome(self) -> str:
@@ -128,19 +140,56 @@ class GoResult:
 
 
 class ReservationObserver:
-    """Proxy sullo store del Core. Registra l'esito deciso dal Core, delega tutto."""
+    """Proxy sullo store del Core. Registra l'esito deciso dal Core, delega tutto.
+
+    P-B04 (PROVIDER / EXECUTION BOUNDARY HARDENING): a `mark_submitting` — l'istante in cui
+    il Core persiste chi tenta cosa, PRIMA di autorizzare i byte e PRIMA del marcatore di
+    invio — il proxy verifica che il digest calcolato dal Core coincida con lo snapshot
+    exact-byte sigillato dal runtime, lega lo snapshot all'attempt (job_id + attempt_token,
+    write-once) e arma il guard del trasporto per QUESTO thread. Una deriva qui e' un
+    rifiuto PRIMA di qualunque effetto esterno: l'attempt viene chiuso come
+    rifiutato-prima-dell'invio (settlement 0 attestato) tramite il percorso esplicito del
+    Core (`mark_refused_before_send`), cosi' il rifiuto non lascia una RESERVED orfana."""
 
     def __init__(self, inner):
         self._inner = inner
+        self._snapshot = None
         self.last_outcome = None
+
+    def attach_snapshot(self, binding: SnapshotBinding) -> None:
+        self._snapshot = binding
 
     def reserve_or_get_live(self, spec, **kw):
         outcome, job = self._inner.reserve_or_get_live(spec, **kw)
         self.last_outcome = outcome
         return outcome, job
 
+    def mark_submitting(self, job, **kw):
+        if self._snapshot is not None:
+            try:
+                self._snapshot.bind(job, kw)
+            except PayloadSnapshotError as e:
+                now = kw.get("now")
+                reason = f"snapshot guard: {e} (rifiutato prima di autorizzare/inviare)"
+                self._inner.record_anomaly(job.job_id, "SNAPSHOT_REFUSED_BEFORE_SEND",
+                                           {"code": e.code, "message": str(e),
+                                            "core_digest": kw.get("payload_digest"),
+                                            "sealed_digest": self._snapshot.digest}, now)
+                self._inner.mark_refused_before_send(job, reason, now)
+                raise
+        return self._inner.mark_submitting(job, **kw)
+
     def __getattr__(self, name):
         return getattr(self._inner, name)
+
+
+def _snapshot_report(seal: dict, proof: dict | None, ledger: SnapshotLedger) -> dict:
+    """Evidenza P-B04 riferita dal runtime: sigillo + (se l'invio e' avvenuto) attestazione pre-send."""
+    return {"ledger_dir": ledger.root, "digest": seal["digest"], "bytes": seal["bytes"],
+            "sealed_at": seal.get("sealed_at"), "opkey": seal.get("opkey"),
+            "send_verified": proof is not None,
+            "send_attestation": (proof or {}).get("send_attestation"),
+            "persisted_mode": (proof or {}).get("persisted_mode")}
 
 
 def _ensure_core_on_path(core_path: str) -> None:
@@ -165,6 +214,11 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
     if not isinstance(operation_id, str) or not operation_id.strip():
         raise IntentRefused("OPERATION_ID_REQUIRED",
                             "operation_id obbligatorio per ogni operazione (RESUME e NEW_ATTEMPT)")
+    # 1b) LEGACY SPEND PATH: il percorso LEGACY_LAB (authorization=None) e' chiudibile
+    #     fail-closed (provider_gate.LEGACY_LAB_SPEND_PATH). Verificato PRIMA di pin, import,
+    #     store: se chiuso, nessun effetto di alcun tipo (LEGACY_SPEND_PATH_DISABLED).
+    if authorization is None:
+        require_legacy_lab_spend_path()
     # 2) CORE PIN: il Core non autorizzato non viene nemmeno importato.
     verdict = require_core_verdict(core_path, required_core_sha)
     core_sha = verdict.observed
@@ -184,7 +238,8 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
     if not store_path.startswith(STATE_DIR + os.sep):
         raise ValueError(f"store fuori da state/: {store_path}")
     os.makedirs(os.path.dirname(store_path), exist_ok=True)
-    store = ReservationObserver(SqliteReservationStore(store_path))
+    observer = ReservationObserver(SqliteReservationStore(store_path))
+    store = observer
     # 6) INTENTO sull'OPERAZIONE (RV03 + CR-01). Il Core dice qual e' l'ultimo
     #    tentativo di QUESTA operazione, qualunque spec avesse.
     latest = store.find_latest_by_operation(operation_id)
@@ -271,6 +326,20 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
     #     e LEGATO all'operazione; e' il Core a consumarlo nella prenotazione.
     if intent == INTENT_NEW_ATTEMPT and used_permit is None:
         used_permit = store.issue_permit(spec.spec_key, reason, operation_id=operation_id)
+    # 7c) P-B04: SNAPSHOT EXACT-BYTE. I byte che il trasporto inviera' (adapter.serialize:
+    #     la stessa funzione che il Core chiama in run_job) sono persistiti write-once,
+    #     content-addressed, sigillati per operazione/spec/provider/conto. A mark_submitting
+    #     il proxy lega lo snapshot all'attempt; immediatamente prima del send il guard del
+    #     trasporto rilegge i byte persistiti e li confronta byte per byte (vedi
+    #     runtime/payload_snapshot.py). Qualunque scarto -> rifiuto PRIMA del marcatore.
+    provider_account = str(getattr(adapter, "account_id", "") or "")
+    ledger = SnapshotLedger(ledger_dir_for(store_path))
+    seal = ledger.seal(adapter.serialize(spec), operation_id=operation_id, spec_key=spec.spec_key,
+                       provider=adapter.name, provider_account=provider_account, now=clock())
+    guard = install_snapshot_guard(adapter)
+    observer.attach_snapshot(SnapshotBinding(ledger, guard, operation_id=operation_id,
+                                             provider=adapter.name, provider_account=provider_account,
+                                             digest=seal["digest"], clock=clock))
     # 8) Il Core fa tutto: prenotazione atomica (operazione, permesso, quote,
     #    envelope), submit, poll, persistenza.
     job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,
@@ -288,4 +357,5 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
         operation_id=persisted.operation_id, core_pin=core_pin, governance=governance,
         envelope_id=envelope_id, quote_id=persisted.quote_id, budget_units=budget_units,
         resumed=False, requested_spec_key=spec.spec_key,
-        legacy_resume_as_start=legacy_resume_as_start)
+        legacy_resume_as_start=legacy_resume_as_start,
+        payload_snapshot=_snapshot_report(seal, guard.last_proof, ledger))

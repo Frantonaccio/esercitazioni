@@ -1,0 +1,1007 @@
+diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py b/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py
+index 5d4464a..7783694 100644
+--- a/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py
++++ b/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py
+@@ -25,6 +25,12 @@
+                                      (OperationConflict) e un'operazione incerta con spec diversa
+                                      (OperationBusy): cambiare run/modello/spec senza operation_id
+                                      non e' possibile, perche' senza operation_id non si parte.
++      1b. LEGACY SPEND PATH       -> authorization=None (LEGACY_LAB) e' ammesso SOLO se
++                                     provider_gate.LEGACY_LAB_SPEND_PATH lo consente
++                                     (LEGACY_SPEND_PATH_DISABLED altrimenti, prima di ogni effetto)
++      7c. SNAPSHOT (P-B04)        -> byte canonici del payload persistiti write-once e sigillati
++                                     (runtime/payload_snapshot.py); a mark_submitting legati
++                                     all'attempt; riverificati byte per byte prima del send
+       7. AUTORIZZAZIONE (CR-02)   -> percorso GOVERNATO (authorization dato): envelope DERIVATO dallo
+                                      scope dell'operazione (un envelope presentato viene solo
+                                      validato); importo DERIVATO da una quote fidata (quote_id),
+@@ -62,7 +68,10 @@ from typing import Any
+ from runtime.authorization import AuthorizationRefused, LabAuthorization
+ from runtime.core_pin import REQUIRED_CORE_SHA, require_core_verdict
+ from runtime.genspec_bridge import GoInputs, build_genspec
+-from runtime.provider_gate import require_fake_adapter, require_fake_mode
++from runtime.payload_snapshot import (PayloadSnapshotError, SnapshotBinding, SnapshotLedger,
++                                      install_snapshot_guard, ledger_dir_for)
++from runtime.provider_gate import (require_fake_adapter, require_fake_mode,
++                                   require_legacy_lab_spend_path)
+ 
+ GATE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ STATE_DIR = os.path.join(GATE_ROOT, "state")
+@@ -110,6 +119,9 @@ class GoResult:
+     # accade SOLO nel percorso LEGACY_LAB (compatibilita' T01-T23/P2) ed e' marcato qui;
+     # nel percorso GOVERNED e' un rifiuto fail-closed (NO_EXISTING_ATTEMPT), mai un avvio.
+     legacy_resume_as_start: bool = False
++    # P-B04: snapshot exact-byte del payload autorizzato (sigillo + attestazione pre-send), se
++    # questa chiamata ha raggiunto il trasporto. None su resume/EXISTING_LIVE_JOB.
++    payload_snapshot: dict | None = None
+ 
+     @property
+     def outcome(self) -> str:
+@@ -128,21 +140,58 @@ class GoResult:
+ 
+ 
+ class ReservationObserver:
+-    """Proxy sullo store del Core. Registra l'esito deciso dal Core, delega tutto."""
++    """Proxy sullo store del Core. Registra l'esito deciso dal Core, delega tutto.
++
++    P-B04 (PROVIDER / EXECUTION BOUNDARY HARDENING): a `mark_submitting` — l'istante in cui
++    il Core persiste chi tenta cosa, PRIMA di autorizzare i byte e PRIMA del marcatore di
++    invio — il proxy verifica che il digest calcolato dal Core coincida con lo snapshot
++    exact-byte sigillato dal runtime, lega lo snapshot all'attempt (job_id + attempt_token,
++    write-once) e arma il guard del trasporto per QUESTO thread. Una deriva qui e' un
++    rifiuto PRIMA di qualunque effetto esterno: l'attempt viene chiuso come
++    rifiutato-prima-dell'invio (settlement 0 attestato) tramite il percorso esplicito del
++    Core (`mark_refused_before_send`), cosi' il rifiuto non lascia una RESERVED orfana."""
+ 
+     def __init__(self, inner):
+         self._inner = inner
++        self._snapshot = None
+         self.last_outcome = None
+ 
++    def attach_snapshot(self, binding: SnapshotBinding) -> None:
++        self._snapshot = binding
++
+     def reserve_or_get_live(self, spec, **kw):
+         outcome, job = self._inner.reserve_or_get_live(spec, **kw)
+         self.last_outcome = outcome
+         return outcome, job
+ 
++    def mark_submitting(self, job, **kw):
++        if self._snapshot is not None:
++            try:
++                self._snapshot.bind(job, kw)
++            except PayloadSnapshotError as e:
++                now = kw.get("now")
++                reason = f"snapshot guard: {e} (rifiutato prima di autorizzare/inviare)"
++                self._inner.record_anomaly(job.job_id, "SNAPSHOT_REFUSED_BEFORE_SEND",
++                                           {"code": e.code, "message": str(e),
++                                            "core_digest": kw.get("payload_digest"),
++                                            "sealed_digest": self._snapshot.digest}, now)
++                self._inner.mark_refused_before_send(job, reason, now)
++                raise
++        return self._inner.mark_submitting(job, **kw)
++
+     def __getattr__(self, name):
+         return getattr(self._inner, name)
+ 
+ 
++def _snapshot_report(seal: dict, proof: dict | None, ledger: SnapshotLedger) -> dict:
++    """Evidenza P-B04 riferita dal runtime: sigillo + (se l'invio e' avvenuto) attestazione pre-send."""
++    return {"ledger_dir": ledger.root, "digest": seal["digest"], "bytes": seal["bytes"],
++            "sealed_at": seal.get("sealed_at"), "opkey": seal.get("opkey"),
++            "send_verified": proof is not None,
++            "send_attestation": (proof or {}).get("send_attestation"),
++            "persisted_mode": (proof or {}).get("persisted_mode")}
++
++
+ def _ensure_core_on_path(core_path: str) -> None:
+     if core_path not in sys.path:
+         sys.path.insert(0, core_path)
+@@ -165,6 +214,11 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
+     if not isinstance(operation_id, str) or not operation_id.strip():
+         raise IntentRefused("OPERATION_ID_REQUIRED",
+                             "operation_id obbligatorio per ogni operazione (RESUME e NEW_ATTEMPT)")
++    # 1b) LEGACY SPEND PATH: il percorso LEGACY_LAB (authorization=None) e' chiudibile
++    #     fail-closed (provider_gate.LEGACY_LAB_SPEND_PATH). Verificato PRIMA di pin, import,
++    #     store: se chiuso, nessun effetto di alcun tipo (LEGACY_SPEND_PATH_DISABLED).
++    if authorization is None:
++        require_legacy_lab_spend_path()
+     # 2) CORE PIN: il Core non autorizzato non viene nemmeno importato.
+     verdict = require_core_verdict(core_path, required_core_sha)
+     core_sha = verdict.observed
+@@ -184,7 +238,8 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
+     if not store_path.startswith(STATE_DIR + os.sep):
+         raise ValueError(f"store fuori da state/: {store_path}")
+     os.makedirs(os.path.dirname(store_path), exist_ok=True)
+-    store = ReservationObserver(SqliteReservationStore(store_path))
++    observer = ReservationObserver(SqliteReservationStore(store_path))
++    store = observer
+     # 6) INTENTO sull'OPERAZIONE (RV03 + CR-01). Il Core dice qual e' l'ultimo
+     #    tentativo di QUESTA operazione, qualunque spec avesse.
+     latest = store.find_latest_by_operation(operation_id)
+@@ -271,6 +326,20 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
+     #     e LEGATO all'operazione; e' il Core a consumarlo nella prenotazione.
+     if intent == INTENT_NEW_ATTEMPT and used_permit is None:
+         used_permit = store.issue_permit(spec.spec_key, reason, operation_id=operation_id)
++    # 7c) P-B04: SNAPSHOT EXACT-BYTE. I byte che il trasporto inviera' (adapter.serialize:
++    #     la stessa funzione che il Core chiama in run_job) sono persistiti write-once,
++    #     content-addressed, sigillati per operazione/spec/provider/conto. A mark_submitting
++    #     il proxy lega lo snapshot all'attempt; immediatamente prima del send il guard del
++    #     trasporto rilegge i byte persistiti e li confronta byte per byte (vedi
++    #     runtime/payload_snapshot.py). Qualunque scarto -> rifiuto PRIMA del marcatore.
++    provider_account = str(getattr(adapter, "account_id", "") or "")
++    ledger = SnapshotLedger(ledger_dir_for(store_path))
++    seal = ledger.seal(adapter.serialize(spec), operation_id=operation_id, spec_key=spec.spec_key,
++                       provider=adapter.name, provider_account=provider_account, now=clock())
++    guard = install_snapshot_guard(adapter)
++    observer.attach_snapshot(SnapshotBinding(ledger, guard, operation_id=operation_id,
++                                             provider=adapter.name, provider_account=provider_account,
++                                             digest=seal["digest"], clock=clock))
+     # 8) Il Core fa tutto: prenotazione atomica (operazione, permesso, quote,
+     #    envelope), submit, poll, persistenza.
+     job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,
+@@ -288,4 +357,5 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
+         operation_id=persisted.operation_id, core_pin=core_pin, governance=governance,
+         envelope_id=envelope_id, quote_id=persisted.quote_id, budget_units=budget_units,
+         resumed=False, requested_spec_key=spec.spec_key,
+-        legacy_resume_as_start=legacy_resume_as_start)
++        legacy_resume_as_start=legacy_resume_as_start,
++        payload_snapshot=_snapshot_report(seal, guard.last_proof, ledger))
+diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/orphan_lease.py b/RUNTIME_INTEGRATION_GATE_01/runtime/orphan_lease.py
+new file mode 100644
+index 0000000..b1a4397
+--- /dev/null
++++ b/RUNTIME_INTEGRATION_GATE_01/runtime/orphan_lease.py
+@@ -0,0 +1,84 @@
++"""ORPHAN RESERVED LEASE — classificazione read-only. NESSUNA policy di reclaim, NESSUN dispatch.
++
++Riproduzione (evidence/pre_fix/reproduction_baseline.json["ORPHAN_RESERVED"]): una riga
++RESERVED committata da `reserve_or_get_live` il cui processo muore PRIMA di
++`mark_submitting` non ha intento di submit persistito (provider '', attempt_token
++NULL, payload_digest NULL, submit_intent_at NULL). Da quel momento:
++
++    resume                        -> EXISTING_LIVE_JOB/reserved-no-dispatch (per sempre)
++    new_attempt (stessa operazione) -> LIVE_OR_UNCERTAIN_ATTEMPT (per sempre)
++    recover_orphaned_submits      -> la ignora (agisce SOLO su RESERVED con intento)
++    due_for_reconcile             -> la elenca; nessun consumatore la porta altrove
++    reserved_units                -> il budget resta impegnato
++
++STATI formalizzati (derivati dai campi che il Core espone su `Job`; `submit_intent_at`
++non e' in `Job`, ma `mark_submitting` scrive nella STESSA transazione provider,
++provider_account, payload_digest, attempt_token e submit_intent_at: i primi quattro
++sono quindi il segnale equivalente):
++
++    RESERVED_NO_INTENT    RESERVED, nessun provider/token/digest: NESSUN invio e' avvenuto
++                          attraverso il percorso governato (il Core persiste l'intento PRIMA
++                          di autorizzare i byte e PRIMA del marcatore di invio: RV02/RV05).
++                          E' l'orfana di questo gap.
++    RESERVED_WITH_INTENT  RESERVED con intento: dominio di `recover_orphaned_submits`
++                          (-> SUBMIT_UNKNOWN, riconciliazione richiesta). NON e' questo gap.
++    NOT_RESERVED          qualunque altro stato.
++
++OWNERSHIP: una RESERVED_NO_INTENT ha `operation_id` (e quote/permit consumati nella
++transazione di prenotazione) ma NESSUNA identita' di attempt (nessun token): non e'
++distinguibile, dai soli dati persistiti, da una prenotazione VIVA fatta da un altro
++processo un istante fa che sta per chiamare `mark_submitting`. L'unico
++discriminante e' il TEMPO (`submitted_at` = istante della prenotazione), e una
++finestra di lease non e' definita da nessuna parte (ne' Core ne' Runtime).
++
++PERCHE' NON C'E' UNA RECLAIM QUI: una reclaim corretta e' possibile (RESERVED -> FAILED
++con settlement 0 tramite il percorso esplicito del Core, protetta dal CAS sulla
++revisione: se `mark_submitting` vince la corsa la reclaim ottiene StaleWrite; se
++vince la reclaim, `mark_submitting` ottiene StaleWrite PRIMA di autorizzare/inviare)
++ma richiede una LEASE AUTHORITY: chi fissa la finestra, chi puo' invocarla, con
++quale evidenza. Questa e' una decisione umana, non del gate. Finche' non esiste:
++STILL_OPEN. Qui si classifica e si riferisce, non si decide. Vedi ORPHAN_LEASE.md.
++
++ZERO BLIND RETRY: qualunque futura reclaim NON crea un nuovo attempt: la spesa
++successiva resta intent="new_attempt" + reason + quote + permit + autorizzazione.
++"""
++from __future__ import annotations
++
++RESERVED_NO_INTENT = "RESERVED_NO_INTENT"
++RESERVED_WITH_INTENT = "RESERVED_WITH_INTENT"
++NOT_RESERVED = "NOT_RESERVED"
++RECLAIM_POLICY = "NOT_AUTHORIZED"       # nessuna reclaim implementata: decisione umana pendente
++
++
++def classify_attempt(job, now: float) -> dict:
++    """Classificazione pura di un Job del Core. Nessun I/O, nessuna scrittura."""
++    state = job.state.value
++    if state != "RESERVED":
++        cls = NOT_RESERVED
++    elif job.provider or job.attempt_token or job.payload_digest:
++        cls = RESERVED_WITH_INTENT
++    else:
++        cls = RESERVED_NO_INTENT
++    return {"job_id": job.job_id, "operation_id": job.operation_id, "state": state, "class": cls,
++            "provider": job.provider, "attempt_token": job.attempt_token,
++            "payload_digest": job.payload_digest, "reserved_at": job.submitted_at,
++            "age_s": (now - job.submitted_at) if job.submitted_at else None,
++            "exits_available": _exits(cls), "reclaim_policy": RECLAIM_POLICY}
++
++
++def _exits(cls: str) -> list[str]:
++    if cls == RESERVED_WITH_INTENT:
++        return ["recover_orphaned_submits -> SUBMIT_UNKNOWN", "reconcile (autenticata) -> stato scoperto"]
++    if cls == RESERVED_NO_INTENT:
++        return []           # nessuna uscita esistente: e' il gap
++    return ["n/a"]
++
++
++def inventory(store, operation_ids, now: float) -> list[dict]:
++    """Ultimo attempt di ogni operazione data, classificato. Solo letture del Protocol."""
++    out = []
++    for op in operation_ids:
++        latest = store.find_latest_by_operation(op)
++        if latest is not None:
++            out.append(classify_attempt(latest, now))
++    return out
+diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py b/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py
+new file mode 100644
+index 0000000..8952af2
+--- /dev/null
++++ b/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py
+@@ -0,0 +1,420 @@
++"""P-B04 — SNAPSHOT EXACT-BYTE, IMMUTABILE E VERIFICABILE del payload autorizzato (LAB).
++
++Cosa il Core gia' garantisce (RV02, transport/pipeline.run_job + adapters/fake.MockTransport):
++il digest dei byte che il trasporto inviera' e' persistito PRIMA del submit
++(`reservations.payload_digest`) e il trasporto fittizio rifiuta ogni digest non
++autorizzato prima del marcatore di invio.
++
++Cosa mancava (riprodotto pre-fix, evidence/pre_fix/reproduction_baseline.json["P-B04"]):
++  - i BYTE autorizzati non esistono su disco: solo il loro sha256;
++  - l'insieme dei digest autorizzati vive in memoria nel trasporto, nello stesso
++    dominio di privilegio dell'adapter: un adapter che deriva puo' autorizzare da
++    solo un secondo digest e RAGGIUNGERE il marcatore di invio con byte diversi;
++    il mismatch e' rilevato solo DOPO l'invio (SUBMIT_UNKNOWN);
++  - nessuna verifica su evidenza persistita immediatamente prima del send;
++  - nessuna verifica in reconciliation/audit.
++
++Questo modulo aggiunge, SOLO nel Runtime e senza toccare il Core:
++
++  SnapshotLedger          ledger WRITE-ONCE su filesystem (O_EXCL, mode 0444,
++                          content-addressed: il nome del file E' il digest):
++                            <digest>.bin                          byte canonici esatti
++                            <digest>__<opkey>.seal.json           sigillo: operation/spec/provider/conto
++                            <digest>__<opkey>__<attempt_token>.bind.json binding all'attempt (job_id + token)
++                            <digest>__<opkey>__<attempt_token>.send.json attestazione pre-send (monouso)
++                          (bind/send sono chiavati sull'attempt_token, casuale per attempt e
++                          persistito dal Core nella riga del job: un ledger residuo di un run
++                          precedente non puo' collidere con un attempt nuovo)
++                          Nessun file viene mai aggiornato o cancellato da questo
++                          modulo: un secondo `open(O_EXCL)` sullo stesso nome fallisce.
++
++  SnapshotGuardedTransport
++                          avvolge il trasporto dell'adapter (MockTransport): il
++                          marcatore di invio resta nel trasporto interno; PRIMA di
++                          delegargli `send(payload)` rilegge i byte persistiti e
++                          pretende: byte identici (confronto byte per byte, non solo
++                          digest), digest del file == digest atteso, sigillo per QUESTA
++                          operazione/provider/conto, binding a QUESTO attempt
++                          (job_id + attempt_token registrati a mark_submitting),
++                          attestazione non ancora emessa. Qualunque scarto ->
++                          PayloadBindingError del Core PRIMA del marcatore: run_job
++                          lo tratta come REFUSED_BEFORE_SEND (costo attestato 0).
++
++L'immutabilita' e' del ledger (write-once + content-addressed + verifica a ogni
++lettura), non una convenzione del chiamante. Il ledger sta accanto allo store
++(`<store_path>.snapshots/`), quindi con P-B01 vive nel dominio dello spender.
++
++Questo modulo NON importa il Core a livello di modulo: l'unica classe del Core
++che usa (`adapters.base.PayloadBindingError`) e' importata lazily, dopo il pin.
++"""
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import threading
++import time
++
++SNAPSHOT_DIR_SUFFIX = ".snapshots"
++SEAL_SCHEMA = "payload-snapshot-seal/1"
++BIND_SCHEMA = "payload-snapshot-bind/1"
++SEND_SCHEMA = "payload-snapshot-send-attestation/1"
++_SEAL_KEYS = ("digest", "bytes", "operation_id", "spec_key", "provider", "provider_account")
++
++
++class PayloadSnapshotError(RuntimeError):
++    """Lo snapshot non prova che i byte da inviare siano quelli autorizzati. Nessun invio."""
++
++    def __init__(self, code: str, message: str):
++        self.code = code
++        super().__init__(f"{code}: {message}")
++
++
++def ledger_dir_for(store_path: str) -> str:
++    return os.path.abspath(store_path) + SNAPSHOT_DIR_SUFFIX
++
++
++def sha256_hex(data: bytes) -> str:
++    return hashlib.sha256(data).hexdigest()
++
++
++def opkey(operation_id: str, provider: str, provider_account: str) -> str:
++    """Chiave del contesto di autorizzazione: operazione + provider + conto."""
++    raw = json.dumps([operation_id, provider, provider_account], separators=(",", ":"),
++                     ensure_ascii=False).encode("utf-8")
++    return hashlib.sha256(raw).hexdigest()[:24]
++
++
++def _write_once(path: str, data: bytes) -> None:
++    """Crea il file SOLO se non esiste (O_EXCL) e lo lascia in sola lettura (0444)."""
++    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o444)
++    try:
++        os.write(fd, data)
++        os.fsync(fd)
++    finally:
++        os.close(fd)
++    os.chmod(path, 0o444)
++
++
++def _read(path: str) -> bytes:
++    with open(path, "rb") as fh:
++        return fh.read()
++
++
++def _read_json(path: str) -> dict:
++    return json.loads(_read(path).decode("utf-8"))
++
++
++def _require_str(name: str, value) -> str:
++    if not isinstance(value, str) or not value:
++        raise PayloadSnapshotError("BINDING_FIELD_REQUIRED", f"{name} obbligatorio (stringa non vuota)")
++    return value
++
++
++class SnapshotLedger:
++    """Ledger write-once dei payload autorizzati. Nessun UPDATE, nessun DELETE."""
++
++    def __init__(self, root: str):
++        self.root = os.path.abspath(root)
++        os.makedirs(self.root, mode=0o700, exist_ok=True)
++
++    # ------------------------------------------------------------ path
++    def bin_path(self, digest: str) -> str:
++        return os.path.join(self.root, f"{digest}.bin")
++
++    def seal_path(self, digest: str, key: str) -> str:
++        return os.path.join(self.root, f"{digest}__{key}.seal.json")
++
++    def bind_path(self, digest: str, key: str, attempt_token: str) -> str:
++        return os.path.join(self.root, f"{digest}__{key}__{attempt_token}.bind.json")
++
++    def send_path(self, digest: str, key: str, attempt_token: str) -> str:
++        return os.path.join(self.root, f"{digest}__{key}__{attempt_token}.send.json")
++
++    # ------------------------------------------------------------ seal
++    def seal(self, payload: bytes, *, operation_id: str, spec_key: str, provider: str,
++             provider_account: str, now: float | None = None) -> dict:
++        """Persiste i byte esatti (content-addressed) e il sigillo per il contesto di
++        autorizzazione. Idempotente sullo stesso (byte, contesto); un sigillo gia'
++        esistente con campi diversi e' un conflitto, mai una sovrascrittura."""
++        if not isinstance(payload, (bytes, bytearray)) or not payload:
++            raise PayloadSnapshotError("EMPTY_PAYLOAD", "nessun byte da sigillare")
++        payload = bytes(payload)
++        for n, v in (("operation_id", operation_id), ("spec_key", spec_key),
++                     ("provider", provider), ("provider_account", provider_account)):
++            _require_str(n, v)
++        digest = sha256_hex(payload)
++        key = opkey(operation_id, provider, provider_account)
++        bin_path = self.bin_path(digest)
++        try:
++            _write_once(bin_path, payload)
++        except FileExistsError:
++            pass
++        persisted = _read(bin_path)
++        if persisted != payload:
++            raise PayloadSnapshotError(
++                "DIGEST_COLLISION", f"il file {digest[:16]}….bin contiene byte diversi dal payload")
++        seal = {"schema": SEAL_SCHEMA, "digest": digest, "bytes": len(payload),
++                "operation_id": operation_id, "spec_key": spec_key, "provider": provider,
++                "provider_account": provider_account, "opkey": key,
++                "sealed_at": time.time() if now is None else now}
++        seal_path = self.seal_path(digest, key)
++        try:
++            _write_once(seal_path, json.dumps(seal, sort_keys=True, ensure_ascii=False).encode("utf-8"))
++        except FileExistsError:
++            prev = _read_json(seal_path)
++            if {k: prev.get(k) for k in _SEAL_KEYS} != {k: seal[k] for k in _SEAL_KEYS}:
++                raise PayloadSnapshotError(
++                    "SEAL_CONFLICT", f"sigillo gia' esistente per {digest[:16]}… con campi diversi")
++            return prev
++        return seal
++
++    # ------------------------------------------------------------ bind
++    def bind_attempt(self, *, digest: str, operation_id: str, provider: str, provider_account: str,
++                     job_id: str, attempt_token: str, now: float | None = None) -> dict:
++        """Lega lo snapshot sigillato a UN attempt (job_id + attempt_token). Write-once:
++        un attempt gia' legato non si rilega (ATTEMPT_ALREADY_BOUND)."""
++        for n, v in (("digest", digest), ("operation_id", operation_id), ("provider", provider),
++                     ("provider_account", provider_account), ("job_id", job_id),
++                     ("attempt_token", attempt_token)):
++            _require_str(n, v)
++        key = opkey(operation_id, provider, provider_account)
++        self._require_sealed(digest, key, operation_id, provider, provider_account)
++        bind = {"schema": BIND_SCHEMA, "digest": digest, "opkey": key, "operation_id": operation_id,
++                "provider": provider, "provider_account": provider_account, "job_id": job_id,
++                "attempt_token": attempt_token, "bound_at": time.time() if now is None else now}
++        try:
++            _write_once(self.bind_path(digest, key, attempt_token),
++                        json.dumps(bind, sort_keys=True, ensure_ascii=False).encode("utf-8"))
++        except FileExistsError:
++            raise PayloadSnapshotError(
++                "ATTEMPT_ALREADY_BOUND", f"l'attempt {job_id}/{attempt_token[:12]}… e' gia' legato a uno snapshot")
++        return bind
++
++    # ------------------------------------------------------------ verify
++    def _require_sealed(self, digest: str, key: str, operation_id: str, provider: str,
++                        provider_account: str) -> dict:
++        bin_path = self.bin_path(digest)
++        if not os.path.isfile(bin_path):
++            raise PayloadSnapshotError("SNAPSHOT_MISSING", f"nessun snapshot per il digest {digest[:16]}…")
++        persisted = _read(bin_path)
++        if sha256_hex(persisted) != digest:
++            raise PayloadSnapshotError(
++                "DIGEST_MISMATCH", f"i byte persistiti di {digest[:16]}… non hanno quel digest: snapshot corrotto")
++        seal_path = self.seal_path(digest, key)
++        if not os.path.isfile(seal_path):
++            raise PayloadSnapshotError(
++                "SEAL_MISSING", f"snapshot {digest[:16]}… non sigillato per operazione {operation_id!r} "
++                                f"/ provider {provider!r} / conto {provider_account!r}")
++        seal = _read_json(seal_path)
++        if (seal.get("digest"), seal.get("operation_id"), seal.get("provider"),
++                seal.get("provider_account"), seal.get("bytes")) != (digest, operation_id, provider,
++                                                                     provider_account, len(persisted)):
++            raise PayloadSnapshotError("SEAL_BINDING_MISMATCH", "il sigillo non descrive questo snapshot")
++        return seal
++
++    def check(self, payload: bytes, *, operation_id: str, provider: str, provider_account: str,
++              job_id: str, attempt_token: str) -> dict:
++        """Tutte le verifiche, nessuna scrittura. Solleva PayloadSnapshotError al primo scarto."""
++        payload = bytes(payload)
++        digest = sha256_hex(payload)
++        key = opkey(operation_id, provider, provider_account)
++        seal = self._require_sealed(digest, key, operation_id, provider, provider_account)
++        persisted = _read(self.bin_path(digest))
++        if persisted != payload:
++            raise PayloadSnapshotError(
++                "EXACT_BYTES_MISMATCH", f"i byte da inviare non sono quelli persistiti per {digest[:16]}…")
++        _require_str("attempt_token", attempt_token)
++        bind_path = self.bind_path(digest, key, attempt_token)
++        if not os.path.isfile(bind_path):
++            raise PayloadSnapshotError(
++                "ATTEMPT_NOT_BOUND", f"snapshot {digest[:16]}… non legato all'attempt {job_id}/{attempt_token[:12]}…")
++        bind = _read_json(bind_path)
++        if bind.get("attempt_token") != attempt_token or bind.get("digest") != digest \
++                or bind.get("job_id") != job_id:
++            raise PayloadSnapshotError(
++                "ATTEMPT_TOKEN_MISMATCH", f"binding di {job_id} riferito a un altro attempt/token")
++        mode = os.stat(self.bin_path(digest)).st_mode & 0o777
++        return {"digest": digest, "bytes": len(payload), "opkey": key, "seal": seal, "bind": bind,
++                "persisted_mode": oct(mode), "exact_bytes_equal": True,
++                "digest_recomputed_on_persisted": True}
++
++    def verify_before_send(self, payload: bytes, *, operation_id: str, provider: str,
++                           provider_account: str, job_id: str, attempt_token: str,
++                           now: float | None = None) -> dict:
++        """Verifica immediatamente prima dell'invio + attestazione write-once (una per attempt)."""
++        proof = self.check(payload, operation_id=operation_id, provider=provider,
++                           provider_account=provider_account, job_id=job_id, attempt_token=attempt_token)
++        att = {"schema": SEND_SCHEMA, "digest": proof["digest"], "opkey": proof["opkey"], "job_id": job_id,
++               "attempt_token": attempt_token, "bytes": proof["bytes"],
++               "verified_at": time.time() if now is None else now, "exact_bytes_equal": True}
++        try:
++            _write_once(self.send_path(proof["digest"], proof["opkey"], attempt_token),
++                        json.dumps(att, sort_keys=True, ensure_ascii=False).encode("utf-8"))
++        except FileExistsError:
++            raise PayloadSnapshotError(
++                "SEND_ALREADY_ATTESTED", f"l'attempt {job_id} ha gia' un'attestazione di invio: "
++                                        f"un secondo invio dello stesso attempt non e' autorizzato")
++        proof["send_attestation"] = att
++        return proof
++
++    def audit(self, *, digest: str, operation_id: str, provider: str, provider_account: str,
++              job_id: str, attempt_token: str | None) -> dict:
++        """Audit (reconciliation / evidenza): lo snapshot bound a questo attempt esiste,
++        e' integro e sigillato per questo contesto? Nessuna scrittura, nessuna eccezione."""
++        problems: list[str] = []
++        out = {"digest": digest, "job_id": job_id, "ok": False, "problems": problems,
++               "send_attested": False}
++        try:
++            for n, v in (("digest", digest), ("operation_id", operation_id), ("provider", provider),
++                         ("provider_account", provider_account), ("job_id", job_id)):
++                _require_str(n, v)
++            key = opkey(operation_id, provider, provider_account)
++            self._require_sealed(digest, key, operation_id, provider, provider_account)
++            persisted = _read(self.bin_path(digest))
++            if not isinstance(attempt_token, str) or not attempt_token:
++                problems.append("ATTEMPT_TOKEN_REQUIRED")
++            else:
++                bind_path = self.bind_path(digest, key, attempt_token)
++                if not os.path.isfile(bind_path):
++                    problems.append("ATTEMPT_NOT_BOUND")
++                else:
++                    bind = _read_json(bind_path)
++                    if bind.get("job_id") != job_id or bind.get("digest") != digest:
++                        problems.append("ATTEMPT_TOKEN_MISMATCH")
++                out["send_attested"] = os.path.isfile(self.send_path(digest, key, attempt_token))
++            out["bytes"] = len(persisted)
++        except PayloadSnapshotError as e:
++            problems.append(e.code)
++        out["ok"] = not problems
++        return out
++
++    def listing(self) -> list[str]:
++        return sorted(os.listdir(self.root))
++
++
++class SnapshotGuardedTransport:
++    """Avvolge il trasporto fittizio. Il marcatore di invio resta nel trasporto interno;
++    qui si verifica lo snapshot persistito PRIMA di delegare `send`.
++
++    Il contesto atteso (ledger + binding dell'attempt) e' THREAD-LOCAL: viene fissato
++    da ReservationObserver.mark_submitting nello stesso thread che poi fa il submit
++    (hf_batch_runtime esegue i job in thread paralleli sullo stesso adapter)."""
++
++    def __init__(self, transport):
++        self._transport = transport
++        self._ctx = threading.local()
++
++    # ---- attributi/proprieta' che il Core e i test leggono sul trasporto ----
++    @property
++    def inner(self):
++        return self._transport
++
++    @property
++    def sent_count(self) -> int:
++        return self._transport.sent_count
++
++    @property
++    def sent(self):
++        return self._transport.sent
++
++    @property
++    def authorized(self):
++        return self._transport.authorized
++
++    @property
++    def refused(self):
++        return self._transport.refused
++
++    def authorize(self, digest: str) -> None:
++        self._transport.authorize(digest)
++
++    # ---- contesto per-attempt ---------------------------------------------
++    def expect(self, *, ledger: SnapshotLedger, operation_id: str, provider: str,
++               provider_account: str, job_id: str, attempt_token: str, digest: str, clock) -> None:
++        self._ctx.binding = {"ledger": ledger, "operation_id": operation_id, "provider": provider,
++                             "provider_account": provider_account, "job_id": job_id,
++                             "attempt_token": attempt_token, "digest": digest, "clock": clock}
++        self._ctx.last_proof = None
++
++    def clear(self) -> None:
++        self._ctx.binding = None
++
++    @property
++    def last_proof(self):
++        return getattr(self._ctx, "last_proof", None)
++
++    # ---- il guard ---------------------------------------------------------
++    def send(self, payload: bytes) -> str:
++        from adapters.base import PayloadBindingError            # noqa: WPS433  (dopo il pin)
++        b = getattr(self._ctx, "binding", None)
++        try:
++            if b is None:
++                raise PayloadBindingError(
++                    "snapshot guard: nessun attempt legato in questo thread (SNAPSHOT_MISSING): nessun invio")
++            try:
++                proof = b["ledger"].verify_before_send(
++                    payload, operation_id=b["operation_id"], provider=b["provider"],
++                    provider_account=b["provider_account"], job_id=b["job_id"],
++                    attempt_token=b["attempt_token"], now=b["clock"]())
++            except PayloadSnapshotError as e:
++                raise PayloadBindingError(f"snapshot guard: {e}; nessun invio") from e
++            if proof["digest"] != b["digest"]:
++                raise PayloadBindingError(
++                    f"snapshot guard: digest {proof['digest'][:16]}… != autorizzato {b['digest'][:16]}…")
++            self._ctx.last_proof = proof
++            return self._transport.send(payload)                  # <-- marcatore di invio (Core)
++        finally:
++            self._ctx.binding = None
++
++
++_INSTALL_LOCK = threading.Lock()
++
++
++def install_snapshot_guard(adapter) -> SnapshotGuardedTransport:
++    """Avvolge una sola volta il trasporto dell'adapter (idempotente, thread-safe:
++    hf_batch_runtime condivide un adapter fra thread paralleli)."""
++    with _INSTALL_LOCK:
++        t = getattr(adapter, "transport", None)
++        if t is None:
++            raise PayloadSnapshotError("TRANSPORT_REQUIRED", "l'adapter non espone un trasporto da vincolare")
++        if isinstance(t, SnapshotGuardedTransport):
++            return t
++        guard = SnapshotGuardedTransport(t)
++        adapter.transport = guard
++        return guard
++
++
++class SnapshotBinding:
++    """Contesto P-B04 di UNA chiamata `go`: ledger, guard, identita' dell'adapter, digest sigillato.
++    `bind(job, kw)` viene invocato dal proxy dello store a `mark_submitting` (kw = gli argomenti
++    che il Core sta per persistire): verifica che il Core abbia calcolato lo STESSO digest
++    sigillato dal runtime, lega lo snapshot all'attempt e arma il guard nel thread corrente."""
++
++    def __init__(self, ledger: SnapshotLedger, guard: SnapshotGuardedTransport, *, operation_id: str,
++                 provider: str, provider_account: str, digest: str, clock):
++        self.ledger, self.guard = ledger, guard
++        self.operation_id, self.provider, self.provider_account = operation_id, provider, provider_account
++        self.digest, self.clock = digest, clock
++        self.bound: dict | None = None
++
++    def bind(self, job, kw: dict) -> dict:
++        core_digest = kw.get("payload_digest")
++        if core_digest != self.digest:
++            raise PayloadSnapshotError(
++                "SERIALIZATION_DRIFT",
++                f"digest calcolato dal Core {str(core_digest)[:16]}… != snapshot sigillato "
++                f"{self.digest[:16]}…: l'adapter ha serializzato byte diversi fra sigillo e submit")
++        if kw.get("provider") != self.provider or kw.get("provider_account") != self.provider_account:
++            raise PayloadSnapshotError(
++                "IDENTITY_DRIFT", f"ownership {kw.get('provider')}/{kw.get('provider_account')} != "
++                                  f"sigillo {self.provider}/{self.provider_account}")
++        token = kw.get("attempt_token")
++        self.bound = self.ledger.bind_attempt(
++            digest=self.digest, operation_id=self.operation_id, provider=self.provider,
++            provider_account=self.provider_account, job_id=job.job_id, attempt_token=token,
++            now=kw.get("now"))
++        self.guard.expect(ledger=self.ledger, operation_id=self.operation_id, provider=self.provider,
++                          provider_account=self.provider_account, job_id=job.job_id,
++                          attempt_token=token, digest=self.digest, clock=self.clock)
++        return self.bound
+diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py b/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py
+index d7f875d..12f9957 100644
+--- a/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py
++++ b/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py
+@@ -15,6 +15,8 @@ e sulla classe dell'adapter. Nessun fallback: un provider sconosciuto non
+ """
+ from __future__ import annotations
+ 
++import os
++
+ ALLOWED_PROVIDER_MODE = "fake"
+ 
+ # Nomi di provider che questo gate deve rifiutare esplicitamente. La lista e'
+@@ -57,3 +59,54 @@ def require_fake_adapter(adapter, fake_adapter_cls) -> None:
+     name = str(getattr(adapter, "name", ""))
+     if not name.startswith("fake"):
+         raise RealProviderDisabled(f"adapter.name:{name}")
++
++
++# ---------------------------------------------------------------------------
++# LEGACY SPEND PATH (PROVIDER / EXECUTION BOUNDARY HARDENING, 2026-09-17).
++#
++# `go(..., authorization=None)` e' il percorso LEGACY_LAB: budget/envelope_units
++# grezzi, nessuna quote, nessun envelope derivato, resume-as-start. Aggira
++# authorization/quote/envelope/permit ed e' riprodotto come percorso spendibile
++# (evidence/pre_fix/reproduction_baseline.json["LEGACY_SPEND_PATH"]). Oggi e'
++# raggiungibile SOLO con FakeAdapter (REAL_PROVIDER_DISABLED su tutto il resto) ed
++# e' usato dai test storici T01-T27: NON e' eliminabile in questa fase
++# (BLOCKED_PROVIDER_GATE). Questo interruttore lo rende chiudibile in modo
++# esplicito, verificato e fail-closed, PRIMA di qualunque effetto:
++#
++#   LEGACY_LAB_SPEND_PATH = "ENABLED_LAB_ONLY"   (stato attuale, LAB)
++#   LEGACY_LAB_SPEND_PATH = "DISABLED"           (Provider Boundary Gate: obbligatorio)
++#
++# L'ambiente puo' solo CHIUDERE (CREATIVE_OS_LEGACY_LAB_SPEND_PATH=disabled), mai
++# riaprire un percorso chiuso in codice.
++# ---------------------------------------------------------------------------
++LEGACY_LAB_SPEND_PATH = "ENABLED_LAB_ONLY"
++LEGACY_SPEND_PATH_ENV = "CREATIVE_OS_LEGACY_LAB_SPEND_PATH"
++
++
++class LegacySpendPathDisabled(RuntimeError):
++    """Il percorso LEGACY_LAB e' chiuso: solo il percorso governato puo' spendere."""
++
++    code = "LEGACY_SPEND_PATH_DISABLED"
++
++    def __init__(self, state: str):
++        self.state = state
++        super().__init__(
++            f"{self.code}: percorso LEGACY_LAB (authorization=None) chiuso ({state}); "
++            "solo il percorso governato (envelope derivato + quote fidata + permit) puo' spendere. "
++            "Nessuna reservation, nessun permit, nessun submit.")
++
++
++def legacy_spend_path_state() -> str:
++    if LEGACY_LAB_SPEND_PATH != "ENABLED_LAB_ONLY":
++        return "DISABLED"
++    if str(os.environ.get(LEGACY_SPEND_PATH_ENV, "")).strip().lower() == "disabled":
++        return "DISABLED"
++    return "ENABLED_LAB_ONLY"
++
++
++def require_legacy_lab_spend_path() -> str:
++    """Chiamata da `go()` quando authorization is None, PRIMA di pin/import/store."""
++    state = legacy_spend_path_state()
++    if state != "ENABLED_LAB_ONLY":
++        raise LegacySpendPathDisabled(state)
++    return state
+diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/reconciliation.py b/RUNTIME_INTEGRATION_GATE_01/runtime/reconciliation.py
+new file mode 100644
+index 0000000..69dfd20
+--- /dev/null
++++ b/RUNTIME_INTEGRATION_GATE_01/runtime/reconciliation.py
+@@ -0,0 +1,235 @@
++"""P-B02 — RECONCILIATION AUTENTICATA E LEGATA ALL'IDENTITA' (Runtime, LAB).
++
++Cosa il Core offre (registry/reservations.SqliteReservationStore.reconcile, CR-05):
++un percorso ESPLICITO che porta RESERVED/SUBMIT_UNKNOWN a uno stato scoperto da
++un'evidenza, registrata come anomalia 'RECONCILIATION'. L'unica precondizione
++del Core e' che l'evidenza abbia `source` e `remote_ref` non vuoti.
++
++Cosa mancava (riprodotto pre-fix, evidence/pre_fix/reproduction_baseline.json["P-B02"]):
++una evidenza qualunque, di chiunque, che nomina un altro provider, un altro
++conto, un altro job remoto e un altro token viene accettata; la stessa evidenza
++riproposta su un altro job di un'altra operazione viene accettata di nuovo.
++
++Questo modulo NON cambia il Core: mette DAVANTI a `store.reconcile` un
++verificatore fail-closed. La riconciliazione avviene solo se:
++
++  1. il REPORT e' ben formato e AUTENTICATO: HMAC-SHA256 sui campi canonici con
++     una chiave derivata dal segreto dello spender per (provider, conto). E' l'
++     equivalente LAB di "risposta autenticata del provider": chi non ha il segreto
++     dello spender non puo' produrre un report valido (l'orchestrator non lo ha);
++  2. il job esiste nello store AUTOREVOLE ed e' in uno stato riconciliabile
++     (RESERVED con intento di submit persistito, oppure SUBMIT_UNKNOWN);
++  3. l'ADAPTER che riconcilia e' il proprietario del job (provider + conto: la
++     stessa regola di transport.pipeline._check_ownership);
++  4. il report e' LEGATO al job persistito: provider, provider_account,
++     provider_job_id (se noto), attempt_token, payload_digest, operation_id,
++     job_id — TUTTI devono coincidere;
++  5. (P-B04) lo snapshot exact-byte legato a quell'attempt esiste ed e' integro;
++  6. il NONCE del report non e' mai stato consumato: claim write-once (O_EXCL)
++     nella directory `<store_path>.reconciliation/` — un replay fallisce anche se
++     tutto il resto e' valido;
++  7. lo stato di destinazione e' uno stato che un provider puo' riferire.
++
++Solo allora si chiama `store.reconcile(job, state, evidence)`: e' il Core a
++validare la transizione (RECONCILIATION_TRANSITIONS), il CAS sulla revisione e a
++registrare l'evidenza. Ogni rifiuto e' `ReconciliationRefused(code)` PRIMA di
++qualunque scrittura sul journal.
++
++Questo e' un hardening LAB: la chiave e la firma sono un equivalente
++verificabile dell'interlocutore autenticato, NON una verifica contro un provider
++reale. Nessun claim di "real provider reconciliation".
++"""
++from __future__ import annotations
++
++import hashlib
++import hmac
++import json
++import os
++import secrets
++import time
++
++REPORT_SCHEMA = "lab-provider-status-report/1"
++REPORT_FIELDS = ("schema", "provider", "provider_account", "provider_job_id", "attempt_token",
++                 "payload_digest", "operation_id", "job_id", "state", "remote_ref", "nonce", "issued_at")
++RECONCILABLE_STATES = ("RESERVED", "SUBMIT_UNKNOWN")
++REPORTABLE_STATES = ("SUBMITTED", "RUNNING", "SUCCEEDED", "FAILED", "TIMEOUT")
++EVIDENCE_SOURCE = "LAB_AUTHENTICATED_PROVIDER_REPORT"
++NONCE_DIR_SUFFIX = ".reconciliation"
++_KEY_CONTEXT = b"vf-reconciliation-report-key/1"
++
++
++class ReconciliationRefused(RuntimeError):
++    """Il report non prova nulla su QUESTO job: nessuna transizione, journal intatto."""
++
++    def __init__(self, code: str, message: str):
++        self.code = code
++        super().__init__(f"{code}: {message}")
++
++
++def nonce_dir_for(store_path: str) -> str:
++    return os.path.abspath(store_path) + NONCE_DIR_SUFFIX
++
++
++def derive_report_key(secret: str | bytes, provider: str, provider_account: str) -> bytes:
++    """Chiave di autenticazione dei report, derivata dal segreto dello spender per
++    (provider, conto). Il segreto non lascia mai lo spender; la chiave nemmeno."""
++    if isinstance(secret, str):
++        secret = secret.encode("utf-8")
++    if not secret or not provider or not provider_account:
++        raise ReconciliationRefused("KEY_CONTEXT_REQUIRED", "segreto, provider e conto obbligatori")
++    msg = _KEY_CONTEXT + b"|" + provider.encode("utf-8") + b"|" + provider_account.encode("utf-8")
++    return hmac.new(secret, msg, hashlib.sha256).digest()
++
++
++def canonical_report_bytes(fields: dict) -> bytes:
++    body = {k: fields.get(k) for k in REPORT_FIELDS}
++    return json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
++
++
++def sign_report(key: bytes, fields: dict) -> dict:
++    report = {k: fields.get(k) for k in REPORT_FIELDS}
++    report["signature"] = hmac.new(key, canonical_report_bytes(report), hashlib.sha256).hexdigest()
++    return report
++
++
++def verify_report_signature(key: bytes, report: dict) -> bool:
++    sig = report.get("signature")
++    if not isinstance(sig, str) or not sig:
++        return False
++    expected = hmac.new(key, canonical_report_bytes(report), hashlib.sha256).hexdigest()
++    return hmac.compare_digest(sig, expected)
++
++
++class LabProviderStatusAuthority:
++    """Equivalente LAB dell'endpoint di stato autenticato del provider, per UN conto.
++    Vive dal lato dello spender (che possiede il segreto). Emette report firmati."""
++
++    def __init__(self, secret: str | bytes, provider: str, provider_account: str):
++        self.provider, self.provider_account = provider, provider_account
++        self._key = derive_report_key(secret, provider, provider_account)
++
++    @property
++    def key(self) -> bytes:
++        return self._key
++
++    def report(self, *, provider_job_id: str, attempt_token: str, payload_digest: str,
++               operation_id: str, job_id: str, state: str, remote_ref: str,
++               now: float | None = None, nonce: str | None = None) -> dict:
++        return sign_report(self._key, {
++            "schema": REPORT_SCHEMA, "provider": self.provider,
++            "provider_account": self.provider_account, "provider_job_id": provider_job_id,
++            "attempt_token": attempt_token, "payload_digest": payload_digest,
++            "operation_id": operation_id, "job_id": job_id, "state": state,
++            "remote_ref": remote_ref, "nonce": nonce or f"nonce_{secrets.token_hex(16)}",
++            "issued_at": time.time() if now is None else now})
++
++
++def _check_report_shape(report) -> dict:
++    if not isinstance(report, dict):
++        raise ReconciliationRefused("REPORT_MALFORMED", "report non e' un mapping")
++    for k in REPORT_FIELDS:
++        v = report.get(k)
++        if k == "issued_at":
++            if not isinstance(v, (int, float)) or isinstance(v, bool):
++                raise ReconciliationRefused("REPORT_MALFORMED", f"campo {k!r} assente o non numerico")
++        elif k == "provider_job_id":
++            if v is not None and not isinstance(v, str):
++                raise ReconciliationRefused("REPORT_MALFORMED", f"campo {k!r} non stringa")
++        elif not isinstance(v, str) or not v:
++            raise ReconciliationRefused("REPORT_MALFORMED", f"campo {k!r} assente o vuoto")
++    if report["schema"] != REPORT_SCHEMA:
++        raise ReconciliationRefused("REPORT_MALFORMED", f"schema {report['schema']!r} non ammesso")
++    return report
++
++
++def _claim_nonce(nonce_dir: str, nonce: str, payload: dict) -> str:
++    """Claim WRITE-ONCE del nonce: O_EXCL. Un nonce gia' consumato -> REPLAY."""
++    os.makedirs(nonce_dir, mode=0o700, exist_ok=True)
++    path = os.path.join(nonce_dir, hashlib.sha256(nonce.encode("utf-8")).hexdigest() + ".json")
++    try:
++        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o444)
++    except FileExistsError:
++        raise ReconciliationRefused("REPLAY", f"nonce {nonce[:12]}… gia' consumato: report riproposto")
++    try:
++        os.write(fd, json.dumps(payload, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8"))
++    finally:
++        os.close(fd)
++    return path
++
++
++def reconcile_authenticated(store, adapter, report, *, job_id: str, key: bytes, nonce_dir: str,
++                            snapshot_ledger=None, now: float | None = None,
++                            max_age_s: float | None = None):
++    """Verifica tutto, poi (e solo poi) `store.reconcile`. Restituisce il Job aggiornato.
++    `job_id` e' il job che il CHIAMANTE intende riconciliare: un report valido ma di un altro
++    job/operazione non viene mai applicato altrove (JOB_MISMATCH)."""
++    now = time.time() if now is None else now
++    report = _check_report_shape(report)
++    if not isinstance(job_id, str) or not job_id:
++        raise ReconciliationRefused("JOB_ID_REQUIRED", "job_id di destinazione obbligatorio")
++    if report["job_id"] != job_id:
++        raise ReconciliationRefused(
++            "JOB_MISMATCH", f"il report riguarda {report['job_id']!r}, destinazione {job_id!r}: "
++                            f"una risposta valida di un altro job/operazione non si applica qui")
++    # 1. autenticazione dell'interlocutore (equivalente LAB)
++    if not verify_report_signature(key, report):
++        raise ReconciliationRefused("UNAUTHENTICATED", "firma del report assente o non valida")
++    if max_age_s is not None and now - float(report["issued_at"]) > max_age_s:
++        raise ReconciliationRefused("REPORT_STALE", "report troppo vecchio")
++    if report["state"] not in REPORTABLE_STATES:
++        raise ReconciliationRefused("TARGET_STATE_NOT_ALLOWED",
++                                    f"stato {report['state']!r} non riferibile da un provider")
++    # 2. job autorevole, stato riconciliabile
++    job = store.get(job_id)
++    if job is None:
++        raise ReconciliationRefused("JOB_UNKNOWN", f"job {job_id!r} sconosciuto allo store autorevole")
++    if job.state.value not in RECONCILABLE_STATES:
++        raise ReconciliationRefused("NOT_RECONCILABLE", f"job {job.job_id} in stato {job.state.value}")
++    if not (job.provider and job.provider_account and job.attempt_token and job.payload_digest):
++        raise ReconciliationRefused(
++            "OWNERSHIP_INCOMPLETE",
++            f"job {job.job_id}: nessun intento di submit persistito (provider/conto/token/digest assenti): "
++            f"nulla e' stato inviato, nulla da riconciliare con un provider")
++    # 3. l'adapter che riconcilia e' il proprietario (provider + conto)
++    account = str(getattr(adapter, "account_id", "") or "")
++    if getattr(adapter, "name", None) != job.provider or account != job.provider_account:
++        raise ReconciliationRefused(
++            "ADAPTER_NOT_OWNER", f"adapter {getattr(adapter, 'name', None)}/{account} non e' il proprietario "
++                                 f"di {job.job_id} ({job.provider}/{job.provider_account})")
++    # 4. binding del report al job persistito
++    checks = (("PROVIDER_MISMATCH", report["provider"], job.provider),
++              ("ACCOUNT_MISMATCH", report["provider_account"], job.provider_account),
++              ("OPERATION_MISMATCH", report["operation_id"], job.operation_id),
++              ("JOB_MISMATCH", report["job_id"], job.job_id),
++              ("ATTEMPT_TOKEN_MISMATCH", report["attempt_token"], job.attempt_token),
++              ("PAYLOAD_DIGEST_MISMATCH", report["payload_digest"], job.payload_digest))
++    for code, got, expected in checks:
++        if got != expected:
++            raise ReconciliationRefused(code, f"report {got!r} != job {expected!r}")
++    if job.provider_job_id:
++        if report["provider_job_id"] != job.provider_job_id:
++            raise ReconciliationRefused(
++                "PROVIDER_JOB_ID_MISMATCH", f"report {report['provider_job_id']!r} != job {job.provider_job_id!r}")
++    elif not report["provider_job_id"]:
++        raise ReconciliationRefused("PROVIDER_JOB_ID_REQUIRED",
++                                    "il job non ha identita' remota: il report deve fornirla")
++    # 5. P-B04: lo snapshot exact-byte di QUESTO attempt esiste ed e' integro
++    snapshot_audit = None
++    if snapshot_ledger is not None:
++        snapshot_audit = snapshot_ledger.audit(
++            digest=job.payload_digest, operation_id=job.operation_id, provider=job.provider,
++            provider_account=job.provider_account, job_id=job.job_id, attempt_token=job.attempt_token)
++        if not snapshot_audit["ok"]:
++            raise ReconciliationRefused("SNAPSHOT_AUDIT_FAILED",
++                                        f"snapshot dell'attempt non verificabile: {snapshot_audit['problems']}")
++    # 6. replay: nonce monouso (claim write-once, prima della scrittura sul journal)
++    nonce_path = _claim_nonce(nonce_dir, report["nonce"], {"job_id": job.job_id, "state": report["state"],
++                                                          "remote_ref": report["remote_ref"], "at": now})
++    # 7. percorso esplicito del Core (transizione, CAS, evidenza registrata)
++    target = type(job.state)(report["state"])
++    evidence = {"source": EVIDENCE_SOURCE, "remote_ref": report["remote_ref"],
++                "provider_job_id": report["provider_job_id"],
++                "report": {k: report[k] for k in REPORT_FIELDS},
++                "signature_verified": True, "verifier": {"provider": adapter.name, "provider_account": account},
++                "nonce_claim": os.path.basename(nonce_path), "snapshot_audit": snapshot_audit}
++    return store.reconcile(job, target, evidence, now=now)
+diff --git a/RUNTIME_INTEGRATION_GATE_01/tests/run_gate.py b/RUNTIME_INTEGRATION_GATE_01/tests/run_gate.py
+index ddee78b..23bf424 100644
+--- a/RUNTIME_INTEGRATION_GATE_01/tests/run_gate.py
++++ b/RUNTIME_INTEGRATION_GATE_01/tests/run_gate.py
+@@ -51,6 +51,11 @@ def db_for(test_id: str) -> str:
+     for suffix in ("", "-journal", "-wal", "-shm"):
+         if os.path.exists(p + suffix):
+             os.remove(p + suffix)
++    # PROVIDER / EXECUTION BOUNDARY HARDENING (2026-09-17): il runtime tiene accanto allo store il
++    # ledger write-once degli snapshot P-B04 e i nonce P-B02; un db nuovo parte senza residui.
++    for suffix in (".snapshots", ".reconciliation"):
++        if os.path.isdir(p + suffix):
++            shutil.rmtree(p + suffix)
+     return p
+ 
+ 
+diff --git a/RUNTIME_INTEGRATION_GATE_01/tests/static_checks.py b/RUNTIME_INTEGRATION_GATE_01/tests/static_checks.py
+index 65a00f9..379ea0f 100644
+--- a/RUNTIME_INTEGRATION_GATE_01/tests/static_checks.py
++++ b/RUNTIME_INTEGRATION_GATE_01/tests/static_checks.py
+@@ -179,7 +179,11 @@ def run(core_path: str | None = None) -> dict:
+     expected_core_imports = {
+         "adapters.base.GenSpec", "adapters.fake.FakeAdapter",
+         "registry.reservations.SqliteReservationStore", "transport.pipeline.run_job",
+-        "transport.pipeline.resume_job"}      # CR-09: resume esplicito, non un secondo submit
++        "transport.pipeline.resume_job",      # CR-09: resume esplicito, non un secondo submit
++        # P-B04 (PROVIDER / EXECUTION BOUNDARY HARDENING 2026-09-17): il guard dello snapshot
++        # exact-byte (runtime/payload_snapshot.py) rifiuta PRIMA del marcatore di invio con la
++        # stessa eccezione del contratto RV02 del Core, cosi' run_job attesta "non inviato".
++        "adapters.base.PayloadBindingError"}
+     unexpected = sorted(core_imports - expected_core_imports)
+     missing = sorted(expected_core_imports - core_imports)
+     if unexpected:

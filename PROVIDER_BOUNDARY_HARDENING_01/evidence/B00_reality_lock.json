@@ -1,0 +1,15 @@
+{
+  "canonical": {
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "runtime_main_sha": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e"
+  },
+  "core_head": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "core_status_porcelain": "",
+  "p2_sha256_before": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+  "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "runtime_branch": "claude/provider-boundary-hardening-c1k77q",
+  "runtime_head": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e",
+  "runtime_head_descends_from_canonical": true,
+  "runtime_origin_main": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e"
+}

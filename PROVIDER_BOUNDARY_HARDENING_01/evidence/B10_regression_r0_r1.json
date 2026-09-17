@@ -1,0 +1,238 @@
+{
+  "artifacts": [
+    "regression/r0_r1_run_gate_post_fix.log",
+    "regression/r0_r1_RESULTS_post_fix.json",
+    "regression/r0_r1_TEST_RESULTS_post_fix.md"
+  ],
+  "historic_tracked_files_restored": true,
+  "per_test": {
+    "T01": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T02": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T03": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T04": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T05": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T06": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T07": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T08": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T09": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T10": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T11": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T12": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T13": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T14": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T15": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T16": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T17": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T18": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T19": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T20": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T21": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T22": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T23": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T24": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T25": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T26": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T27": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T28": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T29": {
+      "reason_code": "BLOCKED_ENVIRONMENT",
+      "status": "BLOCKED"
+    },
+    "T30": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T31": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T32": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T33": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T34": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T35": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T36": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    },
+    "T37": {
+      "reason_code": "VERIFIED",
+      "status": "PASS"
+    }
+  },
+  "runner_exit": 0,
+  "summary": {
+    "all_requirements_verified": false,
+    "blocked": 1,
+    "blocked_not_allowed_by_policy": [],
+    "blocked_tests": [
+      {
+        "id": "T29",
+        "reason_code": "BLOCKED_ENVIRONMENT"
+      }
+    ],
+    "fail": 0,
+    "fail_ids": [],
+    "gate_decision": "LAB_GATE_COMPLETE_WITH_ALLOWED_BLOCKED",
+    "invalid": [],
+    "inventory": {
+      "duplicates": [],
+      "expected_count": 37,
+      "missing": [],
+      "observed_count": 37,
+      "unexpected": [],
+      "valid": true
+    },
+    "pass": 36,
+    "pass_ids": [
+      "T01",
+      "T02",
+      "T03",
+      "T04",
+      "T05",
+      "T06",
+      "T07",
+      "T08",
+      "T09",
+      "T10",
+      "T11",
+      "T12",
+      "T13",
+      "T14",
+      "T15",
+      "T16",
+      "T17",
+      "T18",
+      "T19",
+      "T20",
+      "T21",
+      "T22",
+      "T23",
+      "T24",
+      "T25",
+      "T26",
+      "T27",
+      "T28",
+      "T37",
+      "T30",
+      "T31",
+      "T32",
+      "T33",
+      "T34",
+      "T35",
+      "T36"
+    ],
+    "policy_allowed_blocked": {
+      "T29": [
+        "BLOCKED_ENVIRONMENT"
+      ]
+    },
+    "readiness": {
+      "lab_mock": true,
+      "production": "NOT_DECLARED",
+      "real_provider": "NOT_DECLARED",
+      "security_boundary_p_b01": "NOT_VERIFIED"
+    },
+    "runner_exit": 0,
+    "runner_exit_meaning": "raccolta e report completati; nessun FAIL; nessun BLOCKED fuori policy LAB. NON significa 'tutti i requisiti verificati'.",
+    "total": 37,
+    "unverified_requirements": [
+      "T29"
+    ]
+  }
+}

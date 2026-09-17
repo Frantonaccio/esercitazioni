@@ -1,0 +1,564 @@
+{
+  "checks": {
+    "governed_unaffected_by_switch": true,
+    "hf_batch_legacy_disabled_zero_submits": true,
+    "hf_batch_legacy_enabled_marked": true,
+    "hf_batch_main_never_reaches_provider": true,
+    "hf_batch_no_adapter_real_provider_disabled": true,
+    "legacy_disabled_before_core_import": true,
+    "legacy_enabled_reaches_adapter_gate_only": true,
+    "p2_frozen_not_imported_by_runtime": true,
+    "sentinel_zero_violations": true
+  },
+  "governed_with_legacy_disabled": {
+    "job_id": "res_2dcf9e75700d0c90_1",
+    "ok": true,
+    "outcome": "SUCCEEDED",
+    "payload_snapshot": {
+      "bytes": 177,
+      "digest": "67deb5a0d40ab942a064e7bad7100656b844c932e52e65a19ceed8745f320347",
+      "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb_b07c.db.snapshots",
+      "opkey": "f64a4cdecc5ae91f2dc8ecad",
+      "persisted_mode": "0o444",
+      "sealed_at": 1789635833.7120438,
+      "send_attestation": {
+        "attempt_token": "att_7a9e755b6468bc70fd5f8f72",
+        "bytes": 177,
+        "digest": "67deb5a0d40ab942a064e7bad7100656b844c932e52e65a19ceed8745f320347",
+        "exact_bytes_equal": true,
+        "job_id": "res_2dcf9e75700d0c90_1",
+        "opkey": "f64a4cdecc5ae91f2dc8ecad",
+        "schema": "payload-snapshot-send-attestation/1",
+        "verified_at": 1789635833.7184603
+      },
+      "send_verified": true
+    },
+    "persisted": {
+      "attempt_token": "att_7a9e755b6468bc70fd5f8f72",
+      "cost_credits": 4.0,
+      "error": null,
+      "job_id": "res_2dcf9e75700d0c90_1",
+      "operation_id": "T31:b07",
+      "payload_digest": "67deb5a0d40ab942a064e7bad7100656b844c932e52e65a19ceed8745f320347",
+      "polls": 1,
+      "provider": "fake",
+      "provider_account": "fake_acct_a",
+      "provider_job_id": "pv_2dcf9e75",
+      "quote_id": "quote_a2b7f451f51437430b5d994c",
+      "revision": 3,
+      "spec_key": "2dcf9e75700d0c90f9c4e4eaff000025c4960e3a71c4a3173e14b6544ea99310",
+      "state": "SUCCEEDED",
+      "submitted_at": 1789635833.719144,
+      "terminal_by": 1789636133.719144,
+      "webhook_hints": 0
+    },
+    "pid": 3798,
+    "quote_id": "quote_a2b7f451f51437430b5d994c",
+    "reservation_outcome": "RESERVED_NEW",
+    "resumed": false,
+    "spec_key": "2dcf9e75700d0c90f9c4e4eaff000025c4960e3a71c4a3173e14b6544ea99310",
+    "state": "SUCCEEDED",
+    "submits": 1,
+    "transport_guarded": "SnapshotGuardedTransport",
+    "transport_refused": [],
+    "transport_sent": [
+      "67deb5a0d40ab942a064e7bad7100656b844c932e52e65a19ceed8745f320347"
+    ],
+    "transport_sent_count": 1
+  },
+  "hf_batch_legacy_disabled": {
+    "adapter": true,
+    "disable_legacy": true,
+    "error": "LEGACY_SPEND_PATH_DISABLED",
+    "lock": "REAL_PROVIDER_DISABLED",
+    "message": "LEGACY_SPEND_PATH_DISABLED: percorso LEGACY_LAB (authorization=None) chiuso (DISABLED); solo il percorso governato (envelope derivato + quote fidata + permit) puo' spendere. Nessuna reservation, nessun permit, nessun submit.",
+    "ok": false,
+    "quote": "REAL_PROVIDER_DISABLED",
+    "store_created": false,
+    "submits": 0,
+    "violations": []
+  },
+  "hf_batch_legacy_enabled": {
+    "adapter": true,
+    "disable_legacy": false,
+    "governance": [
+      "LEGACY_LAB",
+      "LEGACY_LAB"
+    ],
+    "legacy_resume_as_start": [
+      true,
+      true
+    ],
+    "lock": "REAL_PROVIDER_DISABLED",
+    "ok": true,
+    "quote": "REAL_PROVIDER_DISABLED",
+    "run_statuses": [
+      "SUCCEEDED",
+      "SUCCEEDED"
+    ],
+    "store_created": true,
+    "submits": 2,
+    "violations": []
+  },
+  "hf_batch_no_adapter_as_main": {
+    "adapter": false,
+    "disable_legacy": false,
+    "error": "REAL_PROVIDER_DISABLED",
+    "lock": "REAL_PROVIDER_DISABLED",
+    "message": "REAL_PROVIDER_DISABLED: provider_mode='adapter:builtins.NoneType'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
+    "ok": false,
+    "quote": "REAL_PROVIDER_DISABLED",
+    "store_created": false,
+    "submits": null,
+    "violations": []
+  },
+  "hf_batch_runtime_main": {
+    "go": {
+      "rc": 1,
+      "stderr": "NO LOCK — run lock first\n",
+      "stdout": ""
+    },
+    "lock": {
+      "rc": 1,
+      "stderr": "sercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 307, in <module>\n    getattr(b, verb)()\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 156, in lock\n    _real_cli()\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 38, in _real_cli\n    raise RealProviderDisabled(\"higgsfield-cli\")\nruntime.provider_gate.RealProviderDisabled: REAL_PROVIDER_DISABLED: provider_mode='higgsfield-cli'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.\n",
+      "stdout": ""
+    },
+    "quote": {
+      "rc": 1,
+      "stderr": "ercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 307, in <module>\n    getattr(b, verb)()\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 213, in quote\n    _real_cli()\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 38, in _real_cli\n    raise RealProviderDisabled(\"higgsfield-cli\")\nruntime.provider_gate.RealProviderDisabled: REAL_PROVIDER_DISABLED: provider_mode='higgsfield-cli'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.\n",
+      "stdout": ""
+    }
+  },
+  "legacy_disabled": {
+    "core_imported_after": false,
+    "core_imported_before": false,
+    "error": "LEGACY_SPEND_PATH_DISABLED",
+    "message": "LEGACY_SPEND_PATH_DISABLED: percorso LEGACY_LAB (authorization=None) chiuso (DISABLED); solo il percorso governato (envelope derivato + quote fidata + permit) puo' spendere. Nessuna reservation, nessun permit, nessun submit.",
+    "ok": false,
+    "store_created": false,
+    "switch_state": "DISABLED"
+  },
+  "legacy_enabled": {
+    "code": "REAL_PROVIDER_DISABLED",
+    "core_imported_after": true,
+    "core_imported_before": false,
+    "error": "RealProviderDisabled",
+    "message": "REAL_PROVIDER_DISABLED: provider_mode='adapter:builtins.NoneType'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
+    "ok": false,
+    "store_created": false,
+    "switch_state": "ENABLED_LAB_ONLY",
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 378, in legacy_go_disabled\n    res = go_candidate.go(make_inputs(prompt), adapter=None, provider_mode=\"fake\", store_path=db,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 233, in go\n    require_fake_adapter(adapter, FakeAdapter)\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py\", line 57, in require_fake_adapter\n    raise RealProviderDisabled(\nruntime.provider_gate.RealProviderDisabled: REAL_PROVIDER_DISABLED: provider_mode='adapter:builtins.NoneType'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.\n"
+  },
+  "p2_frozen": {
+    "has_real_cli_submit": true,
+    "imported_by_runtime": false,
+    "sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
+  },
+  "static": {
+    "core_primitives": [
+      {
+        "defines": [
+          "run_job",
+          "resume_job"
+        ],
+        "file": "creative-os/transport/pipeline.py"
+      },
+      {
+        "defines": [
+          "send",
+          "submit"
+        ],
+        "file": "creative-os/adapters/fake.py"
+      },
+      {
+        "defines": [
+          "reserve_or_get_live",
+          "reconcile"
+        ],
+        "file": "creative-os/registry/reservations.py"
+      }
+    ],
+    "repo_hits": [
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py",
+        "hits": {
+          "subprocess": [
+            75,
+            94
+          ]
+        },
+        "sha256": "18c39c91266d66ef"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py",
+        "hits": {
+          "go_candidate_go": [
+            200
+          ],
+          "reserve_or_get_live": [
+            162,
+            163
+          ],
+          "run_job_call": [
+            40,
+            345
+          ]
+        },
+        "sha256": "38b2cceaf0bbfc68"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_bridge.py",
+        "hits": {
+          "higgsfield_cli": [
+            7
+          ]
+        },
+        "sha256": "349762b7ef69071e"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py",
+        "hits": {
+          "go_candidate_go": [
+            249
+          ],
+          "higgsfield_cli": [
+            38,
+            173,
+            177,
+            217,
+            222
+          ],
+          "run_job_call": [
+            227,
+            275
+          ],
+          "subprocess": [
+            62,
+            157,
+            173,
+            217,
+            222
+          ]
+        },
+        "sha256": "459fa670f60edd7a"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py",
+        "hits": {
+          "higgsfield_cli": [
+            25
+          ]
+        },
+        "sha256": "0b5dc10ba4db4595"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/runtime/reconciliation.py",
+        "hits": {
+          "reconcile": [
+            33,
+            235
+          ]
+        },
+        "sha256": "9abde363fd6f1703"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/tests/audit_sentinel.py",
+        "hits": {
+          "higgsfield_cli": [
+            18,
+            21,
+            93
+          ]
+        },
+        "sha256": "043fc73b2a74168e"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/tests/boundary_mock.py",
+        "hits": {
+          "go_candidate_go": [
+            165
+          ]
+        },
+        "sha256": "7b58330adb269c67"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/tests/run_gate.py",
+        "hits": {
+          "higgsfield_cli": [
+            384,
+            847,
+            848
+          ],
+          "subprocess": [
+            97,
+            482,
+            519,
+            521,
+            653,
+            1405,
+            1455,
+            1457
+          ]
+        },
+        "sha256": "57ce08057cb93528"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/tests/static_checks.py",
+        "hits": {
+          "adapter_submit": [
+            6
+          ],
+          "higgsfield_cli": [
+            165
+          ],
+          "run_job_call": [
+            65
+          ]
+        },
+        "sha256": "56b51b54c63ca1a0"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/tests/worker.py",
+        "hits": {
+          "go_candidate_go": [
+            105,
+            221
+          ],
+          "higgsfield_cli": [
+            242,
+            246,
+            252
+          ],
+          "reserve_or_get_live": [
+            192,
+            197
+          ],
+          "run_job_call": [
+            320
+          ],
+          "subprocess": [
+            252
+          ]
+        },
+        "sha256": "08789784320a4981"
+      },
+      {
+        "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/orchestrator_probe.py",
+        "hits": {
+          "higgsfield_cli": [
+            86
+          ]
+        },
+        "sha256": "7890b82f3e5655b5"
+      },
+      {
+        "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py",
+        "hits": {
+          "go_candidate_go": [
+            168,
+            378,
+            466,
+            470
+          ],
+          "reconcile": [
+            347
+          ],
+          "reserve_or_get_live": [
+            462
+          ],
+          "run_job_call": [
+            411
+          ]
+        },
+        "sha256": "3f9628a2f54fa9d1"
+      },
+      {
+        "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/reproduce_pre_fix.py",
+        "hits": {
+          "go_candidate_go": [
+            128,
+            154,
+            157
+          ],
+          "higgsfield_cli": [
+            50
+          ],
+          "reconcile": [
+            52,
+            62
+          ],
+          "reserve_or_get_live": [
+            152
+          ],
+          "run_job_call": [
+            43,
+            58,
+            78,
+            107
+          ]
+        },
+        "sha256": "2d57d9d165f09c7d"
+      },
+      {
+        "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/run_boundary_gate.py",
+        "hits": {
+          "higgsfield_cli": [
+            329,
+            586
+          ],
+          "reconcile": [
+            411
+          ],
+          "subprocess": [
+            97,
+            126,
+            129,
+            145,
+            184,
+            581,
+            586,
+            686,
+            694,
+            696
+          ]
+        },
+        "sha256": "4e6129adc838fb5f"
+      },
+      {
+        "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/spender_daemon.py",
+        "hits": {
+          "go_candidate_go": [
+            213
+          ]
+        },
+        "sha256": "4773cc7116bd83f8"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/hf_batch.py",
+        "hits": {
+          "higgsfield_cli": [
+            118,
+            122,
+            161,
+            166,
+            185,
+            206
+          ],
+          "run_job_call": [
+            171,
+            209
+          ],
+          "subprocess": [
+            44,
+            102,
+            118,
+            161,
+            166,
+            185,
+            206
+          ]
+        },
+        "sha256": "637f3a803ee38d04"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/preflight.py",
+        "hits": {
+          "subprocess": [
+            48,
+            49
+          ]
+        },
+        "sha256": "6c622c1293cc4962"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/LAB/gate01_lab.py",
+        "hits": {
+          "adapter_submit": [
+            342
+          ],
+          "subprocess": [
+            67
+          ]
+        },
+        "sha256": "7ac3f189438675fa"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/LAB/hf_batch_ORIGINAL.py",
+        "hits": {
+          "higgsfield_cli": [
+            118,
+            122,
+            161,
+            166,
+            185,
+            206
+          ],
+          "run_job_call": [
+            171,
+            209
+          ],
+          "subprocess": [
+            44,
+            102,
+            118,
+            161,
+            166,
+            185,
+            206
+          ]
+        },
+        "sha256": "637f3a803ee38d04"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/LAB/hf_batch_lab.py",
+        "hits": {
+          "higgsfield_cli": [
+            119,
+            123,
+            162,
+            167,
+            186,
+            207
+          ],
+          "run_job_call": [
+            172,
+            210
+          ],
+          "subprocess": [
+            45,
+            103,
+            119,
+            162,
+            167,
+            186,
+            207
+          ]
+        },
+        "sha256": "e9cc8c3518365a7b"
+      },
+      {
+        "file": "RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/LAB/test_gate01.py",
+        "hits": {
+          "higgsfield_cli": [
+            320
+          ],
+          "run_job_call": [
+            47,
+            75,
+            90,
+            93,
+            104,
+            105,
+            119,
+            140,
+            147,
+            154,
+            172,
+            324
+          ]
+        },
+        "sha256": "a26ad52c6d5246a7"
+      }
+    ]
+  }
+}

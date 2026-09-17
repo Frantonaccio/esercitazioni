@@ -1,0 +1,35 @@
+PROVIDER / EXECUTION BOUNDARY GATE 01 — Core /home/user/creative-os @ 740ee979300f (required 740ee979300f)
+  B00 [32mPASS[0m  Reality Lock  [VERIFIED exit=0]
+       [2mCore 740ee979300f clean=True · Runtime origin/main 39c82968fbfb (HEAD 39c82968fbfb discende=True) · pin 740ee979300f · P2 637f3a803ee38d04[0m
+  B10 [32mPASS[0m  R0-R1 regression (run_gate.py T01-T37) on hardened runtime  [VERIFIED exit=0]
+       [2mrun_gate.py: exit 0 · 36/37 PASS · BLOCKED ['T29/BLOCKED_ENVIRONMENT'] · FAIL [] · inventario valido True · T19 statico PASS[0m
+  B01 [32mPASS[0m  P-B01 real privilege boundary (distinct UIDs)  [VERIFIED exit=0]
+       [2muid orchestrator 65531 (caps 0000000000000000, nnp=1) vs spender 65532 · probe canoniche: {'read_worker_secret': 'BLOCKED (PermissionError)', 'write_worker_code': 'BLOCKED (3 files, PermissionError)', 'write_worker_store': 'BLOCKED (OperationalError)', 'direct_dispatch_on_worker_store': 'BLOCKED (OperationalError)'} -> PASS/VERIFIED · terzo uid -> PEER_UID_NOT_AUTHORIZED · prima spesa via socket -> SUCCEEDED conto acct_1aebf3f17cab · resume -> RESUMED/SUCCEEDED · check falliti: nessuno[0m
+  B02 [32mPASS[0m  P-B01 same-UID control stays BLOCKED  [VERIFIED exit=0]
+       [2msame-uid -> BLOCKED_ENVIRONMENT qualunque probe · uid distinti: 4/4 BLOCKED -> PASS, 3/4 o 1 bypass -> FAIL · T29 storico BLOCKED_ENVIRONMENT · T29 regressione BLOCKED_ENVIRONMENT[0m
+  B03 [32mPASS[0m  P-B02 authenticated reconciliation: binding fail-closed  [VERIFIED exit=0]
+       [2m16 controprove fail-closed (journal invariato: True) · scarti: nessuno · report valido -> SUCCEEDED (provider_job_id pv_remote_1, evidenza firmata registrata) · u2 dopo i rifiuti -> FAILED[0m
+  B04 [32mPASS[0m  P-B02 replay / other operation / snapshot audit  [VERIFIED exit=0]
+       [2mN1 -> RUNNING · incertezza -> replay N1 -> REPLAY · nuovo report -> SUCCEEDED · report valido di altro job -> JOB_MISMATCH · RESERVED senza intento -> OWNERSHIP_INCOMPLETE · snapshot bind rimosso -> SNAPSHOT_AUDIT_FAILED · unico chiamante runtime di store.reconcile: ['reconciliation.py'][0m
+  B05 [32mPASS[0m  P-B04 exact-byte snapshot  [VERIFIED exit=0]
+       [2mgo -> SUCCEEDED (1 invio, trasporto SnapshotGuardedTransport) · byte persistiti == canonici ricalcolati: True · sha256(file)==digest job: True · mode 0o444 · seal/bind/send presenti (4 file) · resume: 0 nuovi file · API: overwrite rifiutato, altra op -> SEAL_MISSING, token errato -> ATTEMPT_NOT_BOUND, 2o invio -> SEND_ALREADY_ATTESTED, reorder -> SNAPSHOT_MISSING[0m
+  B06 [32mPASS[0m  P-B04 counterproofs refused before send  [VERIFIED exit=0]
+       [2m6 controprove: tutte rifiutate PRIMA del marcatore (sent_count 0), FAILED con settlement 0 attestato, nessun SUBMIT_UNKNOWN · pre-fix lo stesso caso 'substitute' raggiungeva l'invio (sent_count 1, SUBMIT_UNKNOWN) · adapter corretto dopo i rifiuti -> SUCCEEDED · check falliti: nessuno[0m
+B1_NEW_CLIP            SUCCEEDED job=res_f4076e463c1fbcd9_1 0.0s 
+B4C_NEW_CLIP           SUCCEEDED job=res_6d687b11cfaf4fd0_1 0.0s 
+balance None -> None · LOCK_HELD
+  B07 [32mPASS[0m  Legacy spend paths inventory + fail-closed switch  [VERIFIED exit=0]
+       [2minventario statico: 22 file con hit · legacy aperto -> RealProviderDisabled (solo FakeAdapter) · legacy chiuso -> LEGACY_SPEND_PATH_DISABLED (Core importato: False, store creato: False) · governato con legacy chiuso -> SUCCEEDED · hf_batch legacy chiuso -> LEGACY_SPEND_PATH_DISABLED (0 submit) · __main__ go/lock/quote -> NO LOCK / REAL_PROVIDER_DISABLED ×2 · P2 frozen non importato · check falliti: nessuno[0m
+  B08 [32mPASS[0m  Orphan RESERVED lease: reproduction + classification  [VERIFIED exit=0]
+       [2morfana senza intento: classe RESERVED_NO_INTENT, uscite [] · resume -> EXISTING_LIVE_JOB/reserved-no-dispatch (0 submit) · new_attempt -> LIVE_OR_UNCERTAIN_ATTEMPT · recover -> [] · reconcile autenticata -> OWNERSHIP_INCOMPLETE · con intento (crash exit 4) -> RESERVED_WITH_INTENT -> recover SUBMIT_UNKNOWN · reclaim: NOT_AUTHORIZED · GAP: STILL_OPEN[0m
+  B09 [32mPASS[0m  Authorization / pricing authority (LAB state)  [VERIFIED exit=0]
+       [2mautorita' LAB (listino {'fake_model_v1': 10, 'fake_model_v2': 12, 'fake_model_free': 0}, envelope per scope) vive nello spender · orchestrator: quote sullo store spender -> BLOCKED (OperationalError), scrittura store -> BLOCKED (OperationalError), importo dal client -> PROTOCOL: chiavi non ammesse [ · real authorization/pricing: NOT_VERIFIED[0m
+  B11 [32mPASS[0m  P2 freeze after + Core pin/tree + static checks  [VERIFIED exit=0]
+       [2mP2 before 637f3a803ee38d04 == after 637f3a803ee38d04 == canonico · Core 740ee979300f clean=True · static checks ok=True (0 findings)[0m
+
+12/12 PASS · BLOCKED [] · FAIL []
+GATE_DECISION: LAB_GATE_COMPLETE_ALL_VERIFIED · runner exit 0 (raccolta e report completati; nessun FAIL; nessun BLOCKED fuori policy LAB. NON significa 'tutti i requisiti verificati'.)
+inventario: 12/12 valido=True
+requisiti NON verificati: nessuno
+crediti spesi: 0 · provider reali: 0 · rete generativa: 0 · credenziali reali: 0
+EXIT=0

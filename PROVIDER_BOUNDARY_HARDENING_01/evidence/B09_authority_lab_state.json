@@ -1,0 +1,42 @@
+{
+  "authority": {
+    "envelope_by_scope": {
+      "MOTION_B1_B4C": "ENV_LAB_MOTION_B1_B4C",
+      "T24": "ENV_T24",
+      "T25": "ENV_T25",
+      "T26": "ENV_T26",
+      "T28": "ENV_T28",
+      "T29": "ENV_T29",
+      "T30": "ENV_T30",
+      "T31": "ENV_T31",
+      "T32": "ENV_T32",
+      "T35": "ENV_T35",
+      "T36": "ENV_T36",
+      "T37": "ENV_T37",
+      "WOA": "ENV_LAB_WO",
+      "WOB": "ENV_LAB_WO",
+      "WO_A": "ENV_LAB_WO",
+      "WO_B": "ENV_LAB_WO",
+      "lab": "ENV_LAB"
+    },
+    "label": "LAB_ONLY",
+    "price_table": {
+      "fake_model_free": 0,
+      "fake_model_v1": 10,
+      "fake_model_v2": 12
+    },
+    "unit": "synthetic_units"
+  },
+  "claim": "LAB_ONLY: nessun valore reale di credito, nessuna policy tenant, nessun Human Authorization system",
+  "client_amount_refused": "PROTOCOL: chiavi non ammesse ['amount']",
+  "orchestrator_issue_quote_on_spender_store": "BLOCKED (OperationalError)",
+  "orchestrator_write_spender_store": "BLOCKED (OperationalError)",
+  "quote_issued_by_spender": {
+    "amount": 10,
+    "envelope_id": "ENV_T29",
+    "price_source": "LAB_PRICE_TABLE",
+    "sku": "fake_model_v1"
+  },
+  "real_pricing": "NOT_VERIFIED",
+  "real_provider_authorization": "NOT_VERIFIED"
+}

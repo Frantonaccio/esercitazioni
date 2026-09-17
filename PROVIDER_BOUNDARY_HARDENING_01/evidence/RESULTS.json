@@ -1,0 +1,212 @@
+{
+  "schema": "provider-boundary-gate-results/1",
+  "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "canonical": {
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "runtime_main_sha": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e",
+    "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
+  },
+  "results": [
+    {
+      "id": "B00",
+      "title": "Reality Lock",
+      "expected": "Core HEAD canonico e pulito; Runtime origin/main canonico; pin; P2 frozen",
+      "actual": "Core 740ee979300f clean=True · Runtime origin/main 39c82968fbfb (HEAD 39c82968fbfb discende=True) · pin 740ee979300f · P2 637f3a803ee38d04",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B00_reality_lock.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B10",
+      "title": "R0-R1 regression (run_gate.py T01-T37) on hardened runtime",
+      "expected": "36 PASS, T29 BLOCKED_ENVIRONMENT, 0 FAIL, inventario 37/37",
+      "actual": "run_gate.py: exit 0 · 36/37 PASS · BLOCKED ['T29/BLOCKED_ENVIRONMENT'] · FAIL [] · inventario valido True · T19 statico PASS",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B10_regression_r0_r1.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B01",
+      "title": "P-B01 real privilege boundary (distinct UIDs)",
+      "expected": "orchestrator uid != spender uid, 0 caps, no_new_privs; 4 probe canoniche BLOCKED; peer uid autenticato; spesa governata via socket; segreto mai nel canale",
+      "actual": "uid orchestrator 65531 (caps 0000000000000000, nnp=1) vs spender 65532 · probe canoniche: {'read_worker_secret': 'BLOCKED (PermissionError)', 'write_worker_code': 'BLOCKED (3 files, PermissionError)', 'write_worker_store': 'BLOCKED (OperationalError)', 'direct_dispatch_on_worker_store': 'BLOCKED (OperationalError)'} -> PASS/VERIFIED · terzo uid -> PEER_UID_NOT_AUTHORIZED · prima spesa via socket -> SUCCEEDED conto acct_1aebf3f17cab · resume -> RESUMED/SUCCEEDED · check falliti: nessuno",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B01_privilege_boundary_uid.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B02",
+      "title": "P-B01 same-UID control stays BLOCKED",
+      "expected": "t29_status(same_uid) -> BLOCKED_ENVIRONMENT; T29 storico e di regressione BLOCKED",
+      "actual": "same-uid -> BLOCKED_ENVIRONMENT qualunque probe · uid distinti: 4/4 BLOCKED -> PASS, 3/4 o 1 bypass -> FAIL · T29 storico BLOCKED_ENVIRONMENT · T29 regressione BLOCKED_ENVIRONMENT",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B02_same_uid_control.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B03",
+      "title": "P-B02 authenticated reconciliation: binding fail-closed",
+      "expected": "16 controprove rifiutate con journal invariato; report valido -> stato scoperto con evidenza firmata",
+      "actual": "16 controprove fail-closed (journal invariato: True) · scarti: nessuno · report valido -> SUCCEEDED (provider_job_id pv_remote_1, evidenza firmata registrata) · u2 dopo i rifiuti -> FAILED",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B03_reconciliation_authenticated.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B04",
+      "title": "P-B02 replay / other operation / snapshot audit",
+      "expected": "replay -> REPLAY; report valido di altro job -> JOB_MISMATCH; RESERVED senza intento -> OWNERSHIP_INCOMPLETE; snapshot mancante -> SNAPSHOT_AUDIT_FAILED",
+      "actual": "N1 -> RUNNING · incertezza -> replay N1 -> REPLAY · nuovo report -> SUCCEEDED · report valido di altro job -> JOB_MISMATCH · RESERVED senza intento -> OWNERSHIP_INCOMPLETE · snapshot bind rimosso -> SNAPSHOT_AUDIT_FAILED · unico chiamante runtime di store.reconcile: ['reconciliation.py']",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B04_reconciliation_replay_cross_operation.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B05",
+      "title": "P-B04 exact-byte snapshot",
+      "expected": "byte persistiti == canonici; sha256(file) == digest job; 0444; seal/bind/send; resume 0 file; API write-once/altra op/token/2o invio rifiutati",
+      "actual": "go -> SUCCEEDED (1 invio, trasporto SnapshotGuardedTransport) · byte persistiti == canonici ricalcolati: True · sha256(file)==digest job: True · mode 0o444 · seal/bind/send presenti (4 file) · resume: 0 nuovi file · API: overwrite rifiutato, altra op -> SEAL_MISSING, token errato -> ATTEMPT_NOT_BOUND, 2o invio -> SEND_ALREADY_ATTESTED, reorder -> SNAPSHOT_MISSING",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B05_snapshot_exact_byte.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B06",
+      "title": "P-B04 counterproofs refused before send",
+      "expected": "nested/drift/reorder/sostituzione/missing/corrupt -> sent_count 0, FAILED settlement 0, nessun SUBMIT_UNKNOWN; pre-fix raggiungeva l'invio",
+      "actual": "6 controprove: tutte rifiutate PRIMA del marcatore (sent_count 0), FAILED con settlement 0 attestato, nessun SUBMIT_UNKNOWN · pre-fix lo stesso caso 'substitute' raggiungeva l'invio (sent_count 1, SUBMIT_UNKNOWN) · adapter corretto dopo i rifiuti -> SUCCEEDED · check falliti: nessuno",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B06_snapshot_counterproofs.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B07",
+      "title": "Legacy spend paths inventory + fail-closed switch",
+      "expected": "interruttore chiuso -> LEGACY_SPEND_PATH_DISABLED prima di import/store; governato invariato; hf_batch legacy 0 submit; __main__ mai al provider; P2 frozen non importato",
+      "actual": "inventario statico: 22 file con hit · legacy aperto -> RealProviderDisabled (solo FakeAdapter) · legacy chiuso -> LEGACY_SPEND_PATH_DISABLED (Core importato: False, store creato: False) · governato con legacy chiuso -> SUCCEEDED · hf_batch legacy chiuso -> LEGACY_SPEND_PATH_DISABLED (0 submit) · __main__ go/lock/quote -> NO LOCK / REAL_PROVIDER_DISABLED ×2 · P2 frozen non importato · check falliti: nessuno",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B07_legacy_spend_paths.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B08",
+      "title": "Orphan RESERVED lease: reproduction + classification",
+      "expected": "RESERVED_NO_INTENT senza uscite; 0 submit; new_attempt rifiutato; recover ignora; reconcile OWNERSHIP_INCOMPLETE; con intento -> SUBMIT_UNKNOWN; reclaim NOT_AUTHORIZED",
+      "actual": "orfana senza intento: classe RESERVED_NO_INTENT, uscite [] · resume -> EXISTING_LIVE_JOB/reserved-no-dispatch (0 submit) · new_attempt -> LIVE_OR_UNCERTAIN_ATTEMPT · recover -> [] · reconcile autenticata -> OWNERSHIP_INCOMPLETE · con intento (crash exit 4) -> RESERVED_WITH_INTENT -> recover SUBMIT_UNKNOWN · reclaim: NOT_AUTHORIZED · GAP: STILL_OPEN",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B08_orphan_reserved_lease.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B09",
+      "title": "Authorization / pricing authority (LAB state)",
+      "expected": "autorita' LAB nello spender; orchestrator non emette quote ne' scrive lo store; importo dal client rifiutato; real: NOT_VERIFIED",
+      "actual": "autorita' LAB (listino {'fake_model_v1': 10, 'fake_model_v2': 12, 'fake_model_free': 0}, envelope per scope) vive nello spender · orchestrator: quote sullo store spender -> BLOCKED (OperationalError), scrittura store -> BLOCKED (OperationalError), importo dal client -> PROTOCOL: chiavi non ammesse [ · real authorization/pricing: NOT_VERIFIED",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B09_authority_lab_state.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    },
+    {
+      "id": "B11",
+      "title": "P2 freeze after + Core pin/tree + static checks",
+      "expected": "P2 before == after == canonico; Core HEAD canonico pulito; static checks 0 findings",
+      "actual": "P2 before 637f3a803ee38d04 == after 637f3a803ee38d04 == canonico · Core 740ee979300f clean=True · static checks ok=True (0 findings)",
+      "status": "PASS",
+      "reason_code": "VERIFIED",
+      "evidence": "evidence/B11_p2_freeze_core_pin_after.json",
+      "diagnostic_exit": 0,
+      "pass": true,
+      "raw": null
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 12,
+    "fail": 0,
+    "blocked": 0,
+    "inventory": {
+      "expected_count": 12,
+      "observed_count": 12,
+      "missing": [],
+      "unexpected": [],
+      "duplicates": [],
+      "valid": true
+    },
+    "pass_ids": [
+      "B00",
+      "B10",
+      "B01",
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B09",
+      "B11"
+    ],
+    "fail_ids": [],
+    "blocked_tests": [],
+    "blocked_not_allowed_by_policy": [],
+    "invalid": [],
+    "policy_allowed_blocked": {
+      "B01": [
+        "BLOCKED_ENVIRONMENT"
+      ],
+      "B09": [
+        "BLOCKED_ENVIRONMENT"
+      ]
+    },
+    "gate_decision": "LAB_GATE_COMPLETE_ALL_VERIFIED",
+    "runner_exit": 0,
+    "runner_exit_meaning": "raccolta e report completati; nessun FAIL; nessun BLOCKED fuori policy LAB. NON significa 'tutti i requisiti verificati'.",
+    "all_requirements_verified": true,
+    "unverified_requirements": [],
+    "readiness": {
+      "lab_mock": true,
+      "real_provider": "NOT_DECLARED",
+      "production": "NOT_DECLARED",
+      "security_boundary_p_b01": "LAB_VERIFIED_UID_BOUNDARY",
+      "p_b02_authenticated_reconciliation": "LAB_VERIFIED",
+      "p_b04_exact_byte_snapshot": "LAB_VERIFIED",
+      "legacy_spend_paths": "INVENTORIED_SWITCH_VERIFIED_RESIDUAL_BLOCKED_PROVIDER_GATE",
+      "orphan_reserved_lease": "STILL_OPEN (riprodotto, classificato, nessuna reclaim)",
+      "authorization_pricing": "LAB_ONLY",
+      "max_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW"
+    }
+  }
+}

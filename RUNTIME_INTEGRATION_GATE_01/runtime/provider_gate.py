@@ -15,6 +15,8 @@ e sulla classe dell'adapter. Nessun fallback: un provider sconosciuto non
 """
 from __future__ import annotations
 
+import os
+
 ALLOWED_PROVIDER_MODE = "fake"
 
 # Nomi di provider che questo gate deve rifiutare esplicitamente. La lista e'
@@ -57,3 +59,54 @@ def require_fake_adapter(adapter, fake_adapter_cls) -> None:
     name = str(getattr(adapter, "name", ""))
     if not name.startswith("fake"):
         raise RealProviderDisabled(f"adapter.name:{name}")
+
+
+# ---------------------------------------------------------------------------
+# LEGACY SPEND PATH (PROVIDER / EXECUTION BOUNDARY HARDENING, 2026-09-17).
+#
+# `go(..., authorization=None)` e' il percorso LEGACY_LAB: budget/envelope_units
+# grezzi, nessuna quote, nessun envelope derivato, resume-as-start. Aggira
+# authorization/quote/envelope/permit ed e' riprodotto come percorso spendibile
+# (evidence/pre_fix/reproduction_baseline.json["LEGACY_SPEND_PATH"]). Oggi e'
+# raggiungibile SOLO con FakeAdapter (REAL_PROVIDER_DISABLED su tutto il resto) ed
+# e' usato dai test storici T01-T27: NON e' eliminabile in questa fase
+# (BLOCKED_PROVIDER_GATE). Questo interruttore lo rende chiudibile in modo
+# esplicito, verificato e fail-closed, PRIMA di qualunque effetto:
+#
+#   LEGACY_LAB_SPEND_PATH = "ENABLED_LAB_ONLY"   (stato attuale, LAB)
+#   LEGACY_LAB_SPEND_PATH = "DISABLED"           (Provider Boundary Gate: obbligatorio)
+#
+# L'ambiente puo' solo CHIUDERE (CREATIVE_OS_LEGACY_LAB_SPEND_PATH=disabled), mai
+# riaprire un percorso chiuso in codice.
+# ---------------------------------------------------------------------------
+LEGACY_LAB_SPEND_PATH = "ENABLED_LAB_ONLY"
+LEGACY_SPEND_PATH_ENV = "CREATIVE_OS_LEGACY_LAB_SPEND_PATH"
+
+
+class LegacySpendPathDisabled(RuntimeError):
+    """Il percorso LEGACY_LAB e' chiuso: solo il percorso governato puo' spendere."""
+
+    code = "LEGACY_SPEND_PATH_DISABLED"
+
+    def __init__(self, state: str):
+        self.state = state
+        super().__init__(
+            f"{self.code}: percorso LEGACY_LAB (authorization=None) chiuso ({state}); "
+            "solo il percorso governato (envelope derivato + quote fidata + permit) puo' spendere. "
+            "Nessuna reservation, nessun permit, nessun submit.")
+
+
+def legacy_spend_path_state() -> str:
+    if LEGACY_LAB_SPEND_PATH != "ENABLED_LAB_ONLY":
+        return "DISABLED"
+    if str(os.environ.get(LEGACY_SPEND_PATH_ENV, "")).strip().lower() == "disabled":
+        return "DISABLED"
+    return "ENABLED_LAB_ONLY"
+
+
+def require_legacy_lab_spend_path() -> str:
+    """Chiamata da `go()` quando authorization is None, PRIMA di pin/import/store."""
+    state = legacy_spend_path_state()
+    if state != "ENABLED_LAB_ONLY":
+        raise LegacySpendPathDisabled(state)
+    return state

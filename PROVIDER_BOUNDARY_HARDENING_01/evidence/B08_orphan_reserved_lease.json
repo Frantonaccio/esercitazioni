@@ -1,0 +1,136 @@
+{
+  "classification": {
+    "inventory": [
+      {
+        "age_s": 99.0,
+        "attempt_token": null,
+        "class": "RESERVED_NO_INTENT",
+        "exits_available": [],
+        "job_id": "res_6b00c13ae5c1b353_1",
+        "operation_id": "ORPH:a",
+        "payload_digest": null,
+        "provider": "",
+        "reclaim_policy": "NOT_AUTHORIZED",
+        "reserved_at": 1.0,
+        "state": "RESERVED"
+      },
+      {
+        "age_s": -1789635734.4904788,
+        "attempt_token": "att_2f09101a0e844899c0f865b4",
+        "class": "RESERVED_WITH_INTENT",
+        "exits_available": [
+          "recover_orphaned_submits -> SUBMIT_UNKNOWN",
+          "reconcile (autenticata) -> stato scoperto"
+        ],
+        "job_id": "res_b157c035497bf6f8_1",
+        "operation_id": "ORPH:crash",
+        "payload_digest": "4e3c85e59d9fb7e57ac064090393cc811fea3eb389df9325bba4d01c3885c97e",
+        "provider": "fake",
+        "reclaim_policy": "NOT_AUTHORIZED",
+        "reserved_at": 1789635834.4904788,
+        "state": "RESERVED"
+      }
+    ],
+    "recovered": [
+      {
+        "attempt_token": "att_2f09101a0e844899c0f865b4",
+        "cost_credits": null,
+        "error": "intento di submit registrato senza esito: riconciliazione richiesta",
+        "job_id": "res_b157c035497bf6f8_1",
+        "operation_id": "ORPH:crash",
+        "payload_digest": "4e3c85e59d9fb7e57ac064090393cc811fea3eb389df9325bba4d01c3885c97e",
+        "polls": 0,
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 2,
+        "spec_key": "b157c035497bf6f89b0f104cb341f68b7298a2105bfdce563c059c758c184b17",
+        "state": "SUBMIT_UNKNOWN",
+        "submitted_at": 1789635834.4904788,
+        "terminal_by": 0.0,
+        "webhook_hints": 0
+      }
+    ]
+  },
+  "crash_after_send_exit": 4,
+  "gap_status": "STILL_OPEN",
+  "scenario": {
+    "classify_no_intent": {
+      "age_s": 99.0,
+      "attempt_token": null,
+      "class": "RESERVED_NO_INTENT",
+      "exits_available": [],
+      "job_id": "res_6b00c13ae5c1b353_1",
+      "operation_id": "ORPH:a",
+      "payload_digest": null,
+      "provider": "",
+      "reclaim_policy": "NOT_AUTHORIZED",
+      "reserved_at": 1.0,
+      "state": "RESERVED"
+    },
+    "due_for_reconcile": [
+      "res_6b00c13ae5c1b353_1"
+    ],
+    "inventory": [
+      {
+        "age_s": 99.0,
+        "attempt_token": null,
+        "class": "RESERVED_NO_INTENT",
+        "exits_available": [],
+        "job_id": "res_6b00c13ae5c1b353_1",
+        "operation_id": "ORPH:a",
+        "payload_digest": null,
+        "provider": "",
+        "reclaim_policy": "NOT_AUTHORIZED",
+        "reserved_at": 1.0,
+        "state": "RESERVED"
+      }
+    ],
+    "new_attempt_same_operation": {
+      "accepted": false,
+      "code": "LIVE_OR_UNCERTAIN_ATTEMPT"
+    },
+    "ok": true,
+    "reclaim_policy": "NOT_AUTHORIZED",
+    "reconcile_orphan": {
+      "accepted": false,
+      "code": "OWNERSHIP_INCOMPLETE"
+    },
+    "recover_orphaned_submits": [],
+    "reservation": {
+      "job_id": "res_6b00c13ae5c1b353_1",
+      "outcome": "RESERVED_NEW"
+    },
+    "reserved_units": 0,
+    "resume": {
+      "outcome": "EXISTING_LIVE_JOB/reserved-no-dispatch",
+      "resumed": true,
+      "submits": 0
+    },
+    "rows": [
+      {
+        "attempt_token": null,
+        "budget_units": 0,
+        "envelope_id": null,
+        "error": null,
+        "job_id": "res_6b00c13ae5c1b353_1",
+        "operation_id": "ORPH:a",
+        "payload_digest": null,
+        "permit_id": null,
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 0,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "6b00c13ae5c1b3539aefc0d643c30537bbf67809bd196918590c37ee143d57c1",
+        "state": "RESERVED",
+        "submit_intent_at": null
+      }
+    ],
+    "with_intent_case": "vedi crash_after_send"
+  },
+  "why_open": "nessuna lease authority (finestra, attore, evidenza) definita in Core o Runtime; una reclaim senza authority sarebbe una policy arbitraria (vietata dal mandato)"
+}

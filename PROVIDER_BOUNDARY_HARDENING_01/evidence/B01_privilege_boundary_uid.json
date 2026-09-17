@@ -1,0 +1,305 @@
+{
+  "attempts": {
+    "direct_dispatch_on_worker_store": "BLOCKED (OperationalError)",
+    "read_worker_secret": "BLOCKED (PermissionError)",
+    "write_worker_code": "BLOCKED (3 files, PermissionError)",
+    "write_worker_store": "BLOCKED (OperationalError)"
+  },
+  "checks": {
+    "extra_probes_blocked": true,
+    "orchestrator_no_caps": true,
+    "own_store_spend_is_not_spender_account": true,
+    "protocol_first_spend_governed": true,
+    "protocol_refusals": true,
+    "protocol_resume_no_new_submit": true,
+    "secret_never_in_channel": true,
+    "secret_owned_by_spender_0600": true,
+    "sentinel_zero_violations": true,
+    "snapshot_ledger_in_spender_domain": true,
+    "spender_store_one_succeeded_row": true,
+    "store_owned_by_spender": true,
+    "t29_canonical_probes_all_blocked": true,
+    "third_uid_refused": true,
+    "uids_distinct": true,
+    "whoami_peer_authenticated": true
+  },
+  "daemon": {
+    "account_id": "acct_1aebf3f17cab",
+    "allowed_peer_uid": 65531,
+    "db": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb01/spender/store.db",
+    "gid": 65532,
+    "pid": 3602,
+    "secret_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb01/spender/secret/worker_secret.json",
+    "socket": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb01/ipc/spender.sock",
+    "uid": 65532
+  },
+  "precondition": {
+    "cap_chown": true,
+    "cap_eff": "0x1fffeffffff",
+    "cap_setgid": true,
+    "cap_setuid": true,
+    "euid": 0,
+    "setpriv": "/usr/bin/setpriv"
+  },
+  "probe_full": {
+    "attempts": {
+      "direct_dispatch_on_worker_store": "BLOCKED (OperationalError)",
+      "read_worker_secret": "BLOCKED (PermissionError)",
+      "write_worker_code": "BLOCKED (3 files, PermissionError)",
+      "write_worker_store": "BLOCKED (OperationalError)"
+    },
+    "caps": {
+      "CapBnd": "0000000000000000",
+      "CapEff": "0000000000000000",
+      "CapPrm": "0000000000000000"
+    },
+    "extra_probes": {
+      "direct_dispatch_detail": {
+        "error": "OperationalError",
+        "message": "unable to open database file",
+        "ok": false,
+        "state": null,
+        "submits": 0,
+        "transport_sent": 0
+      },
+      "issue_quote_on_worker_store": "BLOCKED (OperationalError)",
+      "kill_spender": "BLOCKED (PermissionError)",
+      "list_secret_dir": "BLOCKED (PermissionError)",
+      "own_store_dispatch": {
+        "error": null,
+        "note": "spesa possibile SOLO sul proprio store con il proprio FakeAdapter: conto diverso da quello dello spender",
+        "provider_account": "fake_acct_a",
+        "state": "SUCCEEDED"
+      },
+      "read_snapshot_ledger": "BLOCKED (PermissionError)",
+      "read_spender_proc_environ": "BLOCKED (PermissionError)"
+    },
+    "gid": 65531,
+    "no_new_privs": "1",
+    "pid": 3610,
+    "protocol": {
+      "amount_from_client": {
+        "ok": false,
+        "refused": "PROTOCOL: chiavi non ammesse ['amount']",
+        "served": 5,
+        "submits": 1
+      },
+      "first": {
+        "budget_units": 10,
+        "envelope_id": "ENV_T29",
+        "governance": "GOVERNED_LAB",
+        "job_id": "res_1b756b91dd15fdb2_1",
+        "ok": true,
+        "outcome": "SUCCEEDED",
+        "payload_snapshot": {
+          "bytes": 177,
+          "digest": "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19",
+          "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb01/spender/store.db.snapshots",
+          "opkey": "58c0d94726b5da8d44fbc694",
+          "persisted_mode": "0o444",
+          "sealed_at": 1789635826.8489163,
+          "send_attestation": {
+            "attempt_token": "att_107223ea991dff5f57766a91",
+            "bytes": 177,
+            "digest": "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19",
+            "exact_bytes_equal": true,
+            "job_id": "res_1b756b91dd15fdb2_1",
+            "opkey": "58c0d94726b5da8d44fbc694",
+            "schema": "payload-snapshot-send-attestation/1",
+            "verified_at": 1789635826.8546867
+          },
+          "send_verified": true
+        },
+        "permit_id": "permit_82b777fa8102e9ccea618f3c",
+        "provider_account": "acct_1aebf3f17cab",
+        "quote_id": "quote_bc1592a27b511c2087247182",
+        "reservation_outcome": "RESERVED_NEW",
+        "resumed": false,
+        "spec_key": "1b756b91dd15fdb2737e1ce4b2f7b1bb2dbc291d4e997982ed50cf83829ab531",
+        "state": "SUCCEEDED",
+        "submits": 1
+      },
+      "no_intent": {
+        "ok": false,
+        "refused": "PROTOCOL: INTENT_REQUIRED (submit senza intent esplicito: resume | new_attempt)",
+        "served": 1,
+        "submits": 0
+      },
+      "quote": {
+        "amount": 10,
+        "envelope_id": "ENV_T29",
+        "ok": true,
+        "price_source": "LAB_PRICE_TABLE",
+        "quote_id": "quote_bc1592a27b511c2087247182",
+        "sku": "fake_model_v1"
+      },
+      "resume": {
+        "budget_units": null,
+        "envelope_id": null,
+        "governance": "GOVERNED_LAB",
+        "job_id": "res_1b756b91dd15fdb2_1",
+        "ok": true,
+        "outcome": "RESUMED/SUCCEEDED",
+        "payload_snapshot": null,
+        "permit_id": null,
+        "provider_account": "acct_1aebf3f17cab",
+        "quote_id": "quote_bc1592a27b511c2087247182",
+        "reservation_outcome": "NONE",
+        "resumed": true,
+        "spec_key": "1b756b91dd15fdb2737e1ce4b2f7b1bb2dbc291d4e997982ed50cf83829ab531",
+        "state": "SUCCEEDED",
+        "submits": 1
+      },
+      "shell": {
+        "ok": false,
+        "refused": "PROTOCOL: op 'shell' non ammessa (ammesse: ('submit', 'quote', 'status', 'stop'))",
+        "served": 6,
+        "submits": 1
+      },
+      "status": {
+        "latest": {
+          "attempt_token": "att_107223ea991dff5f57766a91",
+          "cost_credits": 4.0,
+          "error": null,
+          "job_id": "res_1b756b91dd15fdb2_1",
+          "operation_id": "T29:uid",
+          "payload_digest": "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19",
+          "polls": 1,
+          "provider": "fake",
+          "provider_account": "acct_1aebf3f17cab",
+          "provider_job_id": "pv_1b756b91",
+          "quote_id": "quote_bc1592a27b511c2087247182",
+          "revision": 3,
+          "spec_key": "1b756b91dd15fdb2737e1ce4b2f7b1bb2dbc291d4e997982ed50cf83829ab531",
+          "state": "SUCCEEDED",
+          "submitted_at": 1789635826.8552895,
+          "terminal_by": 1789636126.8552895,
+          "webhook_hints": 0
+        },
+        "ok": true
+      },
+      "whoami": {
+        "account_id": "acct_1aebf3f17cab",
+        "ok": true,
+        "peer_uid": 65531,
+        "pid": 3602,
+        "served": 1,
+        "uid": 65532
+      }
+    },
+    "secret_in_channel": false,
+    "uid": 65531
+  },
+  "probe_other_uid": {
+    "caps": {
+      "CapBnd": "0000000000000000",
+      "CapEff": "0000000000000000",
+      "CapPrm": "0000000000000000"
+    },
+    "gid": 65530,
+    "no_new_privs": "1",
+    "pid": 3621,
+    "protocol": [
+      {
+        "allowed_peer_uid": 65531,
+        "ok": false,
+        "peer_uid": 65530,
+        "refused": "PEER_UID_NOT_AUTHORIZED"
+      }
+    ],
+    "uid": 65530
+  },
+  "requirement_verified": true,
+  "scope_note": "confine LAB con segreto fittizio e FakeAdapter; kernel DAC fra UID non privilegiati; il gate (operatore) gira come root: e' il ruolo dell'installatore, non dell'orchestrator",
+  "secret_stat": {
+    "mode": "0o600",
+    "uid": 65532
+  },
+  "spender_snapshot_ledger": [
+    "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19.bin",
+    "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19__58c0d94726b5da8d44fbc694.seal.json",
+    "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19__58c0d94726b5da8d44fbc694__att_107223ea991dff5f57766a91.bind.json",
+    "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19__58c0d94726b5da8d44fbc694__att_107223ea991dff5f57766a91.send.json"
+  ],
+  "spender_store_rows": [
+    {
+      "attempt_token": "att_107223ea991dff5f57766a91",
+      "budget_units": 10,
+      "envelope_id": "ENV_T29",
+      "error": null,
+      "job_id": "res_1b756b91dd15fdb2_1",
+      "operation_id": "T29:uid",
+      "payload_digest": "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19",
+      "permit_id": "permit_82b777fa8102e9ccea618f3c",
+      "provider": "fake",
+      "provider_account": "acct_1aebf3f17cab",
+      "provider_job_id": "pv_1b756b91",
+      "quote_id": "quote_bc1592a27b511c2087247182",
+      "revision": 3,
+      "settled_units": null,
+      "settlement_source": null,
+      "spec_key": "1b756b91dd15fdb2737e1ce4b2f7b1bb2dbc291d4e997982ed50cf83829ab531",
+      "state": "SUCCEEDED",
+      "submit_intent_at": 1789635826.8527176
+    }
+  ],
+  "status": "PASS",
+  "stop": {
+    "caps": {
+      "CapBnd": "0000000000000000",
+      "CapEff": "0000000000000000",
+      "CapPrm": "0000000000000000"
+    },
+    "gid": 65531,
+    "no_new_privs": "1",
+    "pid": 3622,
+    "protocol": [
+      {
+        "account_id": "acct_1aebf3f17cab",
+        "audit": [
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 3610,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 3610,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_REFUSED",
+            "peer_gid": 65530,
+            "peer_pid": 3621,
+            "peer_uid": 65530
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 3622,
+            "peer_uid": 65531
+          }
+        ],
+        "ok": true,
+        "secret_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb01/spender/secret/worker_secret.json",
+        "served": 1,
+        "stopped": true,
+        "uid": 65532,
+        "violations": []
+      }
+    ],
+    "uid": 65531
+  },
+  "t29_status": {
+    "reason_code": "VERIFIED",
+    "same_uid": false,
+    "status": "PASS"
+  },
+  "uids": {
+    "orchestrator": 65531,
+    "other": 65530,
+    "spender": 65532
+  }
+}

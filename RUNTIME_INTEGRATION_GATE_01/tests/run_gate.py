@@ -51,6 +51,11 @@ def db_for(test_id: str) -> str:
     for suffix in ("", "-journal", "-wal", "-shm"):
         if os.path.exists(p + suffix):
             os.remove(p + suffix)
+    # PROVIDER / EXECUTION BOUNDARY HARDENING (2026-09-17): il runtime tiene accanto allo store il
+    # ledger write-once degli snapshot P-B04 e i nonce P-B02; un db nuovo parte senza residui.
+    for suffix in (".snapshots", ".reconciliation"):
+        if os.path.isdir(p + suffix):
+            shutil.rmtree(p + suffix)
     return p
 
 

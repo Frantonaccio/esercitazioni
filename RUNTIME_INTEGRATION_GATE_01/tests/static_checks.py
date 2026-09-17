@@ -179,7 +179,11 @@ def run(core_path: str | None = None) -> dict:
     expected_core_imports = {
         "adapters.base.GenSpec", "adapters.fake.FakeAdapter",
         "registry.reservations.SqliteReservationStore", "transport.pipeline.run_job",
-        "transport.pipeline.resume_job"}      # CR-09: resume esplicito, non un secondo submit
+        "transport.pipeline.resume_job",      # CR-09: resume esplicito, non un secondo submit
+        # P-B04 (PROVIDER / EXECUTION BOUNDARY HARDENING 2026-09-17): il guard dello snapshot
+        # exact-byte (runtime/payload_snapshot.py) rifiuta PRIMA del marcatore di invio con la
+        # stessa eccezione del contratto RV02 del Core, cosi' run_job attesta "non inviato".
+        "adapters.base.PayloadBindingError"}
     unexpected = sorted(core_imports - expected_core_imports)
     missing = sorted(expected_core_imports - core_imports)
     if unexpected:
