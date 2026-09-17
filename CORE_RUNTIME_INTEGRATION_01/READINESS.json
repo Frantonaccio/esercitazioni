@@ -1,0 +1,525 @@
+{
+  "gap_status": {
+    "APPROVED_INPUT_REALITY_LOCK": "VERIFIED_LAB",
+    "CORE_PIN_POINTS_TO_CANDIDATE": "VERIFIED_LAB",
+    "CORE_RUNTIME_MERGE_AUTHORIZATION": "STILL_OPEN",
+    "EVIDENCE_CHAIN_INTEGRITY": "VERIFIED_LAB",
+    "G_N02_SEMANTIC_CLAIM_PARAPHRASE": "STILL_OPEN",
+    "INDEPENDENT_CI_STATUS_CHECKS": "NOT_RUN",
+    "LEGACY_SPEND_PATHS_CORE_PRIMITIVES": "CORE_CHANGE_REQUIRED",
+    "LEGACY_TESTS_MIGRATION_TO_GOVERNED": "STILL_OPEN",
+    "MECHANISM_REGRESSIONS_ON_CANDIDATE": "VERIFIED_LAB",
+    "NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE": "VERIFIED_LAB",
+    "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY": "VERIFIED_LAB",
+    "ORPHAN_RESERVED_LEASE_POLICY": "POLICY_DECISION_REQUIRED",
+    "P2_FREEZE_AND_BASELINE_UNTOUCHED": "VERIFIED_LAB",
+    "R0_R1_NO_REGRESSION": "VERIFIED_LAB",
+    "REAL_AUTHORIZATION_AND_PRICING": "REAL_PROVIDER_REQUIRED",
+    "REAL_PROVIDER_RECONCILIATION": "REAL_PROVIDER_REQUIRED",
+    "RECONCILIATION_FRESHNESS_NG04_POLICY": "POLICY_DECISION_REQUIRED",
+    "RUNTIME_CONSUMES_CORE_CANDIDATE": "VERIFIED_LAB",
+    "RUN_CONTAMINATION": "NOT_RUN",
+    "RV07_SCHEDULER_RECOVERY_RESIDUAL": "STILL_OPEN",
+    "SUBMIT_UNKNOWN_NO_ZERO_SETTLEMENT": "VERIFIED_LAB"
+  },
+  "report": {
+    "pair_readiness": {
+      "core_candidate_ready": true,
+      "core_candidate_sha": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+      "core_review_state": "APPROVED_PROPOSAL — NOT_MERGE_AUTHORIZED",
+      "core_runtime_pair_ready": true,
+      "human_merge_authorization": false,
+      "meaning": "la coppia Core+Runtime e' COERENTE e promuovibile? Vero quando il Runtime consuma davvero l'API del Core candidate, il pin vi punta, NG-05 e' dimostrato end-to-end e NG-03 e' preservato. NON implica la chiusura degli altri open requirements, e NON e' un'autorizzazione al merge.",
+      "merge_authorized": false,
+      "merge_blockers": [
+        "OPEN_REQUIREMENTS",
+        "HUMAN_MERGE_AUTHORIZATION_ABSENT"
+      ],
+      "ng03_preserved": true,
+      "ng05_end_to_end_verified": true,
+      "pair_blockers": [],
+      "pair_ready_does_not_imply": [
+        "chiusura degli altri open requirements",
+        "merge autorizzato",
+        "provider reale",
+        "production ready"
+      ],
+      "pin_points_to_core_candidate": true,
+      "required_core_sha": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+      "runtime_candidate_branch": "integrate/provider-boundary-core-runtime-2026-09-17",
+      "runtime_candidate_ready": true,
+      "runtime_consumes_core_candidate": true
+    },
+    "phase_readiness": {
+      "all_requirements_verified": false,
+      "core_change_required": [
+        "LEGACY_SPEND_PATHS_CORE_PRIMITIVES"
+      ],
+      "max_state": "CORE_RUNTIME_PAIR_READY_FOR_HUMAN_REVIEW",
+      "max_state_meaning": "coppia Core+Runtime coerente, pronta per Human Review. NON e' un'autorizzazione al merge.",
+      "meaning": "i requisiti della fase sono chiusi?",
+      "not_implied": [
+        "provider reale verificato",
+        "provider ready",
+        "production ready",
+        "credenziali autorizzate",
+        "spend autorizzato",
+        "merge autorizzato",
+        "R2 autorizzato",
+        "chiusura degli altri open requirements"
+      ],
+      "open_requirements": [
+        {
+          "id": "RECONCILIATION_FRESHNESS_NG04_POLICY",
+          "note": "Meccanismo verificato anche sul Core candidate. Nessun valore scelto: servono clock semantics, latenza e timing reali del provider.",
+          "scope": "future_gate",
+          "state": "POLICY_DECISION_REQUIRED",
+          "title": "NG-04 — POLICY: valori della finestra"
+        },
+        {
+          "id": "ORPHAN_RESERVED_LEASE_POLICY",
+          "note": "Meccanismo verificato anche sul Core candidate. `RECLAIM_POLICY = NOT_AUTHORIZED`.",
+          "scope": "this_phase",
+          "state": "POLICY_DECISION_REQUIRED",
+          "title": "Orphan lease — POLICY: finestra, attore, evidenze, classi ammesse"
+        },
+        {
+          "id": "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+          "note": "PROBLEMA DISTINTO da NG-05. Il Core candidate aggiunge una primitive, non ne governa l'accesso: `transport.pipeline.run_job`, `adapter.submit` e `store.reconcile` raw restano raggiungibili. Non chiuso da questa integrazione.",
+          "scope": "future_gate",
+          "state": "CORE_CHANGE_REQUIRED",
+          "title": "Legacy #10/#11: primitive del Core raggiungibili senza passare dal Runtime"
+        },
+        {
+          "id": "LEGACY_TESTS_MIGRATION_TO_GOVERNED",
+          "note": "PROBLEMA DISTINTO da NG-05. Invariato.",
+          "scope": "future_gate",
+          "state": "STILL_OPEN",
+          "title": "Migrazione dei test storici T01-T27 al percorso governato"
+        },
+        {
+          "id": "REAL_AUTHORIZATION_AND_PRICING",
+          "note": "Fuori scope: nessun provider reale, nessuna credenziale, 0 crediti.",
+          "scope": "future_gate",
+          "state": "REAL_PROVIDER_REQUIRED",
+          "title": "Authorization / pricing reali del provider"
+        },
+        {
+          "id": "REAL_PROVIDER_RECONCILIATION",
+          "note": "Fuori scope.",
+          "scope": "future_gate",
+          "state": "REAL_PROVIDER_REQUIRED",
+          "title": "Reconciliation verificata contro un provider reale"
+        },
+        {
+          "id": "CORE_RUNTIME_MERGE_AUTHORIZATION",
+          "note": "Non e' un fatto tecnico e il codice non se la concede: serve una Human Merge Authorization separata. `merge_authorized = false` finche' non arriva.",
+          "scope": "this_phase",
+          "state": "STILL_OPEN",
+          "title": "Autorizzazione umana al merge della coppia Core+Runtime"
+        },
+        {
+          "id": "RUN_CONTAMINATION",
+          "note": "Input Tenant assente.",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "run_contamination"
+        },
+        {
+          "id": "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+          "note": "Non toccato.",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "G-N02"
+        },
+        {
+          "id": "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+          "note": "Non toccato.",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "RV07"
+        },
+        {
+          "id": "INDEPENDENT_CI_STATUS_CHECKS",
+          "note": "Assenti sul branch.",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "Status check CI indipendenti"
+        }
+      ],
+      "open_requirements_blocking_all_verified": [
+        "RECONCILIATION_FRESHNESS_NG04_POLICY",
+        "ORPHAN_RESERVED_LEASE_POLICY",
+        "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+        "LEGACY_TESTS_MIGRATION_TO_GOVERNED",
+        "REAL_AUTHORIZATION_AND_PRICING",
+        "REAL_PROVIDER_RECONCILIATION",
+        "CORE_RUNTIME_MERGE_AUTHORIZATION"
+      ],
+      "open_requirements_future_gate": [
+        "RECONCILIATION_FRESHNESS_NG04_POLICY",
+        "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+        "LEGACY_TESTS_MIGRATION_TO_GOVERNED",
+        "REAL_AUTHORIZATION_AND_PRICING",
+        "REAL_PROVIDER_RECONCILIATION"
+      ],
+      "open_requirements_other_phase": [
+        "RUN_CONTAMINATION",
+        "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+        "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+        "INDEPENDENT_CI_STATUS_CHECKS"
+      ],
+      "open_requirements_this_phase": [
+        "ORPHAN_RESERVED_LEASE_POLICY",
+        "CORE_RUNTIME_MERGE_AUTHORIZATION"
+      ],
+      "phase_gate_decision": "LAB_GATE_COMPLETE_WITH_OPEN_GAPS",
+      "policy_decision_required": [
+        "RECONCILIATION_FRESHNESS_NG04_POLICY",
+        "ORPHAN_RESERVED_LEASE_POLICY"
+      ],
+      "real_provider_required": [
+        "REAL_AUTHORIZATION_AND_PRICING",
+        "REAL_PROVIDER_RECONCILIATION"
+      ],
+      "requirements": [
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D00"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "APPROVED_INPUT_REALITY_LOCK",
+          "note": "8/8 verifiche. Nessun APPROVED_INPUT_DRIFT.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Reality Lock sugli input approvati (Core main/candidate, Runtime main/reviewed, P2)"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D01"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "CORE_PIN_POINTS_TO_CANDIDATE",
+          "note": "Candidate pulito -> CORE_PIN_OK. Baseline vecchia -> STALE_CORE_PIN (non MISMATCH generico: e' un Core VECCHIO, e il runtime lo dice). Candidate sporco -> CORE_WORKTREE_DIRTY. Path assente / SHA sbagliato -> CORE_PIN_MISMATCH. `go()` contro la baseline si ferma PRIMA dell'import e senza creare lo store.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "REQUIRED_CORE_SHA punta al Core candidate approvato, fail-closed su tutto il resto"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D01",
+            "D06"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "RUNTIME_CONSUMES_CORE_CANDIDATE",
+          "note": "Unico call site: go_candidate._refuse_pre_submit. Il percorso a due transazioni reconcile -> settle e' RIMOSSO dal caso pre-submit; `settle` non e' piu' chiamata dal runtime; `reconcile` resta solo per il report autenticato P-B02.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Il Runtime consuma realmente `mark_refused_pre_submit`"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D02",
+            "D03",
+            "D04",
+            "D05"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
+          "note": "SERIALIZATION_DRIFT e IDENTITY_DRIFT: FAILED + settlement 0 + 1 riga di ledger + 1 anomalia, in UNA transazione, con provenance veritiera. Crash prima del COMMIT del Core: nulla di parziale, e la chiusura ritentata riesce. Vista obsoleta: CAS fail-closed, nessun doppio settlement. Non-RESERVED e identita' remota persistita: rifiutati. Era CORE_CHANGE_REQUIRED.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "NG-05 — atomicita' della terminalizzazione pre-submit, end-to-end Runtime -> Core"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D06",
+            "D07"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE",
+          "note": "`TRANSPORT_ATTESTED_NOT_SENT` resta esclusiva del percorso con attestazione reale (controprova positiva: quel percorso la registra ancora). Il Core la RIFIUTA come `source` del percorso pre-submit, quindi l'invariante e' ora imposta da entrambi i lati.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "NG-03 — provenance veritiera preservata dall'integrazione"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D08"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "SUBMIT_UNKNOWN_NO_ZERO_SETTLEMENT",
+          "note": "L'API atomica rifiuta un job non RESERVED: un invio che puo' essere avvenuto non diventa gratis. RESUME non crea un nuovo attempt ne' un nuovo submit.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Invio incerto: resta SUBMIT_UNKNOWN, nessun settlement zero, nessun blind retry"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D09"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "MECHANISM_REGRESSIONS_ON_CANDIDATE",
+          "note": "Nessun test storico indebolito: stessi asserti, Core diverso.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "P-B04, P-B01+P-B02, NG-04, legacy spend paths, orphan lease rieseguiti sul Core candidate"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D10"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "R0_R1_NO_REGRESSION",
+          "note": "Stessa forma della baseline: 36/37 PASS, 0 FAIL, T29 BLOCKED_ENVIRONMENT per policy.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Nessuna regressione R0-R1 (T01-T37) contro il Core candidate"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D11"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "P2_FREEZE_AND_BASELINE_UNTOUCHED",
+          "note": "Il Core candidate non e' stato modificato oltre il commit approvato.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "P2 invariato, Core main e Runtime main intatti, nessun tag"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D12"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "EVIDENCE_CHAIN_INTEGRITY",
+          "note": "Stessa struttura approvata dalla Human Review: nessun `runtime_commit`, SHA256SUMS copre MANIFEST.json, nessun .pyc nel package.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Catena di provenance preservata (code sha / evidence head / provenance esterna)"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D09"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "RECONCILIATION_FRESHNESS_NG04_POLICY",
+          "note": "Meccanismo verificato anche sul Core candidate. Nessun valore scelto: servono clock semantics, latenza e timing reali del provider.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "POLICY_DECISION_REQUIRED",
+          "title": "NG-04 — POLICY: valori della finestra"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D09"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "ORPHAN_RESERVED_LEASE_POLICY",
+          "note": "Meccanismo verificato anche sul Core candidate. `RECLAIM_POLICY = NOT_AUTHORIZED`.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "POLICY_DECISION_REQUIRED",
+          "title": "Orphan lease — POLICY: finestra, attore, evidenze, classi ammesse"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D09"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+          "note": "PROBLEMA DISTINTO da NG-05. Il Core candidate aggiunge una primitive, non ne governa l'accesso: `transport.pipeline.run_job`, `adapter.submit` e `store.reconcile` raw restano raggiungibili. Non chiuso da questa integrazione.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "CORE_CHANGE_REQUIRED",
+          "title": "Legacy #10/#11: primitive del Core raggiungibili senza passare dal Runtime"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D09"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "LEGACY_TESTS_MIGRATION_TO_GOVERNED",
+          "note": "PROBLEMA DISTINTO da NG-05. Invariato.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "STILL_OPEN",
+          "title": "Migrazione dei test storici T01-T27 al percorso governato"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "REAL_AUTHORIZATION_AND_PRICING",
+          "note": "Fuori scope: nessun provider reale, nessuna credenziale, 0 crediti.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "REAL_PROVIDER_REQUIRED",
+          "title": "Authorization / pricing reali del provider"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "REAL_PROVIDER_RECONCILIATION",
+          "note": "Fuori scope.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "REAL_PROVIDER_REQUIRED",
+          "title": "Reconciliation verificata contro un provider reale"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "D11"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "CORE_RUNTIME_MERGE_AUTHORIZATION",
+          "note": "Non e' un fatto tecnico e il codice non se la concede: serve una Human Merge Authorization separata. `merge_authorized = false` finche' non arriva.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "STILL_OPEN",
+          "title": "Autorizzazione umana al merge della coppia Core+Runtime"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "RUN_CONTAMINATION",
+          "note": "Input Tenant assente.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "run_contamination"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+          "note": "Non toccato.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "G-N02"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+          "note": "Non toccato.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "RV07"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "INDEPENDENT_CI_STATUS_CHECKS",
+          "note": "Assenti sul branch.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "Status check CI indipendenti"
+        }
+      ],
+      "verified_requirements": [
+        "APPROVED_INPUT_REALITY_LOCK",
+        "CORE_PIN_POINTS_TO_CANDIDATE",
+        "RUNTIME_CONSUMES_CORE_CANDIDATE",
+        "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
+        "NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE",
+        "SUBMIT_UNKNOWN_NO_ZERO_SETTLEMENT",
+        "MECHANISM_REGRESSIONS_ON_CANDIDATE",
+        "R0_R1_NO_REGRESSION",
+        "P2_FREEZE_AND_BASELINE_UNTOUCHED",
+        "EVIDENCE_CHAIN_INTEGRITY"
+      ]
+    },
+    "runner_exit": 0,
+    "runner_exit_meaning": "tutti i test hanno prodotto l'esito atteso. NON significa merge autorizzato.",
+    "schema": "core-runtime-integration-ng05-readiness/1",
+    "test_suite": {
+      "all_tests_passed": true,
+      "blocked": 0,
+      "blocked_tests": [],
+      "fail": 0,
+      "fail_ids": [],
+      "inventory": {
+        "duplicates": [],
+        "expected_count": 13,
+        "missing": [],
+        "observed_count": 13,
+        "unexpected": [],
+        "valid": true
+      },
+      "meaning": "i test hanno prodotto l'esito atteso. NON significa che i requisiti siano chiusi ne' che il merge sia autorizzato.",
+      "pass": 13,
+      "pass_ids": [
+        "D00",
+        "D01",
+        "D02",
+        "D03",
+        "D04",
+        "D05",
+        "D06",
+        "D07",
+        "D08",
+        "D09",
+        "D10",
+        "D11",
+        "D12"
+      ],
+      "test_suite_decision": "ALL_TESTS_PASS",
+      "total": 13
+    }
+  }
+}

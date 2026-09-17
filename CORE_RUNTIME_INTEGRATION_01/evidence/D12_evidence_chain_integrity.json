@@ -1,0 +1,35 @@
+{
+  "chain": "runtime_code_sha -> runtime_evidence_head_sha (solo in PROVENANCE esterna) -> PROVENANCE.json + SHA256SUMS.EXTERNAL",
+  "counterproofs": {
+    "ambiguous_key": [
+      "AMBIGUOUS_MANIFEST_KEY"
+    ],
+    "consistent": [],
+    "head_drift": [
+      "CODE_SHA_EQUALS_EVIDENCE_HEAD",
+      "HEAD_NOT_EVIDENCE_HEAD"
+    ],
+    "manifest_not_covered": [
+      "MANIFEST_NOT_COVERED",
+      "MISSING_FROM_SUMS"
+    ],
+    "valid": []
+  },
+  "expected": {
+    "ambiguous_key": [
+      "AMBIGUOUS_MANIFEST_KEY"
+    ],
+    "consistent": [],
+    "head_drift": [
+      "CODE_SHA_EQUALS_EVIDENCE_HEAD",
+      "HEAD_NOT_EVIDENCE_HEAD"
+    ],
+    "manifest_not_covered": [
+      "MANIFEST_NOT_COVERED",
+      "MISSING_FROM_SUMS"
+    ],
+    "valid": []
+  },
+  "mismatches": {},
+  "verifier": "pbg2/bundle_provenance.py:verify (authority approvata, riusata non copiata)"
+}

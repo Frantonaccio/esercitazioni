@@ -1,0 +1,116 @@
+{
+  "checks": {
+    "go_against_old_core_refused": true,
+    "other_reconcile_settle_sites_as_declared": true,
+    "pin_matrix_fail_closed": true,
+    "required_core_sha_is_candidate": true,
+    "runtime_uses_atomic_api": true,
+    "static_contract_ok_against_candidate": true,
+    "two_transaction_path_removed_from_go_candidate": true
+  },
+  "go_against_old_core": {
+    "code": "STALE_CORE_PIN",
+    "core_imported_before": false,
+    "observed": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "ok": true,
+    "refused": true,
+    "store_created": false,
+    "verified": true
+  },
+  "pin_matrix": {
+    "cases": {
+      "candidate_clean": {
+        "code": "CORE_PIN_OK",
+        "observed": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
+      },
+      "candidate_clean_again": {
+        "code": "CORE_PIN_OK",
+        "observed": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
+      },
+      "candidate_dirty": {
+        "code": "CORE_WORKTREE_DIRTY",
+        "dirty": [
+          "?? __pin_probe_untracked__.txt"
+        ],
+        "observed": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
+      },
+      "missing_path": {
+        "code": "CORE_PIN_MISMATCH",
+        "dirty": [],
+        "observed": null
+      },
+      "old_baseline": {
+        "code": "STALE_CORE_PIN",
+        "dirty": [],
+        "observed": "740ee979300fe20a9382992528604dee70cb2fcf"
+      },
+      "wrong_sha_pure": {
+        "code": "CORE_PIN_MISMATCH",
+        "observed": "0000000000000000000000000000000000000000"
+      }
+    },
+    "expected": {
+      "candidate_clean": "CORE_PIN_OK",
+      "candidate_clean_again": "CORE_PIN_OK",
+      "candidate_dirty": "CORE_WORKTREE_DIRTY",
+      "missing_path": "CORE_PIN_MISMATCH",
+      "old_baseline": "STALE_CORE_PIN",
+      "wrong_sha_pure": "CORE_PIN_MISMATCH"
+    },
+    "mismatches": {},
+    "ok": true,
+    "required_core_sha": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+    "verified": true
+  },
+  "required_core_sha": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+  "runtime_call_sites": {
+    "mark_refused_pre_submit": [
+      [
+        "go_candidate.py",
+        "_refuse_pre_submit"
+      ]
+    ],
+    "reconcile": [
+      [
+        "orphan_lease.py",
+        "reclaim_orphan_reserved"
+      ],
+      [
+        "reconciliation.py",
+        "reconcile_authenticated"
+      ]
+    ],
+    "settle": [
+      [
+        "orphan_lease.py",
+        "reclaim_orphan_reserved"
+      ]
+    ]
+  },
+  "static_checks": {
+    "contract_drift": [],
+    "core_imports": [
+      "adapters.base.GenSpec",
+      "adapters.base.PayloadBindingError",
+      "adapters.fake.FakeAdapter",
+      "registry.reservations.SqliteReservationStore",
+      "transport.pipeline.resume_job",
+      "transport.pipeline.run_job"
+    ],
+    "files": [
+      "__init__.py",
+      "authorization.py",
+      "core_pin.py",
+      "genspec_bridge.py",
+      "go_candidate.py",
+      "hf_batch_bridge.py",
+      "hf_batch_runtime.py",
+      "orphan_lease.py",
+      "payload_snapshot.py",
+      "provider_gate.py",
+      "reconciliation.py"
+    ],
+    "findings": [],
+    "ok": true
+  }
+}

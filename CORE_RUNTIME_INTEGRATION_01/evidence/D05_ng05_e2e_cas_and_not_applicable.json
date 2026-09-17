@@ -1,0 +1,224 @@
+{
+  "counterproofs": {
+    "job_id": "res_4a368373bd0efcff_1",
+    "journal_unchanged": true,
+    "no_double_settlement": true,
+    "not_applicable_anomaly": true,
+    "not_reserved": {
+      "error": "TransitionRefused",
+      "refused": true
+    },
+    "ok": true,
+    "provider_job_id_present": {
+      "error": "TransitionRefused",
+      "refused": true
+    },
+    "remote_job_untouched": true,
+    "stale_second_call": {
+      "error": "TransitionRefused",
+      "refused": true
+    },
+    "transport_source_refused": {
+      "error": "ReconciliationEvidenceRequired",
+      "refused": true
+    },
+    "verified": true
+  },
+  "first_closure": {
+    "adapter_kind": "drift_nested",
+    "go": {
+      "code": "SERIALIZATION_DRIFT",
+      "error": "PayloadSnapshotError",
+      "job_id": null,
+      "message": "SERIALIZATION_DRIFT: digest calcolato dal Core 5f1fcf3b1649df92… != snapshot sigillato a5cb15992093bd95…: l'adapter ha serializzato byte diversi fra sigillo e submit",
+      "ok": false,
+      "state": null,
+      "submits": 0,
+      "transport_sent_count": 0
+    },
+    "job_id": "res_4a368373bd0efcff_1",
+    "ok": true,
+    "reconciliation_evidence": {
+      "attested_by": "runtime_snapshot_guard",
+      "observed": {
+        "core_digest": "5f1fcf3b1649df92046e2bcc33a90747b605ab5fbc1660d75451f2915dace950",
+        "core_digest_authorized_in_transport": false,
+        "guard_armed_for_this_attempt": false,
+        "refused_at": "store.mark_submitting (prima di adapter.authorize_payload e di ogni send)",
+        "sealed_digest": "a5cb15992093bd956b0c9b7e44384401b7d5bf2e0235bca20990d11de79e0b76",
+        "sealed_digest_authorized_in_transport": false,
+        "send_attestation_present": false,
+        "transport_sent_count_at_seal": 0,
+        "transport_sent_count_now": 0,
+        "transport_sent_count_unchanged": true
+      },
+      "reason": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core 5f1fcf3b1649df92… != snapshot sigillato a5cb15992093bd95…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+      "refusal_code": "SERIALIZATION_DRIFT",
+      "remote_ref": "none:never_dispatched",
+      "source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+      "transport_attestation": null
+    },
+    "runtime_report": {
+      "atomic": true,
+      "code": "SERIALIZATION_DRIFT",
+      "core_api": "mark_refused_pre_submit",
+      "message": "SERIALIZATION_DRIFT: digest calcolato dal Core 5f1fcf3b1649df92… != snapshot sigillato a5cb15992093bd95…: l'adapter ha serializzato byte diversi fra sigillo e submit",
+      "not_dispatched_provable": true,
+      "observed": {
+        "core_digest": "5f1fcf3b1649df92046e2bcc33a90747b605ab5fbc1660d75451f2915dace950",
+        "core_digest_authorized_in_transport": false,
+        "guard_armed_for_this_attempt": false,
+        "refused_at": "store.mark_submitting (prima di adapter.authorize_payload e di ogni send)",
+        "sealed_digest": "a5cb15992093bd956b0c9b7e44384401b7d5bf2e0235bca20990d11de79e0b76",
+        "sealed_digest_authorized_in_transport": false,
+        "send_attestation_present": false,
+        "transport_sent_count_at_seal": 0,
+        "transport_sent_count_now": 0,
+        "transport_sent_count_unchanged": true
+      },
+      "provenance": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+      "reason": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core 5f1fcf3b1649df92… != snapshot sigillato a5cb15992093bd95…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+      "settled": true,
+      "terminalized": true
+    },
+    "state": {
+      "anomalies": [
+        {
+          "detail": {
+            "evidence": {
+              "attested_by": "runtime_snapshot_guard",
+              "observed": {
+                "core_digest": "5f1fcf3b1649df92046e2bcc33a90747b605ab5fbc1660d75451f2915dace950",
+                "core_digest_authorized_in_transport": false,
+                "guard_armed_for_this_attempt": false,
+                "refused_at": "store.mark_submitting (prima di adapter.authorize_payload e di ogni send)",
+                "sealed_digest": "a5cb15992093bd956b0c9b7e44384401b7d5bf2e0235bca20990d11de79e0b76",
+                "sealed_digest_authorized_in_transport": false,
+                "send_attestation_present": false,
+                "transport_sent_count_at_seal": 0,
+                "transport_sent_count_now": 0,
+                "transport_sent_count_unchanged": true
+              },
+              "reason": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core 5f1fcf3b1649df92… != snapshot sigillato a5cb15992093bd95…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+              "refusal_code": "SERIALIZATION_DRIFT",
+              "remote_ref": "none:never_dispatched",
+              "source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+              "transport_attestation": null
+            },
+            "from": "RESERVED",
+            "to": "FAILED"
+          },
+          "job_id": "res_4a368373bd0efcff_1",
+          "kind": "RECONCILIATION",
+          "seq": 1
+        },
+        {
+          "detail": {
+            "atomic": true,
+            "code": "SERIALIZATION_DRIFT",
+            "core_api": "mark_refused_pre_submit",
+            "message": "SERIALIZATION_DRIFT: digest calcolato dal Core 5f1fcf3b1649df92… != snapshot sigillato a5cb15992093bd95…: l'adapter ha serializzato byte diversi fra sigillo e submit",
+            "not_dispatched_provable": true,
+            "observed": {
+              "core_digest": "5f1fcf3b1649df92046e2bcc33a90747b605ab5fbc1660d75451f2915dace950",
+              "core_digest_authorized_in_transport": false,
+              "guard_armed_for_this_attempt": false,
+              "refused_at": "store.mark_submitting (prima di adapter.authorize_payload e di ogni send)",
+              "sealed_digest": "a5cb15992093bd956b0c9b7e44384401b7d5bf2e0235bca20990d11de79e0b76",
+              "sealed_digest_authorized_in_transport": false,
+              "send_attestation_present": false,
+              "transport_sent_count_at_seal": 0,
+              "transport_sent_count_now": 0,
+              "transport_sent_count_unchanged": true
+            },
+            "provenance": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+            "reason": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core 5f1fcf3b1649df92… != snapshot sigillato a5cb15992093bd95…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+            "settled": true,
+            "terminalized": true
+          },
+          "job_id": "res_4a368373bd0efcff_1",
+          "kind": "SNAPSHOT_REFUSED_PRE_SUBMIT",
+          "seq": 2
+        }
+      ],
+      "anomaly_kinds": [
+        "RECONCILIATION",
+        "SNAPSHOT_REFUSED_PRE_SUBMIT"
+      ],
+      "ledger": [
+        {
+          "cost_known": 0,
+          "job_id": "res_4a368373bd0efcff_1",
+          "kind": "RESERVE",
+          "source": "reserve_or_get_live",
+          "units": 10
+        },
+        {
+          "cost_known": 1,
+          "job_id": "res_4a368373bd0efcff_1",
+          "kind": "SETTLE",
+          "source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+          "units": 0
+        }
+      ],
+      "row": {
+        "attempt_token": null,
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core 5f1fcf3b1649df92… != snapshot sigillato a5cb15992093bd95…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+        "job_id": "res_4a368373bd0efcff_1",
+        "operation_id": "lab:d05",
+        "payload_digest": null,
+        "permit_id": "permit_887c660d2fe368d2fb58b646",
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": "quote_15085afdc6817a7b0dd9389c",
+        "revision": 1,
+        "settled_units": 0,
+        "settlement_source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+        "spec_key": "4a368373bd0efcff119b17dad5f6b1b2bb8556ccdae3a8c5c6b907ef7b015bec",
+        "state": "FAILED",
+        "submit_intent_at": null
+      },
+      "rows": [
+        {
+          "attempt_token": null,
+          "budget_units": 10,
+          "envelope_id": "ENV_LAB",
+          "error": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core 5f1fcf3b1649df92… != snapshot sigillato a5cb15992093bd95…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+          "job_id": "res_4a368373bd0efcff_1",
+          "operation_id": "lab:d05",
+          "payload_digest": null,
+          "permit_id": "permit_887c660d2fe368d2fb58b646",
+          "provider": "",
+          "provider_account": "",
+          "provider_job_id": null,
+          "quote_id": "quote_15085afdc6817a7b0dd9389c",
+          "revision": 1,
+          "settled_units": 0,
+          "settlement_source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+          "spec_key": "4a368373bd0efcff119b17dad5f6b1b2bb8556ccdae3a8c5c6b907ef7b015bec",
+          "state": "FAILED",
+          "submit_intent_at": null
+        }
+      ],
+      "settle_rows": [
+        {
+          "cost_known": 1,
+          "job_id": "res_4a368373bd0efcff_1",
+          "kind": "SETTLE",
+          "source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+          "units": 0
+        }
+      ],
+      "totals": {
+        "live_reservation_units": 0,
+        "settled_units": 0,
+        "terminal_unsettled_jobs": 0,
+        "unsettled_exposure_units": 0
+      }
+    },
+    "verified": true
+  }
+}

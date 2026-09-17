@@ -1,0 +1,55 @@
+{
+  "declared_other_sites": {
+    "reconcile": [
+      [
+        "orphan_lease.py",
+        "reclaim_orphan_reserved"
+      ],
+      [
+        "reconciliation.py",
+        "reconcile_authenticated"
+      ]
+    ],
+    "settle": [
+      [
+        "orphan_lease.py",
+        "reclaim_orphan_reserved"
+      ]
+    ]
+  },
+  "go_candidate_residual_sites": [],
+  "go_candidate_two_transaction_path_removed": true,
+  "ok": true,
+  "orphan_lease_path_unchanged_by_this_delta": true,
+  "other_sites_as_declared": true,
+  "runtime_call_sites": {
+    "mark_refused_pre_submit": [
+      [
+        "go_candidate.py",
+        "_refuse_pre_submit"
+      ]
+    ],
+    "reconcile": [
+      [
+        "orphan_lease.py",
+        "reclaim_orphan_reserved"
+      ],
+      [
+        "reconciliation.py",
+        "reconcile_authenticated"
+      ]
+    ],
+    "settle": [
+      [
+        "orphan_lease.py",
+        "reclaim_orphan_reserved"
+      ]
+    ]
+  },
+  "runtime_never_uses_transport_path": true,
+  "runtime_uses_atomic_api": true,
+  "transport_path_signature": "(self, job: 'Job', reason: 'str', now: 'float') -> 'Job'",
+  "transport_path_unchanged": true,
+  "transport_path_uses_transport_source": true,
+  "verified": true
+}

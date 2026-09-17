@@ -1,0 +1,26 @@
+{
+  "evidence_source": "TRANSPORT_ATTESTED_NOT_SENT",
+  "ok": true,
+  "row": {
+    "attempt_token": null,
+    "budget_units": 10,
+    "envelope_id": "ENV_LAB",
+    "error": "trasporto attesta: nessun invio",
+    "job_id": "res_e5054788f8c1c1a4_1",
+    "operation_id": "lab:d07",
+    "payload_digest": null,
+    "permit_id": null,
+    "provider": "",
+    "provider_account": "",
+    "provider_job_id": null,
+    "quote_id": null,
+    "revision": 1,
+    "settled_units": 0,
+    "settlement_source": "TRANSPORT_ATTESTED_NOT_SENT",
+    "spec_key": "e5054788f8c1c1a4c15520f3a56bc703851758a0bfcf61ce437c2bf9435aad93",
+    "state": "FAILED",
+    "submit_intent_at": null
+  },
+  "settle_source": "TRANSPORT_ATTESTED_NOT_SENT",
+  "verified": true
+}

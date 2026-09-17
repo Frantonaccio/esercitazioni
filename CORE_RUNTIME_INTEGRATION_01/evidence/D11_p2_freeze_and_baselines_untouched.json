@@ -1,0 +1,37 @@
+{
+  "approved_bundle_status": "",
+  "bundle_v3_status": "",
+  "checks": {
+    "approved_bundle_v2_untouched": true,
+    "bundle_v3_untouched": true,
+    "core_candidate_untouched": true,
+    "core_main_untouched": true,
+    "no_credential_material": true,
+    "no_tags": true,
+    "p2_before_equals_after": true,
+    "runtime_main_untouched": true
+  },
+  "core_candidate": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+  "core_main": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "credential_scan": {
+    "extensions_skipped": [
+      ".zip",
+      ".db",
+      ".bin",
+      ".sock"
+    ],
+    "files_scanned": 27,
+    "hits": [],
+    "patterns_count": 8,
+    "patterns_declared_in": "pbg2/bundle_provenance.py",
+    "patterns_sha256": "06689d729628c280921b323a3e35d68720f6adcec7cbc4e260d30f391e2460ce",
+    "self_reference_excluded": "pbg2/bundle_provenance.py"
+  },
+  "p2_after": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+  "p2_before": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+  "runtime_origin_main": "0698279703ab959625ac4e84ee636bc5b93b45fd",
+  "tags": {
+    "core": [],
+    "runtime": []
+  }
+}

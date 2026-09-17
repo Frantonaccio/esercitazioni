@@ -1,0 +1,35 @@
+{
+  "approved_inputs": {
+    "core_baseline": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "core_candidate": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+    "core_candidate_branch": "harden/provider-boundary-core-atomicity-2026-09-17",
+    "evidence_bundle_v2_sha256": "12cd7773f5d242578ae877d34bb6d3603d429725127626a7ff4d1780dd20e078",
+    "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "runtime_code_sha": "e845b744a4af3a143b1b1e710016726c57ad6c39",
+    "runtime_main": "0698279703ab959625ac4e84ee636bc5b93b45fd",
+    "runtime_reviewed_head": "4a73cdad18034e7c1bd9842a37e34e0273f9325a"
+  },
+  "checks": {
+    "core_baseline_tree_clean": true,
+    "core_candidate_branch": true,
+    "core_candidate_descends_from_baseline": true,
+    "core_candidate_is_approved": true,
+    "core_candidate_tree_clean": true,
+    "core_main_is_approved_baseline": true,
+    "integration_branch_from_reviewed_head": true,
+    "p2_unchanged": true,
+    "runtime_main_is_canonical": true,
+    "runtime_reviewed_head_exists": true,
+    "runtime_work_descends_from_canonical": true
+  },
+  "observed": {
+    "core_candidate": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+    "core_candidate_branch": "harden/provider-boundary-core-atomicity-2026-09-17",
+    "core_main": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "runtime_branch": "integrate/provider-boundary-core-runtime-2026-09-17",
+    "runtime_head": "4a73cdad18034e7c1bd9842a37e34e0273f9325a",
+    "runtime_origin_main": "0698279703ab959625ac4e84ee636bc5b93b45fd"
+  },
+  "stop_condition": null
+}

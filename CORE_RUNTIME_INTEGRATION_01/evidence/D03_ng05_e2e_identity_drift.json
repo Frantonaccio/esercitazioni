@@ -1,0 +1,197 @@
+{
+  "adapter_kind": "identity_drift",
+  "go": {
+    "code": "IDENTITY_DRIFT",
+    "error": "PayloadSnapshotError",
+    "job_id": null,
+    "message": "IDENTITY_DRIFT: ownership fake/acct_other != sigillo fake/fake_acct_a",
+    "ok": false,
+    "state": null,
+    "submits": 0,
+    "transport_sent_count": 0
+  },
+  "job_id": "res_b3c7a40c10b38d15_1",
+  "ok": true,
+  "reconciliation_evidence": {
+    "attested_by": "runtime_snapshot_guard",
+    "observed": {
+      "core_digest": "9b3064ff99d1b2f007180051b8851dad90ee1e29ef54f2ed525627140cc4be1d",
+      "core_digest_authorized_in_transport": false,
+      "guard_armed_for_this_attempt": false,
+      "refused_at": "store.mark_submitting (prima di adapter.authorize_payload e di ogni send)",
+      "sealed_digest": "9b3064ff99d1b2f007180051b8851dad90ee1e29ef54f2ed525627140cc4be1d",
+      "sealed_digest_authorized_in_transport": false,
+      "send_attestation_present": false,
+      "transport_sent_count_at_seal": 0,
+      "transport_sent_count_now": 0,
+      "transport_sent_count_unchanged": true
+    },
+    "reason": "snapshot guard: IDENTITY_DRIFT: ownership fake/acct_other != sigillo fake/fake_acct_a (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+    "refusal_code": "IDENTITY_DRIFT",
+    "remote_ref": "none:never_dispatched",
+    "source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+    "transport_attestation": null
+  },
+  "runtime_report": {
+    "atomic": true,
+    "code": "IDENTITY_DRIFT",
+    "core_api": "mark_refused_pre_submit",
+    "message": "IDENTITY_DRIFT: ownership fake/acct_other != sigillo fake/fake_acct_a",
+    "not_dispatched_provable": true,
+    "observed": {
+      "core_digest": "9b3064ff99d1b2f007180051b8851dad90ee1e29ef54f2ed525627140cc4be1d",
+      "core_digest_authorized_in_transport": false,
+      "guard_armed_for_this_attempt": false,
+      "refused_at": "store.mark_submitting (prima di adapter.authorize_payload e di ogni send)",
+      "sealed_digest": "9b3064ff99d1b2f007180051b8851dad90ee1e29ef54f2ed525627140cc4be1d",
+      "sealed_digest_authorized_in_transport": false,
+      "send_attestation_present": false,
+      "transport_sent_count_at_seal": 0,
+      "transport_sent_count_now": 0,
+      "transport_sent_count_unchanged": true
+    },
+    "provenance": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+    "reason": "snapshot guard: IDENTITY_DRIFT: ownership fake/acct_other != sigillo fake/fake_acct_a (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+    "settled": true,
+    "terminalized": true
+  },
+  "state": {
+    "anomalies": [
+      {
+        "detail": {
+          "evidence": {
+            "attested_by": "runtime_snapshot_guard",
+            "observed": {
+              "core_digest": "9b3064ff99d1b2f007180051b8851dad90ee1e29ef54f2ed525627140cc4be1d",
+              "core_digest_authorized_in_transport": false,
+              "guard_armed_for_this_attempt": false,
+              "refused_at": "store.mark_submitting (prima di adapter.authorize_payload e di ogni send)",
+              "sealed_digest": "9b3064ff99d1b2f007180051b8851dad90ee1e29ef54f2ed525627140cc4be1d",
+              "sealed_digest_authorized_in_transport": false,
+              "send_attestation_present": false,
+              "transport_sent_count_at_seal": 0,
+              "transport_sent_count_now": 0,
+              "transport_sent_count_unchanged": true
+            },
+            "reason": "snapshot guard: IDENTITY_DRIFT: ownership fake/acct_other != sigillo fake/fake_acct_a (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+            "refusal_code": "IDENTITY_DRIFT",
+            "remote_ref": "none:never_dispatched",
+            "source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+            "transport_attestation": null
+          },
+          "from": "RESERVED",
+          "to": "FAILED"
+        },
+        "job_id": "res_b3c7a40c10b38d15_1",
+        "kind": "RECONCILIATION",
+        "seq": 1
+      },
+      {
+        "detail": {
+          "atomic": true,
+          "code": "IDENTITY_DRIFT",
+          "core_api": "mark_refused_pre_submit",
+          "message": "IDENTITY_DRIFT: ownership fake/acct_other != sigillo fake/fake_acct_a",
+          "not_dispatched_provable": true,
+          "observed": {
+            "core_digest": "9b3064ff99d1b2f007180051b8851dad90ee1e29ef54f2ed525627140cc4be1d",
+            "core_digest_authorized_in_transport": false,
+            "guard_armed_for_this_attempt": false,
+            "refused_at": "store.mark_submitting (prima di adapter.authorize_payload e di ogni send)",
+            "sealed_digest": "9b3064ff99d1b2f007180051b8851dad90ee1e29ef54f2ed525627140cc4be1d",
+            "sealed_digest_authorized_in_transport": false,
+            "send_attestation_present": false,
+            "transport_sent_count_at_seal": 0,
+            "transport_sent_count_now": 0,
+            "transport_sent_count_unchanged": true
+          },
+          "provenance": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+          "reason": "snapshot guard: IDENTITY_DRIFT: ownership fake/acct_other != sigillo fake/fake_acct_a (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+          "settled": true,
+          "terminalized": true
+        },
+        "job_id": "res_b3c7a40c10b38d15_1",
+        "kind": "SNAPSHOT_REFUSED_PRE_SUBMIT",
+        "seq": 2
+      }
+    ],
+    "anomaly_kinds": [
+      "RECONCILIATION",
+      "SNAPSHOT_REFUSED_PRE_SUBMIT"
+    ],
+    "ledger": [
+      {
+        "cost_known": 0,
+        "job_id": "res_b3c7a40c10b38d15_1",
+        "kind": "RESERVE",
+        "source": "reserve_or_get_live",
+        "units": 10
+      },
+      {
+        "cost_known": 1,
+        "job_id": "res_b3c7a40c10b38d15_1",
+        "kind": "SETTLE",
+        "source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+        "units": 0
+      }
+    ],
+    "row": {
+      "attempt_token": null,
+      "budget_units": 10,
+      "envelope_id": "ENV_LAB",
+      "error": "snapshot guard: IDENTITY_DRIFT: ownership fake/acct_other != sigillo fake/fake_acct_a (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+      "job_id": "res_b3c7a40c10b38d15_1",
+      "operation_id": "lab:d03",
+      "payload_digest": null,
+      "permit_id": "permit_aed9fa7fb99a4400e0003698",
+      "provider": "",
+      "provider_account": "",
+      "provider_job_id": null,
+      "quote_id": "quote_6065777579544f880e456338",
+      "revision": 1,
+      "settled_units": 0,
+      "settlement_source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+      "spec_key": "b3c7a40c10b38d1527f0a06a523376c6c27f32047b1b3bd189d128640e9c8c10",
+      "state": "FAILED",
+      "submit_intent_at": null
+    },
+    "rows": [
+      {
+        "attempt_token": null,
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": "snapshot guard: IDENTITY_DRIFT: ownership fake/acct_other != sigillo fake/fake_acct_a (rifiutato a mark_submitting: nessuna autorizzazione del payload, nessun invio, nessuna attestazione del trasporto)",
+        "job_id": "res_b3c7a40c10b38d15_1",
+        "operation_id": "lab:d03",
+        "payload_digest": null,
+        "permit_id": "permit_aed9fa7fb99a4400e0003698",
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": "quote_6065777579544f880e456338",
+        "revision": 1,
+        "settled_units": 0,
+        "settlement_source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+        "spec_key": "b3c7a40c10b38d1527f0a06a523376c6c27f32047b1b3bd189d128640e9c8c10",
+        "state": "FAILED",
+        "submit_intent_at": null
+      }
+    ],
+    "settle_rows": [
+      {
+        "cost_known": 1,
+        "job_id": "res_b3c7a40c10b38d15_1",
+        "kind": "SETTLE",
+        "source": "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED",
+        "units": 0
+      }
+    ],
+    "totals": {
+      "live_reservation_units": 0,
+      "settled_units": 0,
+      "terminal_unsettled_jobs": 0,
+      "unsettled_exposure_units": 0
+    }
+  },
+  "verified": true
+}

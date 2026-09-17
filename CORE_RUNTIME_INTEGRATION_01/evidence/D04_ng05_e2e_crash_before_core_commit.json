@@ -1,0 +1,38 @@
+{
+  "after": {
+    "after_crash": {
+      "anomaly_kinds": [],
+      "revision": 0,
+      "settle_rows": 0,
+      "settled_units": null,
+      "state": "RESERVED",
+      "totals": {
+        "live_reservation_units": 10,
+        "settled_units": 0,
+        "terminal_unsettled_jobs": 0,
+        "unsettled_exposure_units": 10
+      }
+    },
+    "after_retry": {
+      "settle_rows": 1,
+      "settled_units": 0,
+      "state": "FAILED",
+      "totals": {
+        "live_reservation_units": 0,
+        "settled_units": 0,
+        "terminal_unsettled_jobs": 0,
+        "unsettled_exposure_units": 0
+      }
+    },
+    "job_id": "res_b3e9cb953ba240e0_1",
+    "nothing_partial": true,
+    "ok": true,
+    "retry_succeeds": true,
+    "verified": true
+  },
+  "crash": {
+    "exitcode": 13,
+    "result": null
+  },
+  "note": "il crash e' iniettato al confine del Core (_crash_hook, la stessa convenzione di test gia' usata da settle): il percorso del runtime e' quello vero, integralmente, fino alla chiamata dell'API"
+}

@@ -1,0 +1,23 @@
+{
+  "atomic_api_on_submit_unknown": {
+    "error": "TransitionRefused",
+    "refused": true
+  },
+  "job_id": "res_8e57ea78b131d60e_1",
+  "ok": true,
+  "resume": {
+    "ok": true,
+    "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
+    "resumed": true,
+    "state": "SUBMIT_UNKNOWN",
+    "submits": 0
+  },
+  "rows_for_operation": [
+    "res_8e57ea78b131d60e_1"
+  ],
+  "settle_rows": 0,
+  "settled_units": null,
+  "state": "SUBMIT_UNKNOWN",
+  "submits_after_first": 1,
+  "verified": true
+}

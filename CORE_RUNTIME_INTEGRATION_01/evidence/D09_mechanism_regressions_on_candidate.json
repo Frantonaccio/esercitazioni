@@ -1,0 +1,35 @@
+{
+  "core_path": "/home/user/creative-os-atomicity",
+  "note": "stesse funzioni di verifica del gate approvato (pbg2.run_gate2 c02/c03/c04/c05), eseguite contro il Core candidate; evidenze scritte in questo bundle.",
+  "results": {
+    "composition_pb01_pb02": {
+      "actual": "orchestrator uid 65531 vs spender 65532 · segreto di riconciliazione BLOCKED (PermissionError) · chiave: /proc/mem BLOCKED (PermissionError), ready-file senza chiave True, 0 hex64 estranei sul canale · forge -> UNAUTHENTICATED · terzo uid -> PEER_UID_NOT_AUTHORIZED · report dello spender -> SUCCEEDED · replay: orchestrator -> NOT_RECONCILABLE, nonce dentro lo spender -> REPLAY · binding {'wrong_provider': 'PROVIDER_MISMATCH', 'wrong_account': 'ACCOUNT_MISMATCH', 'wrong_job': 'JOB_UNKNOWN', 'wrong_operation': 'OPERATION_MISMATCH', 'wrong_attempt': 'ATTEMPT_TOKEN_MISMATCH', 'wrong_payload_digest': 'PAYLOAD_DIGEST_MISMATCH', 'stale': 'REPORT_STALE', 'from_future': 'REPORT_FROM_FUTURE', 'replay': 'REPLAY'} · check falliti: nessuno",
+      "evidence": "../CORE_RUNTIME_INTEGRATION_01/evidence/mechanisms/C02_pb01_pb02_composition.json",
+      "ok": true
+    },
+    "freshness_ng04": {
+      "actual": "18 controprove fail-closed (scarti: nessuno) · casi che devono passare: tutti · policy omessa -> FRESHNESS_POLICY_REQUIRED · 1970 -> REPORT_STALE · futuro -> REPORT_FROM_FUTURE · confine age==max -> applicato=True · nonce non bruciato da un rifiuto -> applicato=True · replay -> REPLAY · journal invariato sui rifiuti: True",
+      "evidence": "../CORE_RUNTIME_INTEGRATION_01/evidence/mechanisms/C03_ng04_freshness_mechanism.json",
+      "ok": true
+    },
+    "legacy_spend_paths": {
+      "actual": "modalita' disingaggiata: legacy #2 spende (SUCCEEDED), helper #7 ok · ingaggiata: #2 -> LEGACY_SPEND_PATH_DISABLED, #7 -> PROVIDER_BOUNDARY_MODE_ENGAGED (store non creato), #1 governato -> SUCCEEDED · primitive del Core #10/#11 raggiungibili in ENTRAMBE le modalita' (CORE_CHANGE_REQUIRED) · check falliti: nessuno",
+      "evidence": "../CORE_RUNTIME_INTEGRATION_01/evidence/mechanisms/C04_legacy_spend_paths_v2.json",
+      "ok": true
+    },
+    "orphan_lease": {
+      "actual": "policy omessa -> POLICY_DECISION_REQUIRED · attore errato -> RECLAIM_NOT_AUTHORIZED · evidenza incompleta -> RECLAIM_EVIDENCE_INCOMPLETE · lease non scaduto -> LEASE_NOT_EXPIRED · fence stantio -> FENCING_TOKEN_STALE · classe non ammessa -> RECLAIM_CLASS_NOT_ALLOWED · corsa persa dal reclaim -> RECLAIM_CLASS_NOT_ALLOWED (riga intatta) · fence dopo scrittura neutra -> FENCING_TOKEN_STALE · corsa vinta dal reclaim -> mark_submitting successivo StaleWrite · reclaim legittimo -> FAILED settled 0 · zero nuovi attempt · crash durante il reclaim (exit 11): terminale non regolato VISIBILE e riparato idempotentemente · RECLAIM_POLICY = NOT_AUTHORIZED (requisito NON chiuso)",
+      "evidence": "../CORE_RUNTIME_INTEGRATION_01/evidence/mechanisms/C05_orphan_lease_mechanism_policy.json",
+      "ok": true
+    },
+    "pb04_snapshot": {
+      "audit_ok": true,
+      "ok": true,
+      "persisted_equals_recomputed_canonical": true,
+      "persisted_mode": "0o444",
+      "send_attestation": true,
+      "sha256_of_persisted_equals_job_digest": true,
+      "state": "SUCCEEDED"
+    }
+  }
+}
