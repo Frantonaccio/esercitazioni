@@ -20,21 +20,21 @@
       "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb_b07c.db.snapshots",
       "opkey": "f64a4cdecc5ae91f2dc8ecad",
       "persisted_mode": "0o444",
-      "sealed_at": 1789637576.360756,
+      "sealed_at": 1789639453.3484952,
       "send_attestation": {
-        "attempt_token": "att_8ef1b872f6737baa980f917e",
+        "attempt_token": "att_41d21b18ff457b9e26a33146",
         "bytes": 177,
         "digest": "67deb5a0d40ab942a064e7bad7100656b844c932e52e65a19ceed8745f320347",
         "exact_bytes_equal": true,
         "job_id": "res_2dcf9e75700d0c90_1",
         "opkey": "f64a4cdecc5ae91f2dc8ecad",
         "schema": "payload-snapshot-send-attestation/1",
-        "verified_at": 1789637576.3668356
+        "verified_at": 1789639453.354203
       },
       "send_verified": true
     },
     "persisted": {
-      "attempt_token": "att_8ef1b872f6737baa980f917e",
+      "attempt_token": "att_41d21b18ff457b9e26a33146",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_2dcf9e75700d0c90_1",
@@ -44,16 +44,16 @@
       "provider": "fake",
       "provider_account": "fake_acct_a",
       "provider_job_id": "pv_2dcf9e75",
-      "quote_id": "quote_5957b4ed5649f7634e73feca",
+      "quote_id": "quote_6c8deb9d2c7be471944a1309",
       "revision": 3,
       "spec_key": "2dcf9e75700d0c90f9c4e4eaff000025c4960e3a71c4a3173e14b6544ea99310",
       "state": "SUCCEEDED",
-      "submitted_at": 1789637576.3677778,
-      "terminal_by": 1789637876.3677778,
+      "submitted_at": 1789639453.3547828,
+      "terminal_by": 1789639753.3547828,
       "webhook_hints": 0
     },
-    "pid": 2512,
-    "quote_id": "quote_5957b4ed5649f7634e73feca",
+    "pid": 2470,
+    "quote_id": "quote_6c8deb9d2c7be471944a1309",
     "reservation_outcome": "RESERVED_NEW",
     "resumed": false,
     "spec_key": "2dcf9e75700d0c90f9c4e4eaff000025c4960e3a71c4a3173e14b6544ea99310",
@@ -408,26 +408,26 @@
         "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/run_boundary_gate.py",
         "hits": {
           "higgsfield_cli": [
-            350,
-            622
+            351,
+            623
           ],
           "reconcile": [
-            305
+            306
           ],
           "subprocess": [
-            98,
-            127,
-            130,
-            146,
-            185,
-            617,
-            622,
-            722,
-            730,
-            732
+            99,
+            128,
+            131,
+            147,
+            186,
+            618,
+            623,
+            723,
+            731,
+            733
           ]
         },
-        "sha256": "84db235704e05459"
+        "sha256": "2cd58605889c6c50"
       },
       {
         "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/spender_daemon.py",

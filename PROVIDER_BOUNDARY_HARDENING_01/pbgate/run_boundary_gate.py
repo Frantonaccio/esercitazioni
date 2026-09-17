@@ -21,6 +21,7 @@ BLOCKED non e' PASS.
   B10  Regressione R0-R1 (tests/run_gate.py T01-T37) sul runtime modificato
   B11  P2 freeze after == before, Core pin/tree invariati, static checks
   B12  NG-03 provenance economica del rifiuto PRE-SUBMIT (corrective delta, HUMAN REVIEW 01)
+  B13  Reporting: test suite result e phase readiness separati (corrective delta, HUMAN REVIEW 02)
 """
 from __future__ import annotations
 
@@ -51,13 +52,13 @@ os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
 
 from runtime.core_pin import REQUIRED_CORE_SHA                       # noqa: E402
 from tests import gate_report, static_checks, worker                 # noqa: E402
-from pbgate import pb_worker                                         # noqa: E402
+from pbgate import pb_worker, phase_readiness                        # noqa: E402
 
 CANON = {"core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
          "runtime_main_sha": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e",
          "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"}
 P2_PATH = os.path.join(GATE01, "p2_handoff", "VF_RUNTIME_T16_HANDOFF_2026-09-16", "P2_RUNTIME", "hf_batch.py")
-EXPECTED_IDS = frozenset(f"B{i:02d}" for i in range(0, 13))
+EXPECTED_IDS = frozenset(f"B{i:02d}" for i in range(0, 14))
 POLICY = {"B01": frozenset({"BLOCKED_ENVIRONMENT"}), "B09": frozenset({"BLOCKED_ENVIRONMENT"})}
 CTX = multiprocessing.get_context("spawn")
 RESULTS: list[dict] = []
@@ -897,40 +898,184 @@ def b12():
             f"check falliti: {failed or 'nessuno'}"), ev, ok
 
 
-# ------------------------------------------------------------------ report
-def write_results() -> dict:
-    s = gate_report.summarize(RESULTS, policy=POLICY, expected_ids=EXPECTED_IDS)
-    passed = set(s["pass_ids"])
-    s["readiness"] = {"lab_mock": s["gate_decision"] in (gate_report.GATE_COMPLETE_ALL_VERIFIED, gate_report.GATE_COMPLETE_WITH_ALLOWED_BLOCKED),
-                      "real_provider": "NOT_DECLARED", "production": "NOT_DECLARED",
-                      "security_boundary_p_b01": "LAB_VERIFIED_UID_BOUNDARY" if "B01" in passed else "NOT_VERIFIED",
-                      "p_b02_authenticated_reconciliation": "LAB_VERIFIED" if {"B03", "B04"} <= passed else "NOT_VERIFIED",
-                      "p_b04_exact_byte_snapshot": "LAB_VERIFIED" if {"B05", "B06"} <= passed else "NOT_VERIFIED",
-                      "pre_submit_settlement_provenance": "LAB_VERIFIED_TRUTHFUL" if "B12" in passed else "NOT_VERIFIED",
-                      "legacy_spend_paths": "INVENTORIED_SWITCH_VERIFIED_RESIDUAL_BLOCKED_PROVIDER_GATE" if "B07" in passed else "NOT_VERIFIED",
-                      "orphan_reserved_lease": "STILL_OPEN (riprodotto, classificato, nessuna reclaim)",
-                      "authorization_pricing": "LAB_ONLY" if "B09" in passed else "NOT_VERIFIED",
-                      "max_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW"
-                      if s["gate_decision"] == gate_report.GATE_COMPLETE_ALL_VERIFIED else "NOT_READY"}
+# ------------------------------------------------------------------ B13 (HUMAN REVIEW 02)
+def b13():
+    """REPORTING: "tutti i test PASS" e "tutti i requisiti chiusi" sono due affermazioni diverse.
+    Le cinque controprove richieste dal review, piu' l'invariante che rende impossibile affermarle insieme."""
+    from pbgate import make_manifest
+    PR = phase_readiness
+    # report REALE proiettato: i test gia' eseguiti piu' questo, assunto PASS
+    projected = list(RESULTS) + [{"id": "B13", "status": "PASS", "reason_code": "VERIFIED", "title": "reporting",
+                                  "expected": "", "actual": "", "evidence": "", "diagnostic_exit": 0, "pass": True}]
+    suite = gate_report.summarize(projected, policy=POLICY, expected_ids=EXPECTED_IDS)
+    real = PR.build(projected, suite)
+    rp, rt = real["phase_readiness"], real["test_suite"]
+    req = {r["id"]: r for r in rp["requirements"]}
+
+    def synth(states: dict, all_pass: bool = True) -> dict:
+        """Report sintetico: registro dei requisiti sostituito, per provare i casi limite."""
+        saved = PR.REQUIREMENTS
+        PR.REQUIREMENTS = tuple({"id": k, "scope": v[0], "evidence_tests": (), "declared": v[1],
+                                 "fallback": v[1], "title": k, "note": ""} for k, v in states.items())
+        try:
+            results = [{"id": i, "status": "FAIL" if (not all_pass and i == "B05") else "PASS",
+                        "reason_code": "ASSERTION_FAILED" if (not all_pass and i == "B05") else "VERIFIED"}
+                       for i in sorted(EXPECTED_IDS)]
+            return PR.build(results, gate_report.summarize(results, policy=POLICY, expected_ids=EXPECTED_IDS))
+        finally:
+            PR.REQUIREMENTS = saved
+
+    c1 = synth({"ORPHAN_RESERVED_LEASE": ("this_phase", PR.STILL_OPEN), "X_OK": ("this_phase", PR.VERIFIED_LAB)})
+    c2 = synth({"LEGACY_SPEND_PATHS_PROVIDER_GATE": ("future_gate", PR.BLOCKED_PROVIDER_GATE),
+                "Y_OK": ("this_phase", PR.VERIFIED_LAB)})
+    c3 = synth({"P_B02_BINDING_AUTHENTICATION": ("this_phase", PR.VERIFIED_LAB),
+                "P_B02_P_B01_COMPOSITION": ("this_phase", PR.NOT_VERIFIED)})
+    c4 = synth({"ONLY_OK": ("this_phase", PR.VERIFIED_LAB)})
+    c4b = synth({"ONLY_OK": ("this_phase", PR.VERIFIED_LAB)}, all_pass=False)
+
+    forged = json.loads(json.dumps(c1))
+    forged["phase_readiness"]["all_requirements_verified"] = True
+    try:
+        PR.validate(forged)
+        forged_refused = False
+    except PR.ReportingInconsistent:
+        forged_refused = True
+
+    con = PR.console(real)
+    mdl = "\n".join(PR.markdown(real))
+    man = make_manifest.build_manifest(real, runtime_code_sha="0" * 40, bundle_version="test")
+    gaps = PR.machine_readable_gaps(real)
+    av = str(rp["all_requirements_verified"]).lower()
+    coherent = {
+        "console_shows_both": (f"all_tests_passed = {str(rt['all_tests_passed']).lower()}" in con
+                               and f"all_requirements_verified = {av}" in con
+                               and rp["phase_gate_decision"] in con),
+        "markdown_shows_both": (f"`all_requirements_verified = {av}`" in mdl
+                                and f"`phase_gate_decision = {rp['phase_gate_decision']}`" in mdl
+                                and f"**{str(rt['all_tests_passed']).lower()}**" in mdl),
+        "manifest_matches": (man["phase_readiness"]["all_requirements_verified"] == rp["all_requirements_verified"]
+                             and man["phase_readiness"]["phase_gate_decision"] == rp["phase_gate_decision"]
+                             and man["test_suite"]["all_tests_passed"] == rt["all_tests_passed"]
+                             and man["test_suite"]["pass"] == rt["pass"] and man["gap_status"] == gaps),
+        "manifest_never_claims_all_verified": ('"all_requirements_verified": true' not in json.dumps(man, ensure_ascii=False)
+                                               if not rp["all_requirements_verified"] else True),
+        "counts_match": man["test_suite"]["total"] == rt["total"] == len(projected),
+    }
+    checks = {
+        "c1_tests_green_orphan_open": (c1["test_suite"]["all_tests_passed"] is True
+                                       and c1["phase_readiness"]["all_requirements_verified"] is False
+                                       and c1["phase_readiness"]["phase_gate_decision"] == PR.PHASE_COMPLETE_WITH_OPEN_GAPS
+                                       and c1["phase_readiness"]["open_requirements_this_phase"] == ["ORPHAN_RESERVED_LEASE"]),
+        "c2_tests_green_legacy_blocked_provider_gate": (c2["test_suite"]["all_tests_passed"] is True
+                                                        and c2["phase_readiness"]["all_requirements_verified"] is False
+                                                        and c2["phase_readiness"]["open_requirements_future_gate"] == ["LEGACY_SPEND_PATHS_PROVIDER_GATE"]
+                                                        and c2["phase_readiness"]["open_requirements_blocking_all_verified"] == ["LEGACY_SPEND_PATHS_PROVIDER_GATE"]),
+        "c3_pb02_not_globally_verified": (c3["phase_readiness"]["all_requirements_verified"] is False
+                                          and "P_B02_BINDING_AUTHENTICATION" in c3["phase_readiness"]["verified_requirements"]
+                                          and "P_B02_P_B01_COMPOSITION" in c3["phase_readiness"]["open_requirements_this_phase"]),
+        "c4_no_open_requirements_allows_all_verified": (c4["phase_readiness"]["all_requirements_verified"] is True
+                                                        and c4["phase_readiness"]["phase_gate_decision"] == PR.PHASE_COMPLETE_ALL_VERIFIED),
+        "c4b_failing_test_blocks_all_verified": (c4b["phase_readiness"]["all_requirements_verified"] is False
+                                                 and c4b["phase_readiness"]["phase_gate_decision"] == PR.PHASE_NOT_FAVORABLE),
+        "c5_console_json_markdown_manifest_coherent": all(coherent.values()),
+        "forged_report_refused": forged_refused,
+        "real_tests_all_pass": rt["all_tests_passed"] is True and rt["test_suite_decision"] == PR.TEST_SUITE_ALL_PASS,
+        "real_requirements_not_all_verified": rp["all_requirements_verified"] is False,
+        "real_decision_with_open_gaps": rp["phase_gate_decision"] == PR.PHASE_COMPLETE_WITH_OPEN_GAPS,
+        "real_max_state_still_reachable": rp["max_state"] == PR.MAX_STATE,
+        "real_required_open_ids_present": {"ORPHAN_RESERVED_LEASE", "LEGACY_SPEND_PATHS_PROVIDER_GATE",
+                                           "P_B02_P_B01_COMPOSITION", "RECONCILIATION_FRESHNESS_NG04"}
+                                          <= set(rp["open_requirements_blocking_all_verified"]),
+        "real_ng05_conservative_limitation": req["NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY"]["state"] == PR.OPEN_CONSERVATIVE_LIMITATION,
+        "real_pb02_binding_only": (req["P_B02_BINDING_AUTHENTICATION"]["state"] == PR.VERIFIED_LAB
+                                   and req["P_B02_P_B01_COMPOSITION"]["state"] == PR.NOT_VERIFIED
+                                   and req["REAL_PROVIDER_RECONCILIATION"]["state"] == PR.NOT_VERIFIED),
+        "real_orphan_open_despite_b08_pass": (req["ORPHAN_RESERVED_LEASE"]["state"] == PR.STILL_OPEN
+                                              and "B08" in rt["pass_ids"]),
+    }
+    ok = all(checks.values())
+    ev = evidence("B13", "reporting_phase_readiness", {
+        "real_report": real,
+        "synthetic_cases": {"c1_orphan_open": c1, "c2_legacy_blocked": c2, "c3_pb02_composition": c3,
+                            "c4_no_open": c4, "c4b_failing_test": c4b},
+        "forged_report_refused": forged_refused, "coherence": coherent, "machine_readable_gaps": gaps,
+        "manifest_preview": man, "checks": checks,
+        "note": "il report reale e' proiettato con B13 assunto PASS; RESULTS.json e' costruito dalla "
+                "STESSA funzione (phase_readiness.build) al termine dell'esecuzione."})
+    failed = [k for k, v in checks.items() if not v]
+    return (f"A: {rt['pass']}/{rt['total']} PASS, all_tests_passed={rt['all_tests_passed']} ({rt['test_suite_decision']}) · "
+            f"B: all_requirements_verified={rp['all_requirements_verified']} ({rp['phase_gate_decision']}), aperti bloccanti "
+            f"{rp['open_requirements_blocking_all_verified']}, stato massimo "
+            f"{rp['max_state']} · controprove: orphan aperto con test verdi, legacy BLOCKED_PROVIDER_GATE, P-B02 non globalmente "
+            f"verificata, ALL_VERIFIED solo senza aperti, test FAIL -> mai ALL_VERIFIED, report forgiato rifiutato, "
+            f"console/JSON/Markdown/MANIFEST coerenti · check falliti: {failed or 'nessuno'}"), ev, ok
+
+
+# ------------------------------------------------------------------ report (authority unica)
+def build_report() -> dict:
+    """UNA sola classificazione: da `gate_report.summarize` si prendono SOLO i fatti sui test,
+    la readiness di fase la decide `pbgate/phase_readiness.py`."""
+    suite = gate_report.summarize(RESULTS, policy=POLICY, expected_ids=EXPECTED_IDS)
+    return phase_readiness.build(RESULTS, suite)
+
+
+def write_results(report: dict) -> dict:
+    """RESULTS.json, TEST_RESULTS.md e il blocco di stato del README derivano dallo STESSO report;
+    alla fine i file vengono riletti e confrontati (fail-closed)."""
+    payload = {"schema": "provider-boundary-gate-results/2", "required_core_sha": REQUIRED_CORE_SHA,
+               "canonical": CANON, "results": RESULTS, "report": report}
     with open(os.path.join(EVIDENCE_DIR, "RESULTS.json"), "w", encoding="utf-8") as fh:
-        json.dump({"schema": "provider-boundary-gate-results/1", "required_core_sha": REQUIRED_CORE_SHA, "canonical": CANON,
-                   "results": RESULTS, "summary": s}, fh, indent=2, ensure_ascii=False, default=str)
+        json.dump(payload, fh, indent=2, ensure_ascii=False, default=str)
     lines = ["# TEST_RESULTS — PROVIDER / EXECUTION BOUNDARY GATE 01", "",
              f"Core canonical: `{REQUIRED_CORE_SHA}` · Runtime baseline: `{CANON['runtime_main_sha']}` · provider: FakeAdapter only · "
              "crediti spesi: 0 · rete generativa: nessuna · credenziali reali: nessuna", "",
-             "Stato per test (authority unica, tri-state): PASS = requisito verificato in LAB · FAIL = requisito NON superato · "
-             "BLOCKED = requisito NON verificabile nell'ambiente corrente (NON superato).", "",
+             "Due domande distinte, due risposte distinte (Human Review 02): **A** dice se i test hanno prodotto "
+             "l'esito atteso; **B** se i requisiti della fase sono chiusi. Un test PASS su un requisito aperto "
+             "verifica che quel requisito resta aperto: non lo chiude.", "",
+             "### Esito per test", "",
+             "Tri-state: PASS = esito atteso prodotto · FAIL = esito atteso NON prodotto · BLOCKED = non verificabile "
+             "nell'ambiente corrente (NON superato).", "",
              "| TEST | TITLE | EXPECTED | ACTUAL | STATUS | REASON_CODE | EXIT | EVIDENCE |", "|---|---|---|---|---|---|---|---|"]
     for r in RESULTS:
         lines.append(f"| {r['id']} | {r['title']} | {r['expected']} | {r['actual']} | **{r['status']}** | `{r['reason_code']}` | {r['diagnostic_exit']} | `{r['evidence']}` |")
-    lines += ["", f"**Totale: {s['pass']}/{s['total']} PASS · BLOCKED: {[b['id'] + '/' + b['reason_code'] for b in s['blocked_tests']] or 'nessuno'} · FAIL: {s['fail_ids'] or 'nessuno'}**",
-              "", f"**GATE_DECISION: `{s['gate_decision']}`** · runner exit {s['runner_exit']}: {s['runner_exit_meaning']}", "",
-              f"Inventario: {s['inventory']['observed_count']}/{s['inventory']['expected_count']} · valido: {s['inventory']['valid']}", "",
-              "Readiness:", ""] + [f"- {k}: `{v}`" for k, v in s["readiness"].items()] + [
-              "", "Nulla di quanto sopra significa provider ready, production ready, credenziali autorizzate, spend autorizzato, merge autorizzato o R2 autorizzato.", ""]
+    lines += [""] + phase_readiness.markdown(report) + [
+        f"runner exit {report['runner_exit']}: {report['runner_exit_meaning']}", ""]
     with open(os.path.join(BUNDLE, "TEST_RESULTS.md"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines))
-    return s
+    readme_path = os.path.join(BUNDLE, "README.md")
+    if os.path.exists(readme_path):
+        src = open(readme_path, encoding="utf-8").read()
+        block = phase_readiness.readme_block(report)
+        if phase_readiness.README_BEGIN in src and phase_readiness.README_END in src:
+            head, rest = src.split(phase_readiness.README_BEGIN, 1)
+            _, tail = rest.split(phase_readiness.README_END, 1)
+            src = head + block + tail
+        else:
+            src = src.rstrip() + "\n\n" + block + "\n"
+        with open(readme_path, "w", encoding="utf-8") as fh:
+            fh.write(src)
+    cross_check_written_files(report)
+    return report
+
+
+def cross_check_written_files(report: dict) -> dict:
+    """Authority unica verificata sui FILE: divergenza -> ReportingInconsistent (fail-closed)."""
+    pr, ts = report["phase_readiness"], report["test_suite"]
+    js = json.load(open(os.path.join(EVIDENCE_DIR, "RESULTS.json"), encoding="utf-8"))["report"]
+    if (js["phase_readiness"]["all_requirements_verified"] != pr["all_requirements_verified"]
+            or js["phase_readiness"]["phase_gate_decision"] != pr["phase_gate_decision"]
+            or js["test_suite"]["all_tests_passed"] != ts["all_tests_passed"]):
+        raise phase_readiness.ReportingInconsistent("RESULTS.json diverge dal report")
+    need = [f"`all_requirements_verified = {str(pr['all_requirements_verified']).lower()}`",
+            f"`phase_gate_decision = {pr['phase_gate_decision']}`"]
+    for name in ("TEST_RESULTS.md", "README.md"):
+        doc = open(os.path.join(BUNDLE, name), encoding="utf-8").read()
+        for token in need:
+            if token not in doc:
+                raise phase_readiness.ReportingInconsistent(f"{name}: manca {token}")
+        if pr["all_requirements_verified"] is False and "all_requirements_verified = true" in doc.lower():
+            raise phase_readiness.ReportingInconsistent(f"{name}: afferma anche all_requirements_verified true")
+    return {"RESULTS.json": True, "TEST_RESULTS.md": True, "README.md": True}
 
 
 def main() -> int:
@@ -959,13 +1104,16 @@ def main() -> int:
                "e fatti osservati; rifiuto dentro submit -> TRANSPORT_ATTESTED_NOT_SENT invariato; invio incerto -> "
                "SUBMIT_UNKNOWN senza settlement; race -> StaleWrite, nessun doppio settlement", b12)
         record("B11", "P2 freeze after + Core pin/tree + static checks", "P2 before == after == canonico; Core HEAD canonico pulito; static checks 0 findings", b11)
+        record("B13", "Reporting: test-suite result vs phase readiness (HUMAN REVIEW 02)",
+               "all_tests_passed e all_requirements_verified separati e coerenti; requisiti aperti elencati; "
+               "ALL_VERIFIED solo senza aperti; report incoerente rifiutato; console/JSON/Markdown/MANIFEST allineati", b13)
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
         shutil.rmtree(os.path.join(STATE_DIR, "pb01"), ignore_errors=True)
-    s = write_results()
-    print(gate_report.console_summary(s), flush=True)
+    report = write_results(build_report())
+    print(phase_readiness.console(report), flush=True)
     print("crediti spesi: 0 · provider reali: 0 · rete generativa: 0 · credenziali reali: 0", flush=True)
-    return s["runner_exit"]
+    return report["runner_exit"]
 
 
 if __name__ == "__main__":

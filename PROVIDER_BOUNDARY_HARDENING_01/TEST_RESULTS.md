@@ -2,13 +2,17 @@
 
 Core canonical: `740ee979300fe20a9382992528604dee70cb2fcf` · Runtime baseline: `39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e` · provider: FakeAdapter only · crediti spesi: 0 · rete generativa: nessuna · credenziali reali: nessuna
 
-Stato per test (authority unica, tri-state): PASS = requisito verificato in LAB · FAIL = requisito NON superato · BLOCKED = requisito NON verificabile nell'ambiente corrente (NON superato).
+Due domande distinte, due risposte distinte (Human Review 02): **A** dice se i test hanno prodotto l'esito atteso; **B** se i requisiti della fase sono chiusi. Un test PASS su un requisito aperto verifica che quel requisito resta aperto: non lo chiude.
+
+### Esito per test
+
+Tri-state: PASS = esito atteso prodotto · FAIL = esito atteso NON prodotto · BLOCKED = non verificabile nell'ambiente corrente (NON superato).
 
 | TEST | TITLE | EXPECTED | ACTUAL | STATUS | REASON_CODE | EXIT | EVIDENCE |
 |---|---|---|---|---|---|---|---|
-| B00 | Reality Lock | Core HEAD canonico e pulito; Runtime origin/main canonico; pin; P2 frozen | Core 740ee979300f clean=True · Runtime origin/main 39c82968fbfb (HEAD c66fd30c41c1 discende=True) · pin 740ee979300f · P2 637f3a803ee38d04 | **PASS** | `VERIFIED` | 0 | `evidence/B00_reality_lock.json` |
+| B00 | Reality Lock | Core HEAD canonico e pulito; Runtime origin/main canonico; pin; P2 frozen | Core 740ee979300f clean=True · Runtime origin/main 39c82968fbfb (HEAD 06771aa6fbf7 discende=True) · pin 740ee979300f · P2 637f3a803ee38d04 | **PASS** | `VERIFIED` | 0 | `evidence/B00_reality_lock.json` |
 | B10 | R0-R1 regression (run_gate.py T01-T37) on hardened runtime | 36 PASS, T29 BLOCKED_ENVIRONMENT, 0 FAIL, inventario 37/37 | run_gate.py: exit 0 · 36/37 PASS · BLOCKED ['T29/BLOCKED_ENVIRONMENT'] · FAIL [] · inventario valido True · T19 statico PASS | **PASS** | `VERIFIED` | 0 | `evidence/B10_regression_r0_r1.json` |
-| B01 | P-B01 real privilege boundary (distinct UIDs) | orchestrator uid != spender uid, 0 caps, no_new_privs; 4 probe canoniche BLOCKED; peer uid autenticato; spesa governata via socket; segreto mai nel canale | uid orchestrator 65531 (caps 0000000000000000, nnp=1) vs spender 65532 · probe canoniche: {'read_worker_secret': 'BLOCKED (PermissionError)', 'write_worker_code': 'BLOCKED (3 files, PermissionError)', 'write_worker_store': 'BLOCKED (OperationalError)', 'direct_dispatch_on_worker_store': 'BLOCKED (OperationalError)'} -> PASS/VERIFIED · terzo uid -> PEER_UID_NOT_AUTHORIZED · prima spesa via socket -> SUCCEEDED conto acct_f62cc2abcf72 · resume -> RESUMED/SUCCEEDED · check falliti: nessuno | **PASS** | `VERIFIED` | 0 | `evidence/B01_privilege_boundary_uid.json` |
+| B01 | P-B01 real privilege boundary (distinct UIDs) | orchestrator uid != spender uid, 0 caps, no_new_privs; 4 probe canoniche BLOCKED; peer uid autenticato; spesa governata via socket; segreto mai nel canale | uid orchestrator 65531 (caps 0000000000000000, nnp=1) vs spender 65532 · probe canoniche: {'read_worker_secret': 'BLOCKED (PermissionError)', 'write_worker_code': 'BLOCKED (3 files, PermissionError)', 'write_worker_store': 'BLOCKED (OperationalError)', 'direct_dispatch_on_worker_store': 'BLOCKED (OperationalError)'} -> PASS/VERIFIED · terzo uid -> PEER_UID_NOT_AUTHORIZED · prima spesa via socket -> SUCCEEDED conto acct_1d36d1332ad4 · resume -> RESUMED/SUCCEEDED · check falliti: nessuno | **PASS** | `VERIFIED` | 0 | `evidence/B01_privilege_boundary_uid.json` |
 | B02 | P-B01 same-UID control stays BLOCKED | t29_status(same_uid) -> BLOCKED_ENVIRONMENT; T29 storico e di regressione BLOCKED | same-uid -> BLOCKED_ENVIRONMENT qualunque probe · uid distinti: 4/4 BLOCKED -> PASS, 3/4 o 1 bypass -> FAIL · T29 storico BLOCKED_ENVIRONMENT · T29 regressione BLOCKED_ENVIRONMENT | **PASS** | `VERIFIED` | 0 | `evidence/B02_same_uid_control.json` |
 | B03 | P-B02 authenticated reconciliation: binding fail-closed | 16 controprove rifiutate con journal invariato; report valido -> stato scoperto con evidenza firmata | 16 controprove fail-closed (journal invariato: True) · scarti: nessuno · report valido -> SUCCEEDED (provider_job_id pv_remote_1, evidenza firmata registrata) · u2 dopo i rifiuti -> FAILED | **PASS** | `VERIFIED` | 0 | `evidence/B03_reconciliation_authenticated.json` |
 | B04 | P-B02 replay / other operation / snapshot audit | replay -> REPLAY; report valido di altro job -> JOB_MISMATCH; RESERVED senza intento -> OWNERSHIP_INCOMPLETE; snapshot mancante -> SNAPSHOT_AUDIT_FAILED | N1 -> RUNNING · incertezza -> replay N1 -> REPLAY · nuovo report -> SUCCEEDED · report valido di altro job -> JOB_MISMATCH · RESERVED senza intento -> OWNERSHIP_INCOMPLETE · snapshot bind rimosso -> SNAPSHOT_AUDIT_FAILED · chiamanti runtime di reconcile (AST): [('go_candidate.py', '_refuse_pre_submit'), ('reconciliation.py', 'reconcile_authenticated')] | **PASS** | `VERIFIED` | 0 | `evidence/B04_reconciliation_replay_cross_operation.json` |
@@ -19,25 +23,45 @@ Stato per test (authority unica, tri-state): PASS = requisito verificato in LAB 
 | B09 | Authorization / pricing authority (LAB state) | autorita' LAB nello spender; orchestrator non emette quote ne' scrive lo store; importo dal client rifiutato; real: NOT_VERIFIED | autorita' LAB (listino {'fake_model_v1': 10, 'fake_model_v2': 12, 'fake_model_free': 0}, envelope per scope) vive nello spender · orchestrator: quote sullo store spender -> BLOCKED (OperationalError), scrittura store -> BLOCKED (OperationalError), importo dal client -> PROTOCOL: chiavi non ammesse [ · real authorization/pricing: NOT_VERIFIED | **PASS** | `VERIFIED` | 0 | `evidence/B09_authority_lab_state.json` |
 | B12 | NG-03 truthful pre-submit settlement provenance | rifiuto a mark_submitting -> FAILED settlement 0 con provenance RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED e fatti osservati; rifiuto dentro submit -> TRANSPORT_ATTESTED_NOT_SENT invariato; invio incerto -> SUBMIT_UNKNOWN senza settlement; race -> StaleWrite, nessun doppio settlement | SERIALIZATION_DRIFT e IDENTITY_DRIFT -> FAILED settlement 0 con provenance RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED (TRANSPORT_ATTESTED_NOT_SENT assente da riga, evidenza e ledger; fatti osservati: sent_count invariato, digest non autorizzati, guard non armato, nessuna attestazione) · rifiuto dentro submit -> TRANSPORT_ATTESTED_NOT_SENT (invariato) · invio incerto -> SUBMIT_UNKNOWN senza settlement · race: seconda terminalizzazione StaleWrite, un solo SETTLE, settle idempotente, importo diverso -> SettlementConflict · check falliti: nessuno | **PASS** | `VERIFIED` | 0 | `evidence/B12_pre_submit_provenance.json` |
 | B11 | P2 freeze after + Core pin/tree + static checks | P2 before == after == canonico; Core HEAD canonico pulito; static checks 0 findings | P2 before 637f3a803ee38d04 == after 637f3a803ee38d04 == canonico · Core 740ee979300f clean=True · static checks ok=True (0 findings) | **PASS** | `VERIFIED` | 0 | `evidence/B11_p2_freeze_core_pin_after.json` |
+| B13 | Reporting: test-suite result vs phase readiness (HUMAN REVIEW 02) | all_tests_passed e all_requirements_verified separati e coerenti; requisiti aperti elencati; ALL_VERIFIED solo senza aperti; report incoerente rifiutato; console/JSON/Markdown/MANIFEST allineati | A: 14/14 PASS, all_tests_passed=True (ALL_TESTS_PASS) · B: all_requirements_verified=False (LAB_GATE_COMPLETE_WITH_OPEN_GAPS), aperti bloccanti ['ORPHAN_RESERVED_LEASE', 'LEGACY_SPEND_PATHS_PROVIDER_GATE', 'P_B02_P_B01_COMPOSITION', 'RECONCILIATION_FRESHNESS_NG04', 'NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY', 'REAL_AUTHORIZATION_AND_PRICING', 'REAL_PROVIDER_RECONCILIATION'], stato massimo PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW · controprove: orphan aperto con test verdi, legacy BLOCKED_PROVIDER_GATE, P-B02 non globalmente verificata, ALL_VERIFIED solo senza aperti, test FAIL -> mai ALL_VERIFIED, report forgiato rifiutato, console/JSON/Markdown/MANIFEST coerenti · check falliti: nessuno | **PASS** | `VERIFIED` | 0 | `evidence/B13_reporting_phase_readiness.json` |
 
-**Totale: 13/13 PASS · BLOCKED: nessuno · FAIL: nessuno**
+## A. TEST SUITE RESULT
 
-**GATE_DECISION: `LAB_GATE_COMPLETE_ALL_VERIFIED`** · runner exit 0: raccolta e report completati; nessun FAIL; nessun BLOCKED fuori policy LAB. NON significa 'tutti i requisiti verificati'.
+| inventario | PASS | FAIL | BLOCKED | all_tests_passed | test_suite_decision |
+|---|---|---|---|---|---|
+| 14/14 (valido: True) | 14 | 0 | 0 | **true** | `ALL_TESTS_PASS` |
 
-Inventario: 13/13 · valido: True
+_i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO._
 
-Readiness:
+## B. PHASE / REQUIREMENT READINESS
 
-- lab_mock: `True`
-- real_provider: `NOT_DECLARED`
-- production: `NOT_DECLARED`
-- security_boundary_p_b01: `LAB_VERIFIED_UID_BOUNDARY`
-- p_b02_authenticated_reconciliation: `LAB_VERIFIED`
-- p_b04_exact_byte_snapshot: `LAB_VERIFIED`
-- pre_submit_settlement_provenance: `LAB_VERIFIED_TRUTHFUL`
-- legacy_spend_paths: `INVENTORIED_SWITCH_VERIFIED_RESIDUAL_BLOCKED_PROVIDER_GATE`
-- orphan_reserved_lease: `STILL_OPEN (riprodotto, classificato, nessuna reclaim)`
-- authorization_pricing: `LAB_ONLY`
-- max_state: `PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW`
+**`all_requirements_verified = false`** · **`phase_gate_decision = LAB_GATE_COMPLETE_WITH_OPEN_GAPS`** · stato massimo: `PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW`
+
+_i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto (STILL_OPEN, BLOCKED_PROVIDER_GATE, NOT_VERIFIED, NOT_RUN, OPEN_CONSERVATIVE_LIMITATION) e tutti i test sono PASS._
+
+| REQUISITO | SCOPE | STATO | EVIDENZA | NOTA |
+|---|---|---|---|---|
+| P_B01_PRIVILEGE_BOUNDARY | this_phase | **`VERIFIED_LAB`** | B01, B02 | LAB_VERIFIED_UID_BOUNDARY, approvato in perimetro LAB da Human Review 01. Non chiude il boundary di produzione (adapter reale nello spender, credenziali reali, hardening del daemon). |
+| P_B02_BINDING_AUTHENTICATION | this_phase | **`VERIFIED_LAB`** | B03, B04 | LAB_VERIFIED_BINDING_AUTH_ONLY: verificati binding e autenticazione. NON copre la composizione con P-B01 (requisito separato) ne' il provider reale. |
+| P_B04_EXACT_BYTE_SNAPSHOT | this_phase | **`VERIFIED_LAB`** | B05, B06 | Ledger write-once nel dominio dello spender; non e' WORM hardware. |
+| NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE | this_phase | **`VERIFIED_LAB`** | B12, B06 | Chiuso: rifiuto a mark_submitting -> RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED; rifiuto dentro submit -> TRANSPORT_ATTESTED_NOT_SENT (invariato). |
+| LEGACY_SPEND_PATHS_INVENTORY_AND_SWITCH | this_phase | **`VERIFIED_LAB`** | B07 | Verificati l'inventario (13 entry point) e la chiusura fail-closed dell'interruttore. La CHIUSURA dei percorsi residui e' un requisito separato e aperto. |
+| P2_FREEZE_AND_CORE_PIN | this_phase | **`VERIFIED_LAB`** | B00, B11 | Core non modificato, nessun branch Core, main intoccato. |
+| R0_R1_NO_REGRESSION | this_phase | **`VERIFIED_LAB`** | B10 | 36/37 PASS con T29/BLOCKED_ENVIRONMENT per policy (mock same-UID invariato), 0 FAIL. |
+| ORPHAN_RESERVED_LEASE | this_phase | **`STILL_OPEN`** | B08 | B08 PASS significa che il gate ha VERIFICATO che il gap resta aperto: riprodotto, stati formalizzati, zero blind retry, RECLAIM_POLICY = NOT_AUTHORIZED (decisione di Human Review 01). Chiusura: serve una lease authority (finestra, attore, evidenza). |
+| LEGACY_SPEND_PATHS_PROVIDER_GATE | future_gate | **`BLOCKED_PROVIDER_GATE`** | B07 | Residui: LEGACY_LAB (usato da T01-T27), helper di test same-UID, primitive del Core, store.reconcile raw, P2 frozen fuori runtime. Vedi LEGACY_SPEND_PATHS.md. |
+| P_B02_P_B01_COMPOSITION | this_phase | **`NOT_VERIFIED`** | B03, B04, B01 | NG-06: in B03/B04 segreto e chiave sono fixture del processo di test, non del daemon. La custodia del segreto e' un requisito di design, non un fatto dimostrato. |
+| RECONCILIATION_FRESHNESS_NG04 | future_gate | **`STILL_OPEN`** | — | Oggi opzionale: il nonce monouso impedisce il riuso, non l'eta'. Non implementato in questo delta per decisione esplicita di Human Review 02. |
+| NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY | this_phase | **`OPEN_CONSERVATIVE_LIMITATION`** | B12 | Limite dichiarato e conservativo, NON blocker per questo gate LAB (Human Review 02): un'interruzione lascia un terminale non regolato con esposizione mantenuta, visibile e riparabile (settle idempotente). API additiva del Core proposta, non necessaria. |
+| REAL_AUTHORIZATION_AND_PRICING | future_gate | **`NOT_VERIFIED`** | B09 | B09 verifica lo stato LAB dell'autorita'. Nessuna verifica contro sistemi reali: 'real provider authorization' e 'real pricing verified' restano NOT_VERIFIED. |
+| REAL_PROVIDER_RECONCILIATION | future_gate | **`NOT_VERIFIED`** | — | Fuori scope di questa fase per mandato (nessun provider reale, nessuna credenziale). |
+| RUN_CONTAMINATION | other_phase | **`NOT_RUN`** | — | Input Tenant assente: non eseguito. |
+| G_N02_SEMANTIC_CLAIM_PARAPHRASE | other_phase | **`STILL_OPEN`** | — | Fuori scope, non toccato. |
+| RV07_SCHEDULER_RECOVERY_RESIDUAL | other_phase | **`STILL_OPEN`** | — | Non toccato. P-B02 fornisce l'uscita autenticata da SUBMIT_UNKNOWN, ma nessuno scheduler la invoca. |
+| INDEPENDENT_CI_STATUS_CHECKS | other_phase | **`NOT_RUN`** | — | Assenti sul branch, come nella fase precedente. |
+
+Requisiti aperti che impediscono `all_requirements_verified`: ['ORPHAN_RESERVED_LEASE', 'LEGACY_SPEND_PATHS_PROVIDER_GATE', 'P_B02_P_B01_COMPOSITION', 'RECONCILIATION_FRESHNESS_NG04', 'NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY', 'REAL_AUTHORIZATION_AND_PRICING', 'REAL_PROVIDER_RECONCILIATION'] (di questa fase: ['ORPHAN_RESERVED_LEASE', 'P_B02_P_B01_COMPOSITION', 'NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY']; rinviati al Provider Boundary Gate: ['LEGACY_SPEND_PATHS_PROVIDER_GATE', 'RECONCILIATION_FRESHNESS_NG04', 'REAL_AUTHORIZATION_AND_PRICING', 'REAL_PROVIDER_RECONCILIATION']). Di altre fasi, elencati ma non imputati a questa: ['RUN_CONTAMINATION', 'G_N02_SEMANTIC_CLAIM_PARAPHRASE', 'RV07_SCHEDULER_RECOVERY_RESIDUAL', 'INDEPENDENT_CI_STATUS_CHECKS'].
 
 Nulla di quanto sopra significa provider ready, production ready, credenziali autorizzate, spend autorizzato, merge autorizzato o R2 autorizzato.
+
+runner exit 0: tutti i test del gate hanno prodotto l'esito atteso. NON significa 'tutti i requisiti di fase verificati': vedi phase_readiness.

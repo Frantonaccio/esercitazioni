@@ -1,7 +1,7 @@
 # TEST_MATRIX — PROVIDER / EXECUTION BOUNDARY GATE 01
 
 Runner: `pbgate/run_boundary_gate.py` · classificazione: `RUNTIME_INTEGRATION_GATE_01/tests/gate_report.py` (tri-state PASS | FAIL | BLOCKED,
-BLOCKED solo via `GateBlocked` per precondizione ambientale; policy LAB: `B01`/`B09` possono essere `BLOCKED_ENVIRONMENT`) · inventario canonico B00..B12.
+BLOCKED solo via `GateBlocked` per precondizione ambientale; policy LAB: `B01`/`B09` possono essere `BLOCKED_ENVIRONMENT`) · inventario canonico B00..B13.
 Processi reali (`multiprocessing` spawn) per ogni helper; UID distinti via `setpriv` per B01. Nessun provider reale, nessuna credenziale, 0 crediti.
 
 | ID | Gap | Requisito | Riproduzione pre-fix | Controprove fail-closed | Evidenza |
@@ -18,4 +18,5 @@ Processi reali (`multiprocessing` spawn) per ogni helper; UID distinti via `setp
 | B08 | Orphan lease | `RESERVED_NO_INTENT` senza uscite; resume 0 submit; new_attempt rifiutato; recover ignora; `due_for_reconcile` elenca; reconcile → `OWNERSHIP_INCOMPLETE`; crash dopo invio → `RESERVED_WITH_INTENT` → recover `SUBMIT_UNKNOWN`; reclaim `NOT_AUTHORIZED` | `reproduction_baseline.json["ORPHAN_RESERVED"]` | — (gap resta STILL_OPEN) | `B08_orphan_reserved_lease.json`, `ORPHAN_LEASE.md` |
 | B09 | Authority | listino/envelope LAB dichiarati; orchestrator non emette quote ne' scrive lo store spender; importo dal client → PROTOCOL; real: NOT_VERIFIED | — | — | `B09_authority_lab_state.json` |
 | B12 | NG-03 (delta correttivo) | provenance del settlement 0 corrispondente all'evidenza prodotta: rifiuto a `mark_submitting` → `FAILED` + `SETTLE 0` con `RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED` e fatti osservati; rifiuto dentro `submit` → `TRANSPORT_ATTESTED_NOT_SENT` invariato; invio incerto → `SUBMIT_UNKNOWN` senza settlement; race → `StaleWrite`, un solo `SETTLE`, `settle` idempotente, importo diverso → `SettlementConflict` | `evidence/pre_fix/reproduction_ng03.json` (A e B registravano la stessa provenance) | 5 controprove obbligatorie del review | `B12_pre_submit_provenance.json`, `CORRECTIVE_DELTA_NG03.md` |
+| B13 | Reporting (delta correttivo HR-02) | test-suite result e phase readiness separati e coerenti: `all_tests_passed` vs `all_requirements_verified`; requisiti aperti elencati con stato; `ALL_VERIFIED` solo senza aperti; report forgiato rifiutato da `validate()`; console/JSON/Markdown/MANIFEST allineati | `RESULTS.json` v2 dichiarava insieme ALL_VERIFIED e requisiti aperti | 5 controprove del review + report forgiato + verifiche sul report reale | `B13_reporting_phase_readiness.json`, `CORRECTIVE_DELTA_REPORTING.md` |
 | B11 | Freeze | P2 before == after == canonico (anche `LAB/hf_batch_ORIGINAL.py`); Core HEAD/tree invariati; static checks 0 findings | — | — | `B11_p2_freeze_core_pin_after.json` |

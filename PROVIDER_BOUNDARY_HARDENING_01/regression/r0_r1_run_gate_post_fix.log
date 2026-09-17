@@ -23,7 +23,7 @@ RUNTIME INTEGRATION GATE 01 — Core /home/user/creative-os @ 740ee979300f (requ
   T11 [32mPASS[0m  provider mismatch  [VERIFIED exit=0]
        [2mfake_a RUNNING | fake_b -> ProviderMismatch submits=0 reservation intatta=fake_a/RUNNING[0m
   T12 [32mPASS[0m  budget atomicity  [VERIFIED exit=0]
-       [2mconcorrente: ['BudgetExceeded', 'OK'] impegnati=50/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70[0m
+       [2mconcorrente: ['BudgetExceeded', 'OK'] impegnati=70/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70[0m
   T13 [32mPASS[0m  invalid budget rejection  [VERIFIED exit=0]
        [2m5 valori non ammessi -> ReservationContractError, 0 submit, 0 righe[0m
   T14 [32mPASS[0m  fake mode blocks real provider  [VERIFIED exit=0]
@@ -81,7 +81,7 @@ balance None -> None · LOCK_HELD
   T33 [32mPASS[0m  CR-01 cross-operation identity  [VERIFIED exit=0]
        [2mOP_B su spec viva di OP_A -> OperationConflict (0 submit) · OP_A riprende res_0a2d7cb6976713d7_1 · RESUME(OP_A)=res_0a2d7cb6976713d7_1 != RESUME(OP_B)=res_0a2d7cb6976713d7_2[0m
 B1_NEW_CLIP            SUCCEEDED job=res_f4076e463c1fbcd9_1 0.0s 
-B4C_NEW_CLIP           SUCCEEDED job=res_6d687b11cfaf4fd0_1 0.0s 
+B4C_NEW_CLIP           SUCCEEDED job=res_6d687b11cfaf4fd0_1 0.1s 
 balance None -> None · LOCK_HELD
 B1_NEW_CLIP            RESUMED/SUCCEEDED job=res_f4076e463c1fbcd9_1 0.0s 
 B4C_NEW_CLIP           RESUMED/SUCCEEDED job=res_6d687b11cfaf4fd0_1 0.0s 

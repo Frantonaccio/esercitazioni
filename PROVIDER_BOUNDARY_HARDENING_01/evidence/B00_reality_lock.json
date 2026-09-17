@@ -9,7 +9,7 @@
   "p2_sha256_before": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
   "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
   "runtime_branch": "claude/provider-boundary-hardening-c1k77q",
-  "runtime_head": "c66fd30c41c132c394ad54619d317d8c9f16f60d",
+  "runtime_head": "06771aa6fbf7f210575b08f9453610e305e11921",
   "runtime_head_descends_from_canonical": true,
   "runtime_origin_main": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e"
 }

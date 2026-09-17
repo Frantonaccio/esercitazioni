@@ -1,5 +1,31 @@
 # OPEN GAPS — DOPO PROVIDER / EXECUTION BOUNDARY HARDENING (2026-09-17)
 
+> **v3 (Human Review 02)**: gli stati qui sotto sono gli stessi che il gate produce a macchina.
+> L'authority unica e' `pbgate/phase_readiness.py`; il valore per ogni id sta in `MANIFEST.json`
+> (`gap_status`), in `evidence/RESULTS.json` (`report.phase_readiness.requirements`) e in
+> `TEST_RESULTS.md` sezione B. **`all_requirements_verified = false`** finche' uno di questi e' aperto.
+>
+> | id | stato |
+> |---|---|
+> | `P_B01_PRIVILEGE_BOUNDARY` | `VERIFIED_LAB` |
+> | `P_B02_BINDING_AUTHENTICATION` | `VERIFIED_LAB` (binding e autenticazione soltanto) |
+> | `P_B04_EXACT_BYTE_SNAPSHOT` | `VERIFIED_LAB` |
+> | `NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE` | `VERIFIED_LAB` |
+> | `LEGACY_SPEND_PATHS_INVENTORY_AND_SWITCH` | `VERIFIED_LAB` |
+> | `P2_FREEZE_AND_CORE_PIN` | `VERIFIED_LAB` |
+> | `R0_R1_NO_REGRESSION` | `VERIFIED_LAB` |
+> | `ORPHAN_RESERVED_LEASE` | `STILL_OPEN` |
+> | `LEGACY_SPEND_PATHS_PROVIDER_GATE` | `BLOCKED_PROVIDER_GATE` |
+> | `P_B02_P_B01_COMPOSITION` | `NOT_VERIFIED` |
+> | `RECONCILIATION_FRESHNESS_NG04` | `STILL_OPEN` |
+> | `NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY` | `OPEN_CONSERVATIVE_LIMITATION` |
+> | `REAL_AUTHORIZATION_AND_PRICING` | `NOT_VERIFIED` |
+> | `REAL_PROVIDER_RECONCILIATION` | `NOT_VERIFIED` |
+> | `RUN_CONTAMINATION` | `NOT_RUN` (altra fase) |
+> | `G_N02_SEMANTIC_CLAIM_PARAPHRASE` | `STILL_OPEN` (altra fase) |
+> | `RV07_SCHEDULER_RECOVERY_RESIDUAL` | `STILL_OPEN` (altra fase) |
+> | `INDEPENDENT_CI_STATUS_CHECKS` | `NOT_RUN` (altra fase) |
+
 Stato massimo consentito raggiunto in LAB: `PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW`.
 Nessuno stato qui sotto significa provider ready, production ready, credenziali autorizzate, spend autorizzato,
 merge autorizzato o R2 autorizzato.
@@ -23,6 +49,12 @@ Gap chiusi da questo delta correttivo:
   `store.reconcile` + `store.settle` con `source = RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED` e i fatti osservati
   allegati, oppure non terminalizza affatto se quei fatti non concordano. Verificato da B12 (5 controprove),
   B06 e B04. Nessuna modifica del Core richiesta. Dettagli: `CORRECTIVE_DELTA_NG03.md`.
+
+Gap chiusi dal delta correttivo di reporting (Human Review 02):
+- **NG-07** (blocker `PHASE_READINESS_REPORTING_INCONSISTENT`): **CHIUSO**. L'esito dei test e la readiness di
+  fase sono due sezioni distinte prodotte da un'unica authority; `all_requirements_verified` non puo' essere vero
+  mentre un requisito e' `STILL_OPEN` o `BLOCKED_PROVIDER_GATE` (invariante fail-closed + cross-check dei file
+  scritti). Verificato da B13 con le cinque controprove richieste. Dettagli: `CORRECTIVE_DELTA_REPORTING.md`.
 
 Gap aperti emersi o precisati in questa fase:
 - **NG-01** il gate storico e il nuovo gate girano come root (operatore): la riproducibilita' del confine P-B01 in un

@@ -1,7 +1,9 @@
-# PROVIDER / EXECUTION BOUNDARY HARDENING — EVIDENCE BUNDLE v2 (2026-09-17)
+# PROVIDER / EXECUTION BOUNDARY HARDENING — EVIDENCE BUNDLE v3 (2026-09-17)
 
-Bundle v2 = bundle 01 + **delta correttivo NG-03** richiesto da Human Review 01
-(`HUMAN_REVIEW_HOLD — PRE_SEND_PROVENANCE_MISMATCH`). Vedi `CORRECTIVE_DELTA_NG03.md`.
+Bundle v3 = v2 + **delta correttivo di reporting** richiesto da Human Review 02
+(`HUMAN_REVIEW_HOLD — PHASE_READINESS_REPORTING_INCONSISTENT`). Il v2 chiudeva NG-03
+(`CORRECTIVE_DELTA_NG03.md`); il v3 separa l'esito dei test dalla readiness di fase
+(`CORRECTIVE_DELTA_REPORTING.md`). Nessuna modifica al runtime, al Core o a P2 in v3.
 
 Stato dichiarato: **`PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW`** (LAB).
 NON significa: provider ready · production ready · credenziali autorizzate · spend autorizzato · merge autorizzato · R2 autorizzato.
@@ -16,7 +18,9 @@ Provider reali: 0 · credenziali reali: 0 · rete generativa: 0 · crediti: 0 ·
 | `PROVENANCE.json` + `SHA256SUMS.EXTERNAL` | **v2**: reference non ambigue (code sha, evidence head sha, branch, base canonica), generate DOPO il commit finale |
 | `GAP_MATRIX.md` | matrice pre-fix (gap, file/funzioni reali, riproduzione, rischio, fix minimo, test) |
 | `evidence/pre_fix/reproduction_baseline.json` | riproduzioni sul codice NON modificato (`pbgate/reproduce_pre_fix.py`) |
-| `TEST_MATRIX.md` / `TEST_RESULTS.md` | matrice e risultati B00..B12 (tri-state) |
+| `TEST_MATRIX.md` / `TEST_RESULTS.md` | matrice e risultati B00..B13 (tri-state) + readiness di fase |
+| `pbgate/phase_readiness.py` | **v3**: authority unica di classificazione (test suite vs requisiti di fase) |
+| `pbgate/make_manifest.py` | **v3**: MANIFEST.json derivato dallo stesso report |
 | `evidence/B*.json`, `evidence/RESULTS.json`, `evidence/raw/*.log` | evidenza strutturata e log grezzi |
 | `evidence/RUNTIME_DIFF_hardening.patch` | diff completo del Runtime (file modificati + nuovi) |
 | `regression/` | regressione R0-R1 (`run_gate.py` T01-T37) sul runtime modificato: log, RESULTS.json, TEST_RESULTS.md |
@@ -50,8 +54,23 @@ storico e ripristina i file tracciati che esso riscrive (`git checkout` di evide
 | `tests/run_gate.py` | `db_for`: pulizia dei ledger `.snapshots/.reconciliation` accanto allo store (igiene di riesecuzione) |
 Non modificati: Core, P2, `tests/boundary_mock.py`, `tests/worker.py`, `tests/gate_report.py`, T01-T37 (assert invariati).
 
+<!-- READINESS:BEGIN (generato da pbgate/phase_readiness.py — non modificare a mano) -->
+## Stato (authority unica: `pbgate/phase_readiness.py`)
+
+**A. Test suite** — 14/14 PASS, FAIL 0, BLOCKED 0, inventario 14/14 valido: `all_tests_passed = true`, `test_suite_decision = ALL_TESTS_PASS`.
+
+**B. Phase readiness** — `all_requirements_verified = false`, `phase_gate_decision = LAB_GATE_COMPLETE_WITH_OPEN_GAPS`, stato massimo `PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW`.
+
+Requisiti aperti che impediscono `all_requirements_verified`: `ORPHAN_RESERVED_LEASE`, `LEGACY_SPEND_PATHS_PROVIDER_GATE`, `P_B02_P_B01_COMPOSITION`, `RECONCILIATION_FRESHNESS_NG04`, `NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY`, `REAL_AUTHORIZATION_AND_PRICING`, `REAL_PROVIDER_RECONCILIATION`.
+
+Di questa fase: `ORPHAN_RESERVED_LEASE`, `P_B02_P_B01_COMPOSITION`, `NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY`. Rinviati al Provider Boundary Gate: `LEGACY_SPEND_PATHS_PROVIDER_GATE`, `RECONCILIATION_FRESHNESS_NG04`, `REAL_AUTHORIZATION_AND_PRICING`, `REAL_PROVIDER_RECONCILIATION`.
+
+Un test PASS su un requisito aperto significa che il gate ha verificato che quel requisito resta aperto: non lo chiude. Dettaglio per requisito in `TEST_RESULTS.md` e `OPEN_GAPS.md`.
+<!-- READINESS:END -->
+
 ## Risultati (sintesi)
-Vedi `TEST_RESULTS.md`: B00..B12 13/13 PASS, `LAB_GATE_COMPLETE_ALL_VERIFIED`; regressione R0-R1 36/37 PASS + T29
-`BLOCKED_ENVIRONMENT` (per policy, mock same-UID invariato), 0 FAIL, inventario 37/37. Stati per gap in
-`OPEN_GAPS.md`: NG-03 chiuso; restano aperti NG-04 (freshness), NG-05 (atomicita' in due transazioni, proposta
-Core additiva non necessaria), NG-06 (composizione P-B01+P-B02 non dimostrata), oltre ai gap gia' noti.
+Il blocco di stato qui sopra e' generato dall'authority unica (`pbgate/phase_readiness.py`) insieme a
+`TEST_RESULTS.md`, `evidence/RESULTS.json` e `MANIFEST.json`: le due domande — "i test hanno prodotto l'esito
+atteso?" e "i requisiti della fase sono chiusi?" — hanno risposte separate e non possono contraddirsi
+(invariante fail-closed verificato da B13). Dettaglio per requisito in `TEST_RESULTS.md` sezione B e in
+`OPEN_GAPS.md`.

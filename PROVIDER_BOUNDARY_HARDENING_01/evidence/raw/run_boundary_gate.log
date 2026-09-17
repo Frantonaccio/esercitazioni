@@ -1,10 +1,10 @@
 PROVIDER / EXECUTION BOUNDARY GATE 01 — Core /home/user/creative-os @ 740ee979300f (required 740ee979300f)
   B00 [32mPASS[0m  Reality Lock  [VERIFIED exit=0]
-       [2mCore 740ee979300f clean=True · Runtime origin/main 39c82968fbfb (HEAD c66fd30c41c1 discende=True) · pin 740ee979300f · P2 637f3a803ee38d04[0m
+       [2mCore 740ee979300f clean=True · Runtime origin/main 39c82968fbfb (HEAD 06771aa6fbf7 discende=True) · pin 740ee979300f · P2 637f3a803ee38d04[0m
   B10 [32mPASS[0m  R0-R1 regression (run_gate.py T01-T37) on hardened runtime  [VERIFIED exit=0]
        [2mrun_gate.py: exit 0 · 36/37 PASS · BLOCKED ['T29/BLOCKED_ENVIRONMENT'] · FAIL [] · inventario valido True · T19 statico PASS[0m
   B01 [32mPASS[0m  P-B01 real privilege boundary (distinct UIDs)  [VERIFIED exit=0]
-       [2muid orchestrator 65531 (caps 0000000000000000, nnp=1) vs spender 65532 · probe canoniche: {'read_worker_secret': 'BLOCKED (PermissionError)', 'write_worker_code': 'BLOCKED (3 files, PermissionError)', 'write_worker_store': 'BLOCKED (OperationalError)', 'direct_dispatch_on_worker_store': 'BLOCKED (OperationalError)'} -> PASS/VERIFIED · terzo uid -> PEER_UID_NOT_AUTHORIZED · prima spesa via socket -> SUCCEEDED conto acct_f62cc2abcf72 · resume -> RESUMED/SUCCEEDED · check falliti: nessuno[0m
+       [2muid orchestrator 65531 (caps 0000000000000000, nnp=1) vs spender 65532 · probe canoniche: {'read_worker_secret': 'BLOCKED (PermissionError)', 'write_worker_code': 'BLOCKED (3 files, PermissionError)', 'write_worker_store': 'BLOCKED (OperationalError)', 'direct_dispatch_on_worker_store': 'BLOCKED (OperationalError)'} -> PASS/VERIFIED · terzo uid -> PEER_UID_NOT_AUTHORIZED · prima spesa via socket -> SUCCEEDED conto acct_1d36d1332ad4 · resume -> RESUMED/SUCCEEDED · check falliti: nessuno[0m
   B02 [32mPASS[0m  P-B01 same-UID control stays BLOCKED  [VERIFIED exit=0]
        [2msame-uid -> BLOCKED_ENVIRONMENT qualunque probe · uid distinti: 4/4 BLOCKED -> PASS, 3/4 o 1 bypass -> FAIL · T29 storico BLOCKED_ENVIRONMENT · T29 regressione BLOCKED_ENVIRONMENT[0m
   B03 [32mPASS[0m  P-B02 authenticated reconciliation: binding fail-closed  [VERIFIED exit=0]
@@ -28,10 +28,19 @@ balance None -> None · LOCK_HELD
        [2mSERIALIZATION_DRIFT e IDENTITY_DRIFT -> FAILED settlement 0 con provenance RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED (TRANSPORT_ATTESTED_NOT_SENT assente da riga, evidenza e ledger; fatti osservati: sent_count invariato, digest non autorizzati, guard non armato, nessuna attestazione) · rifiuto dentro submit -> TRANSPORT_ATTESTED_NOT_SENT (invariato) · invio incerto -> SUBMIT_UNKNOWN senza settlement · race: seconda terminalizzazione StaleWrite, un solo SETTLE, settle idempotente, importo diverso -> SettlementConflict · check falliti: nessuno[0m
   B11 [32mPASS[0m  P2 freeze after + Core pin/tree + static checks  [VERIFIED exit=0]
        [2mP2 before 637f3a803ee38d04 == after 637f3a803ee38d04 == canonico · Core 740ee979300f clean=True · static checks ok=True (0 findings)[0m
+  B13 [32mPASS[0m  Reporting: test-suite result vs phase readiness (HUMAN REVIEW 02)  [VERIFIED exit=0]
+       [2mA: 14/14 PASS, all_tests_passed=True (ALL_TESTS_PASS) · B: all_requirements_verified=False (LAB_GATE_COMPLETE_WITH_OPEN_GAPS), aperti bloccanti ['ORPHAN_RESERVED_LEASE', 'LEGACY_SPEND_PATHS_PROVIDER_GATE', 'P_B02_P_B01_COMPOSITION', 'RECONCILIATION_FRESHNESS_NG04', 'NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY', 'REAL_AUTHORIZATION_AND_PRICING', 'REAL_PROVIDER_RECONCILIATION'], stato massimo PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW · controprove: orphan aperto con test verdi, legacy BLOCKED_PROVIDER_GATE, P-B02 non globalmente verificata, ALL_VERIFIED solo senza aperti, test FAIL -> mai ALL_VERIFIED, report forgiato rifiutato, console/JSON/Markdown/MANIFEST coerenti · check falliti: nessuno[0m
 
-13/13 PASS · BLOCKED [] · FAIL []
-GATE_DECISION: LAB_GATE_COMPLETE_ALL_VERIFIED · runner exit 0 (raccolta e report completati; nessun FAIL; nessun BLOCKED fuori policy LAB. NON significa 'tutti i requisiti verificati'.)
-inventario: 13/13 valido=True
-requisiti NON verificati: nessuno
+A. TEST SUITE   14/14 PASS · FAIL nessuno · BLOCKED nessuno · inventario 14/14 valido=True
+   all_tests_passed = true · test_suite_decision = ALL_TESTS_PASS
+
+B. PHASE READINESS   all_requirements_verified = false · phase_gate_decision = LAB_GATE_COMPLETE_WITH_OPEN_GAPS
+   aperti che impediscono ALL_VERIFIED: ['ORPHAN_RESERVED_LEASE', 'LEGACY_SPEND_PATHS_PROVIDER_GATE', 'P_B02_P_B01_COMPOSITION', 'RECONCILIATION_FRESHNESS_NG04', 'NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY', 'REAL_AUTHORIZATION_AND_PRICING', 'REAL_PROVIDER_RECONCILIATION']
+     - di questa fase: ['ORPHAN_RESERVED_LEASE', 'P_B02_P_B01_COMPOSITION', 'NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY']
+     - rinviati al Provider Boundary Gate: ['LEGACY_SPEND_PATHS_PROVIDER_GATE', 'RECONCILIATION_FRESHNESS_NG04', 'REAL_AUTHORIZATION_AND_PRICING', 'REAL_PROVIDER_RECONCILIATION']
+   di altre fasi (elencati, non imputati): ['RUN_CONTAMINATION', 'G_N02_SEMANTIC_CLAIM_PARAPHRASE', 'RV07_SCHEDULER_RECOVERY_RESIDUAL', 'INDEPENDENT_CI_STATUS_CHECKS']
+   stato massimo: PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW
+
+runner exit 0: tutti i test del gate hanno prodotto l'esito atteso. NON significa 'tutti i requisiti di fase verificati': vedi phase_readiness.
 crediti spesi: 0 · provider reali: 0 · rete generativa: 0 · credenziali reali: 0
 EXIT=0

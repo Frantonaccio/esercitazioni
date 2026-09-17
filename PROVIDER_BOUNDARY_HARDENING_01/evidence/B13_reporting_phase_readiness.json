@@ -1,0 +1,1045 @@
+{
+  "checks": {
+    "c1_tests_green_orphan_open": true,
+    "c2_tests_green_legacy_blocked_provider_gate": true,
+    "c3_pb02_not_globally_verified": true,
+    "c4_no_open_requirements_allows_all_verified": true,
+    "c4b_failing_test_blocks_all_verified": true,
+    "c5_console_json_markdown_manifest_coherent": true,
+    "forged_report_refused": true,
+    "real_decision_with_open_gaps": true,
+    "real_max_state_still_reachable": true,
+    "real_ng05_conservative_limitation": true,
+    "real_orphan_open_despite_b08_pass": true,
+    "real_pb02_binding_only": true,
+    "real_required_open_ids_present": true,
+    "real_requirements_not_all_verified": true,
+    "real_tests_all_pass": true
+  },
+  "coherence": {
+    "console_shows_both": true,
+    "counts_match": true,
+    "manifest_matches": true,
+    "manifest_never_claims_all_verified": true,
+    "markdown_shows_both": true
+  },
+  "forged_report_refused": true,
+  "machine_readable_gaps": {
+    "G_N02_SEMANTIC_CLAIM_PARAPHRASE": "STILL_OPEN",
+    "INDEPENDENT_CI_STATUS_CHECKS": "NOT_RUN",
+    "LEGACY_SPEND_PATHS_INVENTORY_AND_SWITCH": "VERIFIED_LAB",
+    "LEGACY_SPEND_PATHS_PROVIDER_GATE": "BLOCKED_PROVIDER_GATE",
+    "NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE": "VERIFIED_LAB",
+    "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY": "OPEN_CONSERVATIVE_LIMITATION",
+    "ORPHAN_RESERVED_LEASE": "STILL_OPEN",
+    "P2_FREEZE_AND_CORE_PIN": "VERIFIED_LAB",
+    "P_B01_PRIVILEGE_BOUNDARY": "VERIFIED_LAB",
+    "P_B02_BINDING_AUTHENTICATION": "VERIFIED_LAB",
+    "P_B02_P_B01_COMPOSITION": "NOT_VERIFIED",
+    "P_B04_EXACT_BYTE_SNAPSHOT": "VERIFIED_LAB",
+    "R0_R1_NO_REGRESSION": "VERIFIED_LAB",
+    "REAL_AUTHORIZATION_AND_PRICING": "NOT_VERIFIED",
+    "REAL_PROVIDER_RECONCILIATION": "NOT_VERIFIED",
+    "RECONCILIATION_FRESHNESS_NG04": "STILL_OPEN",
+    "RUN_CONTAMINATION": "NOT_RUN",
+    "RV07_SCHEDULER_RECOVERY_RESIDUAL": "STILL_OPEN"
+  },
+  "manifest_preview": {
+    "authority": "pbgate/phase_readiness.py — console, RESULTS.json, TEST_RESULTS.md, README e questo manifest derivano tutti dallo stesso report; B13 verifica la coerenza.",
+    "bundle_version": "test",
+    "checksums": "SHA256SUMS covers every committed bundle file (this manifest included, SHA256SUMS itself excluded); SHA256SUMS.EXTERNAL covers PROVENANCE.json, generated after the final commit",
+    "created_date": "2026-09-17",
+    "credits_spent": 0,
+    "declared_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW",
+    "gap_status": {
+      "G_N02_SEMANTIC_CLAIM_PARAPHRASE": "STILL_OPEN",
+      "INDEPENDENT_CI_STATUS_CHECKS": "NOT_RUN",
+      "LEGACY_SPEND_PATHS_INVENTORY_AND_SWITCH": "VERIFIED_LAB",
+      "LEGACY_SPEND_PATHS_PROVIDER_GATE": "BLOCKED_PROVIDER_GATE",
+      "NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE": "VERIFIED_LAB",
+      "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY": "OPEN_CONSERVATIVE_LIMITATION",
+      "ORPHAN_RESERVED_LEASE": "STILL_OPEN",
+      "P2_FREEZE_AND_CORE_PIN": "VERIFIED_LAB",
+      "P_B01_PRIVILEGE_BOUNDARY": "VERIFIED_LAB",
+      "P_B02_BINDING_AUTHENTICATION": "VERIFIED_LAB",
+      "P_B02_P_B01_COMPOSITION": "NOT_VERIFIED",
+      "P_B04_EXACT_BYTE_SNAPSHOT": "VERIFIED_LAB",
+      "R0_R1_NO_REGRESSION": "VERIFIED_LAB",
+      "REAL_AUTHORIZATION_AND_PRICING": "NOT_VERIFIED",
+      "REAL_PROVIDER_RECONCILIATION": "NOT_VERIFIED",
+      "RECONCILIATION_FRESHNESS_NG04": "STILL_OPEN",
+      "RUN_CONTAMINATION": "NOT_RUN",
+      "RV07_SCHEDULER_RECOVERY_RESIDUAL": "STILL_OPEN"
+    },
+    "generative_network_calls": 0,
+    "not_implied": [
+      "provider ready",
+      "production ready",
+      "credenziali autorizzate",
+      "spend autorizzato",
+      "merge autorizzato",
+      "R2 autorizzato",
+      "P-B01 verified beyond LAB uid boundary",
+      "P-B02 composed with P-B01 inside the isolated spender"
+    ],
+    "package_name": "VF_PROVIDER_EXECUTION_BOUNDARY_HARDENING_EVIDENCE_test",
+    "phase": "PROVIDER / EXECUTION BOUNDARY HARDENING",
+    "phase_readiness": {
+      "all_requirements_verified": false,
+      "max_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW",
+      "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto (STILL_OPEN, BLOCKED_PROVIDER_GATE, NOT_VERIFIED, NOT_RUN, OPEN_CONSERVATIVE_LIMITATION) e tutti i test sono PASS.",
+      "open_requirements_future_gate": [
+        "LEGACY_SPEND_PATHS_PROVIDER_GATE",
+        "RECONCILIATION_FRESHNESS_NG04",
+        "REAL_AUTHORIZATION_AND_PRICING",
+        "REAL_PROVIDER_RECONCILIATION"
+      ],
+      "open_requirements_other_phase": [
+        "RUN_CONTAMINATION",
+        "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+        "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+        "INDEPENDENT_CI_STATUS_CHECKS"
+      ],
+      "open_requirements_this_phase": [
+        "ORPHAN_RESERVED_LEASE",
+        "P_B02_P_B01_COMPOSITION",
+        "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY"
+      ],
+      "phase_gate_decision": "LAB_GATE_COMPLETE_WITH_OPEN_GAPS",
+      "verified_requirements": [
+        "P_B01_PRIVILEGE_BOUNDARY",
+        "P_B02_BINDING_AUTHENTICATION",
+        "P_B04_EXACT_BYTE_SNAPSHOT",
+        "NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE",
+        "LEGACY_SPEND_PATHS_INVENTORY_AND_SWITCH",
+        "P2_FREEZE_AND_CORE_PIN",
+        "R0_R1_NO_REGRESSION"
+      ]
+    },
+    "real_credentials": 0,
+    "real_providers": 0,
+    "references": {
+      "canonical_runtime_base_sha": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e",
+      "core_branch": "main",
+      "core_branch_created": false,
+      "core_changed": false,
+      "core_repo": "Frantonaccio/creative-os",
+      "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+      "main_touched": false,
+      "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+      "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+      "runtime_branch": "claude/provider-boundary-hardening-c1k77q",
+      "runtime_code_sha": "0000000000000000000000000000000000000000",
+      "runtime_code_sha_meaning": "commit containing code + evidence + documents of this bundle",
+      "runtime_evidence_head_sha": "declared in PROVENANCE.json (external file, generated after the commit that adds this manifest; a manifest cannot name its own commit)",
+      "runtime_repo": "Frantonaccio/esercitazioni"
+    },
+    "supersedes": [
+      {
+        "bundle_version": "v1",
+        "code_sha": "9aafe9b16f10861846ec7527191009c6e0dabbd6",
+        "evidence_head_sha": "c66fd30c41c132c394ad54619d317d8c9f16f60d",
+        "external_sha256": "054ea4821097eca1f95264ae3acb3b037f8ab1219d0536cca9c1f90a0d61b961",
+        "verdict": "HUMAN_REVIEW_HOLD — PRE_SEND_PROVENANCE_MISMATCH"
+      },
+      {
+        "bundle_version": "v2",
+        "code_sha": "7fa9cd656ce5970cbd8a549345d8330abbe79f47",
+        "evidence_head_sha": "06771aa6fbf7f210575b08f9453610e305e11921",
+        "external_sha256": "b54de9b5b7a661fc28f4d18488f8eac77d8a369cdcb4ec2deb5f00a4cb9e04a4",
+        "verdict": "HUMAN_REVIEW_HOLD — PHASE_READINESS_REPORTING_INCONSISTENT (reporting-only)"
+      }
+    ],
+    "test_suite": {
+      "all_tests_passed": true,
+      "blocked": 0,
+      "fail": 0,
+      "inventory": {
+        "duplicates": [],
+        "expected_count": 14,
+        "missing": [],
+        "observed_count": 14,
+        "unexpected": [],
+        "valid": true
+      },
+      "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO.",
+      "pass": 14,
+      "runner": "pbgate/run_boundary_gate.py",
+      "test_suite_decision": "ALL_TESTS_PASS",
+      "total": 14
+    }
+  },
+  "note": "il report reale e' proiettato con B13 assunto PASS; RESULTS.json e' costruito dalla STESSA funzione (phase_readiness.build) al termine dell'esecuzione.",
+  "real_report": {
+    "phase_readiness": {
+      "all_requirements_verified": false,
+      "max_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW",
+      "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto (STILL_OPEN, BLOCKED_PROVIDER_GATE, NOT_VERIFIED, NOT_RUN, OPEN_CONSERVATIVE_LIMITATION) e tutti i test sono PASS.",
+      "not_implied": [
+        "provider ready",
+        "production ready",
+        "credenziali autorizzate",
+        "spend autorizzato",
+        "merge autorizzato",
+        "R2 autorizzato"
+      ],
+      "open_requirements": [
+        {
+          "id": "ORPHAN_RESERVED_LEASE",
+          "note": "B08 PASS significa che il gate ha VERIFICATO che il gap resta aperto: riprodotto, stati formalizzati, zero blind retry, RECLAIM_POLICY = NOT_AUTHORIZED (decisione di Human Review 01). Chiusura: serve una lease authority (finestra, attore, evidenza).",
+          "scope": "this_phase",
+          "state": "STILL_OPEN",
+          "title": "Orphan RESERVED lease — nessuna reclaim autorizzata"
+        },
+        {
+          "id": "LEGACY_SPEND_PATHS_PROVIDER_GATE",
+          "note": "Residui: LEGACY_LAB (usato da T01-T27), helper di test same-UID, primitive del Core, store.reconcile raw, P2 frozen fuori runtime. Vedi LEGACY_SPEND_PATHS.md.",
+          "scope": "future_gate",
+          "state": "BLOCKED_PROVIDER_GATE",
+          "title": "Legacy spend paths — chiusura dei percorsi residui prima del Provider Boundary Gate"
+        },
+        {
+          "id": "P_B02_P_B01_COMPOSITION",
+          "note": "NG-06: in B03/B04 segreto e chiave sono fixture del processo di test, non del daemon. La custodia del segreto e' un requisito di design, non un fatto dimostrato.",
+          "scope": "this_phase",
+          "state": "NOT_VERIFIED",
+          "title": "P-B02 composta con P-B01 — reconciliation autenticata DENTRO lo spender isolato"
+        },
+        {
+          "id": "RECONCILIATION_FRESHNESS_NG04",
+          "note": "Oggi opzionale: il nonce monouso impedisce il riuso, non l'eta'. Non implementato in questo delta per decisione esplicita di Human Review 02.",
+          "scope": "future_gate",
+          "state": "STILL_OPEN",
+          "title": "NG-04 — freshness dei report di riconciliazione (max_age_s obbligatorio e fail-closed)"
+        },
+        {
+          "id": "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
+          "note": "Limite dichiarato e conservativo, NON blocker per questo gate LAB (Human Review 02): un'interruzione lascia un terminale non regolato con esposizione mantenuta, visibile e riparabile (settle idempotente). API additiva del Core proposta, non necessaria.",
+          "scope": "this_phase",
+          "state": "OPEN_CONSERVATIVE_LIMITATION",
+          "title": "NG-05 — atomicita' della terminalizzazione pre-submit (due transazioni)"
+        },
+        {
+          "id": "REAL_AUTHORIZATION_AND_PRICING",
+          "note": "B09 verifica lo stato LAB dell'autorita'. Nessuna verifica contro sistemi reali: 'real provider authorization' e 'real pricing verified' restano NOT_VERIFIED.",
+          "scope": "future_gate",
+          "state": "NOT_VERIFIED",
+          "title": "Authorization / pricing reali del provider"
+        },
+        {
+          "id": "REAL_PROVIDER_RECONCILIATION",
+          "note": "Fuori scope di questa fase per mandato (nessun provider reale, nessuna credenziale).",
+          "scope": "future_gate",
+          "state": "NOT_VERIFIED",
+          "title": "Reconciliation verificata contro un provider reale"
+        },
+        {
+          "id": "RUN_CONTAMINATION",
+          "note": "Input Tenant assente: non eseguito.",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "run_contamination"
+        },
+        {
+          "id": "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+          "note": "Fuori scope, non toccato.",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "G-N02 — semantic claim paraphrase"
+        },
+        {
+          "id": "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+          "note": "Non toccato. P-B02 fornisce l'uscita autenticata da SUBMIT_UNKNOWN, ma nessuno scheduler la invoca.",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "RV07 — residuo scheduler/recovery"
+        },
+        {
+          "id": "INDEPENDENT_CI_STATUS_CHECKS",
+          "note": "Assenti sul branch, come nella fase precedente.",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "Status check CI indipendenti"
+        }
+      ],
+      "open_requirements_blocking_all_verified": [
+        "ORPHAN_RESERVED_LEASE",
+        "LEGACY_SPEND_PATHS_PROVIDER_GATE",
+        "P_B02_P_B01_COMPOSITION",
+        "RECONCILIATION_FRESHNESS_NG04",
+        "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
+        "REAL_AUTHORIZATION_AND_PRICING",
+        "REAL_PROVIDER_RECONCILIATION"
+      ],
+      "open_requirements_future_gate": [
+        "LEGACY_SPEND_PATHS_PROVIDER_GATE",
+        "RECONCILIATION_FRESHNESS_NG04",
+        "REAL_AUTHORIZATION_AND_PRICING",
+        "REAL_PROVIDER_RECONCILIATION"
+      ],
+      "open_requirements_other_phase": [
+        "RUN_CONTAMINATION",
+        "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+        "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+        "INDEPENDENT_CI_STATUS_CHECKS"
+      ],
+      "open_requirements_this_phase": [
+        "ORPHAN_RESERVED_LEASE",
+        "P_B02_P_B01_COMPOSITION",
+        "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY"
+      ],
+      "phase_gate_decision": "LAB_GATE_COMPLETE_WITH_OPEN_GAPS",
+      "requirements": [
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B01",
+            "B02"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "P_B01_PRIVILEGE_BOUNDARY",
+          "note": "LAB_VERIFIED_UID_BOUNDARY, approvato in perimetro LAB da Human Review 01. Non chiude il boundary di produzione (adapter reale nello spender, credenziali reali, hardening del daemon).",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "P-B01 — confine di privilegio orchestrator/spender (UID distinti, DAC, SO_PEERCRED)"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B03",
+            "B04"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "P_B02_BINDING_AUTHENTICATION",
+          "note": "LAB_VERIFIED_BINDING_AUTH_ONLY: verificati binding e autenticazione. NON copre la composizione con P-B01 (requisito separato) ne' il provider reale.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "P-B02 — binding e autenticazione HMAC della reconciliation"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B05",
+            "B06"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "P_B04_EXACT_BYTE_SNAPSHOT",
+          "note": "Ledger write-once nel dominio dello spender; non e' WORM hardware.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "P-B04 — snapshot exact-byte immutabile e verificato prima dell'invio"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B12",
+            "B06"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE",
+          "note": "Chiuso: rifiuto a mark_submitting -> RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED; rifiuto dentro submit -> TRANSPORT_ATTESTED_NOT_SENT (invariato).",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "NG-03 — provenance veritiera del settlement zero nel rifiuto pre-submit"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B07"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "LEGACY_SPEND_PATHS_INVENTORY_AND_SWITCH",
+          "note": "Verificati l'inventario (13 entry point) e la chiusura fail-closed dell'interruttore. La CHIUSURA dei percorsi residui e' un requisito separato e aperto.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Legacy spend paths — inventario completo e interruttore fail-closed"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B00",
+            "B11"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "P2_FREEZE_AND_CORE_PIN",
+          "note": "Core non modificato, nessun branch Core, main intoccato.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "P2 frozen (before == after) e Core pin/tree invariati"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B10"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "R0_R1_NO_REGRESSION",
+          "note": "36/37 PASS con T29/BLOCKED_ENVIRONMENT per policy (mock same-UID invariato), 0 FAIL.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Nessuna regressione R0-R1 (T01-T37) sul runtime modificato"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B08"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "ORPHAN_RESERVED_LEASE",
+          "note": "B08 PASS significa che il gate ha VERIFICATO che il gap resta aperto: riprodotto, stati formalizzati, zero blind retry, RECLAIM_POLICY = NOT_AUTHORIZED (decisione di Human Review 01). Chiusura: serve una lease authority (finestra, attore, evidenza).",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "STILL_OPEN",
+          "title": "Orphan RESERVED lease — nessuna reclaim autorizzata"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B07"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "LEGACY_SPEND_PATHS_PROVIDER_GATE",
+          "note": "Residui: LEGACY_LAB (usato da T01-T27), helper di test same-UID, primitive del Core, store.reconcile raw, P2 frozen fuori runtime. Vedi LEGACY_SPEND_PATHS.md.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "BLOCKED_PROVIDER_GATE",
+          "title": "Legacy spend paths — chiusura dei percorsi residui prima del Provider Boundary Gate"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B03",
+            "B04",
+            "B01"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "P_B02_P_B01_COMPOSITION",
+          "note": "NG-06: in B03/B04 segreto e chiave sono fixture del processo di test, non del daemon. La custodia del segreto e' un requisito di design, non un fatto dimostrato.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "NOT_VERIFIED",
+          "title": "P-B02 composta con P-B01 — reconciliation autenticata DENTRO lo spender isolato"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "RECONCILIATION_FRESHNESS_NG04",
+          "note": "Oggi opzionale: il nonce monouso impedisce il riuso, non l'eta'. Non implementato in questo delta per decisione esplicita di Human Review 02.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "STILL_OPEN",
+          "title": "NG-04 — freshness dei report di riconciliazione (max_age_s obbligatorio e fail-closed)"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B12"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
+          "note": "Limite dichiarato e conservativo, NON blocker per questo gate LAB (Human Review 02): un'interruzione lascia un terminale non regolato con esposizione mantenuta, visibile e riparabile (settle idempotente). API additiva del Core proposta, non necessaria.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "OPEN_CONSERVATIVE_LIMITATION",
+          "title": "NG-05 — atomicita' della terminalizzazione pre-submit (due transazioni)"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "B09"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "REAL_AUTHORIZATION_AND_PRICING",
+          "note": "B09 verifica lo stato LAB dell'autorita'. Nessuna verifica contro sistemi reali: 'real provider authorization' e 'real pricing verified' restano NOT_VERIFIED.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "NOT_VERIFIED",
+          "title": "Authorization / pricing reali del provider"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "REAL_PROVIDER_RECONCILIATION",
+          "note": "Fuori scope di questa fase per mandato (nessun provider reale, nessuna credenziale).",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "NOT_VERIFIED",
+          "title": "Reconciliation verificata contro un provider reale"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "RUN_CONTAMINATION",
+          "note": "Input Tenant assente: non eseguito.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "run_contamination"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+          "note": "Fuori scope, non toccato.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "G-N02 — semantic claim paraphrase"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+          "note": "Non toccato. P-B02 fornisce l'uscita autenticata da SUBMIT_UNKNOWN, ma nessuno scheduler la invoca.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "RV07 — residuo scheduler/recovery"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "INDEPENDENT_CI_STATUS_CHECKS",
+          "note": "Assenti sul branch, come nella fase precedente.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "Status check CI indipendenti"
+        }
+      ],
+      "verified_requirements": [
+        "P_B01_PRIVILEGE_BOUNDARY",
+        "P_B02_BINDING_AUTHENTICATION",
+        "P_B04_EXACT_BYTE_SNAPSHOT",
+        "NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE",
+        "LEGACY_SPEND_PATHS_INVENTORY_AND_SWITCH",
+        "P2_FREEZE_AND_CORE_PIN",
+        "R0_R1_NO_REGRESSION"
+      ]
+    },
+    "runner_exit": 0,
+    "runner_exit_meaning": "tutti i test del gate hanno prodotto l'esito atteso. NON significa 'tutti i requisiti di fase verificati': vedi phase_readiness.",
+    "schema": "provider-boundary-phase-readiness/1",
+    "test_suite": {
+      "all_tests_passed": true,
+      "blocked": 0,
+      "blocked_tests": [],
+      "fail": 0,
+      "fail_ids": [],
+      "inventory": {
+        "duplicates": [],
+        "expected_count": 14,
+        "missing": [],
+        "observed_count": 14,
+        "unexpected": [],
+        "valid": true
+      },
+      "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO.",
+      "pass": 14,
+      "pass_ids": [
+        "B00",
+        "B10",
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B12",
+        "B11",
+        "B13"
+      ],
+      "test_suite_decision": "ALL_TESTS_PASS",
+      "total": 14
+    }
+  },
+  "synthetic_cases": {
+    "c1_orphan_open": {
+      "phase_readiness": {
+        "all_requirements_verified": false,
+        "max_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW",
+        "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto (STILL_OPEN, BLOCKED_PROVIDER_GATE, NOT_VERIFIED, NOT_RUN, OPEN_CONSERVATIVE_LIMITATION) e tutti i test sono PASS.",
+        "not_implied": [
+          "provider ready",
+          "production ready",
+          "credenziali autorizzate",
+          "spend autorizzato",
+          "merge autorizzato",
+          "R2 autorizzato"
+        ],
+        "open_requirements": [
+          {
+            "id": "ORPHAN_RESERVED_LEASE",
+            "note": "",
+            "scope": "this_phase",
+            "state": "STILL_OPEN",
+            "title": "ORPHAN_RESERVED_LEASE"
+          }
+        ],
+        "open_requirements_blocking_all_verified": [
+          "ORPHAN_RESERVED_LEASE"
+        ],
+        "open_requirements_future_gate": [],
+        "open_requirements_other_phase": [],
+        "open_requirements_this_phase": [
+          "ORPHAN_RESERVED_LEASE"
+        ],
+        "phase_gate_decision": "LAB_GATE_COMPLETE_WITH_OPEN_GAPS",
+        "requirements": [
+          {
+            "counts_for_phase_readiness": true,
+            "evidence_tests": [],
+            "evidence_tests_not_passed": [],
+            "id": "ORPHAN_RESERVED_LEASE",
+            "note": "",
+            "open": true,
+            "reason_code": "EVIDENCE_TESTS_PASSED",
+            "scope": "this_phase",
+            "state": "STILL_OPEN",
+            "title": "ORPHAN_RESERVED_LEASE"
+          },
+          {
+            "counts_for_phase_readiness": true,
+            "evidence_tests": [],
+            "evidence_tests_not_passed": [],
+            "id": "X_OK",
+            "note": "",
+            "open": false,
+            "reason_code": "EVIDENCE_TESTS_PASSED",
+            "scope": "this_phase",
+            "state": "VERIFIED_LAB",
+            "title": "X_OK"
+          }
+        ],
+        "verified_requirements": [
+          "X_OK"
+        ]
+      },
+      "runner_exit": 0,
+      "runner_exit_meaning": "tutti i test del gate hanno prodotto l'esito atteso. NON significa 'tutti i requisiti di fase verificati': vedi phase_readiness.",
+      "schema": "provider-boundary-phase-readiness/1",
+      "test_suite": {
+        "all_tests_passed": true,
+        "blocked": 0,
+        "blocked_tests": [],
+        "fail": 0,
+        "fail_ids": [],
+        "inventory": {
+          "duplicates": [],
+          "expected_count": 14,
+          "missing": [],
+          "observed_count": 14,
+          "unexpected": [],
+          "valid": true
+        },
+        "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO.",
+        "pass": 14,
+        "pass_ids": [
+          "B00",
+          "B01",
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B09",
+          "B10",
+          "B11",
+          "B12",
+          "B13"
+        ],
+        "test_suite_decision": "ALL_TESTS_PASS",
+        "total": 14
+      }
+    },
+    "c2_legacy_blocked": {
+      "phase_readiness": {
+        "all_requirements_verified": false,
+        "max_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW",
+        "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto (STILL_OPEN, BLOCKED_PROVIDER_GATE, NOT_VERIFIED, NOT_RUN, OPEN_CONSERVATIVE_LIMITATION) e tutti i test sono PASS.",
+        "not_implied": [
+          "provider ready",
+          "production ready",
+          "credenziali autorizzate",
+          "spend autorizzato",
+          "merge autorizzato",
+          "R2 autorizzato"
+        ],
+        "open_requirements": [
+          {
+            "id": "LEGACY_SPEND_PATHS_PROVIDER_GATE",
+            "note": "",
+            "scope": "future_gate",
+            "state": "BLOCKED_PROVIDER_GATE",
+            "title": "LEGACY_SPEND_PATHS_PROVIDER_GATE"
+          }
+        ],
+        "open_requirements_blocking_all_verified": [
+          "LEGACY_SPEND_PATHS_PROVIDER_GATE"
+        ],
+        "open_requirements_future_gate": [
+          "LEGACY_SPEND_PATHS_PROVIDER_GATE"
+        ],
+        "open_requirements_other_phase": [],
+        "open_requirements_this_phase": [],
+        "phase_gate_decision": "LAB_GATE_COMPLETE_WITH_OPEN_GAPS",
+        "requirements": [
+          {
+            "counts_for_phase_readiness": true,
+            "evidence_tests": [],
+            "evidence_tests_not_passed": [],
+            "id": "LEGACY_SPEND_PATHS_PROVIDER_GATE",
+            "note": "",
+            "open": true,
+            "reason_code": "EVIDENCE_TESTS_PASSED",
+            "scope": "future_gate",
+            "state": "BLOCKED_PROVIDER_GATE",
+            "title": "LEGACY_SPEND_PATHS_PROVIDER_GATE"
+          },
+          {
+            "counts_for_phase_readiness": true,
+            "evidence_tests": [],
+            "evidence_tests_not_passed": [],
+            "id": "Y_OK",
+            "note": "",
+            "open": false,
+            "reason_code": "EVIDENCE_TESTS_PASSED",
+            "scope": "this_phase",
+            "state": "VERIFIED_LAB",
+            "title": "Y_OK"
+          }
+        ],
+        "verified_requirements": [
+          "Y_OK"
+        ]
+      },
+      "runner_exit": 0,
+      "runner_exit_meaning": "tutti i test del gate hanno prodotto l'esito atteso. NON significa 'tutti i requisiti di fase verificati': vedi phase_readiness.",
+      "schema": "provider-boundary-phase-readiness/1",
+      "test_suite": {
+        "all_tests_passed": true,
+        "blocked": 0,
+        "blocked_tests": [],
+        "fail": 0,
+        "fail_ids": [],
+        "inventory": {
+          "duplicates": [],
+          "expected_count": 14,
+          "missing": [],
+          "observed_count": 14,
+          "unexpected": [],
+          "valid": true
+        },
+        "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO.",
+        "pass": 14,
+        "pass_ids": [
+          "B00",
+          "B01",
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B09",
+          "B10",
+          "B11",
+          "B12",
+          "B13"
+        ],
+        "test_suite_decision": "ALL_TESTS_PASS",
+        "total": 14
+      }
+    },
+    "c3_pb02_composition": {
+      "phase_readiness": {
+        "all_requirements_verified": false,
+        "max_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW",
+        "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto (STILL_OPEN, BLOCKED_PROVIDER_GATE, NOT_VERIFIED, NOT_RUN, OPEN_CONSERVATIVE_LIMITATION) e tutti i test sono PASS.",
+        "not_implied": [
+          "provider ready",
+          "production ready",
+          "credenziali autorizzate",
+          "spend autorizzato",
+          "merge autorizzato",
+          "R2 autorizzato"
+        ],
+        "open_requirements": [
+          {
+            "id": "P_B02_P_B01_COMPOSITION",
+            "note": "",
+            "scope": "this_phase",
+            "state": "NOT_VERIFIED",
+            "title": "P_B02_P_B01_COMPOSITION"
+          }
+        ],
+        "open_requirements_blocking_all_verified": [
+          "P_B02_P_B01_COMPOSITION"
+        ],
+        "open_requirements_future_gate": [],
+        "open_requirements_other_phase": [],
+        "open_requirements_this_phase": [
+          "P_B02_P_B01_COMPOSITION"
+        ],
+        "phase_gate_decision": "LAB_GATE_COMPLETE_WITH_OPEN_GAPS",
+        "requirements": [
+          {
+            "counts_for_phase_readiness": true,
+            "evidence_tests": [],
+            "evidence_tests_not_passed": [],
+            "id": "P_B02_BINDING_AUTHENTICATION",
+            "note": "",
+            "open": false,
+            "reason_code": "EVIDENCE_TESTS_PASSED",
+            "scope": "this_phase",
+            "state": "VERIFIED_LAB",
+            "title": "P_B02_BINDING_AUTHENTICATION"
+          },
+          {
+            "counts_for_phase_readiness": true,
+            "evidence_tests": [],
+            "evidence_tests_not_passed": [],
+            "id": "P_B02_P_B01_COMPOSITION",
+            "note": "",
+            "open": true,
+            "reason_code": "EVIDENCE_TESTS_PASSED",
+            "scope": "this_phase",
+            "state": "NOT_VERIFIED",
+            "title": "P_B02_P_B01_COMPOSITION"
+          }
+        ],
+        "verified_requirements": [
+          "P_B02_BINDING_AUTHENTICATION"
+        ]
+      },
+      "runner_exit": 0,
+      "runner_exit_meaning": "tutti i test del gate hanno prodotto l'esito atteso. NON significa 'tutti i requisiti di fase verificati': vedi phase_readiness.",
+      "schema": "provider-boundary-phase-readiness/1",
+      "test_suite": {
+        "all_tests_passed": true,
+        "blocked": 0,
+        "blocked_tests": [],
+        "fail": 0,
+        "fail_ids": [],
+        "inventory": {
+          "duplicates": [],
+          "expected_count": 14,
+          "missing": [],
+          "observed_count": 14,
+          "unexpected": [],
+          "valid": true
+        },
+        "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO.",
+        "pass": 14,
+        "pass_ids": [
+          "B00",
+          "B01",
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B09",
+          "B10",
+          "B11",
+          "B12",
+          "B13"
+        ],
+        "test_suite_decision": "ALL_TESTS_PASS",
+        "total": 14
+      }
+    },
+    "c4_no_open": {
+      "phase_readiness": {
+        "all_requirements_verified": true,
+        "max_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW",
+        "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto (STILL_OPEN, BLOCKED_PROVIDER_GATE, NOT_VERIFIED, NOT_RUN, OPEN_CONSERVATIVE_LIMITATION) e tutti i test sono PASS.",
+        "not_implied": [
+          "provider ready",
+          "production ready",
+          "credenziali autorizzate",
+          "spend autorizzato",
+          "merge autorizzato",
+          "R2 autorizzato"
+        ],
+        "open_requirements": [],
+        "open_requirements_blocking_all_verified": [],
+        "open_requirements_future_gate": [],
+        "open_requirements_other_phase": [],
+        "open_requirements_this_phase": [],
+        "phase_gate_decision": "LAB_GATE_COMPLETE_ALL_VERIFIED",
+        "requirements": [
+          {
+            "counts_for_phase_readiness": true,
+            "evidence_tests": [],
+            "evidence_tests_not_passed": [],
+            "id": "ONLY_OK",
+            "note": "",
+            "open": false,
+            "reason_code": "EVIDENCE_TESTS_PASSED",
+            "scope": "this_phase",
+            "state": "VERIFIED_LAB",
+            "title": "ONLY_OK"
+          }
+        ],
+        "verified_requirements": [
+          "ONLY_OK"
+        ]
+      },
+      "runner_exit": 0,
+      "runner_exit_meaning": "tutti i test del gate hanno prodotto l'esito atteso. NON significa 'tutti i requisiti di fase verificati': vedi phase_readiness.",
+      "schema": "provider-boundary-phase-readiness/1",
+      "test_suite": {
+        "all_tests_passed": true,
+        "blocked": 0,
+        "blocked_tests": [],
+        "fail": 0,
+        "fail_ids": [],
+        "inventory": {
+          "duplicates": [],
+          "expected_count": 14,
+          "missing": [],
+          "observed_count": 14,
+          "unexpected": [],
+          "valid": true
+        },
+        "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO.",
+        "pass": 14,
+        "pass_ids": [
+          "B00",
+          "B01",
+          "B02",
+          "B03",
+          "B04",
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B09",
+          "B10",
+          "B11",
+          "B12",
+          "B13"
+        ],
+        "test_suite_decision": "ALL_TESTS_PASS",
+        "total": 14
+      }
+    },
+    "c4b_failing_test": {
+      "phase_readiness": {
+        "all_requirements_verified": false,
+        "max_state": "NOT_READY",
+        "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto (STILL_OPEN, BLOCKED_PROVIDER_GATE, NOT_VERIFIED, NOT_RUN, OPEN_CONSERVATIVE_LIMITATION) e tutti i test sono PASS.",
+        "not_implied": [
+          "provider ready",
+          "production ready",
+          "credenziali autorizzate",
+          "spend autorizzato",
+          "merge autorizzato",
+          "R2 autorizzato"
+        ],
+        "open_requirements": [],
+        "open_requirements_blocking_all_verified": [],
+        "open_requirements_future_gate": [],
+        "open_requirements_other_phase": [],
+        "open_requirements_this_phase": [],
+        "phase_gate_decision": "PHASE_GATE_NOT_FAVORABLE",
+        "requirements": [
+          {
+            "counts_for_phase_readiness": true,
+            "evidence_tests": [],
+            "evidence_tests_not_passed": [],
+            "id": "ONLY_OK",
+            "note": "",
+            "open": false,
+            "reason_code": "EVIDENCE_TESTS_PASSED",
+            "scope": "this_phase",
+            "state": "VERIFIED_LAB",
+            "title": "ONLY_OK"
+          }
+        ],
+        "verified_requirements": [
+          "ONLY_OK"
+        ]
+      },
+      "runner_exit": 1,
+      "runner_exit_meaning": "almeno un test FAIL o BLOCKED: suite non favorevole.",
+      "schema": "provider-boundary-phase-readiness/1",
+      "test_suite": {
+        "all_tests_passed": false,
+        "blocked": 0,
+        "blocked_tests": [],
+        "fail": 1,
+        "fail_ids": [
+          "B05"
+        ],
+        "inventory": {
+          "duplicates": [],
+          "expected_count": 14,
+          "missing": [],
+          "observed_count": 14,
+          "unexpected": [],
+          "valid": true
+        },
+        "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO.",
+        "pass": 13,
+        "pass_ids": [
+          "B00",
+          "B01",
+          "B02",
+          "B03",
+          "B04",
+          "B06",
+          "B07",
+          "B08",
+          "B09",
+          "B10",
+          "B11",
+          "B12",
+          "B13"
+        ],
+        "test_suite_decision": "TESTS_FAILED",
+        "total": 14
+      }
+    }
+  }
+}
