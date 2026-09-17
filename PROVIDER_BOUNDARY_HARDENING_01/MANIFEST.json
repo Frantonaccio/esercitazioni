@@ -1,0 +1,125 @@
+{
+  "package_name": "VF_PROVIDER_EXECUTION_BOUNDARY_HARDENING_EVIDENCE_03",
+  "bundle_version": "v3",
+  "created_date": "2026-09-17",
+  "phase": "PROVIDER / EXECUTION BOUNDARY HARDENING",
+  "declared_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW",
+  "not_implied": [
+    "provider ready",
+    "production ready",
+    "credenziali autorizzate",
+    "spend autorizzato",
+    "merge autorizzato",
+    "R2 autorizzato",
+    "P-B01 verified beyond LAB uid boundary",
+    "P-B02 composed with P-B01 inside the isolated spender"
+  ],
+  "supersedes": [
+    {
+      "bundle_version": "v1",
+      "external_sha256": "054ea4821097eca1f95264ae3acb3b037f8ab1219d0536cca9c1f90a0d61b961",
+      "code_sha": "9aafe9b16f10861846ec7527191009c6e0dabbd6",
+      "evidence_head_sha": "c66fd30c41c132c394ad54619d317d8c9f16f60d",
+      "verdict": "HUMAN_REVIEW_HOLD — PRE_SEND_PROVENANCE_MISMATCH"
+    },
+    {
+      "bundle_version": "v2",
+      "external_sha256": "b54de9b5b7a661fc28f4d18488f8eac77d8a369cdcb4ec2deb5f00a4cb9e04a4",
+      "code_sha": "7fa9cd656ce5970cbd8a549345d8330abbe79f47",
+      "evidence_head_sha": "06771aa6fbf7f210575b08f9453610e305e11921",
+      "verdict": "HUMAN_REVIEW_HOLD — PHASE_READINESS_REPORTING_INCONSISTENT (reporting-only)"
+    }
+  ],
+  "test_suite": {
+    "runner": "pbgate/run_boundary_gate.py",
+    "inventory": {
+      "expected_count": 14,
+      "observed_count": 14,
+      "missing": [],
+      "unexpected": [],
+      "duplicates": [],
+      "valid": true
+    },
+    "total": 14,
+    "pass": 14,
+    "fail": 0,
+    "blocked": 0,
+    "all_tests_passed": true,
+    "test_suite_decision": "ALL_TESTS_PASS",
+    "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO."
+  },
+  "phase_readiness": {
+    "all_requirements_verified": false,
+    "phase_gate_decision": "LAB_GATE_COMPLETE_WITH_OPEN_GAPS",
+    "max_state": "PROVIDER_EXECUTION_BOUNDARY_HARDENING_READY_FOR_HUMAN_REVIEW",
+    "open_requirements_this_phase": [
+      "ORPHAN_RESERVED_LEASE",
+      "P_B02_P_B01_COMPOSITION",
+      "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY"
+    ],
+    "open_requirements_future_gate": [
+      "LEGACY_SPEND_PATHS_PROVIDER_GATE",
+      "RECONCILIATION_FRESHNESS_NG04",
+      "REAL_AUTHORIZATION_AND_PRICING",
+      "REAL_PROVIDER_RECONCILIATION"
+    ],
+    "open_requirements_other_phase": [
+      "RUN_CONTAMINATION",
+      "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+      "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+      "INDEPENDENT_CI_STATUS_CHECKS"
+    ],
+    "verified_requirements": [
+      "P_B01_PRIVILEGE_BOUNDARY",
+      "P_B02_BINDING_AUTHENTICATION",
+      "P_B04_EXACT_BYTE_SNAPSHOT",
+      "NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE",
+      "LEGACY_SPEND_PATHS_INVENTORY_AND_SWITCH",
+      "P2_FREEZE_AND_CORE_PIN",
+      "R0_R1_NO_REGRESSION"
+    ],
+    "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto (STILL_OPEN, BLOCKED_PROVIDER_GATE, NOT_VERIFIED, NOT_RUN, OPEN_CONSERVATIVE_LIMITATION) e tutti i test sono PASS."
+  },
+  "gap_status": {
+    "P_B01_PRIVILEGE_BOUNDARY": "VERIFIED_LAB",
+    "P_B02_BINDING_AUTHENTICATION": "VERIFIED_LAB",
+    "P_B04_EXACT_BYTE_SNAPSHOT": "VERIFIED_LAB",
+    "NG03_PRE_SUBMIT_SETTLEMENT_PROVENANCE": "VERIFIED_LAB",
+    "LEGACY_SPEND_PATHS_INVENTORY_AND_SWITCH": "VERIFIED_LAB",
+    "P2_FREEZE_AND_CORE_PIN": "VERIFIED_LAB",
+    "R0_R1_NO_REGRESSION": "VERIFIED_LAB",
+    "ORPHAN_RESERVED_LEASE": "STILL_OPEN",
+    "LEGACY_SPEND_PATHS_PROVIDER_GATE": "BLOCKED_PROVIDER_GATE",
+    "P_B02_P_B01_COMPOSITION": "NOT_VERIFIED",
+    "RECONCILIATION_FRESHNESS_NG04": "STILL_OPEN",
+    "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY": "OPEN_CONSERVATIVE_LIMITATION",
+    "REAL_AUTHORIZATION_AND_PRICING": "NOT_VERIFIED",
+    "REAL_PROVIDER_RECONCILIATION": "NOT_VERIFIED",
+    "RUN_CONTAMINATION": "NOT_RUN",
+    "G_N02_SEMANTIC_CLAIM_PARAPHRASE": "STILL_OPEN",
+    "RV07_SCHEDULER_RECOVERY_RESIDUAL": "STILL_OPEN",
+    "INDEPENDENT_CI_STATUS_CHECKS": "NOT_RUN"
+  },
+  "references": {
+    "core_repo": "Frantonaccio/creative-os",
+    "core_branch": "main",
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "runtime_repo": "Frantonaccio/esercitazioni",
+    "canonical_runtime_base_sha": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e",
+    "runtime_branch": "claude/provider-boundary-hardening-c1k77q",
+    "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "runtime_code_sha": "9d649869c419a527d75ee95d15ba9542c70251fc",
+    "runtime_code_sha_meaning": "commit containing code + evidence + documents of this bundle",
+    "runtime_evidence_head_sha": "declared in PROVENANCE.json (external file, generated after the commit that adds this manifest; a manifest cannot name its own commit)",
+    "core_changed": false,
+    "core_branch_created": false,
+    "main_touched": false
+  },
+  "credits_spent": 0,
+  "real_providers": 0,
+  "real_credentials": 0,
+  "generative_network_calls": 0,
+  "checksums": "SHA256SUMS covers every committed bundle file (this manifest included, SHA256SUMS itself excluded); SHA256SUMS.EXTERNAL covers PROVENANCE.json, generated after the final commit",
+  "authority": "pbgate/phase_readiness.py — console, RESULTS.json, TEST_RESULTS.md, README e questo manifest derivano tutti dallo stesso report; B13 verifica la coerenza."
+}
