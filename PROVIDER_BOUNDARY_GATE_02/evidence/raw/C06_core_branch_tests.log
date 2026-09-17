@@ -1,0 +1,38 @@
+{
+  "run_ng05_pre_submit_atomicity": {
+    "returncode": 0,
+    "tail": "send invariate (TRANSPORT_ATTESTED_NOT_SENT), comportamento invariato\u001b[0m\n\u001b[32mPASS\u001b[0m  H. contratto CR-03 e controparte in memoria\n      \u001b[2mProtocol ReservationStore dichiara mark_refused_pre_submit; SqliteReservationStore e JobStore la implementano con firme compatibili (CR-03); JobStore rifiuta la provenance del trasporto e registra quella parametrica\u001b[0m\n\nNG-05 pre-submit atomicity: 8/8 PASS"
+  },
+  "run_r0_r1_hardening": {
+    "returncode": 0,
+    "tail": "====================================\n  RV01     5/5\n  RV02     7/7\n  RV06     6/6\n  RV08     5/5\n  RV03     3/3\n  LEDGER   6/6\n  RECOVERY 2/2\n  CR-01    3/3\n  CR-02    1/1\n  CR-03    1/1\n  CR-04    1/1\n  CR-05    1/1\n  CR-07    1/1\n  QUOTE    2/2\n  CR-11    1/1\n  CR-09    1/1\n  STORE    1/1\n\u001b[32mR0-R1 HARDENING: 47/47 test superati — 0 crediti, 0 chiamate a provider esterni, unita' sintetiche.\u001b[0m"
+  },
+  "run_reservation": {
+    "returncode": 0,
+    "tail": "\u001b[2mun interprete nuovo rilegge RESERVED dal journal, senza chat\u001b[0m\n\nLIMITI DICHIARATI\n  \u001b[32mOK  \u001b[0m l'in-memory dichiara il proprio limite\n       \u001b[2mcontratto rispettato nel processo, limite multi-processo dichiarato\u001b[0m\n\n==============================================================================\n\u001b[32mPRENOTAZIONE ATOMICA: 10/10 test superati — 0 crediti, 0 chiamate a provider esterni.\u001b[0m"
+  },
+  "run_review_pr2_final": {
+    "returncode": 0,
+    "tail": "on polla un job altrui\n         \u001b[2mprovider_b: 0 poll, 0 submit; job intatto (provider_a); rifiuto=ProviderMismatch\u001b[0m\n  R6  \u001b[32mOK  \u001b[0m controprova: adapter corretto puo' pollare\n         \u001b[2mprovider_a (altra istanza): poll=2, submit=0, stato=SUCCEEDED\u001b[0m\n\n==============================================================================\n  R5: \u001b[32mNOT_CONFIRMED\u001b[0m\n  R6: \u001b[32mNOT_CONFIRMED\u001b[0m"
+  },
+  "run_review_pr2": {
+    "returncode": 0,
+    "tail": "=1 envelope=True; budget=1 envelope=2.5\u001b[0m\n  R4  \u001b[32mOK  \u001b[0m D budget_units negativo (in memoria)\n         \u001b[2min-memory budget_units=-10: rifiutato con errore di contratto ReservationContractError\u001b[0m\n\n==============================================================================\n  R1: \u001b[32mNOT_CONFIRMED\u001b[0m\n  R2: \u001b[32mNOT_CONFIRMED\u001b[0m\n  R3: \u001b[32mNOT_CONFIRMED\u001b[0m\n  R4: \u001b[32mNOT_CONFIRMED\u001b[0m"
+  },
+  "run_block2": {
+    "returncode": 0,
+    "tail": "rametrizzato\n       \u001b[2mvalori solo nei parametri, mai interpolati nel SQL\u001b[0m\n\nSICUREZZA\n  \u001b[32mOK  \u001b[0m nessuna credenziale nel layer di trasporto\n       \u001b[2mnessun accesso all'ambiente, nessun nome di chiave nel layer di trasporto\u001b[0m\n\n==============================================================================\n\u001b[32mBLOCCO 2: 18/18 test superati — 0 crediti, 0 chiamate a provider esterni.\u001b[0m"
+  },
+  "run_golden": {
+    "returncode": 0,
+    "tail": "uo\\b]\n\n==============================================================================\n\u001b[32mOK  \u001b[0m EDL deterministica  (3 scene, 20.0s, 7 text layer di cui 3 critici e deterministici)\n==============================================================================\n\nESITO: 1 REJECT · 1 PASS  (atteso: 1 REJECT · 1 PASS)\n\u001b[32mBLOCCO 1 APPROVATO — costo di esecuzione: 0 crediti, 0 chiamate di rete.\u001b[0m"
+  },
+  "run_boot_paths": {
+    "returncode": 0,
+    "tail": "es/DEMO_V1.json…\u001b[0m\n\u001b[32mOK  \u001b[0m enforcement senza evidenza    -> BootPathError\n     \u001b[2mrespinto come previsto: EVENT_LOG_APPEND_ONLY: meccanismo dichiarato ('Assenza di verbi. Il deployment di esempio non ha…\u001b[0m\n\n==============================================================================\n\u001b[32mBOOT_PATHS_EXIST — nessun riferimento obbligatorio punta nel vuoto, e il controllo sa fallire.\u001b[0m"
+  },
+  "run_case_collision": {
+    "returncode": 0,
+    "tail": "\u001b[32mOK  \u001b[0m creative-os-atomicity  — 0 collisioni su 69 path (file e directory, NFC + casefold)\n\n\u001b[32mCASE_COLLISION_PREFLIGHT PASS — nessun path collassa sullo stesso nome logico.\u001b[0m"
+  }
+}

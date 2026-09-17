@@ -1,0 +1,12 @@
+{
+  "core_head": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "core_path": "/home/user/creative-os",
+  "runtime_head": "0698279703ab959625ac4e84ee636bc5b93b45fd",
+  "summary": {
+    "legacy_spend_paths": "REPRODUCED",
+    "ng04_freshness": "REPRODUCED",
+    "ng05_atomicity": "REPRODUCED",
+    "orphan_lease": "REPRODUCED",
+    "pb01_pb02_composition": "REPRODUCED"
+  }
+}

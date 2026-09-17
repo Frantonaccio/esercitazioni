@@ -96,8 +96,71 @@ class LegacySpendPathDisabled(RuntimeError):
             "Nessuna reservation, nessun permit, nessun submit.")
 
 
+# ---------------------------------------------------------------------------
+# PROVIDER BOUNDARY MODE (OPEN-GAP CLOSURE, 2026-09-17).
+#
+# UN solo interruttore di MODALITA' per la postura destinata al Provider Boundary
+# Gate. Quando e' INGAGGIATA, ogni percorso spendibile NON governato del Runtime e'
+# chiuso fail-closed, PRIMA di qualunque effetto (nessun pin, nessun import del Core,
+# nessuno store, nessuna reservation, nessun submit):
+#
+#   #2/#4  `go(..., authorization=None)` (LEGACY_LAB) e i suoi chiamanti
+#          -> LEGACY_SPEND_PATH_DISABLED (la modalita' forza `legacy_spend_path_state`)
+#   #7     helper di test che dispacciano direttamente sullo store (`tests/worker.store_call`)
+#          -> PROVIDER_BOUNDARY_MODE_ENGAGED
+#
+# La modalita' e' DISINGAGGIATA per default: la suite storica R0-R1 (T01-T37) usa il
+# percorso LEGACY_LAB e non viene alterata da questa fase. Ingaggiarla e' una
+# precondizione dichiarata del Provider Boundary Gate, non un default nascosto.
+#
+# COSA LA MODALITA' NON PUO' CHIUDERE (dichiarato, non aggirato): i percorsi #10 e #11
+# sono primitive del CORE (`transport.pipeline.run_job`, `adapters.*.submit`,
+# `registry.reservations.SqliteReservationStore.reconcile`), invocabili da qualunque
+# codice che abbia il Core in `sys.path` e un adapter. Nessun interruttore del Runtime
+# le governa. Restano `BLOCKED_PROVIDER_GATE` / `CORE_CHANGE_REQUIRED`: la sola
+# mitigazione attuale e' il confine di processo P-B01 (l'orchestrator non ha il Core
+# dello spender, ne' il suo store, ne' il suo segreto). Vedi LEGACY_SPEND_PATHS_V2.md.
+# ---------------------------------------------------------------------------
+PROVIDER_BOUNDARY_MODE_ENV = "CREATIVE_OS_PROVIDER_BOUNDARY_MODE"
+MODE_ENGAGED = "ENGAGED"
+MODE_DISENGAGED = "DISENGAGED"
+
+
+class ProviderBoundaryModeEngaged(RuntimeError):
+    """La modalita' Provider Boundary chiude questo percorso: solo il governato puo' spendere."""
+
+    code = "PROVIDER_BOUNDARY_MODE_ENGAGED"
+
+    def __init__(self, entry_point: str):
+        self.entry_point = entry_point
+        super().__init__(
+            f"{self.code}: {entry_point} e' un percorso non governato e la modalita' "
+            f"Provider Boundary e' ingaggiata. Nessun effetto: nessuna reservation, "
+            f"nessun permit, nessuna scrittura sullo store, nessun submit.")
+
+
+def provider_boundary_mode() -> str:
+    """Stato della modalita'. Solo l'ambiente puo' INGAGGIARLA; nulla la disingaggia
+    se il codice la fissasse (simmetrico a LEGACY_LAB_SPEND_PATH: si puo' solo chiudere)."""
+    if str(os.environ.get(PROVIDER_BOUNDARY_MODE_ENV, "")).strip().lower() == "engaged":
+        return MODE_ENGAGED
+    return MODE_DISENGAGED
+
+
+def refuse_if_provider_boundary_mode(entry_point: str) -> str:
+    """Da chiamare all'INGRESSO di un percorso non governato, prima di ogni effetto."""
+    state = provider_boundary_mode()
+    if state == MODE_ENGAGED:
+        raise ProviderBoundaryModeEngaged(entry_point)
+    return state
+
+
 def legacy_spend_path_state() -> str:
     if LEGACY_LAB_SPEND_PATH != "ENABLED_LAB_ONLY":
+        return "DISABLED"
+    # La modalita' Provider Boundary CHIUDE il percorso legacy: e' un solo interruttore
+    # per l'intera postura, non due da tenere allineati a mano.
+    if provider_boundary_mode() == MODE_ENGAGED:
         return "DISABLED"
     if str(os.environ.get(LEGACY_SPEND_PATH_ENV, "")).strip().lower() == "disabled":
         return "DISABLED"

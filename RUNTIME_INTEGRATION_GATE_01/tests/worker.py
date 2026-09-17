@@ -166,7 +166,19 @@ def read_state(db: str, core_path: str) -> dict:
 
 def store_call(db: str, core_path: str, method: str, *args, **kwargs) -> dict:
     """Nuovo interprete: invoca un metodo dello store durevole (recovery, ledger, permessi, quote).
-    Due helper di test: `spec_key_of(prompt, over)` e `reserve_or_get_live_by_prompt(prompt, permit_id)`."""
+    Due helper di test: `spec_key_of(prompt, over)` e `reserve_or_get_live_by_prompt(prompt, permit_id)`.
+
+    LEGACY #7 (OPEN-GAP CLOSURE 2026-09-17): questo helper dispaccia DIRETTAMENTE sullo store,
+    fuori dal percorso governato, nello stesso UID del chiamante. E' ammesso solo mentre la
+    modalita' Provider Boundary e' disingaggiata (suite storica R0-R1). Ingaggiata, rifiuta
+    PRIMA di importare il Core e prima di aprire lo store: nessun effetto di alcun tipo."""
+    from runtime.provider_gate import ProviderBoundaryModeEngaged, refuse_if_provider_boundary_mode
+    try:
+        refuse_if_provider_boundary_mode("tests.worker.store_call")
+    except ProviderBoundaryModeEngaged as e:
+        return {"pid": os.getpid(), "ok": False, "error": type(e).__name__, "code": e.code,
+                "message": str(e), "core_imported": "registry.reservations" in sys.modules,
+                "store_created": False}
     if core_path not in sys.path:
         sys.path.insert(0, core_path)
     from adapters.base import GenSpec

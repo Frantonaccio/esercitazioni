@@ -1,0 +1,137 @@
+{
+  "core_surface": {
+    "candidates": {
+      "mark_refused_before_send": {
+        "accepts_caller_extra_sql": false,
+        "hardcoded_sources": [
+          "TRANSPORT_ATTESTED_NOT_SENT"
+        ],
+        "in_protocol": true,
+        "settlement_source_parametric": false,
+        "signature": "(self, job: 'Job', reason: 'str', now: 'float') -> 'Job'",
+        "writes_ledger_settle": true,
+        "writes_settled_units": true,
+        "writes_state": true
+      },
+      "reconcile": {
+        "accepts_caller_extra_sql": false,
+        "hardcoded_sources": [],
+        "in_protocol": true,
+        "settlement_source_parametric": false,
+        "signature": "(self, job: 'Job', state: 'JobState', evidence: 'Mapping', *, now: 'float | None' = None) -> 'Job'",
+        "writes_ledger_settle": false,
+        "writes_settled_units": false,
+        "writes_state": true
+      },
+      "settle": {
+        "accepts_caller_extra_sql": false,
+        "hardcoded_sources": [],
+        "in_protocol": false,
+        "settlement_source_parametric": true,
+        "signature": "(self, job_id: 'str', *, units: 'int | None', source: 'str', cost_unknown: 'bool' = False, now: 'float | None' = None, _crash_hook=None) -> 'dict'",
+        "writes_ledger_settle": false,
+        "writes_settled_units": true,
+        "writes_state": false
+      }
+    },
+    "core_change_required": true,
+    "ok": true,
+    "private_set_state_is_private": true,
+    "protocol_methods": [
+      "_abc_impl",
+      "_is_protocol",
+      "_is_runtime_protocol",
+      "due_for_reconcile",
+      "expire",
+      "find_latest_by_operation",
+      "find_latest_by_spec",
+      "find_live_by_spec",
+      "get",
+      "issue_permit",
+      "mark_refused_before_send",
+      "mark_submit_unknown",
+      "mark_submitted",
+      "mark_submitting",
+      "permit",
+      "put",
+      "reconcile",
+      "record_anomaly",
+      "reserve_or_get_live"
+    ],
+    "single_transaction_primitive_with_parametric_provenance": []
+  },
+  "crash": {
+    "exitcode": 7,
+    "result": null
+  },
+  "job_id": "res_8b5e9ba73993bad6_1",
+  "prepare": {
+    "jobs": [
+      {
+        "op": "lab:ng05_a",
+        "result": {
+          "error": "ConnectionResetError",
+          "job_id": null,
+          "ok": false,
+          "state": null
+        }
+      }
+    ],
+    "ok": true,
+    "rows": [
+      {
+        "attempt_token": "att_5125d51524e67d4d204324cb",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_8b5e9ba73993bad6_1",
+        "operation_id": "lab:ng05_a",
+        "payload_digest": "0f54f8952d3c0e2287b31e986eaa0b99bc51dad53af1a8e859c4ac4f5ef4ab1f",
+        "permit_id": "permit_c61274ecbeb40eaf9d9c1b1d",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_07cde315766576e6887da817",
+        "revision": 2,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "8b5e9ba73993bad621241fa79562b93da16c2e85158d491e97e9bace327e9c6f",
+        "state": "SUBMIT_UNKNOWN",
+        "submit_intent_at": 1789661450.7312486
+      }
+    ]
+  },
+  "row_after": {
+    "attempt_token": "att_5125d51524e67d4d204324cb",
+    "budget_units": 10,
+    "envelope_id": "ENV_LAB",
+    "error": null,
+    "job_id": "res_8b5e9ba73993bad6_1",
+    "operation_id": "lab:ng05_a",
+    "payload_digest": "0f54f8952d3c0e2287b31e986eaa0b99bc51dad53af1a8e859c4ac4f5ef4ab1f",
+    "permit_id": "permit_c61274ecbeb40eaf9d9c1b1d",
+    "provider": "fake",
+    "provider_account": "fake_acct_a",
+    "provider_job_id": null,
+    "quote_id": "quote_07cde315766576e6887da817",
+    "revision": 3,
+    "settled_units": null,
+    "settlement_source": null,
+    "spec_key": "8b5e9ba73993bad621241fa79562b93da16c2e85158d491e97e9bace327e9c6f",
+    "state": "FAILED",
+    "submit_intent_at": 1789661450.7312486
+  },
+  "status": "REPRODUCED",
+  "totals_after": {
+    "live_reservation_units": 0,
+    "settled_units": 0,
+    "terminal_unsettled_jobs": 1,
+    "unsettled_exposure_units": 10
+  },
+  "totals_before": {
+    "live_reservation_units": 10,
+    "settled_units": 0,
+    "terminal_unsettled_jobs": 0,
+    "unsettled_exposure_units": 10
+  }
+}

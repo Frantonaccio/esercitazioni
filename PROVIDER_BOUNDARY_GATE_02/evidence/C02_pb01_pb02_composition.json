@@ -1,0 +1,648 @@
+{
+  "binding_counterproofs": {
+    "from_future": {
+      "case": "from_future",
+      "message": "REPORT_FROM_FUTURE: report emesso 64.999964s nel futuro, skew tollerato 5.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
+      "ok": true,
+      "refused": "REPORT_FROM_FUTURE"
+    },
+    "replay": {
+      "back_to_unknown": "SUBMIT_UNKNOWN",
+      "case": "replay",
+      "first_apply": {
+        "job_id": "res_908f816daf68d2d1_1",
+        "ok": true,
+        "revision": 3,
+        "state": "RUNNING"
+      },
+      "ok": true,
+      "refused": "REPLAY",
+      "replay": {
+        "refused": "REPLAY"
+      }
+    },
+    "stale": {
+      "case": "stale",
+      "message": "REPORT_STALE: report vecchio di 360.000038s, massimo 300.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
+      "ok": true,
+      "refused": "REPORT_STALE"
+    },
+    "wrong_account": {
+      "case": "wrong_account",
+      "message": "ACCOUNT_MISMATCH: report 'acct_stranger' != job 'acct_ec35e550840d'",
+      "ok": true,
+      "refused": "ACCOUNT_MISMATCH"
+    },
+    "wrong_attempt": {
+      "case": "wrong_attempt",
+      "message": "ATTEMPT_TOKEN_MISMATCH: report 'att_bogus' != job 'att_1077d52303263c4560f53de3'",
+      "ok": true,
+      "refused": "ATTEMPT_TOKEN_MISMATCH"
+    },
+    "wrong_job": {
+      "case": "wrong_job",
+      "message": "JOB_UNKNOWN: job 'res_nonexistent_1' sconosciuto allo store autorevole",
+      "ok": true,
+      "refused": "JOB_UNKNOWN"
+    },
+    "wrong_operation": {
+      "case": "wrong_operation",
+      "message": "OPERATION_MISMATCH: report 'lab:another_operation' != job 'lab:composition'",
+      "ok": true,
+      "refused": "OPERATION_MISMATCH"
+    },
+    "wrong_payload_digest": {
+      "case": "wrong_payload_digest",
+      "message": "PAYLOAD_DIGEST_MISMATCH: report '0000000000000000000000000000000000000000000000000000000000000000' != job '4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c'",
+      "ok": true,
+      "refused": "PAYLOAD_DIGEST_MISMATCH"
+    },
+    "wrong_provider": {
+      "case": "wrong_provider",
+      "message": "PROVIDER_MISMATCH: report 'higgsfield' != job 'fake'",
+      "ok": true,
+      "refused": "PROVIDER_MISMATCH"
+    }
+  },
+  "checks": {
+    "correct_report_applied": true,
+    "forged_report_refused": true,
+    "freshness_enforced_by_daemon": true,
+    "future_refused_inside_spender": true,
+    "no_key_files_on_disk": true,
+    "no_key_material_in_channel": true,
+    "no_secret_in_daemon_log": true,
+    "no_secret_marker_in_channel": true,
+    "one_row_reconciled_to_succeeded": true,
+    "orchestrator_no_caps": true,
+    "proc_environ_unreadable": true,
+    "proc_mem_unreadable": true,
+    "ready_file_has_no_key": true,
+    "recon_secret_owned_by_spender_0600": true,
+    "recon_secret_unreadable": true,
+    "replay_by_orchestrator_refused": true,
+    "replay_nonce_refused_inside_spender": true,
+    "resigned_report_refused": true,
+    "secret_dir_unlistable": true,
+    "sentinel_zero_violations": true,
+    "spend_secret_unreadable": true,
+    "stale_refused_inside_spender": true,
+    "store_owned_by_spender": true,
+    "third_uid_refused": true,
+    "uids_distinct": true,
+    "wrong_account_refused": true,
+    "wrong_attempt_refused": true,
+    "wrong_job_refused": true,
+    "wrong_operation_refused": true,
+    "wrong_payload_digest_refused": true,
+    "wrong_provider_refused": true
+  },
+  "counterproofs": {
+    "binding_counterproofs": {
+      "from_future": {
+        "case": "from_future",
+        "message": "REPORT_FROM_FUTURE: report emesso 64.999964s nel futuro, skew tollerato 5.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
+        "ok": true,
+        "refused": "REPORT_FROM_FUTURE"
+      },
+      "replay": {
+        "back_to_unknown": "SUBMIT_UNKNOWN",
+        "case": "replay",
+        "first_apply": {
+          "job_id": "res_908f816daf68d2d1_1",
+          "ok": true,
+          "revision": 3,
+          "state": "RUNNING"
+        },
+        "ok": true,
+        "refused": "REPLAY",
+        "replay": {
+          "refused": "REPLAY"
+        }
+      },
+      "stale": {
+        "case": "stale",
+        "message": "REPORT_STALE: report vecchio di 360.000038s, massimo 300.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
+        "ok": true,
+        "refused": "REPORT_STALE"
+      },
+      "wrong_account": {
+        "case": "wrong_account",
+        "message": "ACCOUNT_MISMATCH: report 'acct_stranger' != job 'acct_ec35e550840d'",
+        "ok": true,
+        "refused": "ACCOUNT_MISMATCH"
+      },
+      "wrong_attempt": {
+        "case": "wrong_attempt",
+        "message": "ATTEMPT_TOKEN_MISMATCH: report 'att_bogus' != job 'att_1077d52303263c4560f53de3'",
+        "ok": true,
+        "refused": "ATTEMPT_TOKEN_MISMATCH"
+      },
+      "wrong_job": {
+        "case": "wrong_job",
+        "message": "JOB_UNKNOWN: job 'res_nonexistent_1' sconosciuto allo store autorevole",
+        "ok": true,
+        "refused": "JOB_UNKNOWN"
+      },
+      "wrong_operation": {
+        "case": "wrong_operation",
+        "message": "OPERATION_MISMATCH: report 'lab:another_operation' != job 'lab:composition'",
+        "ok": true,
+        "refused": "OPERATION_MISMATCH"
+      },
+      "wrong_payload_digest": {
+        "case": "wrong_payload_digest",
+        "message": "PAYLOAD_DIGEST_MISMATCH: report '0000000000000000000000000000000000000000000000000000000000000000' != job '4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c'",
+        "ok": true,
+        "refused": "PAYLOAD_DIGEST_MISMATCH"
+      },
+      "wrong_provider": {
+        "case": "wrong_provider",
+        "message": "PROVIDER_MISMATCH: report 'higgsfield' != job 'fake'",
+        "ok": true,
+        "refused": "PROVIDER_MISMATCH"
+      }
+    },
+    "channel_leak": {
+      "canonical_bytes_change_with_nonce": true,
+      "explained_hex64": [
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c",
+        "5a47254041d0b07d581f1b51534614029c29d7d727e56e86aac976f901280588"
+      ],
+      "hex64_tokens_in_channel": [
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c",
+        "5a47254041d0b07d581f1b51534614029c29d7d727e56e86aac976f901280588"
+      ],
+      "secret_marker_in_channel": false,
+      "signature_present_in_report": true,
+      "unexplained_hex64": []
+    },
+    "correct_report_from_spender": {
+      "job_id": "res_908f816daf68d2d1_1",
+      "ok": true,
+      "revision": 5,
+      "state": "SUCCEEDED"
+    },
+    "forge_report_with_own_key": {
+      "message": "UNAUTHENTICATED: firma del report assente o non valida",
+      "ok": false,
+      "refused": "UNAUTHENTICATED"
+    },
+    "list_secret_dir": "BLOCKED (PermissionError)",
+    "provider_report_issued": {
+      "fields": [
+        "attempt_token",
+        "issued_at",
+        "job_id",
+        "nonce",
+        "operation_id",
+        "payload_digest",
+        "provider",
+        "provider_account",
+        "provider_job_id",
+        "remote_ref",
+        "schema",
+        "signature",
+        "state"
+      ],
+      "ok": true
+    },
+    "read_recon_secret": "BLOCKED (PermissionError)",
+    "read_signing_key": {
+      "key_files_in_ipc_dir": [],
+      "proc_cmdline_readable": {
+        "contains_secret_marker": false,
+        "readable": true
+      },
+      "proc_environ": "BLOCKED (PermissionError)",
+      "proc_mem": "BLOCKED (PermissionError)",
+      "ready_file": {
+        "contains_key_material": false,
+        "keys": [
+          "account_id",
+          "allowed_peer_uid",
+          "db",
+          "freshness",
+          "gid",
+          "pid",
+          "recon_secret_path",
+          "secret_path",
+          "signing_key_on_disk",
+          "socket",
+          "uid"
+        ],
+        "readable": true,
+        "signing_key_on_disk": false
+      }
+    },
+    "read_spend_secret": "BLOCKED (PermissionError)",
+    "replay_same_report": {
+      "message": "NOT_RECONCILABLE: job res_908f816daf68d2d1_1 in stato SUCCEEDED",
+      "ok": false,
+      "refused": "NOT_RECONCILABLE"
+    },
+    "resign_with_observed_signature": {
+      "message": "UNAUTHENTICATED: firma del report assente o non valida",
+      "ok": false,
+      "refused": "UNAUTHENTICATED"
+    }
+  },
+  "daemon": {
+    "account_id": "acct_ec35e550840d",
+    "allowed_peer_uid": 65531,
+    "db": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_comp/spender/store.db",
+    "freshness": {
+      "label": "LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION",
+      "max_age_s": 300.0,
+      "max_future_skew_s": 5.0
+    },
+    "gid": 65532,
+    "pid": 1252,
+    "recon_secret_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_comp/spender/secret/reconciliation_secret.json",
+    "secret_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_comp/spender/secret/worker_secret.json",
+    "signing_key_on_disk": false,
+    "socket": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_comp/ipc/spender.sock",
+    "uid": 65532
+  },
+  "daemon_log_tail": "",
+  "precondition": {
+    "cap_chown": true,
+    "cap_eff": "0x1fffeffffff",
+    "cap_setgid": true,
+    "cap_setuid": true,
+    "euid": 0,
+    "setpriv": "/usr/bin/setpriv"
+  },
+  "probe_full": {
+    "caps": {
+      "CapBnd": "0000000000000000",
+      "CapEff": "0000000000000000",
+      "CapPrm": "0000000000000000"
+    },
+    "counterproofs": {
+      "binding_counterproofs": {
+        "from_future": {
+          "case": "from_future",
+          "message": "REPORT_FROM_FUTURE: report emesso 64.999964s nel futuro, skew tollerato 5.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
+          "ok": true,
+          "refused": "REPORT_FROM_FUTURE"
+        },
+        "replay": {
+          "back_to_unknown": "SUBMIT_UNKNOWN",
+          "case": "replay",
+          "first_apply": {
+            "job_id": "res_908f816daf68d2d1_1",
+            "ok": true,
+            "revision": 3,
+            "state": "RUNNING"
+          },
+          "ok": true,
+          "refused": "REPLAY",
+          "replay": {
+            "refused": "REPLAY"
+          }
+        },
+        "stale": {
+          "case": "stale",
+          "message": "REPORT_STALE: report vecchio di 360.000038s, massimo 300.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
+          "ok": true,
+          "refused": "REPORT_STALE"
+        },
+        "wrong_account": {
+          "case": "wrong_account",
+          "message": "ACCOUNT_MISMATCH: report 'acct_stranger' != job 'acct_ec35e550840d'",
+          "ok": true,
+          "refused": "ACCOUNT_MISMATCH"
+        },
+        "wrong_attempt": {
+          "case": "wrong_attempt",
+          "message": "ATTEMPT_TOKEN_MISMATCH: report 'att_bogus' != job 'att_1077d52303263c4560f53de3'",
+          "ok": true,
+          "refused": "ATTEMPT_TOKEN_MISMATCH"
+        },
+        "wrong_job": {
+          "case": "wrong_job",
+          "message": "JOB_UNKNOWN: job 'res_nonexistent_1' sconosciuto allo store autorevole",
+          "ok": true,
+          "refused": "JOB_UNKNOWN"
+        },
+        "wrong_operation": {
+          "case": "wrong_operation",
+          "message": "OPERATION_MISMATCH: report 'lab:another_operation' != job 'lab:composition'",
+          "ok": true,
+          "refused": "OPERATION_MISMATCH"
+        },
+        "wrong_payload_digest": {
+          "case": "wrong_payload_digest",
+          "message": "PAYLOAD_DIGEST_MISMATCH: report '0000000000000000000000000000000000000000000000000000000000000000' != job '4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c'",
+          "ok": true,
+          "refused": "PAYLOAD_DIGEST_MISMATCH"
+        },
+        "wrong_provider": {
+          "case": "wrong_provider",
+          "message": "PROVIDER_MISMATCH: report 'higgsfield' != job 'fake'",
+          "ok": true,
+          "refused": "PROVIDER_MISMATCH"
+        }
+      },
+      "channel_leak": {
+        "canonical_bytes_change_with_nonce": true,
+        "explained_hex64": [
+          "0000000000000000000000000000000000000000000000000000000000000000",
+          "4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c",
+          "5a47254041d0b07d581f1b51534614029c29d7d727e56e86aac976f901280588"
+        ],
+        "hex64_tokens_in_channel": [
+          "0000000000000000000000000000000000000000000000000000000000000000",
+          "4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c",
+          "5a47254041d0b07d581f1b51534614029c29d7d727e56e86aac976f901280588"
+        ],
+        "secret_marker_in_channel": false,
+        "signature_present_in_report": true,
+        "unexplained_hex64": []
+      },
+      "correct_report_from_spender": {
+        "job_id": "res_908f816daf68d2d1_1",
+        "ok": true,
+        "revision": 5,
+        "state": "SUCCEEDED"
+      },
+      "forge_report_with_own_key": {
+        "message": "UNAUTHENTICATED: firma del report assente o non valida",
+        "ok": false,
+        "refused": "UNAUTHENTICATED"
+      },
+      "list_secret_dir": "BLOCKED (PermissionError)",
+      "provider_report_issued": {
+        "fields": [
+          "attempt_token",
+          "issued_at",
+          "job_id",
+          "nonce",
+          "operation_id",
+          "payload_digest",
+          "provider",
+          "provider_account",
+          "provider_job_id",
+          "remote_ref",
+          "schema",
+          "signature",
+          "state"
+        ],
+        "ok": true
+      },
+      "read_recon_secret": "BLOCKED (PermissionError)",
+      "read_signing_key": {
+        "key_files_in_ipc_dir": [],
+        "proc_cmdline_readable": {
+          "contains_secret_marker": false,
+          "readable": true
+        },
+        "proc_environ": "BLOCKED (PermissionError)",
+        "proc_mem": "BLOCKED (PermissionError)",
+        "ready_file": {
+          "contains_key_material": false,
+          "keys": [
+            "account_id",
+            "allowed_peer_uid",
+            "db",
+            "freshness",
+            "gid",
+            "pid",
+            "recon_secret_path",
+            "secret_path",
+            "signing_key_on_disk",
+            "socket",
+            "uid"
+          ],
+          "readable": true,
+          "signing_key_on_disk": false
+        }
+      },
+      "read_spend_secret": "BLOCKED (PermissionError)",
+      "replay_same_report": {
+        "message": "NOT_RECONCILABLE: job res_908f816daf68d2d1_1 in stato SUCCEEDED",
+        "ok": false,
+        "refused": "NOT_RECONCILABLE"
+      },
+      "resign_with_observed_signature": {
+        "message": "UNAUTHENTICATED: firma del report assente o non valida",
+        "ok": false,
+        "refused": "UNAUTHENTICATED"
+      }
+    },
+    "gid": 65531,
+    "job_id": "res_908f816daf68d2d1_1",
+    "no_new_privs": "1",
+    "pid": 1253,
+    "submit_lost": {
+      "error": "ConnectionResetError",
+      "job_id": "res_908f816daf68d2d1_1",
+      "message": "risposta del provider persa dopo l'invio (mock)",
+      "ok": false,
+      "state": "SUBMIT_UNKNOWN"
+    },
+    "uid": 65531,
+    "whoami": {
+      "account_id": "acct_ec35e550840d",
+      "freshness": {
+        "label": "LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION",
+        "max_age_s": 300.0,
+        "max_future_skew_s": 5.0
+      },
+      "ok": true,
+      "peer_uid": 65531,
+      "pid": 1252,
+      "served": 1,
+      "uid": 65532
+    }
+  },
+  "probe_other_uid": {
+    "caps": {
+      "CapBnd": "0000000000000000",
+      "CapEff": "0000000000000000",
+      "CapPrm": "0000000000000000"
+    },
+    "gid": 65530,
+    "no_new_privs": "1",
+    "peer_only": [
+      {
+        "allowed_peer_uid": 65531,
+        "ok": false,
+        "peer_uid": 65530,
+        "refused": "PEER_UID_NOT_AUTHORIZED"
+      }
+    ],
+    "pid": 1256,
+    "uid": 65530
+  },
+  "recon_secret_stat": {
+    "mode": "0o600",
+    "uid": 65532
+  },
+  "requirement_verified": true,
+  "scope_note": "composizione LAB: segreto e chiave fittizi, FakeAdapter, kernel DAC fra UID non privilegiati. NON e' una verifica di provider reale ne' di credenziali reali.",
+  "spender_store_rows": [
+    {
+      "attempt_token": "att_1077d52303263c4560f53de3",
+      "budget_units": 10,
+      "envelope_id": "ENV_LAB",
+      "error": null,
+      "job_id": "res_908f816daf68d2d1_1",
+      "operation_id": "lab:composition",
+      "payload_digest": "4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c",
+      "permit_id": "permit_74a7f69c7f189605e0496b1a",
+      "provider": "fake",
+      "provider_account": "acct_ec35e550840d",
+      "provider_job_id": "pv_remote_1",
+      "quote_id": "quote_b91596f6abaf2cbce1716988",
+      "revision": 5,
+      "settled_units": null,
+      "settlement_source": null,
+      "spec_key": "908f816daf68d2d1629d35a61af5c6c1c1ee6145d04edca49688cbb7dec7dad9",
+      "state": "SUCCEEDED",
+      "submit_intent_at": 1789663086.277674
+    }
+  ],
+  "status": "PASS",
+  "stop": {
+    "caps": {
+      "CapBnd": "0000000000000000",
+      "CapEff": "0000000000000000",
+      "CapPrm": "0000000000000000"
+    },
+    "gid": 65531,
+    "no_new_privs": "1",
+    "pid": 1257,
+    "stop": [
+      {
+        "account_id": "acct_ec35e550840d",
+        "audit": [
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1253,
+            "peer_uid": 65531
+          },
+          {
+            "event": "PEER_REFUSED",
+            "peer_gid": 65530,
+            "peer_pid": 1256,
+            "peer_uid": 65530
+          },
+          {
+            "event": "PEER_ACCEPTED",
+            "peer_gid": 65531,
+            "peer_pid": 1257,
+            "peer_uid": 65531
+          }
+        ],
+        "ok": true,
+        "recon_secret_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_comp/spender/secret/reconciliation_secret.json",
+        "secret_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_comp/spender/secret/worker_secret.json",
+        "served": 1,
+        "stopped": true,
+        "uid": 65532,
+        "violations": []
+      }
+    ],
+    "uid": 65531
+  },
+  "uids": {
+    "orchestrator": 65531,
+    "other": 65530,
+    "spender": 65532
+  }
+}

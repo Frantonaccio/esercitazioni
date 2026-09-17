@@ -1,0 +1,64 @@
+{
+  "forge_with_leaked_key": {
+    "forged_accepted": {
+      "applied": true,
+      "state": "SUCCEEDED"
+    },
+    "key_hex_prefix": "7a0d69d25c32e1af",
+    "ok": true,
+    "reproduced": true
+  },
+  "prepare": {
+    "jobs": [
+      {
+        "op": "lab:comp_a",
+        "result": {
+          "error": "ConnectionResetError",
+          "job_id": null,
+          "ok": false,
+          "state": null
+        }
+      }
+    ],
+    "ok": true,
+    "rows": [
+      {
+        "attempt_token": "att_2da1f9ecbd222625db60c218",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_8b5e9ba73993bad6_1",
+        "operation_id": "lab:comp_a",
+        "payload_digest": "0f54f8952d3c0e2287b31e986eaa0b99bc51dad53af1a8e859c4ac4f5ef4ab1f",
+        "permit_id": "permit_ad5efdfca4b5ef499e16c285",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_b5c5922112301c70c054627d",
+        "revision": 2,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "8b5e9ba73993bad621241fa79562b93da16c2e85158d491e97e9bace327e9c6f",
+        "state": "SUBMIT_UNKNOWN",
+        "submit_intent_at": 1789661451.5024154
+      }
+    ]
+  },
+  "static": {
+    "daemon_allowed_ops": [
+      "quote",
+      "status",
+      "stop",
+      "submit",
+      "whoami"
+    ],
+    "daemon_calls_reconcile_authenticated": false,
+    "daemon_has_reconciliation_op": false,
+    "daemon_imports_reconciliation_module": true,
+    "derive_report_key_is_public": true,
+    "key_is_public_property": true,
+    "ok": true,
+    "reproduced": true
+  },
+  "status": "REPRODUCED"
+}

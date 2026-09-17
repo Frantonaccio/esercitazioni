@@ -1,0 +1,33 @@
+{
+  "core_change_required": true,
+  "files": {
+    "legacy_spend_paths": {
+      "sha256": "bdc97620da446d0038546066797b5db2e09cbe0b7879a6daf06e889e6582cbd5",
+      "status": "REPRODUCED"
+    },
+    "ng04_freshness": {
+      "sha256": "cbd78eeaa1fe04e2e4c5e227e71c8338db5ef59eee8714d0b028256597e8e058",
+      "status": "REPRODUCED"
+    },
+    "ng05_atomicity": {
+      "sha256": "54c351a4ba1c119a3f003a94d3dec1126ec68ff62a7d943ef05079f5b39a76c6",
+      "status": "REPRODUCED"
+    },
+    "orphan_lease": {
+      "sha256": "e25a2376fd25c32922c76bcc8de80b28894feeb5a23b26c5123673e615abdac5",
+      "status": "REPRODUCED"
+    },
+    "pb01_pb02_composition": {
+      "sha256": "6dc8af17368c8e94d1c2fdf3eb2a29e1549ecfc33da8f37390e84fadf86bc77e",
+      "status": "REPRODUCED"
+    }
+  },
+  "gap_matrix": "GAP_MATRIX.md",
+  "statuses": {
+    "legacy_spend_paths": "REPRODUCED",
+    "ng04_freshness": "REPRODUCED",
+    "ng05_atomicity": "REPRODUCED",
+    "orphan_lease": "REPRODUCED",
+    "pb01_pb02_composition": "REPRODUCED"
+  }
+}

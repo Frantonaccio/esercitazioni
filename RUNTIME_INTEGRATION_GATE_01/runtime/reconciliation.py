@@ -50,11 +50,14 @@ PERIMETRO DI CIO' CHE E' VERIFICATO (HUMAN REVIEW 01 — correzione di classific
                         quindi la custodia dipende da chi la invoca e da dove.
   NON VERIFICATO        il provider reale: nessuna verifica contro un sistema di provider.
                         Nessun claim di "real provider reconciliation".
-  APERTO                FRESHNESS: `max_age_s` e' OPZIONALE. Senza di esso un report valido e
-                        mai consumato resta accettabile indefinitamente (il nonce monouso
-                        impedisce il riuso, non l'eta'). Renderlo obbligatorio e fail-closed
-                        e' una precondizione del futuro Provider Boundary Gate, non di questo
-                        delta correttivo (vedi OPEN_GAPS.md).
+  MECCANISMO (NG-04)    FRESHNESS: dal PROVIDER BOUNDARY GATE — OPEN-GAP CLOSURE la freshness NON
+                        e' piu' opzionale. `reconcile_authenticated` pretende una
+                        `FreshnessPolicy` esplicita: ometterla e' un rifiuto
+                        (`FRESHNESS_POLICY_REQUIRED`), non un permesso. Il MECCANISMO e'
+                        verificato qui; il VALORE della finestra (`max_age_s`,
+                        `max_future_skew_s`) resta una decisione umana: il modulo non
+                        definisce alcuna policy di default (vedi NG04_FRESHNESS.md,
+                        `POLICY_DECISION_REQUIRED`).
 """
 from __future__ import annotations
 
@@ -85,6 +88,100 @@ class ReconciliationRefused(RuntimeError):
 
 def nonce_dir_for(store_path: str) -> str:
     return os.path.abspath(store_path) + NONCE_DIR_SUFFIX
+
+
+# ---------------------------------------------------------------------------
+# NG-04 — FRESHNESS: MECCANISMO (qui) vs POLICY (decisione umana, non qui).
+#
+# MECCANISMO = la capacita' tecnica di imporre una finestra temporale fail-closed
+# su un report autenticato. E' quello che questo modulo fornisce e che i test
+# verificano, parametricamente.
+#
+# POLICY = i VALORI della finestra (quanti secondi di eta' massima, quanto skew
+# futuro tollerare). NON sono definiti qui e non esiste un default: nessuna
+# costante 30s/60s/5min. Un chiamante che non porta una policy esplicita viene
+# RIFIUTATO (`FRESHNESS_POLICY_REQUIRED`) — l'assenza di decisione non e' un
+# permesso. Vedi `NG04_FRESHNESS.md`: `POLICY_DECISION_REQUIRED`.
+# ---------------------------------------------------------------------------
+_REQUIRED = object()            # sentinella: "nessuna policy fornita", distinta da None
+
+
+class FreshnessPolicy:
+    """Finestra di validita' temporale di un report, PARAMETRICA e fail-closed.
+
+    Due limiti, entrambi obbligatori ed espliciti:
+
+      `max_age_s`          eta' massima ammessa: `now - issued_at <= max_age_s`.
+      `max_future_skew_s`  anticipo massimo tollerato sull'orologio dell'emittente:
+                           `issued_at - now <= max_future_skew_s`. Senza questo
+                           limite un `issued_at` nel futuro rende l'eta' negativa e
+                           quindi sempre "fresca" (difetto riprodotto pre-fix).
+
+    `label` e' obbligatoria e serve a rendere tracciabile CHI ha deciso i valori:
+    l'evidenza registrata dice sempre sotto quale policy il report e' stato accettato.
+    Zero e' un valore ammesso ed e' il piu' stretto possibile (nessun anticipo
+    tollerato / il report deve essere dello stesso istante); non e' un default.
+    """
+
+    __slots__ = ("max_age_s", "max_future_skew_s", "label")
+
+    def __init__(self, *, max_age_s: float, max_future_skew_s: float, label: str):
+        for name, value in (("max_age_s", max_age_s), ("max_future_skew_s", max_future_skew_s)):
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise ReconciliationRefused(
+                    "FRESHNESS_POLICY_INVALID", f"{name} deve essere numerico, ricevuto {value!r}")
+            if value != value or value in (float("inf"), float("-inf")):        # NaN / inf
+                raise ReconciliationRefused(
+                    "FRESHNESS_POLICY_INVALID", f"{name} non finito: {value!r}")
+            if value < 0:
+                raise ReconciliationRefused(
+                    "FRESHNESS_POLICY_INVALID", f"{name} negativo: {value!r}")
+        if not isinstance(label, str) or not label.strip():
+            raise ReconciliationRefused(
+                "FRESHNESS_POLICY_INVALID",
+                "label obbligatoria: la policy deve dichiarare chi ha deciso i valori")
+        self.max_age_s = float(max_age_s)
+        self.max_future_skew_s = float(max_future_skew_s)
+        self.label = label
+
+    def describe(self) -> dict:
+        return {"label": self.label, "max_age_s": self.max_age_s,
+                "max_future_skew_s": self.max_future_skew_s}
+
+    def check(self, issued_at, now: float) -> dict:
+        """Solleva `ReconciliationRefused` se il report non e' fresco. Restituisce
+        l'attestazione da allegare all'evidenza quando lo e'.
+
+        Confini (deliberati, verificati dai test):
+          `age == max_age_s`            -> AMMESSO (la finestra e' chiusa a destra)
+          `age == max_age_s + eps`      -> REPORT_STALE
+          `-skew == -max_future_skew_s` -> AMMESSO
+          `issued_at` oltre lo skew     -> REPORT_FROM_FUTURE
+        """
+        if issued_at is None:
+            raise ReconciliationRefused("REPORT_TIMESTAMP_MISSING",
+                                        "report privo di `issued_at`: eta' non verificabile")
+        if isinstance(issued_at, bool) or not isinstance(issued_at, (int, float)):
+            raise ReconciliationRefused(
+                "REPORT_TIMESTAMP_MALFORMED",
+                f"`issued_at` non numerico: {type(issued_at).__name__}")
+        issued_at = float(issued_at)
+        if issued_at != issued_at or issued_at in (float("inf"), float("-inf")):
+            raise ReconciliationRefused("REPORT_TIMESTAMP_MALFORMED",
+                                        f"`issued_at` non finito: {issued_at!r}")
+        age = now - issued_at
+        if -age > self.max_future_skew_s:
+            raise ReconciliationRefused(
+                "REPORT_FROM_FUTURE",
+                f"report emesso {-age:.6f}s nel futuro, skew tollerato "
+                f"{self.max_future_skew_s}s (policy {self.label!r})")
+        if age > self.max_age_s:
+            raise ReconciliationRefused(
+                "REPORT_STALE",
+                f"report vecchio di {age:.6f}s, massimo {self.max_age_s}s "
+                f"(policy {self.label!r})")
+        return {"policy": self.describe(), "issued_at": issued_at, "checked_at": now,
+                "age_s": age, "verdict": "FRESH"}
 
 
 def derive_report_key(secret: str | bytes, provider: str, provider_account: str) -> bytes:
@@ -154,8 +251,14 @@ def _check_report_shape(report) -> dict:
     for k in REPORT_FIELDS:
         v = report.get(k)
         if k == "issued_at":
-            if not isinstance(v, (int, float)) or isinstance(v, bool):
-                raise ReconciliationRefused("REPORT_MALFORMED", f"campo {k!r} assente o non numerico")
+            # NG-04: la semantica del timestamp ha UNA sola autorita', `FreshnessPolicy.check`
+            # (assente / malformato / nel futuro / troppo vecchio, con codici distinti). Qui si
+            # verifica solo che il campo sia presente e canonicalizzabile per la firma.
+            if k not in report:
+                raise ReconciliationRefused("REPORT_TIMESTAMP_MISSING", "campo 'issued_at' assente")
+            if not isinstance(v, (int, float, str, type(None))):
+                raise ReconciliationRefused("REPORT_TIMESTAMP_MALFORMED",
+                                            f"campo {k!r} non canonicalizzabile: {type(v).__name__}")
         elif k == "provider_job_id":
             if v is not None and not isinstance(v, str):
                 raise ReconciliationRefused("REPORT_MALFORMED", f"campo {k!r} non stringa")
@@ -183,12 +286,25 @@ def _claim_nonce(nonce_dir: str, nonce: str, payload: dict) -> str:
 
 def reconcile_authenticated(store, adapter, report, *, job_id: str, key: bytes, nonce_dir: str,
                             snapshot_ledger=None, now: float | None = None,
-                            max_age_s: float | None = None):
-    # `max_age_s=None` NON impone freshness: gap dichiarato APERTO (vedi testa del modulo).
+                            freshness=_REQUIRED):
     """Verifica tutto, poi (e solo poi) `store.reconcile`. Restituisce il Job aggiornato.
     `job_id` e' il job che il CHIAMANTE intende riconciliare: un report valido ma di un altro
-    job/operazione non viene mai applicato altrove (JOB_MISMATCH)."""
+    job/operazione non viene mai applicato altrove (JOB_MISMATCH).
+
+    NG-04: `freshness` e' una `FreshnessPolicy` OBBLIGATORIA. Non ha default e `None` non e'
+    ammesso: l'assenza di una decisione sulla finestra e' un rifiuto
+    (`FRESHNESS_POLICY_REQUIRED`), mai un permesso. Il modulo non sceglie i valori."""
     now = time.time() if now is None else now
+    if freshness is _REQUIRED or freshness is None:
+        raise ReconciliationRefused(
+            "FRESHNESS_POLICY_REQUIRED",
+            "nessuna FreshnessPolicy fornita: la finestra di validita' del report e' una "
+            "decisione esplicita (max_age_s + max_future_skew_s). Senza di essa non si "
+            "riconcilia nulla.")
+    if not isinstance(freshness, FreshnessPolicy):
+        raise ReconciliationRefused(
+            "FRESHNESS_POLICY_INVALID",
+            f"freshness deve essere una FreshnessPolicy, ricevuto {type(freshness).__name__}")
     report = _check_report_shape(report)
     if not isinstance(job_id, str) or not job_id:
         raise ReconciliationRefused("JOB_ID_REQUIRED", "job_id di destinazione obbligatorio")
@@ -199,8 +315,9 @@ def reconcile_authenticated(store, adapter, report, *, job_id: str, key: bytes, 
     # 1. autenticazione dell'interlocutore (equivalente LAB)
     if not verify_report_signature(key, report):
         raise ReconciliationRefused("UNAUTHENTICATED", "firma del report assente o non valida")
-    if max_age_s is not None and now - float(report["issued_at"]) > max_age_s:
-        raise ReconciliationRefused("REPORT_STALE", "report troppo vecchio")
+    # NG-04: la freshness si valuta DOPO l'autenticazione (un report non autenticato non
+    # merita un verdetto sull'eta') e PRIMA di qualunque lettura dello store.
+    freshness_attestation = freshness.check(report.get("issued_at"), now)
     if report["state"] not in REPORTABLE_STATES:
         raise ReconciliationRefused("TARGET_STATE_NOT_ALLOWED",
                                     f"stato {report['state']!r} non riferibile da un provider")
@@ -256,5 +373,6 @@ def reconcile_authenticated(store, adapter, report, *, job_id: str, key: bytes, 
                 "provider_job_id": report["provider_job_id"],
                 "report": {k: report[k] for k in REPORT_FIELDS},
                 "signature_verified": True, "verifier": {"provider": adapter.name, "provider_account": account},
-                "nonce_claim": os.path.basename(nonce_path), "snapshot_audit": snapshot_audit}
+                "nonce_claim": os.path.basename(nonce_path), "snapshot_audit": snapshot_audit,
+                "freshness": freshness_attestation}
     return store.reconcile(job, target, evidence, now=now)

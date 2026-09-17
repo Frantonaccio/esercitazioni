@@ -1,0 +1,496 @@
+diff --git a/adapters/base.py b/adapters/base.py
+index 5c19a36..70fd3b1 100644
+--- a/adapters/base.py
++++ b/adapters/base.py
+@@ -532,6 +532,13 @@ class ReservationStore(Protocol):
+     # ---- percorsi ESPLICITI con evidenza (CR-05 / CR-06) ---------------------
+     def mark_refused_before_send(self, job: Job, reason: str, now: float) -> Job: ...
+     # RESERVED -> FAILED con settlement 0: ammesso solo con attestazione del trasporto
++    def mark_refused_pre_submit(self, job: Job, reason: str, *, source: str, evidence: Mapping,
++                                now: float) -> Job: ...
++    # NG-05: RESERVED -> FAILED con settlement 0 in UNA transazione, ma con provenance
++    # PARAMETRICA: per i rifiuti che avvengono PRIMA del trasporto, dove non esiste alcuna
++    # attestazione di invio e `TRANSPORT_ATTESTED_NOT_SENT` sarebbe una provenance falsa.
++    # `source` non puo' essere `TRANSPORT_ATTESTED_NOT_SENT` e deve coincidere con
++    # `evidence["source"]`. Additiva: `mark_refused_before_send` resta invariata.
+     def reconcile(self, job: Job, state: JobState, evidence: Mapping, *,
+                   now: float | None = None) -> Job: ...
+     # RESERVED/SUBMIT_UNKNOWN -> stato scoperto da un'evidenza remota/autorevole
+@@ -817,5 +824,37 @@ class JobStore:
+         self._reserved[job.job_id] = 0
+         return self.put(job, _reconciliation=True)
+ 
++    def mark_refused_pre_submit(self, job: Job, reason: str, *, source: str, evidence: Mapping,
++                                now: float) -> Job:
++        """NG-05, controparte in memoria. Stessa semantica di
++        `SqliteReservationStore.mark_refused_pre_submit`, nei limiti di questo registro:
++        `JobStore` non ha ledger economico (vive in `SqliteReservationStore`), quindi qui il
++        settlement zero e' l'azzeramento della riserva. La PROVENANCE e' parametrica e la
++        stessa regola vale: `TRANSPORT_ATTESTED_NOT_SENT` e' riservata al percorso del
++        trasporto e qui e' rifiutata."""
++        if not isinstance(source, str) or not source.strip():
++            raise ReconciliationEvidenceRequired("mark_refused_pre_submit: `source` obbligatoria")
++        if source == "TRANSPORT_ATTESTED_NOT_SENT":
++            raise ReconciliationEvidenceRequired(
++                "mark_refused_pre_submit: provenance del trasporto non ammessa qui")
++        if not isinstance(reason, str) or not reason.strip():
++            raise ReconciliationEvidenceRequired("mark_refused_pre_submit: `reason` obbligatorio")
++        ev = validate_reconciliation_evidence(evidence)
++        if ev["source"] != source:
++            raise ReconciliationEvidenceRequired(
++                f"evidence.source {ev['source']!r} != source {source!r}")
++        if job.provider_job_id:
++            raise TransitionRefused(job.job_id, self._states.get(job.job_id, job.state),
++                                    JobState.FAILED)
++        self._check_write(job, JobState.FAILED, reconciliation=True)
++        full = dict(ev)
++        full.setdefault("reason", reason)
++        self.record_anomaly(job.job_id, "RECONCILIATION",
++                            {"from": JobState.RESERVED.value, "to": JobState.FAILED.value,
++                             "evidence": full}, now)
++        job.state, job.error = JobState.FAILED, reason
++        self._reserved[job.job_id] = 0
++        return self.put(job, _reconciliation=True)
++
+     def all(self) -> list[Job]:
+         return list(self._jobs.values())
+diff --git a/registry/reservations.py b/registry/reservations.py
+index 31ebe93..a3baf66 100644
+--- a/registry/reservations.py
++++ b/registry/reservations.py
+@@ -42,7 +42,8 @@ from collections.abc import Mapping
+ 
+ from adapters.base import (BudgetExceeded, EnvelopeError, GenSpec, Job, JobState,
+                            OperationBusy, OperationConflict, OwnershipViolation, PermitError,
+-                           QuoteAlreadyConsumed, QuoteError, ReservationConflict, ReservationOutcome,
++                           QuoteAlreadyConsumed, QuoteError, ReconciliationEvidenceRequired,
++                           ReservationConflict, ReservationOutcome,
+                            SettlementConflict, StaleWrite, TransitionRefused, assert_transition,
+                            validate_reconciliation_evidence, validate_units)
+ 
+@@ -609,10 +610,14 @@ class SqliteReservationStore:
+ 
+     # -------------------------------------------- transizioni (RV01/RV06)
+     def _set_state(self, job: Job, state: JobState, extra_sql: list | None = None,
+-                   reconciliation: bool = False, **fields) -> Job:
++                   reconciliation: bool = False, _crash_hook=None, **fields) -> Job:
+         """OGNI scrittura di stato passa di qui: compare-and-swap sulla revisione
+         letta, transizione validata dal contratto, ownership write-once. Una
+-        scrittura rifiutata lascia il journal intatto e la registra in `anomalies`."""
++        scrittura rifiutata lascia il journal intatto e la registra in `anomalies`.
++
++        `_crash_hook` (solo test) viene invocato dopo le scritture e PRIMA del COMMIT,
++        con la stessa convenzione gia' usata da `settle`: serve a provare l'atomicita'
++        con un arresto reale del processo."""
+         with self._conn() as c:
+             c.execute("BEGIN IMMEDIATE")
+             try:
+@@ -655,6 +660,8 @@ class SqliteReservationStore:
+                     raise StaleWrite(job.job_id, job.revision, None, current.state.value, state.value)
+                 for sql_, params in (extra_sql or []):
+                     c.execute(sql_, params)
++                if _crash_hook:
++                    _crash_hook()
+                 c.execute("COMMIT")
+             except sqlite3.IntegrityError as exc:
+                 c.execute("ROLLBACK")
+@@ -719,6 +726,84 @@ class SqliteReservationStore:
+                                     sort_keys=True, ensure_ascii=False)))],
+             error=reason)
+ 
++    def mark_refused_pre_submit(self, job: Job, reason: str, *, source: str, evidence: Mapping,
++                                now: float, _crash_hook=None) -> Job:
++        """NG-05 — RESERVED -> FAILED con settlement ZERO in UNA SOLA transazione, con
++        provenance PARAMETRICA e veritiera.
++
++        PERCHE' ESISTE. `mark_refused_before_send` fa gia' tutto questo in una transazione,
++        ma con una provenance FISSA (`TRANSPORT_ATTESTED_NOT_SENT`): e' corretta solo quando
++        il trasporto ha davvero attestato il mancato invio. Un rifiuto PRIMA del trasporto
++        (es. il guard dello snapshot exact-byte a `mark_submitting`: nessuna
++        `authorize_payload`, nessuna lettura di sent_before/sent_after) non ha
++        quell'attestazione, e usarla sarebbe registrare una provenance mai prodotta. La sola
++        alternativa oggi disponibile e' `reconcile` seguito da `settle`: due transazioni, con
++        una finestra in cui il tentativo e' terminale ma non regolato. Questa API additiva
++        chiude quella finestra senza mentire sulla fonte.
++
++        INVARIANTI:
++          - `source` obbligatoria, non vuota, e NON puo' essere `TRANSPORT_ATTESTED_NOT_SENT`:
++            quella provenance appartiene esclusivamente a `mark_refused_before_send`;
++          - `evidence` e' un'evidenza di riconciliazione valida (source + remote_ref non vuoti)
++            e il suo `source` deve COINCIDERE con `source`: una sola verita', non due;
++          - TRANSIZIONE AMMESSA: solo `RESERVED -> FAILED`, e solo per un tentativo senza
++            identita' remota (`provider_job_id` assente). Un job che ha gia' un'identita'
++            presso il provider non e' "pre-submit": `TransitionRefused`;
++          - MODELLO ECONOMICO: `settled_units = 0` scritto SOLO se il tentativo non e' gia'
++            regolato (`WHERE settled_units IS NULL`), quindi nessun doppio conteggio; una riga
++            di ledger `SETTLE` con `units=0`, `cost_known=1` e la `source` del chiamante. Lo
++            zero non e' "FAILED quindi gratis": e' "mai inviato, quindi 0, attestato da
++            <source>";
++          - PROVENANCE: registrata sia nella riga di ledger sia nell'anomalia `RECONCILIATION`,
++            con l'evidenza completa del chiamante;
++          - CAS/CONCORRENZA: compare-and-swap sulla revisione letta (`_set_state`). Se un altro
++            scrittore ha toccato la riga, `StaleWrite` e nulla viene applicato;
++          - ATOMICITA': stato, settlement, ledger e anomalia sono nella STESSA transazione. Un
++            arresto del processo prima del COMMIT non lascia nulla (verificabile con
++            `_crash_hook`).
++        """
++        if not isinstance(source, str) or not source.strip():
++            raise ReconciliationEvidenceRequired(
++                "mark_refused_pre_submit: `source` obbligatoria e non vuota")
++        if source == "TRANSPORT_ATTESTED_NOT_SENT":
++            raise ReconciliationEvidenceRequired(
++                "mark_refused_pre_submit: `TRANSPORT_ATTESTED_NOT_SENT` e' la provenance del "
++                "trasporto e appartiene a mark_refused_before_send: qui sarebbe falsa")
++        if not isinstance(reason, str) or not reason.strip():
++            raise ReconciliationEvidenceRequired(
++                "mark_refused_pre_submit: `reason` obbligatorio e non vuoto")
++        ev = validate_reconciliation_evidence(evidence)
++        if ev["source"] != source:
++            raise ReconciliationEvidenceRequired(
++                f"mark_refused_pre_submit: evidence.source {ev['source']!r} != source {source!r}: "
++                f"una sola provenance, non due")
++        current = self.get(job.job_id)
++        if current is None:
++            raise StaleWrite(job.job_id, job.revision, None, None, JobState.FAILED.value)
++        if current.state is not JobState.RESERVED or current.provider_job_id:
++            # Non e' un rifiuto PRE-SUBMIT: il tentativo e' oltre la prenotazione.
++            self.record_anomaly(job.job_id, "PRE_SUBMIT_REFUSAL_NOT_APPLICABLE",
++                                {"state": current.state.value,
++                                 "provider_job_id": current.provider_job_id,
++                                 "source": source}, now)
++            raise TransitionRefused(job.job_id, current.state, JobState.FAILED)
++        full = dict(ev)
++        full.setdefault("reason", reason)
++        return self._set_state(
++            job, JobState.FAILED, reconciliation=True, _crash_hook=_crash_hook,
++            extra_sql=[("UPDATE reservations SET settled_units=0,settled_at=?,settlement_source=? "
++                        "WHERE job_id=? AND settled_units IS NULL", (now, source, job.job_id)),
++                       ("INSERT INTO ledger(at,envelope_id,job_id,kind,units,cost_known,source,note) "
++                        "SELECT ?,envelope_id,job_id,'SETTLE',0,1,?,? FROM reservations "
++                        "WHERE job_id=? AND settled_units=0 AND settlement_source=?",
++                        (now, source, reason, job.job_id, source)),
++                       ("INSERT INTO anomalies(at,job_id,kind,detail) VALUES(?,?,?,?)",
++                        (now, job.job_id, "RECONCILIATION",
++                         json.dumps({"from": JobState.RESERVED.value, "to": JobState.FAILED.value,
++                                     "evidence": full},
++                                    sort_keys=True, ensure_ascii=False, default=str)))],
++            error=reason)
++
+     def reconcile(self, job: Job, state: JobState, evidence: Mapping, *,
+                   now: float | None = None) -> Job:
+         """Percorso ESPLICITO di riconciliazione (CR-05): porta RESERVED o
+diff --git a/tests/run_ng05_pre_submit_atomicity.py b/tests/run_ng05_pre_submit_atomicity.py
+new file mode 100644
+index 0000000..76ed493
+--- /dev/null
++++ b/tests/run_ng05_pre_submit_atomicity.py
+@@ -0,0 +1,309 @@
++#!/usr/bin/env python3
++"""NG-05 — ATOMICITA' DEL RIFIUTO PRE-SUBMIT (`mark_refused_pre_submit`).
++
++Delta ADDITIVO del Core proposto dal PROVIDER BOUNDARY GATE — OPEN-GAP CLOSURE
++(2026-09-17). Verifica l'API nuova e, soprattutto, che quella vecchia non cambi.
++
++Cosa si dimostra:
++  A  transazione SINGOLA: un arresto reale del processo (os._exit) prima del COMMIT
++     non lascia NULLA (stato, settlement, ledger, anomalia);
++  B  provenance PARAMETRICA e veritiera, registrata in ledger e anomalia;
++  C  la provenance del trasporto (`TRANSPORT_ATTESTED_NOT_SENT`) e' RIFIUTATA qui;
++  D  transizione ammessa: solo RESERVED -> FAILED, solo senza identita' remota;
++  E  CAS sulla revisione: una scrittura obsoleta non applica nulla;
++  F  modello economico: esposizione sostituita da 0, nessun doppio conteggio;
++  G  `mark_refused_before_send` invariata (controprova di non-regressione).
++
++Nessuna rete, nessun provider reale, nessun credito.
++"""
++from __future__ import annotations
++
++import multiprocessing
++import os
++import shutil
++import sys
++import tempfile
++
++sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
++
++from adapters.base import (GenSpec, JobState, JobStore, ReconciliationEvidenceRequired,
++                           ReservationStore, StaleWrite, TransitionRefused)
++from registry.reservations import SqliteReservationStore
++
++GREEN, RED, DIM, RESET = "\033[32m", "\033[31m", "\033[2m", "\033[0m"
++RESULTS: list[tuple[str, bool, str]] = []
++CTX = multiprocessing.get_context("spawn")
++
++SOURCE = "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED"
++REMOTE_REF = "none:never_dispatched"
++REASON = "snapshot guard: DIGEST_MISMATCH (rifiutato a mark_submitting)"
++
++
++def spec(**kw) -> GenSpec:
++    d = dict(kind="image", model="fake_model_v1", prompt="ng05", project_id="DEMO_TEST")
++    d.update(kw)
++    return GenSpec(**d)
++
++
++def EV(**over) -> dict:
++    e = {"source": SOURCE, "remote_ref": REMOTE_REF, "reason": REASON,
++         "observed": {"authorize_payload_called": False, "transport_sent": 0},
++         "attested_by": "runtime_snapshot_guard", "transport_attestation": None}
++    e.update(over)
++    return e
++
++
++def check(name, fn):
++    try:
++        RESULTS.append((name, True, fn() or ""))
++    except Exception as e:                                      # noqa: BLE001
++        RESULTS.append((name, False, f"{type(e).__name__}: {e}"))
++
++
++def expect(exc_type, fn, label=""):
++    try:
++        fn()
++    except exc_type as e:
++        return e
++    raise AssertionError(f"{label}: atteso {exc_type.__name__}, nessuna eccezione")
++
++
++def reserved(db: str, prompt: str, *, envelope="ENV_NG05", units=10):
++    store = SqliteReservationStore(db)
++    store.open_envelope(envelope, 100, now=1.0)
++    s = spec(prompt=prompt)
++    _, job = store.reserve_or_get_live(s, now=1.0, budget_units=units, envelope_id=envelope,
++                                       operation_id=f"OP_{prompt}")
++    return store, job
++
++
++def ledger_rows(store, job_id):
++    return [r for r in store.ledger(job_id)]
++
++
++def anomalies_of(store, job_id, kind):
++    return [a for a in store.anomalies(job_id) if a["kind"] == kind]
++
++
++# ------------------------------------------------------------------ A. transazione singola
++def _crash_child(db: str, prompt: str):
++    """Processo REALE: chiama l'API e muore PRIMA del COMMIT (exit 9)."""
++    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
++    from registry.reservations import SqliteReservationStore
++    store = SqliteReservationStore(db)
++    job = store.find_latest_by_operation(f"OP_{prompt}")
++    store.mark_refused_pre_submit(job, REASON, source=SOURCE, evidence=EV(), now=10.0,
++                                  _crash_hook=lambda: os._exit(9))
++
++
++def a_single_transaction(db):
++    store, job = reserved(db, "atomic")
++    before = store.ledger_totals("ENV_NG05")
++    p = CTX.Process(target=_crash_child, args=(db, "atomic"))
++    p.start()
++    p.join(60)
++    assert p.exitcode == 9, f"il figlio non e' morto prima del COMMIT: exitcode={p.exitcode}"
++    fresh = SqliteReservationStore(db)
++    after_job = fresh.get(job.job_id)
++    after = fresh.ledger_totals("ENV_NG05")
++    assert after_job.state is JobState.RESERVED, after_job.state
++    assert after_job.revision == job.revision, (after_job.revision, job.revision)
++    assert not [r for r in ledger_rows(fresh, job.job_id) if r["kind"] == "SETTLE"]
++    assert not anomalies_of(fresh, job.job_id, "RECONCILIATION")
++    assert after == before, (before, after)
++    # e dopo, senza crash, la stessa chiamata riesce: la transazione non ha lasciato lock
++    fresh.mark_refused_pre_submit(after_job, REASON, source=SOURCE, evidence=EV(), now=11.0)
++    final = SqliteReservationStore(db).get(job.job_id)
++    assert final.state is JobState.FAILED, final.state
++    return (f"crash prima del COMMIT (exit {p.exitcode}): stato RESERVED invariato, revisione "
++            f"{after_job.revision}, 0 righe SETTLE, 0 anomalie RECONCILIATION, totali identici; "
++            f"ritentata senza crash -> {final.state.value}")
++
++
++# ------------------------------------------------------------------ B. provenance parametrica
++def b_parametric_provenance(db):
++    store, job = reserved(db, "prov")
++    out = store.mark_refused_pre_submit(job, REASON, source=SOURCE, evidence=EV(), now=20.0)
++    row = SqliteReservationStore(db).get(job.job_id)
++    settles = [r for r in ledger_rows(store, job.job_id) if r["kind"] == "SETTLE"]
++    anoms = anomalies_of(store, job.job_id, "RECONCILIATION")
++    assert out.state is JobState.FAILED and row.state is JobState.FAILED
++    assert row.revision == job.revision, "revision aggiornata anche sull'oggetto restituito"
++    assert len(settles) == 1 and settles[0]["units"] == 0 and settles[0]["cost_known"] == 1
++    assert settles[0]["source"] == SOURCE, settles[0]["source"]
++    assert len(anoms) == 1
++    ev = anoms[0]["detail"]["evidence"]
++    assert ev["source"] == SOURCE and ev["remote_ref"] == REMOTE_REF
++    assert ev["transport_attestation"] is None and ev["attested_by"] == "runtime_snapshot_guard"
++    assert anoms[0]["detail"]["from"] == "RESERVED" and anoms[0]["detail"]["to"] == "FAILED"
++    return (f"1 riga SETTLE units=0 source={SOURCE} · anomalia RECONCILIATION con l'evidenza del "
++            f"chiamante (transport_attestation=None) · stato {row.state.value}")
++
++
++# ------------------------------------------------------------------ C. provenance falsa vietata
++def c_transport_provenance_refused(db):
++    store, job = reserved(db, "falsa")
++    e1 = expect(ReconciliationEvidenceRequired,
++                lambda: store.mark_refused_pre_submit(
++                    job, REASON, source="TRANSPORT_ATTESTED_NOT_SENT",
++                    evidence=EV(source="TRANSPORT_ATTESTED_NOT_SENT"), now=30.0),
++                "provenance del trasporto")
++    e2 = expect(ReconciliationEvidenceRequired,
++                lambda: store.mark_refused_pre_submit(job, REASON, source="",
++                                                      evidence=EV(), now=30.0), "source vuota")
++    e3 = expect(ReconciliationEvidenceRequired,
++                lambda: store.mark_refused_pre_submit(job, REASON, source=SOURCE,
++                                                      evidence=EV(source="ALTRA_FONTE"), now=30.0),
++                "evidence.source != source")
++    e4 = expect(ReconciliationEvidenceRequired,
++                lambda: store.mark_refused_pre_submit(
++                    job, REASON, source=SOURCE, evidence={"source": SOURCE}, now=30.0),
++                "remote_ref mancante")
++    e5 = expect(ReconciliationEvidenceRequired,
++                lambda: store.mark_refused_pre_submit(job, "   ", source=SOURCE, evidence=EV(),
++                                                      now=30.0), "reason vuoto")
++    fresh = SqliteReservationStore(db).get(job.job_id)
++    assert fresh.state is JobState.RESERVED and fresh.revision == job.revision
++    assert not [r for r in ledger_rows(store, job.job_id) if r["kind"] == "SETTLE"]
++    return (f"5 rifiuti fail-closed (trasporto, source vuota, source incoerente, remote_ref "
++            f"mancante, reason vuoto); journal invariato ({fresh.state.value}, rev {fresh.revision})")
++
++
++# ------------------------------------------------------------------ D. transizione ammessa
++def d_only_pre_submit(db):
++    store, job = reserved(db, "transizione")
++    # con identita' remota persistita non e' piu' "pre-submit"
++    marked = store.mark_submitting(job, provider="fake", provider_account="acct_a",
++                                   payload_digest="a" * 64, attempt_token="att_1", now=40.0)
++    from adapters.base import Job
++    pj = Job(job_id=marked.job_id, spec_key=marked.spec_key, provider="fake",
++             state=JobState.SUBMITTED, provider_job_id="pv_1", submitted_at=41.0,
++             terminal_by=60.0, provider_account="acct_a")
++    submitted = store.mark_submitted(marked, pj)
++    e1 = expect(TransitionRefused,
++                lambda: store.mark_refused_pre_submit(submitted, REASON, source=SOURCE,
++                                                      evidence=EV(), now=42.0),
++                "job gia' submitted")
++    anoms = anomalies_of(store, job.job_id, "PRE_SUBMIT_REFUSAL_NOT_APPLICABLE")
++    after = SqliteReservationStore(db).get(job.job_id)
++    assert after.state is JobState.SUBMITTED, after.state
++    assert not [r for r in ledger_rows(store, job.job_id) if r["kind"] == "SETTLE"]
++    assert len(anoms) == 1 and anoms[0]["detail"]["provider_job_id"] == "pv_1"
++    # e su una RESERVED senza identita' remota, invece, passa
++    store2, job2 = reserved(db, "transizione_ok")
++    ok = store2.mark_refused_pre_submit(job2, REASON, source=SOURCE, evidence=EV(), now=43.0)
++    assert ok.state is JobState.FAILED
++    return (f"SUBMITTED -> {type(e1).__name__} + anomalia PRE_SUBMIT_REFUSAL_NOT_APPLICABLE "
++            f"(stato {after.state.value} invariato) · RESERVED senza identita' remota -> FAILED")
++
++
++# ------------------------------------------------------------------ E. CAS sulla revisione
++def e_cas_stale_write(db):
++    import copy
++    store, job = reserved(db, "cas")
++    stale = copy.copy(job)                                  # revisione letta PRIMA
++    store.mark_submitting(job, provider="fake", provider_account="acct_a",
++                          payload_digest="b" * 64, attempt_token="att_2", now=50.0)
++    e = expect(StaleWrite, lambda: store.mark_refused_pre_submit(
++        stale, REASON, source=SOURCE, evidence=EV(), now=51.0), "revisione obsoleta")
++    after = SqliteReservationStore(db).get(job.job_id)
++    assert after.state is JobState.RESERVED, after.state
++    assert after.revision == stale.revision + 1, (after.revision, stale.revision)
++    assert not [r for r in ledger_rows(store, job.job_id) if r["kind"] == "SETTLE"]
++    anoms = anomalies_of(store, job.job_id, "STALE_WRITE")
++    assert anoms, "la scrittura obsoleta deve restare come evidenza"
++    return (f"scrittura con revisione obsoleta -> StaleWrite ({e.expected_revision} vs "
++            f"{e.current_revision}), 0 righe SETTLE, anomalia STALE_WRITE registrata")
++
++
++# ------------------------------------------------------------------ F. modello economico
++def f_economics(db):
++    store, job = reserved(db, "econ", units=10)
++    before = store.ledger_totals("ENV_NG05")
++    assert before["unsettled_exposure_units"] == 10 and before["terminal_unsettled_jobs"] == 0
++    store.mark_refused_pre_submit(job, REASON, source=SOURCE, evidence=EV(), now=60.0)
++    after = store.ledger_totals("ENV_NG05")
++    assert after["settled_units"] == 0 and after["unsettled_exposure_units"] == 0, after
++    assert after["terminal_unsettled_jobs"] == 0, after
++    assert after["remaining_units"] == 100, after
++    # ripetizione: nessun doppio conteggio, nessuna seconda riga di ledger
++    e = expect(TransitionRefused, lambda: store.mark_refused_pre_submit(
++        store.get(job.job_id), REASON, source=SOURCE, evidence=EV(), now=61.0), "gia' terminale")
++    settles = [r for r in ledger_rows(store, job.job_id) if r["kind"] == "SETTLE"]
++    assert len(settles) == 1, settles
++    # un settlement esplicito successivo allo stesso importo resta idempotente
++    again = store.settle(job.job_id, units=0, source=SOURCE, now=62.0)
++    assert again["applied"] is False and again.get("duplicate") is True, again
++    return (f"esposizione 10 -> settled 0, exposure 0, terminal_unsettled 0, remaining 100 · "
++            f"ripetizione -> {type(e).__name__}, 1 sola riga SETTLE · settle(0) idempotente")
++
++
++# ------------------------------------------------------------------ G. non-regressione
++def g_mark_refused_before_send_unchanged(db):
++    import inspect
++    store, job = reserved(db, "vecchia")
++    src = inspect.getsource(SqliteReservationStore.mark_refused_before_send)
++    assert "TRANSPORT_ATTESTED_NOT_SENT" in src
++    assert str(inspect.signature(SqliteReservationStore.mark_refused_before_send)) == \
++        "(self, job: 'Job', reason: 'str', now: 'float') -> 'Job'"
++    out = store.mark_refused_before_send(job, "non inviato", 70.0)
++    row = SqliteReservationStore(db).get(job.job_id)
++    settles = [r for r in ledger_rows(store, job.job_id) if r["kind"] == "SETTLE"]
++    assert out.state is JobState.FAILED and row.state is JobState.FAILED
++    assert len(settles) == 1 and settles[0]["source"] == "TRANSPORT_ATTESTED_NOT_SENT"
++    return ("firma e provenance di mark_refused_before_send invariate "
++            "(TRANSPORT_ATTESTED_NOT_SENT), comportamento invariato")
++
++
++# ------------------------------------------------------------------ H. contratto / in-memory
++def h_contract_and_jobstore():
++    import inspect
++    assert hasattr(ReservationStore, "mark_refused_pre_submit")
++    want = [p for p in inspect.signature(ReservationStore.mark_refused_pre_submit).parameters
++            if p != "self"]
++    for impl in (SqliteReservationStore, JobStore):
++        have = [p for p in inspect.signature(impl.mark_refused_pre_submit).parameters if p != "self"]
++        assert not [p for p in want if p not in have], (impl.__name__, want, have)
++    from adapters.base import Job
++    js = JobStore()
++    spec_ = spec(prompt="inmem")
++    _, j = js.reserve_or_get_live(spec_, budget_units=5, envelope_units=100, now=1.0,
++                                  operation_id="OP_inmem")
++    expect(ReconciliationEvidenceRequired,
++           lambda: js.mark_refused_pre_submit(j, REASON, source="TRANSPORT_ATTESTED_NOT_SENT",
++                                              evidence=EV(source="TRANSPORT_ATTESTED_NOT_SENT"),
++                                              now=1.0), "JobStore: provenance del trasporto")
++    out = js.mark_refused_pre_submit(j, REASON, source=SOURCE, evidence=EV(), now=2.0)
++    assert out.state is JobState.FAILED
++    anoms = [a for a in js.anomalies if a["kind"] == "RECONCILIATION"]
++    assert anoms and anoms[-1]["detail"]["evidence"]["source"] == SOURCE
++    return ("Protocol ReservationStore dichiara mark_refused_pre_submit; SqliteReservationStore e "
++            "JobStore la implementano con firme compatibili (CR-03); JobStore rifiuta la "
++            "provenance del trasporto e registra quella parametrica")
++
++
++def main() -> int:
++    tmp = tempfile.mkdtemp(prefix="ng05_")
++    try:
++        for name, fn in (("A. transazione singola (crash reale prima del COMMIT)", a_single_transaction),
++                         ("B. provenance parametrica in ledger e anomalia", b_parametric_provenance),
++                         ("C. provenance del trasporto e evidenze incoerenti rifiutate", c_transport_provenance_refused),
++                         ("D. solo RESERVED senza identita' remota", d_only_pre_submit),
++                         ("E. CAS sulla revisione", e_cas_stale_write),
++                         ("F. modello economico (esposizione -> 0, nessun doppio conteggio)", f_economics),
++                         ("G. mark_refused_before_send invariata", g_mark_refused_before_send_unchanged)):
++            check(name, lambda fn=fn, name=name: fn(os.path.join(tmp, f"{abs(hash(name))}.db")))
++        check("H. contratto CR-03 e controparte in memoria", h_contract_and_jobstore)
++    finally:
++        shutil.rmtree(tmp, ignore_errors=True)
++    ok = 0
++    for name, passed, detail in RESULTS:
++        mark = f"{GREEN}PASS{RESET}" if passed else f"{RED}FAIL{RESET}"
++        print(f"{mark}  {name}\n      {DIM}{detail}{RESET}")
++        ok += passed
++    print(f"\nNG-05 pre-submit atomicity: {ok}/{len(RESULTS)} PASS")
++    return 0 if ok == len(RESULTS) else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())

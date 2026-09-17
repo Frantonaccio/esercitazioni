@@ -1,0 +1,134 @@
+{
+  "prepare": {
+    "jobs": [
+      {
+        "op": "lab:ng04_a",
+        "result": {
+          "error": "ConnectionResetError",
+          "job_id": null,
+          "ok": false,
+          "state": null
+        }
+      },
+      {
+        "op": "lab:ng04_b",
+        "result": {
+          "error": "ConnectionResetError",
+          "job_id": null,
+          "ok": false,
+          "state": null
+        }
+      }
+    ],
+    "ok": true,
+    "rows": [
+      {
+        "attempt_token": "att_948870761f56e0f6aa700cc0",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_8b5e9ba73993bad6_1",
+        "operation_id": "lab:ng04_a",
+        "payload_digest": "0f54f8952d3c0e2287b31e986eaa0b99bc51dad53af1a8e859c4ac4f5ef4ab1f",
+        "permit_id": "permit_7d8ff3cf69ca1a1ffaab010b",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_e039b141c0c839c1a7f458f2",
+        "revision": 2,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "8b5e9ba73993bad621241fa79562b93da16c2e85158d491e97e9bace327e9c6f",
+        "state": "SUBMIT_UNKNOWN",
+        "submit_intent_at": 1789661450.4456306
+      },
+      {
+        "attempt_token": "att_4419cb8d8ef2f5f271b9445d",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_20ecee8ca779efaa_1",
+        "operation_id": "lab:ng04_b",
+        "payload_digest": "e1aa3203e3797a9c16eec5a1f73575425607b796d2d9fe60abe758b86c28cbd7",
+        "permit_id": "permit_922b87e1647f5d9adaaec6f1",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_2f19ce826ae57d2f8bc734d1",
+        "revision": 2,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "20ecee8ca779efaaf710c5b04b95536f0cbc7002ba493ee68f44b32922ff2d4b",
+        "state": "SUBMIT_UNKNOWN",
+        "submit_intent_at": 1789661450.464195
+      }
+    ]
+  },
+  "repro": {
+    "A_ancient_report_no_policy": {
+      "applied": true,
+      "issued_at": 0.0,
+      "label": "A",
+      "max_age_s": null,
+      "state": "SUCCEEDED"
+    },
+    "B_future_report_with_policy": {
+      "applied": true,
+      "issued_at": 2000000000.0,
+      "label": "B",
+      "max_age_s": 60.0,
+      "state": "SUCCEEDED"
+    },
+    "freshness_is_optional": true,
+    "max_age_s_default": "None",
+    "ok": true,
+    "reproduced": true,
+    "rows_after": [
+      {
+        "attempt_token": "att_948870761f56e0f6aa700cc0",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_8b5e9ba73993bad6_1",
+        "operation_id": "lab:ng04_a",
+        "payload_digest": "0f54f8952d3c0e2287b31e986eaa0b99bc51dad53af1a8e859c4ac4f5ef4ab1f",
+        "permit_id": "permit_7d8ff3cf69ca1a1ffaab010b",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": "pv_remote_1",
+        "quote_id": "quote_e039b141c0c839c1a7f458f2",
+        "revision": 3,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "8b5e9ba73993bad621241fa79562b93da16c2e85158d491e97e9bace327e9c6f",
+        "state": "SUCCEEDED",
+        "submit_intent_at": 1789661450.4456306
+      },
+      {
+        "attempt_token": "att_4419cb8d8ef2f5f271b9445d",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_20ecee8ca779efaa_1",
+        "operation_id": "lab:ng04_b",
+        "payload_digest": "e1aa3203e3797a9c16eec5a1f73575425607b796d2d9fe60abe758b86c28cbd7",
+        "permit_id": "permit_922b87e1647f5d9adaaec6f1",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": "pv_remote_1",
+        "quote_id": "quote_2f19ce826ae57d2f8bc734d1",
+        "revision": 3,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "20ecee8ca779efaaf710c5b04b95536f0cbc7002ba493ee68f44b32922ff2d4b",
+        "state": "SUCCEEDED",
+        "submit_intent_at": 1789661450.464195
+      }
+    ],
+    "submit_unknown_rows": [
+      "res_8b5e9ba73993bad6_1",
+      "res_20ecee8ca779efaa_1"
+    ]
+  },
+  "status": "REPRODUCED"
+}

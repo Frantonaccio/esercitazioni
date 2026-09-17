@@ -1,0 +1,35 @@
+{
+  "core_branch": "main",
+  "core_head": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "core_status_porcelain": "",
+  "p2_after": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+  "p2_before": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+  "p2_unchanged": true,
+  "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "static_checks": {
+    "contract_drift": [],
+    "core_imports": [
+      "adapters.base.GenSpec",
+      "adapters.base.PayloadBindingError",
+      "adapters.fake.FakeAdapter",
+      "registry.reservations.SqliteReservationStore",
+      "transport.pipeline.resume_job",
+      "transport.pipeline.run_job"
+    ],
+    "files": [
+      "__init__.py",
+      "authorization.py",
+      "core_pin.py",
+      "genspec_bridge.py",
+      "go_candidate.py",
+      "hf_batch_bridge.py",
+      "hf_batch_runtime.py",
+      "orphan_lease.py",
+      "payload_snapshot.py",
+      "provider_gate.py",
+      "reconciliation.py"
+    ],
+    "findings": [],
+    "ok": true
+  }
+}

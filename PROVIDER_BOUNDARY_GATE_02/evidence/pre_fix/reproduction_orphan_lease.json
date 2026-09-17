@@ -1,0 +1,95 @@
+{
+  "repro": {
+    "has_lease_mechanism": false,
+    "module_public_api": [
+      "NOT_RESERVED",
+      "RECLAIM_POLICY",
+      "RESERVED_NO_INTENT",
+      "RESERVED_WITH_INTENT",
+      "annotations",
+      "classify_attempt",
+      "inventory"
+    ],
+    "ok": true,
+    "reclaim_policy_constant": "NOT_AUTHORIZED",
+    "reproduced": true,
+    "scenario": {
+      "classify_no_intent": {
+        "age_s": 99.0,
+        "attempt_token": null,
+        "class": "RESERVED_NO_INTENT",
+        "exits_available": [],
+        "job_id": "res_6b00c13ae5c1b353_1",
+        "operation_id": "ORPH:a",
+        "payload_digest": null,
+        "provider": "",
+        "reclaim_policy": "NOT_AUTHORIZED",
+        "reserved_at": 1.0,
+        "state": "RESERVED"
+      },
+      "due_for_reconcile": [
+        "res_6b00c13ae5c1b353_1"
+      ],
+      "inventory": [
+        {
+          "age_s": 99.0,
+          "attempt_token": null,
+          "class": "RESERVED_NO_INTENT",
+          "exits_available": [],
+          "job_id": "res_6b00c13ae5c1b353_1",
+          "operation_id": "ORPH:a",
+          "payload_digest": null,
+          "provider": "",
+          "reclaim_policy": "NOT_AUTHORIZED",
+          "reserved_at": 1.0,
+          "state": "RESERVED"
+        }
+      ],
+      "new_attempt_same_operation": {
+        "accepted": false,
+        "code": "LIVE_OR_UNCERTAIN_ATTEMPT"
+      },
+      "ok": true,
+      "reclaim_policy": "NOT_AUTHORIZED",
+      "reconcile_orphan": {
+        "accepted": false,
+        "code": "OWNERSHIP_INCOMPLETE"
+      },
+      "recover_orphaned_submits": [],
+      "reservation": {
+        "job_id": "res_6b00c13ae5c1b353_1",
+        "outcome": "RESERVED_NEW"
+      },
+      "reserved_units": 0,
+      "resume": {
+        "outcome": "EXISTING_LIVE_JOB/reserved-no-dispatch",
+        "resumed": true,
+        "submits": 0
+      },
+      "rows": [
+        {
+          "attempt_token": null,
+          "budget_units": 0,
+          "envelope_id": null,
+          "error": null,
+          "job_id": "res_6b00c13ae5c1b353_1",
+          "operation_id": "ORPH:a",
+          "payload_digest": null,
+          "permit_id": null,
+          "provider": "",
+          "provider_account": "",
+          "provider_job_id": null,
+          "quote_id": null,
+          "revision": 0,
+          "settled_units": null,
+          "settlement_source": null,
+          "spec_key": "6b00c13ae5c1b3539aefc0d643c30537bbf67809bd196918590c37ee143d57c1",
+          "state": "RESERVED",
+          "submit_intent_at": null
+        }
+      ],
+      "with_intent_case": "vedi crash_after_send"
+    }
+  },
+  "status": "REPRODUCED"
+}

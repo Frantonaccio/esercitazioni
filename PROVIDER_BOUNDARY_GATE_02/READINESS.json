@@ -1,0 +1,478 @@
+{
+  "gap_status": {
+    "GAP_MATRIX_PHASE_A": "VERIFIED_LAB",
+    "G_N02_SEMANTIC_CLAIM_PARAPHRASE": "STILL_OPEN",
+    "INDEPENDENT_CI_STATUS_CHECKS": "NOT_RUN",
+    "LEGACY_SPEND_PATHS_CORE_PRIMITIVES": "CORE_CHANGE_REQUIRED",
+    "LEGACY_SPEND_PATHS_RUNTIME_CLOSURE": "VERIFIED_LAB",
+    "LEGACY_TESTS_MIGRATION_TO_GOVERNED": "STILL_OPEN",
+    "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY": "CORE_CHANGE_REQUIRED",
+    "ORPHAN_RESERVED_LEASE_MECHANISM": "VERIFIED_LAB",
+    "ORPHAN_RESERVED_LEASE_POLICY": "POLICY_DECISION_REQUIRED",
+    "P2_FREEZE_AND_CORE_PIN": "VERIFIED_LAB",
+    "PHASE_READINESS_REPORTING": "VERIFIED_LAB",
+    "P_B02_P_B01_COMPOSITION": "VERIFIED_LAB",
+    "R0_R1_NO_REGRESSION": "VERIFIED_LAB",
+    "REALITY_LOCK_CANONICAL": "VERIFIED_LAB",
+    "REAL_AUTHORIZATION_AND_PRICING": "REAL_PROVIDER_REQUIRED",
+    "REAL_PROVIDER_RECONCILIATION": "REAL_PROVIDER_REQUIRED",
+    "RECONCILIATION_FRESHNESS_NG04_MECHANISM": "VERIFIED_LAB",
+    "RECONCILIATION_FRESHNESS_NG04_POLICY": "POLICY_DECISION_REQUIRED",
+    "RUN_CONTAMINATION": "NOT_RUN",
+    "RV07_SCHEDULER_RECOVERY_RESIDUAL": "STILL_OPEN"
+  },
+  "report": {
+    "phase_readiness": {
+      "all_requirements_verified": false,
+      "blocked_provider_gate": [],
+      "core_change_required": [
+        "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+        "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY"
+      ],
+      "max_state": "PROVIDER_BOUNDARY_GATE_PRE_REAL_READY_FOR_HUMAN_REVIEW",
+      "meaning": "i requisiti della fase sono chiusi? `all_requirements_verified` e' vero SOLO se nessun requisito di questa fase o del Provider Boundary Gate e' aperto e tutti i test sono PASS.",
+      "not_implied": [
+        "provider reale verificato",
+        "provider ready",
+        "production ready",
+        "credenziali autorizzate",
+        "spend autorizzato",
+        "merge autorizzato",
+        "R2 autorizzato"
+      ],
+      "open_requirements": [
+        {
+          "id": "RECONCILIATION_FRESHNESS_NG04_POLICY",
+          "note": "Nessun valore scelto né suggerito dal codice: nessun 30s/60s/5min. Serve una decisione umana, vedi NG04_FRESHNESS.md.",
+          "scope": "future_gate",
+          "state": "POLICY_DECISION_REQUIRED",
+          "title": "NG-04 — POLICY: valori della finestra (max_age_s, max_future_skew_s)"
+        },
+        {
+          "id": "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+          "note": "`transport.pipeline.run_job`, `adapter.submit` e `store.reconcile` raw sono invocabili da qualunque codice con il Core in sys.path. Nessun interruttore del Runtime li governa: la sola mitigazione e' il confine di processo P-B01. Chiusura = modifica del Core, non autorizzata da questo mandato. Vedi LEGACY_SPEND_PATHS_V2.md.",
+          "scope": "future_gate",
+          "state": "CORE_CHANGE_REQUIRED",
+          "title": "Legacy spend paths #10/#11: primitive del Core raggiungibili senza passare dal Runtime"
+        },
+        {
+          "id": "LEGACY_TESTS_MIGRATION_TO_GOVERNED",
+          "note": "Con la modalita' ingaggiata la suite storica non puo' girare: dipende da LEGACY_LAB. Chiudere il percorso in modo definitivo richiede prima la migrazione dei test.",
+          "scope": "future_gate",
+          "state": "STILL_OPEN",
+          "title": "Migrazione dei test storici T01-T27 al percorso governato"
+        },
+        {
+          "id": "ORPHAN_RESERVED_LEASE_POLICY",
+          "note": "`RECLAIM_POLICY = NOT_AUTHORIZED`. Il requisito NON e' chiuso dal fatto che il meccanismo esista. Vedi ORPHAN_LEASE_MECHANISM_POLICY.md.",
+          "scope": "this_phase",
+          "state": "POLICY_DECISION_REQUIRED",
+          "title": "Orphan RESERVED lease — POLICY: finestra, attore, evidenze, classi ammesse"
+        },
+        {
+          "id": "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
+          "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica (verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e verificato 8/8 su branch Core dedicato, NON mergiato: Core main invariato e il Runtime resta sul percorso conservativo a due transazioni finche' la modifica non e' approvata.",
+          "scope": "this_phase",
+          "state": "CORE_CHANGE_REQUIRED",
+          "title": "NG-05 — atomicita' della terminalizzazione pre-submit"
+        },
+        {
+          "id": "REAL_AUTHORIZATION_AND_PRICING",
+          "note": "Fuori scope per mandato: nessun provider reale, nessuna credenziale, 0 crediti. Prerequisiti documentati in REAL_PROVIDER_PREREQUISITES.md.",
+          "scope": "future_gate",
+          "state": "REAL_PROVIDER_REQUIRED",
+          "title": "Authorization / pricing reali del provider"
+        },
+        {
+          "id": "REAL_PROVIDER_RECONCILIATION",
+          "note": "Fuori scope per mandato. Il perimetro LAB dimostra binding, autenticazione, freshness e composizione con il confine di privilegio: nessuno di questi e' un claim sul provider reale.",
+          "scope": "future_gate",
+          "state": "REAL_PROVIDER_REQUIRED",
+          "title": "Reconciliation verificata contro un provider reale"
+        },
+        {
+          "id": "RUN_CONTAMINATION",
+          "note": "Input Tenant assente: non eseguito (fuori scope).",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "run_contamination"
+        },
+        {
+          "id": "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+          "note": "Fuori scope, non toccato.",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "G-N02 — semantic claim paraphrase"
+        },
+        {
+          "id": "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+          "note": "Non toccato. P-B02 offre l'uscita autenticata da SUBMIT_UNKNOWN, ora dimostrata dentro lo spender, ma nessuno scheduler la invoca.",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "RV07 — residuo scheduler/recovery"
+        },
+        {
+          "id": "INDEPENDENT_CI_STATUS_CHECKS",
+          "note": "Assenti sul branch, come nelle fasi precedenti.",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "Status check CI indipendenti"
+        }
+      ],
+      "open_requirements_blocking_all_verified": [
+        "RECONCILIATION_FRESHNESS_NG04_POLICY",
+        "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+        "LEGACY_TESTS_MIGRATION_TO_GOVERNED",
+        "ORPHAN_RESERVED_LEASE_POLICY",
+        "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
+        "REAL_AUTHORIZATION_AND_PRICING",
+        "REAL_PROVIDER_RECONCILIATION"
+      ],
+      "open_requirements_future_gate": [
+        "RECONCILIATION_FRESHNESS_NG04_POLICY",
+        "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+        "LEGACY_TESTS_MIGRATION_TO_GOVERNED",
+        "REAL_AUTHORIZATION_AND_PRICING",
+        "REAL_PROVIDER_RECONCILIATION"
+      ],
+      "open_requirements_other_phase": [
+        "RUN_CONTAMINATION",
+        "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+        "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+        "INDEPENDENT_CI_STATUS_CHECKS"
+      ],
+      "open_requirements_this_phase": [
+        "ORPHAN_RESERVED_LEASE_POLICY",
+        "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY"
+      ],
+      "phase_gate_decision": "LAB_GATE_COMPLETE_WITH_OPEN_GAPS",
+      "policy_decision_required": [
+        "RECONCILIATION_FRESHNESS_NG04_POLICY",
+        "ORPHAN_RESERVED_LEASE_POLICY"
+      ],
+      "real_provider_required": [
+        "REAL_AUTHORIZATION_AND_PRICING",
+        "REAL_PROVIDER_RECONCILIATION"
+      ],
+      "requirements": [
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C00"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "REALITY_LOCK_CANONICAL",
+          "note": "Core 740ee979 · Runtime origin/main 0698279 · REQUIRED_CORE_SHA == Core · P2 637f3a80.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Reality Lock: Core/Runtime agli SHA canonici, working tree puliti, pin e P2 invariati"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C01"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "GAP_MATRIX_PHASE_A",
+          "note": "5/5 REPRODUCED con processi reali. Una premessa del mandato (il Core offrirebbe gia' una primitive atomica) e' risultata FALSA ed e' documentata come tale.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "PHASE A: ogni gap del mandato riprodotto sul Runtime canonico prima di ogni fix"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C02"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "P_B02_P_B01_COMPOSITION",
+          "note": "Segreto di riconciliazione e chiave derivata vivono solo nel daemon spender (UID distinto, DAC del kernel, SO_PEERCRED); l'orchestrator non li legge, non forgia un report e non si sostituisce allo spender. NON copre il provider reale.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "P-B02 composta con P-B01: firma e verifica della reconciliation DENTRO lo spender isolato"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C03"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "RECONCILIATION_FRESHNESS_NG04_MECHANISM",
+          "note": "`FreshnessPolicy` obbligatoria: assenza = rifiuto. Copre eta' massima, timestamp nel futuro (clock skew), issued_at assente/malformato, replay nonce e i confini della finestra.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "NG-04 — MECCANISMO di freshness fail-closed e parametrico"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C03"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "RECONCILIATION_FRESHNESS_NG04_POLICY",
+          "note": "Nessun valore scelto né suggerito dal codice: nessun 30s/60s/5min. Serve una decisione umana, vedi NG04_FRESHNESS.md.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "POLICY_DECISION_REQUIRED",
+          "title": "NG-04 — POLICY: valori della finestra (max_age_s, max_future_skew_s)"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C04"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "LEGACY_SPEND_PATHS_RUNTIME_CLOSURE",
+          "note": "#2/#4 (go authorization=None e Batch.run_job) e #7 (helper same-UID sullo store) rifiutati PRIMA di ogni effetto quando la modalita' e' ingaggiata. Inventario riverificato su Runtime 0698279.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Legacy spend paths del RUNTIME chiusi fail-closed dalla modalita' Provider Boundary"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C04"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+          "note": "`transport.pipeline.run_job`, `adapter.submit` e `store.reconcile` raw sono invocabili da qualunque codice con il Core in sys.path. Nessun interruttore del Runtime li governa: la sola mitigazione e' il confine di processo P-B01. Chiusura = modifica del Core, non autorizzata da questo mandato. Vedi LEGACY_SPEND_PATHS_V2.md.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "CORE_CHANGE_REQUIRED",
+          "title": "Legacy spend paths #10/#11: primitive del Core raggiungibili senza passare dal Runtime"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C04"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "LEGACY_TESTS_MIGRATION_TO_GOVERNED",
+          "note": "Con la modalita' ingaggiata la suite storica non puo' girare: dipende da LEGACY_LAB. Chiudere il percorso in modo definitivo richiede prima la migrazione dei test.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "STILL_OPEN",
+          "title": "Migrazione dei test storici T01-T27 al percorso governato"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C05"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "ORPHAN_RESERVED_LEASE_MECHANISM",
+          "note": "Ownership, lease timestamp, lease identity, authority, fencing token + CAS, recovery, zero blind retry, concorrenza e crash durante il reclaim. Il meccanismo NON sceglie la policy.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Orphan RESERVED lease — MECCANISMO parametrico verificato"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C05"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "ORPHAN_RESERVED_LEASE_POLICY",
+          "note": "`RECLAIM_POLICY = NOT_AUTHORIZED`. Il requisito NON e' chiuso dal fatto che il meccanismo esista. Vedi ORPHAN_LEASE_MECHANISM_POLICY.md.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "POLICY_DECISION_REQUIRED",
+          "title": "Orphan RESERVED lease — POLICY: finestra, attore, evidenze, classi ammesse"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C06"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
+          "note": "Il Core canonico NON offre una primitive a transazione singola con provenance parametrica (verificato leggendo il contratto reale). Delta additivo `mark_refused_pre_submit` prodotto e verificato 8/8 su branch Core dedicato, NON mergiato: Core main invariato e il Runtime resta sul percorso conservativo a due transazioni finche' la modifica non e' approvata.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "CORE_CHANGE_REQUIRED",
+          "title": "NG-05 — atomicita' della terminalizzazione pre-submit"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C09"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "REAL_AUTHORIZATION_AND_PRICING",
+          "note": "Fuori scope per mandato: nessun provider reale, nessuna credenziale, 0 crediti. Prerequisiti documentati in REAL_PROVIDER_PREREQUISITES.md.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "REAL_PROVIDER_REQUIRED",
+          "title": "Authorization / pricing reali del provider"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C09"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "REAL_PROVIDER_RECONCILIATION",
+          "note": "Fuori scope per mandato. Il perimetro LAB dimostra binding, autenticazione, freshness e composizione con il confine di privilegio: nessuno di questi e' un claim sul provider reale.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "future_gate",
+          "state": "REAL_PROVIDER_REQUIRED",
+          "title": "Reconciliation verificata contro un provider reale"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C07"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "R0_R1_NO_REGRESSION",
+          "note": "Suite storica eseguita con la modalita' Provider Boundary DISINGAGGIATA, come a baseline.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Nessuna regressione R0-R1 (T01-T37) sul Runtime modificato"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C08"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "P2_FREEZE_AND_CORE_PIN",
+          "note": "Core main 740ee979 e working tree puliti a fine fase; il branch Core vive in un worktree separato e non tocca il tree canonico.",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "P2 frozen (before == after), Core main e pin invariati"
+        },
+        {
+          "counts_for_phase_readiness": true,
+          "evidence_tests": [
+            "C09"
+          ],
+          "evidence_tests_not_passed": [],
+          "id": "PHASE_READINESS_REPORTING",
+          "note": "L'invariante della fase precedente e' preservata ed estesa ai nuovi stati (POLICY_DECISION_REQUIRED, REAL_PROVIDER_REQUIRED, CORE_CHANGE_REQUIRED).",
+          "open": false,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "this_phase",
+          "state": "VERIFIED_LAB",
+          "title": "Reporting: test suite result e phase readiness separati, authority unica fail-closed"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "RUN_CONTAMINATION",
+          "note": "Input Tenant assente: non eseguito (fuori scope).",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "run_contamination"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+          "note": "Fuori scope, non toccato.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "G-N02 — semantic claim paraphrase"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+          "note": "Non toccato. P-B02 offre l'uscita autenticata da SUBMIT_UNKNOWN, ora dimostrata dentro lo spender, ma nessuno scheduler la invoca.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "STILL_OPEN",
+          "title": "RV07 — residuo scheduler/recovery"
+        },
+        {
+          "counts_for_phase_readiness": false,
+          "evidence_tests": [],
+          "evidence_tests_not_passed": [],
+          "id": "INDEPENDENT_CI_STATUS_CHECKS",
+          "note": "Assenti sul branch, come nelle fasi precedenti.",
+          "open": true,
+          "reason_code": "EVIDENCE_TESTS_PASSED",
+          "scope": "other_phase",
+          "state": "NOT_RUN",
+          "title": "Status check CI indipendenti"
+        }
+      ],
+      "verified_requirements": [
+        "REALITY_LOCK_CANONICAL",
+        "GAP_MATRIX_PHASE_A",
+        "P_B02_P_B01_COMPOSITION",
+        "RECONCILIATION_FRESHNESS_NG04_MECHANISM",
+        "LEGACY_SPEND_PATHS_RUNTIME_CLOSURE",
+        "ORPHAN_RESERVED_LEASE_MECHANISM",
+        "R0_R1_NO_REGRESSION",
+        "P2_FREEZE_AND_CORE_PIN",
+        "PHASE_READINESS_REPORTING"
+      ]
+    },
+    "runner_exit": 0,
+    "runner_exit_meaning": "tutti i test del gate hanno prodotto l'esito atteso. NON significa 'tutti i requisiti di fase verificati': vedi phase_readiness.",
+    "schema": "provider-boundary-gate-open-gap-closure-readiness/1",
+    "test_suite": {
+      "all_tests_passed": true,
+      "blocked": 0,
+      "blocked_tests": [],
+      "fail": 0,
+      "fail_ids": [],
+      "inventory": {
+        "duplicates": [],
+        "expected_count": 10,
+        "missing": [],
+        "observed_count": 10,
+        "unexpected": [],
+        "valid": true
+      },
+      "meaning": "i test del gate hanno prodotto l'esito atteso. NON significa che i requisiti di fase siano chiusi: un test PASS puo' verificare che un requisito resta APERTO.",
+      "pass": 10,
+      "pass_ids": [
+        "C00",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09"
+      ],
+      "test_suite_decision": "ALL_TESTS_PASS",
+      "total": 10
+    }
+  }
+}

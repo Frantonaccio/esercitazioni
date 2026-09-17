@@ -1,0 +1,105 @@
+RUNTIME INTEGRATION GATE 01 — Core /home/user/creative-os @ 740ee979300f (required 740ee979300f)
+  P2 hf_batch.py baseline 637f3a803ee38d04 (13484 bytes)
+  T01 [32mPASS[0m  correct Core pin  [VERIFIED exit=0]
+       [2mcore_sha=740ee979300f verdict=CORE_PIN_OK state=SUCCEEDED[0m
+  T02 [32mPASS[0m  wrong Core pin  [VERIFIED exit=0]
+       [2merror=CORE_PIN_MISMATCH core_imported=False[0m
+  T03 [32mPASS[0m  stale old Core pin (9afaddf)  [VERIFIED exit=0]
+       [2merror=STALE_CORE_PIN observed=9afaddf core_imported=False[0m
+  T04 [32mPASS[0m  deterministic spec_key  [VERIFIED exit=0]
+       [2mA==B==C==other_process: True (e355dd3ed48831f2…)[0m
+  T05 [32mPASS[0m  spec mutation changes key  [VERIFIED exit=0]
+       [2m6 mutazioni semantiche -> 6 chiavi diverse: True; 5 input accidentali rifiutati: True[0m
+  T06 [32mPASS[0m  happy path  [VERIFIED exit=0]
+       [2mstate=SUCCEEDED submits=1 provider=fake restart_read=SUCCEEDED reserved_after=0[0m
+  T07 [32mPASS[0m  sequential duplicate  [VERIFIED exit=0]
+       [2mGO#1=RESERVED_NEW GO#2=EXISTING_LIVE_JOB submits=1 same_job_id=True[0m
+  T08 [32mPASS[0m  concurrent duplicate (2 processi)  [VERIFIED exit=0]
+       [2moutcomes=['EXISTING_LIVE_JOB', 'RESERVED_NEW'] total_submits=1 pids=2 rows=1[0m
+  T09 [32mPASS[0m  restart/resume  [VERIFIED exit=0]
+       [2mA: RUNNING polls=1 submits=1 | B (nuovo pid): EXISTING_LIVE_JOB submits=0 same_job=True -> SUCCEEDED[0m
+  T10 [32mPASS[0m  SUBMIT_UNKNOWN no resubmit  [VERIFIED exit=0]
+       [2mGO#1 -> SUBMIT_UNKNOWN (budget impegnato 30) | GO#2 -> EXISTING_LIVE_JOB/reconciliation-required submits=0 budget ancora 30[0m
+  T11 [32mPASS[0m  provider mismatch  [VERIFIED exit=0]
+       [2mfake_a RUNNING | fake_b -> ProviderMismatch submits=0 reservation intatta=fake_a/RUNNING[0m
+  T12 [32mPASS[0m  budget atomicity  [VERIFIED exit=0]
+       [2mconcorrente: ['BudgetExceeded', 'OK'] impegnati=70/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70[0m
+  T13 [32mPASS[0m  invalid budget rejection  [VERIFIED exit=0]
+       [2m5 valori non ammessi -> ReservationContractError, 0 submit, 0 righe[0m
+  T14 [32mPASS[0m  fake mode blocks real provider  [VERIFIED exit=0]
+       [2mprovider_mode=higgsfield -> REAL_PROVIDER_DISABLED violations=0 core_imported=False db_created=False[0m
+  T15 [32mPASS[0m  no credential read  [VERIFIED exit=0]
+       [2mfake go -> SUCCEEDED violations=0 | controprova: sentinella rileva ['credential_file_open', 'provider_subprocess', 'secret_env_read'][0m
+  T16 [32mPASS[0m  P2 hash unchanged  [VERIFIED exit=0]
+       [2mbefore=637f3a803ee3 after=637f3a803ee3 declared=637f3a803ee3 sources_agree=True[0m
+  T17 [32mPASS[0m  Core canonical unchanged  [VERIFIED exit=0]
+       [2mCANONICAL_CLEAN: HEAD=740ee979300f required=740ee979300f branch=main dirty_files=0[0m
+  T18 [32mPASS[0m  durable terminal persistence  [VERIFIED exit=0]
+       [2mSUCCEEDED letto da nuovo processo; replay = RESUMED/SUCCEEDED (0 submit, 1 riga); new_attempt con permesso = RESERVED_NEW (2 righe, 0 impegnato)[0m
+  T19 [32mPASS[0m  static: no duplicate control system (AST)  [VERIFIED exit=0]
+       [2mfindings=0 core_imports=6 contract_drift=0[0m
+  T20 [32mPASS[0m  dirty Core must fail closed  [VERIFIED exit=0]
+       [2mclean -> pin ok | tracked mod (HEAD invariato) -> CORE_WORKTREE_DIRTY core_imported=False | untracked inside -> CORE_WORKTREE_DIRTY | wrong+clean -> CORE_PIN_MISMATCH | stale+clean -> STALE_CORE_PIN[0m
+  T21 [32mPASS[0m  real hf_batch go -> GenSpec mapping  [VERIFIED exit=0]
+       [2m27 job reali in 11 spec: prompt/media == originale True; lock: prompt_sha e sha256_sent combaciano; spec_key stabile in altro processo True; 4 mutazioni reali -> chiave diversa, metadati QA -> stessa chiave True; media MISSING rifiutato True[0m
+B1_NEW_CLIP            RUNNING job=res_f4076e463c1fbcd9_1 0.0s 
+B4C_NEW_CLIP           RUNNING job=res_6d687b11cfaf4fd0_1 0.0s 
+balance None -> None · LOCK_HELD
+B1_NEW_CLIP            EXISTING_LIVE_JOB job=res_f4076e463c1fbcd9_1 0.0s 
+B4C_NEW_CLIP           EXISTING_LIVE_JOB job=res_6d687b11cfaf4fd0_1 0.0s 
+balance None -> None · LOCK_HELD
+B1_NEW_CLIP            SUCCEEDED job=res_f4076e463c1fbcd9_1 0.0s 
+B4C_NEW_CLIP           SUCCEEDED job=res_6d687b11cfaf4fd0_1 0.0s 
+balance None -> None · LOCK_HELD
+  T22 [32mPASS[0m  hf_batch_runtime.go on real spec via Core  [VERIFIED exit=0]
+       [2mspec reale MOTION_B1_B4C: GO#1 2x RESERVED_NEW (2 submit) · GO#2 2x EXISTING_LIVE_JOB (0 submit) · GO#3 nuovo processo -> 2x SUCCEEDED (0 submit) · lock/quote -> REAL_PROVIDER_DISABLED · violazioni sentinella 0[0m
+  T23 [32mPASS[0m  P2 handoff integrity  [VERIFIED exit=0]
+       [2mhandoff SHA256SUMS: 35 file, rc=0 (0 mismatch); 2 ZIP hash registrati[0m
+  T24 [32mPASS[0m  RV03 resume after terminal  [VERIFIED exit=0]
+       [2mGO#1 SUCCEEDED (1 submit) · replay nuovo processo -> RESUMED/SUCCEEDED submits=0 · altro run stessa operazione -> RESUMED/SUCCEEDED submits=0 · altra operazione -> RESERVED_NEW · FAILED replay -> RESUMED/FAILED submits=0[0m
+  T25 [32mPASS[0m  RV03 new attempt needs reason + one-shot permit  [VERIFIED exit=0]
+       [2msenza motivo -> REASON_REQUIRED · senza permesso -> PERMIT_REQUIRED · senza operazione -> OPERATION_ID_REQUIRED · con permesso -> RESERVED_NEW · replay permesso -> PermitError · permit(OP_A) con OP_B/None -> PermitError/PermitError · storico 2[0m
+  T26 [32mPASS[0m  RV03 unknown blocks run/model fallbacks  [VERIFIED exit=0]
+       [2mSUBMIT_UNKNOWN · stessa spec -> EXISTING_LIVE_JOB/reconciliation-required · altro run (RESUME) -> EXISTING_LIVE_JOB/reconciliation-required spec_key=latest · altro modello (RESUME) -> EXISTING_LIVE_JOB/reconciliation-required · new_attempt -> LIVE_OR_UNCERTAIN_ATTEMPT · senza operation_id (modello/run) -> OPERATION_ID_REQUIRED/OPERATION_ID_REQUIRED · submit totali 1[0m
+  T27 [32mPASS[0m  P-B03 cumulative ledger via runtime  [VERIFIED exit=0]
+       [2m3x10 regolati = 30/30 (vivi 0) · quarto (1) -> BudgetExceeded · controprova: terminale non regolato tiene esposti 10 -> BudgetExceeded[0m
+  T28 [32mPASS[0m  P-B01 spender boundary mock (protocol)  [VERIFIED exit=0]
+       [2msenza intent -> PROTOCOL: INTENT_REQUIRED  (×2, anche con quote) · intent estraneo -> PROTOCOL · resume senza attempt -> NO_EXISTING_ATTEMPT (0 submit, nessuna riga) · prima spesa new_attempt/INITIAL_GENERATION -> SUCCEEDED · resume=RESUMED/SUCCEEDED · quote fidata 10u (LAB_PRICE_TABLE) · amount dal client -> PROTOCOL ×2 · fixture zero -> SUCCEEDED/0 · budget≠quote -> BUDGET_NOT_QUOTED · shell/argv/non-JSON -> PROTOCOL · new_attempt (quote nuova)=RESERVED_NEW · permit replay -> PermitError · su incerto -> LIVE_OR_UNCERTAIN_ATTEMPT · senza quote -> QUOTE_REQUIRED · senza operazione -> OPERATION_ID_REQUIRED · violazioni sentinella 0 · segreto nel canale: no[0m
+  T29 [33mBLOCKED[0m  P-B01 privilege isolation  [BLOCKED_ENVIRONMENT exit=1]
+       [2mstesso uid (0) per orchestrator e worker; tentativi di bypass: {'read_worker_secret': 'BYPASS_POSSIBLE', 'write_worker_code': 'BYPASS_POSSIBLE', 'write_worker_store': 'BYPASS_POSSIBLE', 'direct_dispatch_on_worker_store': 'BYPASS_POSSIBLE'}[0m
+B1_NEW_CLIP            SUCCEEDED job=res_f4076e463c1fbcd9_1 0.0s 
+B4C_NEW_CLIP           SUCCEEDED job=res_6d687b11cfaf4fd0_1 0.0s 
+balance None -> None · LOCK_HELD
+  T37 [32mPASS[0m  DELTA 03 intent fail-closed  [VERIFIED exit=0]
+       [2mgoverned resume senza attempt -> NO_EXISTING_ATTEMPT (anche con quote; 0 righe/ledger/permit/submit, quote libera) · new_attempt+INITIAL_GENERATION -> RESERVED_NEW/SUCCEEDED (1 submit) · resume -> RESUMED/SUCCEEDED (0 submit, quote/permit/ledger invariati) · UNKNOWN -> EXISTING_LIVE_JOB/reconciliation-required · RESERVED orfana -> EXISTING_LIVE_JOB/reserved-no-dispatch · prima spesa senza quote -> QUOTE_REQUIRED (0 permessi) · boundary: senza intent -> PROTOCOL INTENT_REQUIRED, resume senza attempt -> NO_EXISTING_ATTEMPT, new_attempt -> SUCCEEDED, resume -> RESUMED/SUCCEEDED · hf_batch governato: default resume -> NO_EXISTING_ATTEMPT, senza namespace -> OPERATION_NAMESPACE_REQUIRED, new_attempt senza quote -> QUOTE_REQUIRED · LEGACY_LAB resume-as-start marcato (True)[0m
+  T30 [32mPASS[0m  recovery mock: crash after send before journal  [VERIFIED exit=0]
+       [2mcrash exit=4 dopo l'invio: RESERVED con ownership/token persistiti · recovery -> SUBMIT_UNKNOWN · replay -> EXISTING_LIVE_JOB/reconciliation-required submits=0[0m
+  T31 [32mPASS[0m  CR-02 envelope authorization binding  [VERIFIED exit=0]
+       [2min scope -> SUCCEEDED (ENV_T31) · fuori scope -> ENVELOPE_OUT_OF_SCOPE · altro envelope valido -> ENVELOPE_OUT_OF_SCOPE · scope non autorizzato -> ENVELOPE_NOT_AUTHORIZED · quote di altra op/spec -> QUOTE_BINDING · envelope_units nel governato -> LEGACY_ENVELOPE_UNITS_FORBIDDEN[0m
+  T32 [32mPASS[0m  CR-02 quote binding  [VERIFIED exit=0]
+       [2momessa -> QUOTE_REQUIRED (sent 0) · inferiore/diversa -> BUDGET_NOT_QUOTED · altra spec/op -> QUOTE_BINDING · budget omesso -> prenotati 10 dalla quote · zero attestato -> SUCCEEDED (0)[0m
+  T33 [32mPASS[0m  CR-01 cross-operation identity  [VERIFIED exit=0]
+       [2mOP_B su spec viva di OP_A -> OperationConflict (0 submit) · OP_A riprende res_0a2d7cb6976713d7_1 · RESUME(OP_A)=res_0a2d7cb6976713d7_1 != RESUME(OP_B)=res_0a2d7cb6976713d7_2[0m
+B1_NEW_CLIP            SUCCEEDED job=res_f4076e463c1fbcd9_1 0.0s 
+B4C_NEW_CLIP           SUCCEEDED job=res_6d687b11cfaf4fd0_1 0.0s 
+balance None -> None · LOCK_HELD
+B1_NEW_CLIP            RESUMED/SUCCEEDED job=res_f4076e463c1fbcd9_1 0.0s 
+B4C_NEW_CLIP           RESUMED/SUCCEEDED job=res_6d687b11cfaf4fd0_1 0.0s 
+balance None -> None · LOCK_HELD
+B1_NEW_CLIP            SUCCEEDED job=res_f4076e463c1fbcd9_1 0.0s 
+B4C_NEW_CLIP           SUCCEEDED job=res_6d687b11cfaf4fd0_1 0.0s 
+balance None -> None · LOCK_HELD
+  T34 [32mPASS[0m  CR-10 work-order operation namespace  [VERIFIED exit=0]
+       [2mWO_A nuovo run -> RESUMED/SUCCEEDED · WO_B stesso asset -> RESERVED_NEW (spec_key identica) · WO_B spec distinta su asset incerto di WO_A -> SUCCEEDED · WO_B stessa spec viva -> OperationConflict · replay WO_A -> attempt A · hf_batch namespaced ops ['WO_A:B1_NEW_CLIP', 'WO_A:B4C_NEW_CLIP'] stabili in 2 round (resumed) · senza namespace = LEGACY_LAB[0m
+  T35 [32mPASS[0m  CR-09 resume is not new spend/dispatch  [VERIFIED exit=0]
+       [2mRUNNING+quote scaduta -> SUCCEEDED (0 submit, ledger invariato) · nuova spesa con quella quote -> QUOTE_ALREADY_CONSUMED · UNKNOWN -> EXISTING_LIVE_JOB/reconciliation-required · RESERVED orfana -> EXISTING_LIVE_JOB/reserved-no-dispatch · terminale+spec diversa -> RESUMED/SUCCEEDED spec_key=latest · RESERVE nel ledger: 3 (solo spese) · op errata -> NO_EXISTING_ATTEMPT · altro conto -> ProviderMismatch[0m
+  T36 [32mPASS[0m  quote lifecycle (atomic single use) via runtime  [VERIFIED exit=0]
+       [2mQ1 consumata da attempt1 · Q1 riusata -> QUOTE_ALREADY_CONSUMED · Q2 -> RESERVED_NEW · resume -> attempt2, Q1/Q2 non riconsumate · rifiuto pre-reservation -> quote libera[0m
+
+36/37 PASS · BLOCKED ['T29/BLOCKED_ENVIRONMENT'] · FAIL []
+GATE_DECISION: LAB_GATE_COMPLETE_WITH_ALLOWED_BLOCKED · runner exit 0 (raccolta e report completati; nessun FAIL; nessun BLOCKED fuori policy LAB. NON significa 'tutti i requisiti verificati'.)
+inventario: 37/37 valido=True
+requisiti NON verificati: ['T29']
+crediti spesi: 0 · provider reali: 0 · rete generativa: 0
+
+--- stderr ---

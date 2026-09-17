@@ -1,0 +1,17 @@
+{
+  "canonical": {
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "runtime_main_sha": "0698279703ab959625ac4e84ee636bc5b93b45fd"
+  },
+  "core_branch": "main",
+  "core_head": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "core_status_porcelain": "",
+  "p2_sha256_before": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+  "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+  "runtime_branch": "claude/provider-boundary-gate-closure-gd6b3g",
+  "runtime_commits_beyond_canonical": [],
+  "runtime_head": "0698279703ab959625ac4e84ee636bc5b93b45fd",
+  "runtime_head_descends_from_canonical": true,
+  "runtime_origin_main": "0698279703ab959625ac4e84ee636bc5b93b45fd"
+}

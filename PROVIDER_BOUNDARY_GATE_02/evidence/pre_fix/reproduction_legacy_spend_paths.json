@@ -1,0 +1,77 @@
+{
+  "core_primitives_direct": {
+    "ok": true,
+    "raw_reconcile": {
+      "accepted": true,
+      "state": "FAILED"
+    },
+    "reproduced": true,
+    "run_job_direct": {
+      "job_id": "res_48d770fc3dc655d8_1",
+      "provider_account": "fake_acct_direct",
+      "state": "SUCCEEDED",
+      "submits": 1
+    }
+  },
+  "legacy_lab_switch": {
+    "closed": {
+      "core_imported_after": true,
+      "core_imported_before": true,
+      "error": "LEGACY_SPEND_PATH_DISABLED",
+      "message": "LEGACY_SPEND_PATH_DISABLED: percorso LEGACY_LAB (authorization=None) chiuso (DISABLED); solo il percorso governato (envelope derivato + quote fidata + permit) puo' spendere. Nessuna reservation, nessun permit, nessun submit.",
+      "ok": false,
+      "store_created": true,
+      "switch_state": "DISABLED"
+    },
+    "closed_code": "LEGACY_SPEND_PATH_DISABLED",
+    "ok": true,
+    "open": {
+      "budget_units": 0,
+      "envelope_id": null,
+      "governance": "LEGACY_LAB",
+      "job_id": "res_e0c11347ba9e0a51_1",
+      "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_legacy1.db.snapshots",
+      "legacy_resume_as_start": true,
+      "ok": true,
+      "permit_id": null,
+      "quote_id": null,
+      "state": "SUCCEEDED",
+      "submits": 1
+    },
+    "reproduced": true,
+    "switch_state_default": "ENABLED_LAB_ONLY"
+  },
+  "status": "REPRODUCED",
+  "test_helper_store_call": {
+    "ok": true,
+    "reproduced": true,
+    "rows": [
+      {
+        "attempt_token": null,
+        "budget_units": 0,
+        "envelope_id": null,
+        "error": null,
+        "job_id": "res_418f4e2fa1d0ff58_1",
+        "operation_id": "lab:legacy_helper",
+        "payload_digest": null,
+        "permit_id": null,
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 0,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "418f4e2fa1d0ff588a4103965256dce9ec7868704ea0378ab3755ae8127db667",
+        "state": "RESERVED",
+        "submit_intent_at": null
+      }
+    ],
+    "store_call": {
+      "job_id": "res_418f4e2fa1d0ff58_1",
+      "ok": true,
+      "pid": 767,
+      "result": "RESERVED_NEW"
+    }
+  }
+}
