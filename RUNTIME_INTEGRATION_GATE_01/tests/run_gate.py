@@ -957,23 +957,21 @@ def t29(canary_home: str, secret_dir: str):
     attempts["direct_dispatch_on_worker_store"] = ("BYPASS_POSSIBLE" if direct.get("state") == "SUCCEEDED"
                                                    else f"BLOCKED ({direct.get('error')})")
     uid = {"orchestrator_uid": os.getuid(), "worker_uid": os.stat(secret_path).st_uid}
-    isolated = all(v == "BLOCKED" or v.startswith("BLOCKED") for v in attempts.values())
-    # Precondizione ambientale RICONOSCIUTA: orchestrator e worker girano con lo stesso uid, quindi
-    # nessuna separazione di privilegio e' disponibile e il requisito NON e' verificabile qui.
+    # Precondizione ambientale RICONOSCIUTA: orchestrator e worker con lo stesso uid -> nessuna
+    # separazione di privilegio disponibile, requisito NON verificabile qui: BLOCKED qualunque sia
+    # l'esito contingente delle probe (decisione umana congelata, gate_report.t29_status).
     same_uid = uid["orchestrator_uid"] == uid["worker_uid"]
-    status = "PASS" if isolated else ("BLOCKED" if same_uid else "FAIL")
-    reason = {"PASS": "VERIFIED", "BLOCKED": "BLOCKED_ENVIRONMENT", "FAIL": "ASSERTION_FAILED"}[status]
+    status, reason = gate_report.t29_status(same_uid, attempts)
     ev = evidence("T29", "boundary_privilege_isolation", {"attempts": attempts, "uids": uid,
                                                           "protocol_reply": replies, "stop": stop,
                                                           "status": status, "reason_code": reason,
                                                           "environment_precondition_same_uid": same_uid,
-                                                          "requirement_verified": isolated})
-    if isolated:
-        return f"confine di privilegio dimostrato: {attempts}", ev, True
-    detail = (f"stesso uid ({uid['orchestrator_uid']}) per orchestrator e worker; "
-              f"tentativi di bypass: {attempts}")
-    if same_uid:
-        raise gate_report.GateBlocked("BLOCKED_ENVIRONMENT", detail, ev)
+                                                          "requirement_verified": status == "PASS"})
+    if status == "BLOCKED":
+        raise gate_report.GateBlocked(reason, (f"stesso uid ({uid['orchestrator_uid']}) per orchestrator e worker; "
+                                               f"tentativi di bypass: {attempts}"), ev)
+    if status == "PASS":
+        return f"confine di privilegio dimostrato con uid distinti {uid}: {attempts}", ev, True
     return f"confine di privilegio NON dimostrato con uid distinti {uid}; tentativi di bypass: {attempts}", ev, False
 
 

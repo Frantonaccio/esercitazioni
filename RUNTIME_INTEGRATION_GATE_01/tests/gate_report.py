@@ -13,6 +13,9 @@ BLOCKED nasce SOLO da `GateBlocked` sollevata dal test per una precondizione amb
 riconosciuta. Non si deduce da testo libero, da `actual.startswith("BLOCKED")`, dall'ID del test
 o da `pass == False`. BLOCKED = requisito NON verificabile nell'ambiente corrente, NON superato.
 
+L'evidence reference deve risolversi (realpath) DENTRO `<gate_root>/evidence/`: path assoluti,
+traversal, file esistenti altrove e symlink in uscita sono rifiutati.
+
 `pass` resta nei risultati solo come campo LEGACY derivato (`status == "PASS"`): nessun
 consumer interno lo usa per ricostruire lo stato tri-state.
 
@@ -30,6 +33,10 @@ import traceback
 
 STATUSES = ("PASS", "FAIL", "BLOCKED")
 REASON_RE = re.compile(r"^[A-Z][A-Z0-9_]*$")
+
+# Inventario CANONICO del gate: ogni ID deve comparire ESATTAMENTE una volta (insieme, non ordine).
+# ID mancante, inatteso o duplicato -> GATE_INVALID (fail-closed): un gate incompleto non certifica nulla.
+EXPECTED_TEST_IDS: frozenset[str] = frozenset(f"T{i:02d}" for i in range(1, 38))
 
 # Policy LAB/MOCK: i soli BLOCKED ammessi senza rendere il gate non favorevole.
 # T29 = P-B01 isolamento di privilegio: nell'ambiente corrente orchestrator e worker hanno lo
@@ -58,6 +65,37 @@ class GateBlocked(Exception):
         super().__init__(f"{reason_code}: {actual}")
 
 
+def evidence_problems(evidence: str, evidence_root: str) -> list[str]:
+    """Il riferimento deve essere un path RELATIVO che, risolto (realpath: symlink e `..` compresi),
+    cade DENTRO la directory canonica `<evidence_root>/evidence/` ed e' un file esistente.
+    Path assoluti, traversal, file esistenti altrove (tests/, runtime/, ...) e symlink che escono
+    dalla directory canonica sono rifiutati (fail-closed)."""
+    canonical = os.path.realpath(os.path.join(evidence_root, "evidence"))
+    if os.path.isabs(evidence):
+        return [f"evidence path assoluto non ammesso: {evidence!r}"]
+    resolved = os.path.realpath(os.path.join(evidence_root, evidence))
+    try:
+        inside = os.path.commonpath([canonical, resolved]) == canonical and resolved != canonical
+    except ValueError:
+        inside = False
+    if not inside:
+        return [f"evidence fuori dalla directory canonica evidence/: {evidence!r}"]
+    if not os.path.isfile(resolved):
+        return [f"evidence non trovata: {evidence!r}"]
+    return []
+
+
+def t29_status(same_uid: bool, attempts: dict) -> tuple[str, str]:
+    """Policy di classificazione di T29 (P-B01 isolamento di privilegio), decisione umana congelata:
+    se orchestrator e worker condividono lo UID la precondizione per verificare P-B01 NON esiste ->
+    BLOCKED/BLOCKED_ENVIRONMENT, QUALUNQUE sia l'esito contingente delle probe. Solo con UID
+    distinti l'esito delle probe decide: tutte bloccate -> PASS, altrimenti FAIL."""
+    if same_uid:
+        return "BLOCKED", "BLOCKED_ENVIRONMENT"
+    isolated = bool(attempts) and all(isinstance(v, str) and v.startswith("BLOCKED") for v in attempts.values())
+    return ("PASS", "VERIFIED") if isolated else ("FAIL", "ASSERTION_FAILED")
+
+
 def make_result(test_id: str, title: str, expected: str, *, status, reason_code, actual, evidence,
                 diagnostic_exit, evidence_root: str) -> dict:
     """Costruisce UN risultato strutturato. Qualunque input malformato degrada a FAIL (fail-closed)
@@ -74,8 +112,8 @@ def make_result(test_id: str, title: str, expected: str, *, status, reason_code,
         problems.append(f"reason_code {reason_code!r} ammesso solo con status BLOCKED")
     if not isinstance(evidence, str) or not evidence.strip():
         problems.append("evidence assente")
-    elif not os.path.isfile(os.path.join(evidence_root, evidence)):
-        problems.append(f"evidence non trovata: {evidence!r}")
+    else:
+        problems += evidence_problems(evidence, evidence_root)
     if not isinstance(diagnostic_exit, int) or isinstance(diagnostic_exit, bool) or diagnostic_exit < 0:
         problems.append(f"diagnostic_exit non valido {diagnostic_exit!r}")
     if problems:
@@ -121,14 +159,26 @@ def run_and_classify(test_id: str, title: str, expected: str, fn, *, evidence_ro
                            evidence_root=evidence_root)
 
 
-def summarize(results: list[dict], policy: dict[str, frozenset[str]] | None = None) -> dict:
-    """Decisione del gate ed exit del runner, derivate SOLO da `status`/`reason_code` strutturati."""
+def summarize(results: list[dict], policy: dict[str, frozenset[str]] | None = None,
+              expected_ids: frozenset[str] | set[str] | None = None) -> dict:
+    """Decisione del gate ed exit del runner, derivate SOLO da `status`/`reason_code` strutturati.
+    L'inventario atteso (default: EXPECTED_TEST_IDS = T01..T37) deve coincidere ESATTAMENTE con gli ID
+    osservati, ciascuno una sola volta; l'ordine non e' authority. Altrimenti GATE_INVALID."""
     policy = LAB_ALLOWED_BLOCKED if policy is None else policy
+    expected = frozenset(EXPECTED_TEST_IDS if expected_ids is None else expected_ids)
     ids = [r.get("id") for r in results]
     invalid: list[str] = []
     dup = sorted({i for i in ids if ids.count(i) > 1})
+    missing = sorted(expected - set(ids))
+    unexpected = sorted(set(ids) - expected)
     if dup:
         invalid.append(f"ID duplicati: {dup}")
+    if missing:
+        invalid.append(f"ID attesi mancanti: {missing}")
+    if unexpected:
+        invalid.append(f"ID inattesi: {unexpected}")
+    inventory = {"expected_count": len(expected), "observed_count": len(ids), "missing": missing,
+                 "unexpected": unexpected, "duplicates": dup, "valid": not (dup or missing or unexpected)}
     for r in results:
         if r.get("status") not in STATUSES or not isinstance(r.get("reason_code"), str):
             invalid.append(f"{r.get('id')}: risultato non strutturato")
@@ -146,6 +196,7 @@ def summarize(results: list[dict], policy: dict[str, frozenset[str]] | None = No
     else:
         decision, runner_exit = GATE_COMPLETE_ALL_VERIFIED, 0
     return {"total": len(results), "pass": len(passed), "fail": len(failed), "blocked": len(blocked),
+            "inventory": inventory,
             "pass_ids": passed, "fail_ids": failed, "blocked_tests": blocked,
             "blocked_not_allowed_by_policy": unallowed, "invalid": invalid,
             "policy_allowed_blocked": {k: sorted(v) for k, v in policy.items()},
@@ -167,7 +218,9 @@ def console_line(r: dict) -> str:
 def console_summary(s: dict) -> str:
     return (f"\n{s['pass']}/{s['total']} PASS · BLOCKED {[b['id'] + '/' + b['reason_code'] for b in s['blocked_tests']]} "
             f"· FAIL {s['fail_ids']}\nGATE_DECISION: {s['gate_decision']} · runner exit {s['runner_exit']} "
-            f"({s['runner_exit_meaning']})\nrequisiti NON verificati: {s['unverified_requirements'] or 'nessuno'}")
+            f"({s['runner_exit_meaning']})\ninventario: {s['inventory']['observed_count']}/{s['inventory']['expected_count']} "
+            f"valido={s['inventory']['valid']}" + (f" {s['invalid']}" if s['invalid'] else "")
+            + f"\nrequisiti NON verificati: {s['unverified_requirements'] or 'nessuno'}")
 
 
 def render_markdown(results: list[dict], s: dict, required_core_sha: str) -> str:
@@ -184,6 +237,8 @@ def render_markdown(results: list[dict], s: dict, required_core_sha: str) -> str
     lines += ["", f"**Totale: {s['pass']}/{s['total']} PASS · BLOCKED: "
               f"{[b['id'] + '/' + b['reason_code'] for b in s['blocked_tests']] or 'nessuno'} · FAIL: {s['fail_ids'] or 'nessuno'}**", "",
               f"**GATE_DECISION: `{s['gate_decision']}`** · runner exit {s['runner_exit']}: {s['runner_exit_meaning']}", "",
+              f"Inventario: {s['inventory']['observed_count']}/{s['inventory']['expected_count']} atteso · valido: {s['inventory']['valid']}"
+              + (f" · mancanti {s['inventory']['missing']} · inattesi {s['inventory']['unexpected']} · duplicati {s['inventory']['duplicates']}" if not s['inventory']['valid'] else ""), "",
               f"Requisiti NON verificati: {s['unverified_requirements'] or 'nessuno'} · "
               f"all_requirements_verified: {s['all_requirements_verified']} · "
               f"P-B01 security boundary: {s['readiness']['security_boundary_p_b01']} · real provider: {s['readiness']['real_provider']}", ""]

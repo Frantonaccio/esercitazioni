@@ -452,6 +452,14 @@
     "pass": 36,
     "fail": 0,
     "blocked": 1,
+    "inventory": {
+      "expected_count": 37,
+      "observed_count": 37,
+      "missing": [],
+      "unexpected": [],
+      "duplicates": [],
+      "valid": true
+    },
     "pass_ids": [
       "T01",
       "T02",

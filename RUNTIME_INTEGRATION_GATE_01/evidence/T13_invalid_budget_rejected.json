@@ -5,7 +5,7 @@
       "error": "ReservationContractError",
       "message": "budget_units deve essere un intero >= 0, ricevuto True",
       "ok": false,
-      "pid": 575,
+      "pid": 531,
       "submits": 0,
       "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto True\n",
       "transport_sent": 0
@@ -15,7 +15,7 @@
       "error": "ReservationContractError",
       "message": "budget_units deve essere un intero >= 0, ricevuto 1.5",
       "ok": false,
-      "pid": 579,
+      "pid": 535,
       "submits": 0,
       "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto 1.5\n",
       "transport_sent": 0
@@ -25,7 +25,7 @@
       "error": "ReservationContractError",
       "message": "budget_units deve essere un intero >= 0, ricevuto -1",
       "ok": false,
-      "pid": 571,
+      "pid": 527,
       "submits": 0,
       "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto -1\n",
       "transport_sent": 0
@@ -35,7 +35,7 @@
       "error": "ReservationContractError",
       "message": "envelope_units deve essere None o un intero >= 0, ricevuto -5",
       "ok": false,
-      "pid": 587,
+      "pid": 543,
       "submits": 0,
       "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: envelope_units deve essere None o un intero >= 0, ricevuto -5\n",
       "transport_sent": 0
@@ -45,7 +45,7 @@
       "error": "ReservationContractError",
       "message": "budget_units deve essere un intero >= 0, ricevuto '10'",
       "ok": false,
-      "pid": 583,
+      "pid": 539,
       "submits": 0,
       "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.ReservationContractError: budget_units deve essere un intero >= 0, ricevuto '10'\n",
       "transport_sent": 0
@@ -57,7 +57,7 @@
     "ownership": [],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 591,
+    "pid": 547,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": []

@@ -48,4 +48,6 @@ Stato per test (authority unica, tri-state): PASS = requisito verificato · FAIL
 
 **GATE_DECISION: `LAB_GATE_COMPLETE_WITH_ALLOWED_BLOCKED`** · runner exit 0: raccolta e report completati; nessun FAIL; nessun BLOCKED fuori policy LAB. NON significa 'tutti i requisiti verificati'.
 
+Inventario: 37/37 atteso · valido: True
+
 Requisiti NON verificati: ['T29'] · all_requirements_verified: False · P-B01 security boundary: NOT_VERIFIED · real provider: NOT_DECLARED

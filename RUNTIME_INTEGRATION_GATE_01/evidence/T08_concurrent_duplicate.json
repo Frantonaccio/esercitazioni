@@ -15,7 +15,7 @@
       "outcome": "RUNNING",
       "permit_id": null,
       "persisted": {
-        "attempt_token": "att_ff4f273764dd7b527822fc12",
+        "attempt_token": "att_c009c4569e41fc52149bb3e7",
         "cost_credits": null,
         "error": null,
         "job_id": "res_6968d4436fef21d3_1",
@@ -29,11 +29,11 @@
         "revision": 3,
         "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
         "state": "RUNNING",
-        "submitted_at": 1789626861.19438,
-        "terminal_by": 1789627161.19438,
+        "submitted_at": 1789627810.7152748,
+        "terminal_by": 1789628110.7152748,
         "webhook_hints": 0
       },
-      "pid": 507,
+      "pid": 463,
       "provider": "fake",
       "provider_job_id": "pv_6968d443",
       "quote_id": null,
@@ -61,7 +61,7 @@
       "outcome": "EXISTING_LIVE_JOB",
       "permit_id": null,
       "persisted": {
-        "attempt_token": "att_ff4f273764dd7b527822fc12",
+        "attempt_token": "att_c009c4569e41fc52149bb3e7",
         "cost_credits": null,
         "error": null,
         "job_id": "res_6968d4436fef21d3_1",
@@ -75,11 +75,11 @@
         "revision": 4,
         "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
         "state": "RUNNING",
-        "submitted_at": 1789626861.19438,
-        "terminal_by": 1789627161.19438,
+        "submitted_at": 1789627810.7152748,
+        "terminal_by": 1789628110.7152748,
         "webhook_hints": 0
       },
-      "pid": 508,
+      "pid": 464,
       "provider": "fake",
       "provider_job_id": "pv_6968d443",
       "quote_id": null,
@@ -98,7 +98,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_ff4f273764dd7b527822fc12",
+        "attempt_token": "att_c009c4569e41fc52149bb3e7",
         "envelope_id": null,
         "job_id": "res_6968d4436fef21d3_1",
         "operation_id": "lab:concorrente",
@@ -110,7 +110,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 515,
+    "pid": 471,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [

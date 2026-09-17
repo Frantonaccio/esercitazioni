@@ -15,7 +15,7 @@
       "outcome": "RUNNING",
       "permit_id": null,
       "persisted": {
-        "attempt_token": "att_bfde51684df13c49e89b5b42",
+        "attempt_token": "att_ec5675ed87f8a9b49d8ebda0",
         "cost_credits": null,
         "error": null,
         "job_id": "res_d695525c7af86ca6_1",
@@ -29,11 +29,11 @@
         "revision": 3,
         "spec_key": "d695525c7af86ca625b22f90aaea6ccddf00537467fa1a13079c79f887784842",
         "state": "RUNNING",
-        "submitted_at": 1789626862.4847295,
-        "terminal_by": 1789627162.4847295,
+        "submitted_at": 1789627812.0471256,
+        "terminal_by": 1789628112.0471256,
         "webhook_hints": 0
       },
-      "pid": 552,
+      "pid": 508,
       "provider": "fake",
       "provider_job_id": "pv_d695525c",
       "quote_id": null,
@@ -51,7 +51,7 @@
       "error": "BudgetExceeded",
       "message": "envelope 100, impegnati 50 (regolati 0 + esposti 50), richiesti 70",
       "ok": false,
-      "pid": 551,
+      "pid": 507,
       "submits": 0,
       "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.BudgetExceeded: envelope 100, impegnati 50 (regolati 0 + esposti 50), richiesti 70\n",
       "transport_sent": 0
@@ -62,7 +62,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_bfde51684df13c49e89b5b42",
+        "attempt_token": "att_ec5675ed87f8a9b49d8ebda0",
         "envelope_id": null,
         "job_id": "res_d695525c7af86ca6_1",
         "operation_id": "lab:budget B",
@@ -74,7 +74,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 559,
+    "pid": 515,
     "quotes_consumed": 0,
     "reserved_units": 50,
     "rows": [
@@ -106,7 +106,7 @@
       "outcome": "RUNNING",
       "permit_id": null,
       "persisted": {
-        "attempt_token": "att_a4ff9bdefd95ab5ba06e692c",
+        "attempt_token": "att_bd46ccd572ea6125774d674f",
         "cost_credits": null,
         "error": null,
         "job_id": "res_91b4cffdfbbef08f_1",
@@ -120,11 +120,11 @@
         "revision": 3,
         "spec_key": "91b4cffdfbbef08fbf75d4a0f9067beea792b71e9a8b91818909a482e0faf4cf",
         "state": "RUNNING",
-        "submitted_at": 1789626862.6828918,
-        "terminal_by": 1789627162.6828918,
+        "submitted_at": 1789627812.2469847,
+        "terminal_by": 1789628112.2469847,
         "webhook_hints": 0
       },
-      "pid": 561,
+      "pid": 517,
       "provider": "fake",
       "provider_job_id": "pv_91b4cffd",
       "quote_id": null,
@@ -142,7 +142,7 @@
       "error": "BudgetExceeded",
       "message": "envelope 100, impegnati 70 (regolati 0 + esposti 70), richiesti 50",
       "ok": false,
-      "pid": 565,
+      "pid": 521,
       "submits": 0,
       "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.BudgetExceeded: envelope 100, impegnati 70 (regolati 0 + esposti 70), richiesti 50\n",
       "transport_sent": 0
@@ -153,7 +153,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_a4ff9bdefd95ab5ba06e692c",
+        "attempt_token": "att_bd46ccd572ea6125774d674f",
         "envelope_id": null,
         "job_id": "res_91b4cffdfbbef08f_1",
         "operation_id": "lab:budget A",
@@ -165,7 +165,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 569,
+    "pid": 525,
     "quotes_consumed": 0,
     "reserved_units": 70,
     "rows": [

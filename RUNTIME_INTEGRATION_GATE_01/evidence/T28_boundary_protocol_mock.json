@@ -27,7 +27,7 @@
     "budget_ne": {
       "code": "BUDGET_NOT_QUOTED",
       "error": "AuthorizationRefused",
-      "message": "BUDGET_NOT_QUOTED: importo presentato 3 diverso dalla quote quote_a80a159f0228461a4f2d23d8 (10 synthetic_units)",
+      "message": "BUDGET_NOT_QUOTED: importo presentato 3 diverso dalla quote quote_811880f208eb2d9914d35389 (10 synthetic_units)",
       "ok": false,
       "submits": 3
     },
@@ -39,9 +39,9 @@
       "legacy_resume_as_start": false,
       "ok": true,
       "outcome": "SUCCEEDED",
-      "permit_id": "permit_3a3d913c96ec297c8c2d0609",
-      "provider_account": "acct_4751f65cb80a",
-      "quote_id": "quote_f61d216eb6812d13760349bc",
+      "permit_id": "permit_f0514730873409d8e7cd236e",
+      "provider_account": "acct_0c3c4197aea6",
+      "quote_id": "quote_22f4adf4fe261711d859f517",
       "requested_spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
       "reservation_outcome": "RESERVED_NEW",
       "resumed": false,
@@ -57,9 +57,9 @@
       "legacy_resume_as_start": false,
       "ok": true,
       "outcome": "SUCCEEDED",
-      "permit_id": "permit_c05c64afdf5a11e1ed31ab4d",
-      "provider_account": "acct_4751f65cb80a",
-      "quote_id": "quote_a56d1366c8f5025abd6653f4",
+      "permit_id": "permit_63604f2b0b8f7142e7bfdfac",
+      "provider_account": "acct_0c3c4197aea6",
+      "quote_id": "quote_6c9c11d97687d844babb4412",
       "requested_spec_key": "a34c287c727bc807d45079aacc7a539a4dae2d7ac8b4fd6ae96013e80c801925",
       "reservation_outcome": "RESERVED_NEW",
       "resumed": false,
@@ -81,9 +81,9 @@
       "legacy_resume_as_start": false,
       "ok": true,
       "outcome": "SUCCEEDED",
-      "permit_id": "permit_ddb1368219f557b5a68ea7de",
-      "provider_account": "acct_4751f65cb80a",
-      "quote_id": "quote_0e8ac98091d81ce2448952b5",
+      "permit_id": "permit_4135753b8011625526c713b9",
+      "provider_account": "acct_0c3c4197aea6",
+      "quote_id": "quote_7ccce171adf7cc4a4070462e",
       "requested_spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
       "reservation_outcome": "RESERVED_NEW",
       "resumed": false,
@@ -146,7 +146,7 @@
     },
     "permit_replay": {
       "error": "PermitError",
-      "message": "permesso permit_ddb1368219f557b5a68ea7de gia' consumato da res_9cde1b88c2473749_2",
+      "message": "permesso permit_4135753b8011625526c713b9 gia' consumato da res_9cde1b88c2473749_2",
       "ok": false,
       "submits": 2
     },
@@ -155,7 +155,7 @@
       "envelope_id": "ENV_T28",
       "ok": true,
       "price_source": "LAB_PRICE_TABLE",
-      "quote_id": "quote_f61d216eb6812d13760349bc",
+      "quote_id": "quote_22f4adf4fe261711d859f517",
       "sku": "fake_model_v1"
     },
     "quote_a2": {
@@ -163,7 +163,7 @@
       "envelope_id": "ENV_T28",
       "ok": true,
       "price_source": "LAB_PRICE_TABLE",
-      "quote_id": "quote_0e8ac98091d81ce2448952b5",
+      "quote_id": "quote_7ccce171adf7cc4a4070462e",
       "sku": "fake_model_v1"
     },
     "quote_a3": {
@@ -171,7 +171,7 @@
       "envelope_id": "ENV_T28",
       "ok": true,
       "price_source": "LAB_PRICE_TABLE",
-      "quote_id": "quote_a7c88cb0d83d2c236f740f7a",
+      "quote_id": "quote_df087358e2416093f1ec91fd",
       "sku": "fake_model_v1"
     },
     "quote_b": {
@@ -179,7 +179,7 @@
       "envelope_id": "ENV_T28",
       "ok": true,
       "price_source": "LAB_PRICE_TABLE",
-      "quote_id": "quote_ce6486acec172d4910f960ed",
+      "quote_id": "quote_df3115a341b72d8dd1e161ae",
       "sku": "fake_model_v1"
     },
     "quote_free": {
@@ -187,7 +187,7 @@
       "envelope_id": "ENV_T28",
       "ok": true,
       "price_source": "LAB_PRICE_TABLE",
-      "quote_id": "quote_a56d1366c8f5025abd6653f4",
+      "quote_id": "quote_6c9c11d97687d844babb4412",
       "sku": "fake_model_free"
     },
     "quote_p": {
@@ -195,7 +195,7 @@
       "envelope_id": "ENV_T28",
       "ok": true,
       "price_source": "LAB_PRICE_TABLE",
-      "quote_id": "quote_a80a159f0228461a4f2d23d8",
+      "quote_id": "quote_811880f208eb2d9914d35389",
       "sku": "fake_model_v1"
     },
     "replay": {
@@ -207,8 +207,8 @@
       "ok": true,
       "outcome": "RESUMED/SUCCEEDED",
       "permit_id": null,
-      "provider_account": "acct_4751f65cb80a",
-      "quote_id": "quote_f61d216eb6812d13760349bc",
+      "provider_account": "acct_0c3c4197aea6",
+      "quote_id": "quote_22f4adf4fe261711d859f517",
       "requested_spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
       "reservation_outcome": "NONE",
       "resumed": true,
@@ -231,7 +231,7 @@
     },
     "status": {
       "latest": {
-        "attempt_token": "att_b0ee79b411b97c857c703693",
+        "attempt_token": "att_fa406b406cfae7b55ae9f354",
         "cost_credits": 4.0,
         "error": null,
         "job_id": "res_9cde1b88c2473749_2",
@@ -239,14 +239,14 @@
         "payload_digest": "ec22d06977e4004bf20334889ef712e51651a1ab37e4f7a826a28ee282d75274",
         "polls": 1,
         "provider": "fake",
-        "provider_account": "acct_4751f65cb80a",
+        "provider_account": "acct_0c3c4197aea6",
         "provider_job_id": "pv_9cde1b88",
-        "quote_id": "quote_0e8ac98091d81ce2448952b5",
+        "quote_id": "quote_7ccce171adf7cc4a4070462e",
         "revision": 3,
         "spec_key": "9cde1b88c24737490f678f303bc3655169f4930f3e0ac7587bc93bd382b2f3a2",
         "state": "SUCCEEDED",
-        "submitted_at": 1789626869.6787498,
-        "terminal_by": 1789627169.6787498,
+        "submitted_at": 1789627819.5981843,
+        "terminal_by": 1789628119.5981843,
         "webhook_hints": 0
       },
       "ok": true
@@ -294,7 +294,7 @@
       "op": "submit",
       "operation_id": "T28:p",
       "prompt": "priced",
-      "quote_id": "quote_a80a159f0228461a4f2d23d8",
+      "quote_id": "quote_811880f208eb2d9914d35389",
       "reason": "INITIAL_GENERATION"
     },
     "first": {
@@ -302,7 +302,7 @@
       "op": "submit",
       "operation_id": "T28:a",
       "prompt": "boundary ok",
-      "quote_id": "quote_f61d216eb6812d13760349bc",
+      "quote_id": "quote_22f4adf4fe261711d859f517",
       "reason": "INITIAL_GENERATION"
     },
     "free": {
@@ -311,7 +311,7 @@
       "op": "submit",
       "operation_id": "T28:z",
       "prompt": "free clip",
-      "quote_id": "quote_a56d1366c8f5025abd6653f4",
+      "quote_id": "quote_6c9c11d97687d844babb4412",
       "reason": "INITIAL_GENERATION"
     },
     "lost": {
@@ -320,7 +320,7 @@
       "op": "submit",
       "operation_id": "T28:b",
       "prompt": "boundary lost",
-      "quote_id": "quote_ce6486acec172d4910f960ed",
+      "quote_id": "quote_df3115a341b72d8dd1e161ae",
       "reason": "INITIAL_GENERATION"
     },
     "new_attempt": {
@@ -328,7 +328,7 @@
       "op": "submit",
       "operation_id": "T28:a",
       "prompt": "boundary ok",
-      "quote_id": "quote_0e8ac98091d81ce2448952b5",
+      "quote_id": "quote_7ccce171adf7cc4a4070462e",
       "reason": "CREATIVE_ITERATION"
     },
     "no_intent": {
@@ -340,7 +340,7 @@
       "op": "submit",
       "operation_id": "T28:a",
       "prompt": "boundary ok",
-      "quote_id": "quote_f61d216eb6812d13760349bc"
+      "quote_id": "quote_22f4adf4fe261711d859f517"
     },
     "no_operation": {
       "intent": "new_attempt",
@@ -373,16 +373,16 @@
       "op": "submit",
       "operation_id": "T28:b",
       "prompt": "boundary lost",
-      "quote_id": "quote_ce6486acec172d4910f960ed",
+      "quote_id": "quote_df3115a341b72d8dd1e161ae",
       "reason": "TECHNICAL_FAILURE_RETRY"
     },
     "permit_replay": {
       "intent": "new_attempt",
       "op": "submit",
       "operation_id": "T28:a",
-      "permit_id": "permit_ddb1368219f557b5a68ea7de",
+      "permit_id": "permit_4135753b8011625526c713b9",
       "prompt": "boundary ok",
-      "quote_id": "quote_a7c88cb0d83d2c236f740f7a",
+      "quote_id": "quote_df087358e2416093f1ec91fd",
       "reason": "CREATIVE_ITERATION"
     },
     "quote_a": {
@@ -427,7 +427,7 @@
       "op": "submit",
       "operation_id": "T28:a",
       "prompt": "boundary ok",
-      "quote_id": "quote_f61d216eb6812d13760349bc"
+      "quote_id": "quote_22f4adf4fe261711d859f517"
     },
     "shell": {
       "cmd": "higgsfield generate create seedance_2_0 --prompt x",
@@ -447,9 +447,9 @@
     }
   },
   "stop": {
-    "account_id": "acct_4751f65cb80a",
+    "account_id": "acct_0c3c4197aea6",
     "ok": true,
-    "secret_path": "/tmp/gate01_9qeokf8r/spender_secret/worker_secret.json",
+    "secret_path": "/tmp/gate01_5q77xjx1/spender_secret/worker_secret.json",
     "served": 31,
     "stopped": true,
     "violations": []

@@ -12,7 +12,7 @@
       "envelope_id": "ENV_T29",
       "ok": true,
       "price_source": "LAB_PRICE_TABLE",
-      "quote_id": "quote_62ba1da3e264c9afc697decd",
+      "quote_id": "quote_045af58e039926f90d30ccb8",
       "sku": "fake_model_v1"
     },
     {
@@ -26,9 +26,9 @@
   "requirement_verified": false,
   "status": "BLOCKED",
   "stop": {
-    "account_id": "acct_aa35f08708f1",
+    "account_id": "acct_3c38ba738faf",
     "ok": true,
-    "secret_path": "/tmp/gate01_9qeokf8r/spender_secret/worker_secret.json",
+    "secret_path": "/tmp/gate01_5q77xjx1/spender_secret/worker_secret.json",
     "served": 3,
     "stopped": true,
     "violations": []

@@ -3,7 +3,7 @@
     "error": "REAL_PROVIDER_DISABLED",
     "message": "REAL_PROVIDER_DISABLED: provider_mode='higgsfield-cli'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
     "ok": true,
-    "pid": 685,
+    "pid": 641,
     "submits": 0,
     "verb": "lock",
     "violations": []
@@ -12,14 +12,14 @@
     "error": "REAL_PROVIDER_DISABLED",
     "message": "REAL_PROVIDER_DISABLED: provider_mode='higgsfield-cli'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.",
     "ok": true,
-    "pid": 687,
+    "pid": 643,
     "submits": 0,
     "verb": "quote",
     "violations": []
   },
   "round_3_new_process": {
     "ok": true,
-    "pid": 675,
+    "pid": 631,
     "submits": 0,
     "traces": [
       {
@@ -73,7 +73,7 @@
   },
   "rounds_1_2_live": {
     "ok": true,
-    "pid": 659,
+    "pid": 615,
     "submits": 2,
     "traces": [
       {
@@ -175,7 +175,7 @@
     "ledger_entries": 2,
     "ownership": [
       {
-        "attempt_token": "att_97de9752bc9e306dc8f3759f",
+        "attempt_token": "att_cce6c80ce9796bee38bffa0c",
         "envelope_id": null,
         "job_id": "res_6d687b11cfaf4fd0_1",
         "operation_id": "MOTION_B1_B4C:B4C_NEW_CLIP",
@@ -185,7 +185,7 @@
         "settled_units": null
       },
       {
-        "attempt_token": "att_1d0b9c825b8f04b2150fca7a",
+        "attempt_token": "att_93f78fe3544e73e218527571",
         "envelope_id": null,
         "job_id": "res_f4076e463c1fbcd9_1",
         "operation_id": "MOTION_B1_B4C:B1_NEW_CLIP",
@@ -197,7 +197,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 673,
+    "pid": 629,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
@@ -228,7 +228,7 @@
     "ledger_entries": 2,
     "ownership": [
       {
-        "attempt_token": "att_97de9752bc9e306dc8f3759f",
+        "attempt_token": "att_cce6c80ce9796bee38bffa0c",
         "envelope_id": null,
         "job_id": "res_6d687b11cfaf4fd0_1",
         "operation_id": "MOTION_B1_B4C:B4C_NEW_CLIP",
@@ -238,7 +238,7 @@
         "settled_units": null
       },
       {
-        "attempt_token": "att_1d0b9c825b8f04b2150fca7a",
+        "attempt_token": "att_93f78fe3544e73e218527571",
         "envelope_id": null,
         "job_id": "res_f4076e463c1fbcd9_1",
         "operation_id": "MOTION_B1_B4C:B1_NEW_CLIP",
@@ -250,7 +250,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 683,
+    "pid": 639,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
