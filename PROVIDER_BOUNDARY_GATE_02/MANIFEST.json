@@ -1,0 +1,99 @@
+{
+  "candidates": {
+    "core_branch": "harden/provider-boundary-core-atomicity-2026-09-17",
+    "core_branch_base": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "core_commit": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+    "deployed": false,
+    "merged": false,
+    "runtime_branch": "claude/provider-boundary-gate-closure-gd6b3g",
+    "runtime_commit": "e845b744a4af3a143b1b1e710016726c57ad6c39",
+    "tagged": false
+  },
+  "canonical_baseline": {
+    "core_branch": "main",
+    "core_repo": "Frantonaccio/creative-os",
+    "core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "required_core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "runtime_main_sha": "0698279703ab959625ac4e84ee636bc5b93b45fd",
+    "runtime_repo": "Frantonaccio/esercitazioni"
+  },
+  "date": "2026-09-17",
+  "files": 43,
+  "gap_status": {
+    "GAP_MATRIX_PHASE_A": "VERIFIED_LAB",
+    "G_N02_SEMANTIC_CLAIM_PARAPHRASE": "STILL_OPEN",
+    "INDEPENDENT_CI_STATUS_CHECKS": "NOT_RUN",
+    "LEGACY_SPEND_PATHS_CORE_PRIMITIVES": "CORE_CHANGE_REQUIRED",
+    "LEGACY_SPEND_PATHS_RUNTIME_CLOSURE": "VERIFIED_LAB",
+    "LEGACY_TESTS_MIGRATION_TO_GOVERNED": "STILL_OPEN",
+    "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY": "CORE_CHANGE_REQUIRED",
+    "ORPHAN_RESERVED_LEASE_MECHANISM": "VERIFIED_LAB",
+    "ORPHAN_RESERVED_LEASE_POLICY": "POLICY_DECISION_REQUIRED",
+    "P2_FREEZE_AND_CORE_PIN": "VERIFIED_LAB",
+    "PHASE_READINESS_REPORTING": "VERIFIED_LAB",
+    "P_B02_P_B01_COMPOSITION": "VERIFIED_LAB",
+    "R0_R1_NO_REGRESSION": "VERIFIED_LAB",
+    "REALITY_LOCK_CANONICAL": "VERIFIED_LAB",
+    "REAL_AUTHORIZATION_AND_PRICING": "REAL_PROVIDER_REQUIRED",
+    "REAL_PROVIDER_RECONCILIATION": "REAL_PROVIDER_REQUIRED",
+    "RECONCILIATION_FRESHNESS_NG04_MECHANISM": "VERIFIED_LAB",
+    "RECONCILIATION_FRESHNESS_NG04_POLICY": "POLICY_DECISION_REQUIRED",
+    "RUN_CONTAMINATION": "NOT_RUN",
+    "RV07_SCHEDULER_RECOVERY_RESIDUAL": "STILL_OPEN"
+  },
+  "next": "Human Review separata. Nessun merge, nessun tag, nessun deploy, nessun R2.",
+  "not_implied": [
+    "provider reale verificato",
+    "provider ready",
+    "production ready",
+    "credenziali autorizzate",
+    "spend autorizzato",
+    "merge autorizzato",
+    "R2 autorizzato"
+  ],
+  "observed_at_manifest_time": {
+    "core_branch": "main",
+    "core_head": "740ee979300fe20a9382992528604dee70cb2fcf",
+    "core_worktree_clean": true,
+    "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
+  },
+  "perimeter": "MOCK ONLY · ZERO PROVIDER REALE · ZERO CREDENZIALI · ZERO CREDITI · NO PRODUCTION · NO DEPLOY · NO TAG · NO RELEASE · NO MERGE",
+  "phase": "PROVIDER BOUNDARY GATE — OPEN-GAP CLOSURE / PRE-REAL-PROVIDER",
+  "phase_readiness": {
+    "all_requirements_verified": false,
+    "core_change_required": [
+      "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+      "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY"
+    ],
+    "max_state": "PROVIDER_BOUNDARY_GATE_PRE_REAL_READY_FOR_HUMAN_REVIEW",
+    "open_requirements_blocking_all_verified": [
+      "RECONCILIATION_FRESHNESS_NG04_POLICY",
+      "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+      "LEGACY_TESTS_MIGRATION_TO_GOVERNED",
+      "ORPHAN_RESERVED_LEASE_POLICY",
+      "NG05_PRE_SUBMIT_TERMINALIZATION_ATOMICITY",
+      "REAL_AUTHORIZATION_AND_PRICING",
+      "REAL_PROVIDER_RECONCILIATION"
+    ],
+    "phase_gate_decision": "LAB_GATE_COMPLETE_WITH_OPEN_GAPS",
+    "policy_decision_required": [
+      "RECONCILIATION_FRESHNESS_NG04_POLICY",
+      "ORPHAN_RESERVED_LEASE_POLICY"
+    ],
+    "real_provider_required": [
+      "REAL_AUTHORIZATION_AND_PRICING",
+      "REAL_PROVIDER_RECONCILIATION"
+    ]
+  },
+  "schema": "provider-boundary-gate-open-gap-closure-manifest/1",
+  "sha256sums": "SHA256SUMS",
+  "test_suite": {
+    "all_tests_passed": true,
+    "blocked": 0,
+    "fail": 0,
+    "pass": 10,
+    "test_suite_decision": "ALL_TESTS_PASS",
+    "total": 10
+  }
+}
