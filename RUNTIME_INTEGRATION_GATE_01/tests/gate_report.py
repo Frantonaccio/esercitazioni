@@ -51,7 +51,7 @@ GATE_INVALID = "GATE_INVALID"
 RUNNER_EXIT_MEANING = {
     0: "raccolta e report completati; nessun FAIL; nessun BLOCKED fuori policy LAB. NON significa 'tutti i requisiti verificati'.",
     1: "almeno un FAIL, oppure un BLOCKED non ammesso dalla policy LAB: gate NON favorevole.",
-    2: "risultati invalidi (ID duplicati o struttura malformata): gate INVALIDO, fail-closed.",
+    2: "risultati invalidi (inventario T01..T37 non esatto: ID mancanti, inattesi o duplicati; oppure struttura malformata): gate INVALIDO, fail-closed.",
 }
 
 
@@ -85,15 +85,35 @@ def evidence_problems(evidence: str, evidence_root: str) -> list[str]:
     return []
 
 
-def t29_status(same_uid: bool, attempts: dict) -> tuple[str, str]:
+# Inventario CANONICO delle probe di T29: con UID distinti solo ESATTAMENTE queste quattro probe,
+# tutte realmente bloccate, possono produrre PASS. Probe mancanti, inattese o malformate -> FAIL.
+T29_EXPECTED_ATTEMPT_KEYS: frozenset[str] = frozenset({
+    "read_worker_secret", "write_worker_code", "write_worker_store", "direct_dispatch_on_worker_store"})
+# Forme ammesse di una probe bloccata: esattamente quelle prodotte dal test (`BLOCKED` oppure
+# `BLOCKED (<diagnostica>)`). Qualunque altra stringa (es. BLOCKED_BUT_NOT_REALLY) NON e' bloccata.
+T29_BLOCKED_FORM = re.compile(r"^BLOCKED(?: \([^()\n]+\))?$")
+
+
+def t29_probe_blocked(value) -> bool:
+    return isinstance(value, str) and T29_BLOCKED_FORM.match(value) is not None
+
+
+def t29_status(same_uid: bool, attempts) -> tuple[str, str]:
     """Policy di classificazione di T29 (P-B01 isolamento di privilegio), decisione umana congelata:
     se orchestrator e worker condividono lo UID la precondizione per verificare P-B01 NON esiste ->
     BLOCKED/BLOCKED_ENVIRONMENT, QUALUNQUE sia l'esito contingente delle probe. Solo con UID
-    distinti l'esito delle probe decide: tutte bloccate -> PASS, altrimenti FAIL."""
+    distinti decidono le probe, e SOLO l'inventario canonico completo (T29_EXPECTED_ATTEMPT_KEYS,
+    nessuna chiave mancante o inattesa) con ogni valore nella forma bloccata ammessa -> PASS.
+    attempts non mapping, vuoto, incompleto, con chiavi extra o valori malformati -> FAIL."""
     if same_uid:
         return "BLOCKED", "BLOCKED_ENVIRONMENT"
-    isolated = bool(attempts) and all(isinstance(v, str) and v.startswith("BLOCKED") for v in attempts.values())
-    return ("PASS", "VERIFIED") if isolated else ("FAIL", "ASSERTION_FAILED")
+    if not isinstance(attempts, dict):
+        return "FAIL", "ASSERTION_FAILED"
+    if set(attempts) != T29_EXPECTED_ATTEMPT_KEYS:
+        return "FAIL", "ASSERTION_FAILED"
+    if not all(t29_probe_blocked(attempts[k]) for k in T29_EXPECTED_ATTEMPT_KEYS):
+        return "FAIL", "ASSERTION_FAILED"
+    return "PASS", "VERIFIED"
 
 
 def make_result(test_id: str, title: str, expected: str, *, status, reason_code, actual, evidence,

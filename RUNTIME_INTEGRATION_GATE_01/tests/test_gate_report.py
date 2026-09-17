@@ -2,7 +2,8 @@
 """Test MIRATI del contratto di reporting (tests/gate_report.py). Nessun Core, nessun runtime,
 nessun provider: solo classificazione, summary, rendering e coerenza dei conteggi.
 Controprove fail-closed richieste dal mandato REPORTING T29 (2026-09-17): CP1..CP8 + CP9 (36+1);
-HUMAN REVIEW di ffaa4ec8 (2026-09-17): CP10 precedenza T29, CP11 inventario T01-T37, CP12 containment evidence."""
+HUMAN REVIEW di ffaa4ec8 (2026-09-17): CP10 precedenza T29, CP11 inventario T01-T37, CP12 containment evidence;
+HUMAN REVIEW v3 di f01bbf52 (2026-09-17): CP13 inventario canonico delle 4 probe T29 e forma dei valori."""
 from __future__ import annotations
 
 import json
@@ -191,6 +192,43 @@ def t29_same_uid_probes_blocked():
     return "x", ev("t29p"), st == "PASS"
 r10 = run("T29", t29_same_uid_probes_blocked)
 check("CP10f attraverso run_and_classify: BLOCKED/BLOCKED_ENVIRONMENT, pass legacy False", r10["status"] == "BLOCKED" and r10["reason_code"] == "BLOCKED_ENVIRONMENT" and r10["pass"] is False)
+
+print("CP13 T29 probe inventory fail-closed (UID distinti)")
+K = sorted(gr.T29_EXPECTED_ATTEMPT_KEYS)
+check("CP13 inventario canonico = 4 probe attese", gr.T29_EXPECTED_ATTEMPT_KEYS == {"read_worker_secret", "write_worker_code", "write_worker_store", "direct_dispatch_on_worker_store"})
+check("CP13a UID distinti + solo 1 delle 4 probe BLOCKED -> FAIL, NON PASS", gr.t29_status(False, {"read_worker_secret": "BLOCKED"}) == ("FAIL", "ASSERTION_FAILED"))
+three = {k: "BLOCKED" for k in K[:3]}
+check("CP13b UID distinti + 3/4 probe BLOCKED -> FAIL", gr.t29_status(False, three) == ("FAIL", "ASSERTION_FAILED"))
+check("CP13c UID distinti + 4 probe BLOCKED -> PASS/VERIFIED", gr.t29_status(False, ALL_BLOCKED) == ("PASS", "VERIFIED"))
+check("CP13d UID distinti + 4 BLOCKED + chiave extra -> FAIL", gr.t29_status(False, dict(ALL_BLOCKED, extra_probe="BLOCKED")) == ("FAIL", "ASSERTION_FAILED"))
+check("CP13e UID distinti + chiave arbitraria foo: BLOCKED -> FAIL", gr.t29_status(False, {"foo": "BLOCKED"}) == ("FAIL", "ASSERTION_FAILED"))
+check("CP13f UID distinti + valore BLOCKED_BUT_NOT_REALLY -> FAIL", gr.t29_status(False, dict(ALL_BLOCKED, write_worker_code="BLOCKED_BUT_NOT_REALLY")) == ("FAIL", "ASSERTION_FAILED")
+      and gr.t29_status(False, dict(ALL_BLOCKED, write_worker_code="BLOCKEDX")) == ("FAIL", "ASSERTION_FAILED")
+      and gr.t29_status(False, dict(ALL_BLOCKED, write_worker_code="BLOCKED (")) == ("FAIL", "ASSERTION_FAILED")
+      and gr.t29_status(False, dict(ALL_BLOCKED, write_worker_code="blocked")) == ("FAIL", "ASSERTION_FAILED")
+      and gr.t29_status(False, dict(ALL_BLOCKED, write_worker_code=" BLOCKED")) == ("FAIL", "ASSERTION_FAILED"))
+nm = []
+for bad in (None, "BLOCKED", ["BLOCKED"] * 4, 4, [("read_worker_secret", "BLOCKED")]):
+    try:
+        nm.append(gr.t29_status(False, bad))
+    except Exception as e:                                          # noqa: BLE001
+        nm.append(("EXC", type(e).__name__))
+check("CP13g UID distinti + attempts non mapping -> FAIL, mai PASS", all(r == ("FAIL", "ASSERTION_FAILED") for r in nm), str(nm))
+check("CP13h UID distinti + attempts vuoto -> FAIL", gr.t29_status(False, {}) == ("FAIL", "ASSERTION_FAILED"))
+check("CP13i UID distinti + valore non stringa / None -> FAIL", gr.t29_status(False, dict(ALL_BLOCKED, read_worker_secret=None)) == ("FAIL", "ASSERTION_FAILED")
+      and gr.t29_status(False, dict(ALL_BLOCKED, read_worker_secret=True)) == ("FAIL", "ASSERTION_FAILED"))
+check("CP13j forme ammesse: BLOCKED e BLOCKED (<diagnostica>)", gr.t29_probe_blocked("BLOCKED") and gr.t29_probe_blocked("BLOCKED (PermissionError)")
+      and gr.t29_probe_blocked("BLOCKED (CorePinError)") and not gr.t29_probe_blocked("BLOCKED ()") and not gr.t29_probe_blocked("BYPASS_POSSIBLE"))
+check("CP13k precedenza conservata: same_uid + 4 BLOCKED -> BLOCKED; same_uid + 4 BYPASS -> BLOCKED; same_uid + attempts non mapping -> BLOCKED",
+      gr.t29_status(True, ALL_BLOCKED) == ("BLOCKED", "BLOCKED_ENVIRONMENT") and gr.t29_status(True, ALL_BYPASS) == ("BLOCKED", "BLOCKED_ENVIRONMENT")
+      and gr.t29_status(True, None) == ("BLOCKED", "BLOCKED_ENVIRONMENT"))
+# attraverso il runner: policy con probe incomplete -> FAIL/ASSERTION_FAILED, mai PASS
+def t29_distinct_uid_one_probe():
+    st, rc = gr.t29_status(False, {"read_worker_secret": "BLOCKED"})
+    return f"probe incomplete: {st}", ev("t29q"), st == "PASS"
+r13 = run("T29", t29_distinct_uid_one_probe)
+check("CP13l attraverso run_and_classify: FAIL/ASSERTION_FAILED", r13["status"] == "FAIL" and r13["reason_code"] == "ASSERTION_FAILED")
+check("CP13m RUNNER_EXIT_MEANING[2] nomina ID mancanti/inattesi/duplicati", all(w in gr.RUNNER_EXIT_MEANING[2] for w in ("mancanti", "inattesi", "duplicati", "malformata")))
 
 print("CP11 inventario canonico T01-T37 fail-closed (insieme esatto, ordine non authority)")
 def full_pass(ids):

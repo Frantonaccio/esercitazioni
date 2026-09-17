@@ -4,7 +4,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_26f5b624c3f30b9632d78339",
+        "attempt_token": "att_8dc2a4ddd55bf1f912f8490d",
         "envelope_id": null,
         "job_id": "res_b157c035497bf6f8_1",
         "operation_id": "T30:asset",
@@ -16,7 +16,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 900,
+    "pid": 875,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
@@ -37,7 +37,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_26f5b624c3f30b9632d78339",
+        "attempt_token": "att_8dc2a4ddd55bf1f912f8490d",
         "envelope_id": null,
         "job_id": "res_b157c035497bf6f8_1",
         "operation_id": "T30:asset",
@@ -49,7 +49,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 904,
+    "pid": 879,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
@@ -71,7 +71,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_26f5b624c3f30b9632d78339",
+        "attempt_token": "att_8dc2a4ddd55bf1f912f8490d",
         "envelope_id": null,
         "job_id": "res_b157c035497bf6f8_1",
         "operation_id": "T30:asset",
@@ -83,7 +83,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 910,
+    "pid": 885,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
@@ -101,10 +101,10 @@
   },
   "recovery": {
     "ok": true,
-    "pid": 902,
+    "pid": 877,
     "result": [
       {
-        "attempt_token": "att_26f5b624c3f30b9632d78339",
+        "attempt_token": "att_8dc2a4ddd55bf1f912f8490d",
         "cost_credits": null,
         "error": "intento di submit registrato senza esito: riconciliazione richiesta",
         "job_id": "res_b157c035497bf6f8_1",
@@ -118,7 +118,7 @@
         "revision": 2,
         "spec_key": "b157c035497bf6f89b0f104cb341f68b7298a2105bfdce563c059c758c184b17",
         "state": "SUBMIT_UNKNOWN",
-        "submitted_at": 1789627822.7592442,
+        "submitted_at": 1789628641.6444728,
         "terminal_by": 0.0,
         "webhook_hints": 0
       }
@@ -139,7 +139,7 @@
     "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_26f5b624c3f30b9632d78339",
+      "attempt_token": "att_8dc2a4ddd55bf1f912f8490d",
       "cost_credits": null,
       "error": "intento di submit registrato senza esito: riconciliazione richiesta",
       "job_id": "res_b157c035497bf6f8_1",
@@ -153,11 +153,11 @@
       "revision": 2,
       "spec_key": "b157c035497bf6f89b0f104cb341f68b7298a2105bfdce563c059c758c184b17",
       "state": "SUBMIT_UNKNOWN",
-      "submitted_at": 1789627822.7592442,
+      "submitted_at": 1789628641.6444728,
       "terminal_by": 0.0,
       "webhook_hints": 0
     },
-    "pid": 906,
+    "pid": 881,
     "provider": "fake",
     "provider_job_id": null,
     "quote_id": null,

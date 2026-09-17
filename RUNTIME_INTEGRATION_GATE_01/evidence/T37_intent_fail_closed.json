@@ -1,6 +1,6 @@
 {
   "boundary": {
-    "quote_id": "quote_09d2a8038f62575014b3b07d",
+    "quote_id": "quote_54cdcb6ede317f83fe88b1e0",
     "replies": [
       {
         "ok": false,
@@ -27,9 +27,9 @@
         "legacy_resume_as_start": false,
         "ok": true,
         "outcome": "SUCCEEDED",
-        "permit_id": "permit_1846bece719ecb026dc8c304",
-        "provider_account": "acct_3b3bc8e434ba",
-        "quote_id": "quote_09d2a8038f62575014b3b07d",
+        "permit_id": "permit_8bc0bc3327351556b68a4fff",
+        "provider_account": "acct_77343d0a046d",
+        "quote_id": "quote_54cdcb6ede317f83fe88b1e0",
         "requested_spec_key": "c4c42ed9c4b95879f4950d2e4036283061bda643401badb069851a8335059ae5",
         "reservation_outcome": "RESERVED_NEW",
         "resumed": false,
@@ -46,8 +46,8 @@
         "ok": true,
         "outcome": "RESUMED/SUCCEEDED",
         "permit_id": null,
-        "provider_account": "acct_3b3bc8e434ba",
-        "quote_id": "quote_09d2a8038f62575014b3b07d",
+        "provider_account": "acct_77343d0a046d",
+        "quote_id": "quote_54cdcb6ede317f83fe88b1e0",
         "requested_spec_key": "c4c42ed9c4b95879f4950d2e4036283061bda643401badb069851a8335059ae5",
         "reservation_outcome": "NONE",
         "resumed": true,
@@ -61,19 +61,19 @@
       "ledger_entries": 1,
       "ownership": [
         {
-          "attempt_token": "att_52c304f56cde5f4c1d72ad89",
+          "attempt_token": "att_76c6760cb8eb11795a90247e",
           "envelope_id": "ENV_T37",
           "job_id": "res_c4c42ed9c4b95879_1",
           "operation_id": "T37:b",
-          "permit_id": "permit_1846bece719ecb026dc8c304",
-          "provider_account": "acct_3b3bc8e434ba",
+          "permit_id": "permit_8bc0bc3327351556b68a4fff",
+          "provider_account": "acct_77343d0a046d",
           "revision": 3,
           "settled_units": null
         }
       ],
       "permits": 1,
       "permits_consumed": 1,
-      "pid": 867,
+      "pid": 842,
       "quotes_consumed": 1,
       "reserved_units": 0,
       "rows": [
@@ -90,9 +90,9 @@
       ]
     },
     "stop": {
-      "account_id": "acct_3b3bc8e434ba",
+      "account_id": "acct_77343d0a046d",
       "ok": true,
-      "secret_path": "/tmp/gate01_5q77xjx1/spender_secret/worker_secret.json",
+      "secret_path": "/tmp/gate01_2pcz3o1f/spender_secret/worker_secret.json",
       "served": 6,
       "stopped": true,
       "violations": []
@@ -111,9 +111,9 @@
     "ok": true,
     "operation_id": "T37:a",
     "outcome": "SUCCEEDED",
-    "permit_id": "permit_f4cbadf8ee6165ed129b7ae2",
+    "permit_id": "permit_94edabcc1f17c458a2d97af2",
     "persisted": {
-      "attempt_token": "att_57526b48f4fb01ae736a37b7",
+      "attempt_token": "att_a4630a04da26732fed1f951e",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_594750f98732949d_1",
@@ -123,18 +123,18 @@
       "provider": "fake",
       "provider_account": "fake_acct_a",
       "provider_job_id": "pv_594750f9",
-      "quote_id": "quote_1f3571f20be30fd223c325d2",
+      "quote_id": "quote_632e8829f2d4f067a15978e9",
       "revision": 3,
       "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
       "state": "SUCCEEDED",
-      "submitted_at": 1789627820.4766803,
-      "terminal_by": 1789628120.4766803,
+      "submitted_at": 1789628639.3342676,
+      "terminal_by": 1789628939.3342676,
       "webhook_hints": 0
     },
-    "pid": 816,
+    "pid": 791,
     "provider": "fake",
     "provider_job_id": "pv_594750f9",
-    "quote_id": "quote_1f3571f20be30fd223c325d2",
+    "quote_id": "quote_632e8829f2d4f067a15978e9",
     "requested_spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
     "reservation_outcome": "RESERVED_NEW",
     "resumed": false,
@@ -150,7 +150,7 @@
     "error": "AuthorizationRefused",
     "message": "QUOTE_REQUIRED: nessuna quote fidata presentata: nessun importo, nessun submit",
     "ok": false,
-    "pid": 848,
+    "pid": 823,
     "submits": 0,
     "transport_sent": 0
   },
@@ -161,7 +161,7 @@
       "error": "IntentRefused",
       "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'T37:a': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
       "ok": false,
-      "pid": 804,
+      "pid": 779,
       "submits": 0,
       "transport_sent": 0
     },
@@ -171,7 +171,7 @@
       "error": "IntentRefused",
       "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'T37:a': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
       "ok": false,
-      "pid": 808,
+      "pid": 783,
       "submits": 0,
       "transport_sent": 0
     }
@@ -181,7 +181,7 @@
     "error": "IntentRefused",
     "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'WO_A:B1_NEW_CLIP': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
     "ok": false,
-    "pid": 869,
+    "pid": 844,
     "submits": 0,
     "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 331, in hf_batch_runtime_go\n    traces.append(b.go())\n                  ^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 275, in go\n    recs = list(ex.map(lambda j: self.run_job(j, lock), self.spec[\"jobs\"]))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/concurrent/futures/_base.py\", line 619, in result_iterator\n    yield _result_or_cancel(fs.pop())\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/concurrent/futures/_base.py\", line 317, in _result_or_cancel\n    return fut.result(timeout)\n           ^^^^^^^^^^^^^^^^^^^\nruntime.go_candidate.IntentRefused: NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'WO_A:B1_NEW_CLIP': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)\n",
     "verb": "go",
@@ -192,7 +192,7 @@
     "error": "AuthorizationRefused",
     "message": "QUOTE_REQUIRED: nessuna quote fidata presentata: nessun importo, nessun submit",
     "ok": false,
-    "pid": 879,
+    "pid": 854,
     "submits": 0,
     "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 331, in hf_batch_runtime_go\n    traces.append(b.go())\n                  ^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 275, in go\n    recs = list(ex.map(lambda j: self.run_job(j, lock), self.spec[\"jobs\"]))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/concurrent/futures/_base.py\", line 619, in result_iterator\n    yield _result_or_cancel(fs.pop())\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/concurrent/futures/_base.py\", line 317, in _result_or_cancel\n    return fut.result(timeout)\n           ^^^^^^^^^^^^^^^^^^^\nruntime.authorization.AuthorizationRefused: QUOTE_REQUIRED: nessuna quote fidata presentata: nessun importo, nessun submit\n",
     "verb": "go",
@@ -204,7 +204,7 @@
     "ownership": [],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 887,
+    "pid": 862,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": []
@@ -214,7 +214,7 @@
     "error": "AuthorizationRefused",
     "message": "OPERATION_NAMESPACE_REQUIRED: il percorso governato richiede operation_namespace (work_order_id); 'batch:asset' e' ammesso solo LEGACY_LAB",
     "ok": false,
-    "pid": 877,
+    "pid": 852,
     "submits": 0,
     "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 308, in hf_batch_runtime_go\n    b = hb.Batch(os.path.join(HANDOFF, \"SPECS\", spec_name), adapter=adapter,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 111, in __init__\n    raise AuthorizationRefused(\nruntime.authorization.AuthorizationRefused: OPERATION_NAMESPACE_REQUIRED: il percorso governato richiede operation_namespace (work_order_id); 'batch:asset' e' ammesso solo LEGACY_LAB\n",
     "verb": "go",
@@ -222,7 +222,7 @@
   },
   "hf_batch_legacy": {
     "ok": true,
-    "pid": 889,
+    "pid": 864,
     "submits": 2,
     "traces": [
       {
@@ -289,7 +289,7 @@
     "outcome": "SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_8786cef00914494f4b4232b7",
+      "attempt_token": "att_66de08436c144a5c5dbd9aa0",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_dd40b12fc2ffe171_1",
@@ -303,11 +303,11 @@
       "revision": 3,
       "spec_key": "dd40b12fc2ffe1716e18ecc4b81a648625414be6fefcc43f6768f4cc09191233",
       "state": "SUCCEEDED",
-      "submitted_at": 1789627821.7581792,
-      "terminal_by": 1789628121.7581792,
+      "submitted_at": 1789628640.629524,
+      "terminal_by": 1789628940.629524,
       "webhook_hints": 0
     },
-    "pid": 854,
+    "pid": 829,
     "provider": "fake",
     "provider_job_id": "pv_dd40b12f",
     "quote_id": null,
@@ -322,16 +322,16 @@
   },
   "quote_after_first": {
     "ok": true,
-    "pid": 822,
+    "pid": 797,
     "result": {
       "amount": 10,
-      "consumed_at": 1789627820.4736855,
+      "consumed_at": 1789628639.33184,
       "consumed_by": "res_594750f98732949d_1",
       "envelope_id": "ENV_T37",
       "expires_at": null,
-      "issued_at": 1789627819.9520764,
+      "issued_at": 1789628638.8310783,
       "operation_id": "T37:a",
-      "quote_id": "quote_1f3571f20be30fd223c325d2",
+      "quote_id": "quote_632e8829f2d4f067a15978e9",
       "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
       "unit": "synthetic_units",
       "version": 1
@@ -339,16 +339,16 @@
   },
   "quote_after_refusals": {
     "ok": true,
-    "pid": 814,
+    "pid": 789,
     "result": {
       "amount": 10,
       "consumed_at": null,
       "consumed_by": null,
       "envelope_id": "ENV_T37",
       "expires_at": null,
-      "issued_at": 1789627819.9520764,
+      "issued_at": 1789628638.8310783,
       "operation_id": "T37:a",
-      "quote_id": "quote_1f3571f20be30fd223c325d2",
+      "quote_id": "quote_632e8829f2d4f067a15978e9",
       "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
       "unit": "synthetic_units",
       "version": 1
@@ -356,16 +356,16 @@
   },
   "quote_after_resume": {
     "ok": true,
-    "pid": 830,
+    "pid": 805,
     "result": {
       "amount": 10,
-      "consumed_at": 1789627820.4736855,
+      "consumed_at": 1789628639.33184,
       "consumed_by": "res_594750f98732949d_1",
       "envelope_id": "ENV_T37",
       "expires_at": null,
-      "issued_at": 1789627819.9520764,
+      "issued_at": 1789628638.8310783,
       "operation_id": "T37:a",
-      "quote_id": "quote_1f3571f20be30fd223c325d2",
+      "quote_id": "quote_632e8829f2d4f067a15978e9",
       "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
       "unit": "synthetic_units",
       "version": 1
@@ -375,7 +375,7 @@
     {
       "job_id": "res_8302fe5dde49e863_1",
       "ok": true,
-      "pid": 842,
+      "pid": 817,
       "result": "RESERVED_NEW"
     },
     {
@@ -411,7 +411,7 @@
         "terminal_by": 0.0,
         "webhook_hints": 0
       },
-      "pid": 844,
+      "pid": 819,
       "provider": "",
       "provider_job_id": null,
       "quote_id": null,
@@ -440,7 +440,7 @@
     "outcome": "RESUMED/SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_57526b48f4fb01ae736a37b7",
+      "attempt_token": "att_a4630a04da26732fed1f951e",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_594750f98732949d_1",
@@ -450,18 +450,18 @@
       "provider": "fake",
       "provider_account": "fake_acct_a",
       "provider_job_id": "pv_594750f9",
-      "quote_id": "quote_1f3571f20be30fd223c325d2",
+      "quote_id": "quote_632e8829f2d4f067a15978e9",
       "revision": 3,
       "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
       "state": "SUCCEEDED",
-      "submitted_at": 1789627820.4766803,
-      "terminal_by": 1789628120.4766803,
+      "submitted_at": 1789628639.3342676,
+      "terminal_by": 1789628939.3342676,
       "webhook_hints": 0
     },
-    "pid": 824,
+    "pid": 799,
     "provider": "fake",
     "provider_job_id": "pv_594750f9",
-    "quote_id": "quote_1f3571f20be30fd223c325d2",
+    "quote_id": "quote_632e8829f2d4f067a15978e9",
     "requested_spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
     "reservation_outcome": "NONE",
     "resumed": true,
@@ -476,11 +476,11 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_57526b48f4fb01ae736a37b7",
+        "attempt_token": "att_a4630a04da26732fed1f951e",
         "envelope_id": "ENV_T37",
         "job_id": "res_594750f98732949d_1",
         "operation_id": "T37:a",
-        "permit_id": "permit_f4cbadf8ee6165ed129b7ae2",
+        "permit_id": "permit_94edabcc1f17c458a2d97af2",
         "provider_account": "fake_acct_a",
         "revision": 3,
         "settled_units": null
@@ -488,7 +488,7 @@
     ],
     "permits": 1,
     "permits_consumed": 1,
-    "pid": 820,
+    "pid": 795,
     "quotes_consumed": 1,
     "reserved_units": 0,
     "rows": [
@@ -510,7 +510,7 @@
     "ownership": [],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 812,
+    "pid": 787,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": []
@@ -520,11 +520,11 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_57526b48f4fb01ae736a37b7",
+        "attempt_token": "att_a4630a04da26732fed1f951e",
         "envelope_id": "ENV_T37",
         "job_id": "res_594750f98732949d_1",
         "operation_id": "T37:a",
-        "permit_id": "permit_f4cbadf8ee6165ed129b7ae2",
+        "permit_id": "permit_94edabcc1f17c458a2d97af2",
         "provider_account": "fake_acct_a",
         "revision": 3,
         "settled_units": null
@@ -532,7 +532,7 @@
     ],
     "permits": 1,
     "permits_consumed": 1,
-    "pid": 828,
+    "pid": 803,
     "quotes_consumed": 1,
     "reserved_units": 0,
     "rows": [
@@ -553,21 +553,21 @@
     "ledger_entries": 3,
     "ownership": [
       {
-        "attempt_token": "att_57526b48f4fb01ae736a37b7",
+        "attempt_token": "att_a4630a04da26732fed1f951e",
         "envelope_id": "ENV_T37",
         "job_id": "res_594750f98732949d_1",
         "operation_id": "T37:a",
-        "permit_id": "permit_f4cbadf8ee6165ed129b7ae2",
+        "permit_id": "permit_94edabcc1f17c458a2d97af2",
         "provider_account": "fake_acct_a",
         "revision": 3,
         "settled_units": null
       },
       {
-        "attempt_token": "att_efc65c5872841ebea2983f93",
+        "attempt_token": "att_db0b78bd67e91c8c071e73ba",
         "envelope_id": "ENV_T37",
         "job_id": "res_77da2a93988886ed_1",
         "operation_id": "T37:u",
-        "permit_id": "permit_47a146ba2bd170f50acd046e",
+        "permit_id": "permit_9afdd16d23aa1f3fd6628701",
         "provider_account": "fake_acct_a",
         "revision": 2,
         "settled_units": null
@@ -585,7 +585,7 @@
     ],
     "permits": 2,
     "permits_consumed": 2,
-    "pid": 852,
+    "pid": 827,
     "quotes_consumed": 2,
     "reserved_units": 10,
     "rows": [
@@ -627,7 +627,7 @@
       "error": "ConnectionResetError",
       "message": "risposta del provider persa dopo l'invio",
       "ok": false,
-      "pid": 834,
+      "pid": 809,
       "submits": 1,
       "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\nConnectionResetError: risposta del provider persa dopo l'invio\n",
       "transport_sent": 0
@@ -647,7 +647,7 @@
       "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
       "permit_id": null,
       "persisted": {
-        "attempt_token": "att_efc65c5872841ebea2983f93",
+        "attempt_token": "att_db0b78bd67e91c8c071e73ba",
         "cost_credits": null,
         "error": null,
         "job_id": "res_77da2a93988886ed_1",
@@ -657,18 +657,18 @@
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": null,
-        "quote_id": "quote_95a5ae1380c8fa3482024979",
+        "quote_id": "quote_a8801745623650f11f5127aa",
         "revision": 2,
         "spec_key": "77da2a93988886edd98e267480422c61048999b28346c580189e8b283611d369",
         "state": "SUBMIT_UNKNOWN",
-        "submitted_at": 1789627821.1578026,
+        "submitted_at": 1789628639.992235,
         "terminal_by": 0.0,
         "webhook_hints": 0
       },
-      "pid": 838,
+      "pid": 813,
       "provider": "fake",
       "provider_job_id": null,
-      "quote_id": "quote_95a5ae1380c8fa3482024979",
+      "quote_id": "quote_a8801745623650f11f5127aa",
       "requested_spec_key": "77da2a93988886edd98e267480422c61048999b28346c580189e8b283611d369",
       "reservation_outcome": "EXISTING_LIVE_JOB",
       "resumed": true,

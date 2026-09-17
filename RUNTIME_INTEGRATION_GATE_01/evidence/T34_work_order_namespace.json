@@ -1,7 +1,7 @@
 {
   "hf_batch_legacy": {
     "ok": true,
-    "pid": 1072,
+    "pid": 1047,
     "submits": 2,
     "traces": [
       {
@@ -55,7 +55,7 @@
   },
   "hf_batch_namespaced": {
     "ok": true,
-    "pid": 1058,
+    "pid": 1033,
     "submits": 2,
     "traces": [
       {
@@ -167,7 +167,7 @@
     "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_01e4b75241b2f461b4af3501",
+      "attempt_token": "att_54619c6bce9a1d22a7eca0d2",
       "cost_credits": null,
       "error": null,
       "job_id": "res_4e08178e0ff8f9e0_1",
@@ -181,11 +181,11 @@
       "revision": 2,
       "spec_key": "4e08178e0ff8f9e00c4dabc4db79cf1b9819e808c8db354c3910d61d01c9f2cb",
       "state": "SUBMIT_UNKNOWN",
-      "submitted_at": 1789627827.4029744,
+      "submitted_at": 1789628646.3098693,
       "terminal_by": 0.0,
       "webhook_hints": 0
     },
-    "pid": 1052,
+    "pid": 1027,
     "provider": "fake",
     "provider_job_id": null,
     "quote_id": null,
@@ -203,7 +203,7 @@
     "ledger_entries": 4,
     "ownership": [
       {
-        "attempt_token": "att_01e4b75241b2f461b4af3501",
+        "attempt_token": "att_54619c6bce9a1d22a7eca0d2",
         "envelope_id": null,
         "job_id": "res_4e08178e0ff8f9e0_1",
         "operation_id": "WO_A:asset2",
@@ -213,7 +213,7 @@
         "settled_units": null
       },
       {
-        "attempt_token": "att_25cf24e3ecf94ff996d13b71",
+        "attempt_token": "att_cada06db8a394868c49530bf",
         "envelope_id": null,
         "job_id": "res_9cab2a63bb7344d4_1",
         "operation_id": "WO_A:asset1",
@@ -223,7 +223,7 @@
         "settled_units": null
       },
       {
-        "attempt_token": "att_ff9b6a4fab63776721d1f793",
+        "attempt_token": "att_4f23c60516498cae73b0ee10",
         "envelope_id": null,
         "job_id": "res_9cab2a63bb7344d4_2",
         "operation_id": "WO_B:asset1",
@@ -233,7 +233,7 @@
         "settled_units": null
       },
       {
-        "attempt_token": "att_07e23dd11ee1a1b5023a5438",
+        "attempt_token": "att_f95c87e9f13b408c12676dd3",
         "envelope_id": null,
         "job_id": "res_c69c17bb53ccfebd_1",
         "operation_id": "WO_B:asset2",
@@ -245,7 +245,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 1056,
+    "pid": 1031,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
@@ -306,7 +306,7 @@
     "outcome": "SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_25cf24e3ecf94ff996d13b71",
+      "attempt_token": "att_cada06db8a394868c49530bf",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_9cab2a63bb7344d4_1",
@@ -320,11 +320,11 @@
       "revision": 3,
       "spec_key": "9cab2a63bb7344d4c67e56b789b7f75d6f6392b910c4f89faaa0161d9b717499",
       "state": "SUCCEEDED",
-      "submitted_at": 1789627827.074841,
-      "terminal_by": 1789628127.074841,
+      "submitted_at": 1789628645.9865916,
+      "terminal_by": 1789628945.9865916,
       "webhook_hints": 0
     },
-    "pid": 1028,
+    "pid": 1003,
     "provider": "fake",
     "provider_job_id": "pv_9cab2a63",
     "quote_id": null,
@@ -352,7 +352,7 @@
     "outcome": "RESUMED/SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_25cf24e3ecf94ff996d13b71",
+      "attempt_token": "att_cada06db8a394868c49530bf",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_9cab2a63bb7344d4_1",
@@ -366,11 +366,11 @@
       "revision": 3,
       "spec_key": "9cab2a63bb7344d4c67e56b789b7f75d6f6392b910c4f89faaa0161d9b717499",
       "state": "SUCCEEDED",
-      "submitted_at": 1789627827.074841,
-      "terminal_by": 1789628127.074841,
+      "submitted_at": 1789628645.9865916,
+      "terminal_by": 1789628945.9865916,
       "webhook_hints": 0
     },
-    "pid": 1032,
+    "pid": 1007,
     "provider": "fake",
     "provider_job_id": "pv_9cab2a63",
     "quote_id": null,
@@ -388,7 +388,7 @@
     "error": "ConnectionResetError",
     "message": "risposta del provider persa dopo l'invio",
     "ok": false,
-    "pid": 1040,
+    "pid": 1015,
     "submits": 1,
     "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\nConnectionResetError: risposta del provider persa dopo l'invio\n",
     "transport_sent": 0
@@ -408,7 +408,7 @@
     "outcome": "SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_07e23dd11ee1a1b5023a5438",
+      "attempt_token": "att_f95c87e9f13b408c12676dd3",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_c69c17bb53ccfebd_1",
@@ -422,11 +422,11 @@
       "revision": 3,
       "spec_key": "c69c17bb53ccfebd0258a1a38e9fbbfa57b3a377c418f2712ff64441113c450c",
       "state": "SUCCEEDED",
-      "submitted_at": 1789627827.512511,
-      "terminal_by": 1789628127.512511,
+      "submitted_at": 1789628646.4230962,
+      "terminal_by": 1789628946.4230962,
       "webhook_hints": 0
     },
-    "pid": 1044,
+    "pid": 1019,
     "provider": "fake",
     "provider_job_id": "pv_c69c17bb",
     "quote_id": null,
@@ -454,7 +454,7 @@
     "outcome": "SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_ff9b6a4fab63776721d1f793",
+      "attempt_token": "att_4f23c60516498cae73b0ee10",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_9cab2a63bb7344d4_2",
@@ -468,11 +468,11 @@
       "revision": 3,
       "spec_key": "9cab2a63bb7344d4c67e56b789b7f75d6f6392b910c4f89faaa0161d9b717499",
       "state": "SUCCEEDED",
-      "submitted_at": 1789627827.2937615,
-      "terminal_by": 1789628127.2937615,
+      "submitted_at": 1789628646.2010303,
+      "terminal_by": 1789628946.2010303,
       "webhook_hints": 0
     },
-    "pid": 1036,
+    "pid": 1011,
     "provider": "fake",
     "provider_job_id": "pv_9cab2a63",
     "quote_id": null,
@@ -490,7 +490,7 @@
     "error": "OperationConflict",
     "message": "spec 4e08178e0ff8… viva sotto l'operazione 'WO_A:asset2' (job res_4e08178e0ff8f9e0_1), richiesta da 'WO_B:asset3': nessuna condivisione fra operazioni",
     "ok": false,
-    "pid": 1048,
+    "pid": 1023,
     "submits": 0,
     "trace": "Traceback (most recent call last):\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/tests/worker.py\", line 105, in run_go\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), **kw)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-runtime/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 276, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/wt-core/transport/pipeline.py\", line 93, in run_job\n    outcome, job = store.reserve_or_get_live(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\nadapters.base.OperationConflict: spec 4e08178e0ff8… viva sotto l'operazione 'WO_A:asset2' (job res_4e08178e0ff8f9e0_1), richiesta da 'WO_B:asset3': nessuna condivisione fra operazioni\n",
     "transport_sent": 0

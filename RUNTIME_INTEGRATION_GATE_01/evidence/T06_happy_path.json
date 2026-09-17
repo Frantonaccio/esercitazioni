@@ -16,7 +16,7 @@
     "outcome": "SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_3774758a063c0367346b2874",
+      "attempt_token": "att_0b7628e3147ee90d0d41c84a",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_f155d17c47cf26f9_1",
@@ -30,11 +30,11 @@
       "revision": 4,
       "spec_key": "f155d17c47cf26f916db27e3654ac35e653086191136c990da2b633fb72fdd36",
       "state": "SUCCEEDED",
-      "submitted_at": 1789627810.3288734,
-      "terminal_by": 1789628110.3288734,
+      "submitted_at": 1789628629.231817,
+      "terminal_by": 1789628929.231817,
       "webhook_hints": 0
     },
-    "pid": 451,
+    "pid": 425,
     "provider": "fake",
     "provider_job_id": "pv_f155d17c",
     "quote_id": null,
@@ -52,7 +52,7 @@
     "ledger_entries": 1,
     "ownership": [
       {
-        "attempt_token": "att_3774758a063c0367346b2874",
+        "attempt_token": "att_0b7628e3147ee90d0d41c84a",
         "envelope_id": null,
         "job_id": "res_f155d17c47cf26f9_1",
         "operation_id": "lab:happy path",
@@ -64,7 +64,7 @@
     ],
     "permits": 0,
     "permits_consumed": 0,
-    "pid": 455,
+    "pid": 429,
     "quotes_consumed": 0,
     "reserved_units": 0,
     "rows": [
