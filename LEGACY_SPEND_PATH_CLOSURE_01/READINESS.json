@@ -1,0 +1,79 @@
+{
+  "evidence_chain": {
+    "canonical_base": {
+      "core_main": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+      "runtime_main": "fea7b439a63a0100a732e21af4dfde6b8edd0951"
+    },
+    "code_sha": {
+      "core": "44f9ea29cea112dfb30c752e5519498e25044c19",
+      "runtime": "ad2f9c072b2a775637eb0b0da0aeca1cb82ca770"
+    },
+    "evidence_head_sha": "assegnato dal commit che pubblica questo bundle; distinto da code_sha per costruzione",
+    "real_branch": {
+      "core": "harden/legacy-spend-core-2026-09-18",
+      "runtime": "claude/legacy-spend-path-closure-c50coy"
+    }
+  },
+  "explicitly_not_claimed": {
+    "credentials_authorized": false,
+    "human_merge_authorization": false,
+    "merge_authorized": false,
+    "ng04_policy_decided": false,
+    "orphan_lease_policy_decided": false,
+    "production_ready": false,
+    "provider_ready": false,
+    "r2_authorized": false,
+    "real_provider_verified": false,
+    "spend_authorized": false
+  },
+  "phase_state": "LEGACY_SPEND_PATHS_CLOSED — READY_FOR_HUMAN_REVIEW",
+  "phase_state_meaning": "Stato MASSIMO consentito dal mandato quando entrambi i gap sono chiusi. Non significa provider ready, production ready, NG-04 decisa, orphan lease decisa, provider reale verificato, credenziali autorizzate, spend autorizzato, merge autorizzato, R2 autorizzato. Serve Human Review separata.",
+  "requirement_readiness": {
+    "all_requirements_verified": false,
+    "all_requirements_verified_reason": "Esistono requisiti aperti nella roadmap complessiva (policy non decise, provider reale non coinvolto, contaminazione e CI indipendente non eseguite, piu' un difetto preesistente scoperto in questa fase). Un PASS di suite non li chiude, e dichiararlo sarebbe falso.",
+    "closed_by_this_phase": [
+      "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+      "LEGACY_TESTS_MIGRATION_TO_GOVERNED"
+    ],
+    "open": [
+      "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+      "INDEPENDENT_CI_STATUS_CHECKS",
+      "ORPHAN_RESERVED_LEASE_POLICY",
+      "REAL_AUTHORIZATION_AND_PRICING",
+      "REAL_PROVIDER_RECONCILIATION",
+      "RECONCILIATION_FRESHNESS_NG04_POLICY",
+      "RUN_CONTAMINATION",
+      "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+      "SNAPSHOT_SEAL_WRITE_RACE"
+    ],
+    "question": "il requisito e' davvero chiuso?",
+    "requirements": {
+      "G_N02_SEMANTIC_CLAIM_PARAPHRASE": "STILL_OPEN",
+      "INDEPENDENT_CI_STATUS_CHECKS": "NOT_RUN",
+      "LEGACY_SPEND_PATHS_CORE_PRIMITIVES": "CLOSED_LAB_VERIFIED",
+      "LEGACY_TESTS_MIGRATION_TO_GOVERNED": "CLOSED_LAB_VERIFIED",
+      "ORPHAN_RESERVED_LEASE_POLICY": "POLICY_DECISION_REQUIRED",
+      "REAL_AUTHORIZATION_AND_PRICING": "REAL_PROVIDER_REQUIRED",
+      "REAL_PROVIDER_RECONCILIATION": "REAL_PROVIDER_REQUIRED",
+      "RECONCILIATION_FRESHNESS_NG04_POLICY": "POLICY_DECISION_REQUIRED",
+      "RUN_CONTAMINATION": "NOT_RUN",
+      "RV07_SCHEDULER_RECOVERY_RESIDUAL": "STILL_OPEN",
+      "SNAPSHOT_SEAL_WRITE_RACE": "STILL_OPEN"
+    }
+  },
+  "schema": "legacy-spend-path-closure-readiness/1",
+  "spend_accounting": {
+    "credentials_read": 0,
+    "credits_spent": 0,
+    "generative_network_calls": 0,
+    "real_providers_called": 0
+  },
+  "test_suite_result": {
+    "answer": "SI",
+    "fail": 0,
+    "fail_ids": [],
+    "pass": 13,
+    "question": "i test hanno prodotto l'esito atteso?",
+    "total": 13
+  }
+}

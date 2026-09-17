@@ -1,0 +1,156 @@
+{
+  "checks": {
+    "budget_units_still_available_to_lab_adapter": true,
+    "client_amount_must_match_trusted_quote": true,
+    "client_omitting_amount_gets_quote_amount": true,
+    "envelope_units_refused_for_spender_at_core": true,
+    "envelope_units_refused_in_governed_runtime": true,
+    "envelope_units_unreachable_from_spender_path": true
+  },
+  "note": "`budget_units`/`envelope_units` restano per il LABORATORIO. Nel percorso spendibile il client non sceglie il prezzo: l'importo viene dalla quote fidata, e `envelope_units` e' rifiutato sia dal Runtime (governato) sia dal Core (adapter spendibile).",
+  "probes": {
+    "client_amount_mismatch": {
+      "code": "BUDGET_NOT_QUOTED",
+      "core_imported": true,
+      "error": "AuthorizationRefused",
+      "message": "BUDGET_NOT_QUOTED: importo presentato 1 diverso dalla quote quote_aa9e6c349e0ad214b2171a88 (10 synthetic_units)",
+      "ok": false,
+      "op": "LSPCB:b3",
+      "pid": 5658,
+      "quote_issued": "quote_aa9e6c349e0ad214b2171a88",
+      "submits": 0,
+      "transport_sent": 0
+    },
+    "client_omits_amount": {
+      "budget_units": 10,
+      "core_imported": true,
+      "core_pin": "CORE_PIN_OK",
+      "envelope_id": "ENV_LSPCB",
+      "governance": "GOVERNED_LAB",
+      "intent": "new_attempt",
+      "job_id": "res_fc162a0ddaa56dda_1",
+      "legacy_resume_as_start": false,
+      "ok": true,
+      "op": "LSPCB:b4",
+      "operation_id": "LSPCB:b4",
+      "outcome": "SUCCEEDED",
+      "permit_id": "permit_1e3f0c913d53489f1a11098b",
+      "persisted": {
+        "attempt_token": "att_34f13dc00fb6a231fd05a306",
+        "cost_credits": 4.0,
+        "error": null,
+        "job_id": "res_fc162a0ddaa56dda_1",
+        "operation_id": "LSPCB:b4",
+        "payload_digest": "ca686f392d8771a91bedc824b688fcb4545bf42d7d514495d1275e7dfa06740d",
+        "polls": 1,
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": "pv_fc162a0d",
+        "quote_id": "quote_9da23df6e831c67f248b3863",
+        "revision": 3,
+        "spec_key": "fc162a0ddaa56dda13b3ab8c8318872b8e4630ffc35744e7ca65ac661d04df01",
+        "state": "SUCCEEDED",
+        "submitted_at": 1789686803.0726104,
+        "terminal_by": 1789687103.0726104,
+        "webhook_hints": 0
+      },
+      "pid": 5663,
+      "provider": "fake",
+      "provider_job_id": "pv_fc162a0d",
+      "quote_id": "quote_9da23df6e831c67f248b3863",
+      "quote_issued": "quote_9da23df6e831c67f248b3863",
+      "requested_spec_key": "fc162a0ddaa56dda13b3ab8c8318872b8e4630ffc35744e7ca65ac661d04df01",
+      "reservation_outcome": "RESERVED_NEW",
+      "resumed": false,
+      "resumed_terminal": false,
+      "spec_key": "fc162a0ddaa56dda13b3ab8c8318872b8e4630ffc35744e7ca65ac661d04df01",
+      "state": "SUCCEEDED",
+      "submits": 1,
+      "transport_sent": 1
+    },
+    "core_envelope_units": {
+      "code": "SPEND_AUTHORIZATION_REQUIRED",
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "error": "SpendAuthorizationRequired",
+      "message": "SPEND_AUTHORIZATION_REQUIRED: transport.pipeline.run_job richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): input governati mancanti: operation_id, quote_id, envelope_id. Nessun invio, nessuna spesa.",
+      "ok": false,
+      "pid": 5651,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 0,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 0
+      }
+    },
+    "lab_budget_units": {
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "governance": "LEGACY_LAB",
+      "lab_adapter": {
+        "submits": 1,
+        "transport_sent": 1
+      },
+      "legacy_resume_as_start": true,
+      "ok": true,
+      "pid": 5669,
+      "sentinel": {
+        "authorized_calls": null,
+        "built": false,
+        "reached": null,
+        "submits": null,
+        "transport_authorized": null,
+        "transport_sent": null
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": true,
+        "files": 4
+      },
+      "state": "SUCCEEDED",
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 1
+      },
+      "submits": 1
+    },
+    "runtime_envelope_units": {
+      "code": "LEGACY_ENVELOPE_UNITS_FORBIDDEN",
+      "core_imported": true,
+      "error": "AuthorizationRefused",
+      "message": "LEGACY_ENVELOPE_UNITS_FORBIDDEN: envelope_units grezzo non ammesso nel percorso governato",
+      "ok": false,
+      "op": "LSPCB:b2",
+      "pid": 5653,
+      "quote_issued": "quote_36ae82335e9a2e581bba9530",
+      "submits": 0,
+      "transport_sent": 0
+    }
+  }
+}

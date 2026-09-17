@@ -1,0 +1,971 @@
+diff --git a/adapters/base.py b/adapters/base.py
+index 70fd3b1..7d9e033 100644
+--- a/adapters/base.py
++++ b/adapters/base.py
+@@ -37,6 +37,7 @@ from __future__ import annotations
+ import hashlib
+ import json
+ import math
++import threading
+ from collections.abc import Mapping
+ from dataclasses import dataclass, field, asdict
+ from enum import Enum
+@@ -591,6 +592,331 @@ class GenerationAdapter(Protocol):
+     def open_stream(self, asset: GeneratedAsset): ...
+ 
+ 
++# ===========================================================================
++# SPENDER BOUNDARY (LEGACY SPEND PATH CLOSURE, 2026-09-18)
++#
++# IL PROBLEMA CHIUSO QUI. Fino a `9cf9cee1` il Core esponeva DUE primitive che
++# potevano raggiungere un provider senza passare dal percorso governato:
++#
++#   #10  `transport.pipeline.run_job(adapter, spec, store)` invocato con i soli
++#        default (nessuna operazione, nessuna quote, nessun envelope) e
++#        `adapter.submit(spec)` invocato direttamente;
++#   #11  `SqliteReservationStore.reconcile(...)` con evidenza arbitraria.
++#
++# Nessun interruttore del RUNTIME poteva chiuderle: pin, intent e authorization
++# sono concetti del Runtime, non del Core. Chiunque avesse il Core in `sys.path`
++# e un adapter poteva spendere (LEGACY_SPEND_PATHS_CORE_PRIMITIVES =
++# CORE_CHANGE_REQUIRED).
++#
++# COSA NON E' IL TARGET. Non e' "togliere la parola legacy", e non e' "eliminare
++# le API del Core perche' potrebbero essere usate male": `run_job`, `submit` e
++# `reconcile` restano esattamente dove sono, con la stessa firma, e i percorsi di
++# laboratorio (adapter deterministici, nessun provider) continuano a funzionare
++# invariati.
++#
++# IL TARGET E': un adapter capace di raggiungere un PROVIDER REALE — uno
++# SPENDER — non puo' essere dispacciato se non attraverso il percorso governato.
++#
++# COME. Un adapter spendibile dichiara `spend_capable = True` derivando da
++# `SpendCapableAdapter`. Per quella classe `submit` e `authorize_payload` NON
++# sono sovrascrivibili (`__init_subclass__` lo impedisce a tempo di definizione
++# della classe): sono metodi-template che pretendono, PRIMA di qualunque
++# effetto, una `DispatchAuthorization` valida per QUESTA spec.
++#
++# PERCHE' L'AUTORIZZAZIONE NON E' FALSIFICABILE. Non e' un token che il
++# chiamante puo' costruire: e' un FATTO RILETTO DAL JOURNAL AUTOREVOLE. Per
++# ottenerla servono, nella riga persistita del tentativo:
++#
++#   - stato RESERVED senza identita' remota (siamo davvero pre-submit);
++#   - `operation_id` presente;
++#   - `attempt_token` e `payload_digest` presenti e coincidenti con quelli che
++#     il Core sta per usare;
++#   - `provider` / `provider_account` coincidenti con l'adapter;
++#   - `quote_id` presente, quote esistente, CONSUMATA DA QUESTO job, legata
++#     alla stessa operazione, alla stessa spec e a un envelope;
++#   - una riga di ledger `RESERVE` per questo job.
++#
++# Tutto cio' nasce SOLO dentro `reserve_or_get_live`, in UNA transazione, che
++# consuma la quote e impegna l'envelope. Fabbricarlo significherebbe scrivere a
++# mano nel database dello spender — che e' gia' fuori dal modello di minaccia
++# (vedi `registry/reservations.py`) ed e' esattamente cio' che il confine di
++# processo P-B01 nega all'orchestrator.
++#
++# CIO' CHE IL CONFINE NON PRETENDE DI FARE. Non impedisce a un adapter di
++# laboratorio non spendibile (`FakeAdapter`) di essere usato direttamente: e'
++# deliberato e verificato: la suite storica R0-R1 continua a girare invariata.
++# La distinzione e' `spend_capable`, cioe' "questo adapter puo' arrivare a un
++# provider vero", e sta all'autore dell'adapter dichiararla — esattamente come
++# sta a lui non mettere una chiave API dentro un FakeAdapter.
++# ===========================================================================
++
++SPEND_CAPABLE_ATTR = "spend_capable"
++
++
++class SpendAuthorizationRequired(Exception):
++    """Un adapter spendibile e' stato dispacciato fuori dal percorso governato.
++
++    Sollevata PRIMA di qualunque effetto esterno: nessuna credenziale letta,
++    nessun subprocess, nessuna rete, nessun job remoto, nessun credito."""
++
++    code = "SPEND_AUTHORIZATION_REQUIRED"
++
++    def __init__(self, entry_point: str, detail: str = ""):
++        self.entry_point = entry_point
++        super().__init__(
++            f"{self.code}: {entry_point} richiede una DispatchAuthorization emessa dal "
++            f"percorso governato (reservation atomica con operazione, quote fidata ed "
++            f"envelope){(': ' + detail) if detail else ''}. Nessun invio, nessuna spesa.")
++
++
++class SpendAuthorizationInvalid(Exception):
++    """Il journal autorevole non autorizza questo dispatch. Fail-closed, parametrico."""
++
++    def __init__(self, code: str, message: str):
++        self.code = code
++        super().__init__(f"{code}: {message}")
++
++
++@dataclass(frozen=True)
++class DispatchAuthorization:
++    """Fatti RILETTI dal journal autorevole. Non e' un permesso emesso: e' una
++    fotografia verificata della prenotazione governata che sta per dispacciare."""
++    job_id: str
++    spec_key: str
++    operation_id: str
++    attempt_token: str
++    payload_digest: str
++    provider: str
++    provider_account: str
++    envelope_id: str
++    quote_id: str
++    quote_amount: int
++    quote_unit: str
++
++    def covers(self, spec: "GenSpec") -> bool:
++        return getattr(spec, "spec_key", None) == self.spec_key
++
++
++def is_spend_capable(adapter) -> bool:
++    """Vero se l'adapter dichiara di poter raggiungere un provider reale."""
++    return bool(getattr(adapter, SPEND_CAPABLE_ATTR, False))
++
++
++def require_governed_dispatch_inputs(*, operation_id, quote_id, envelope_id,
++                                     envelope_units, entry_point: str) -> None:
++    """Rifiuto PRIMA della prenotazione per un adapter spendibile chiamato senza
++    gli input del percorso governato. Zero effetti: nessuna riga, nessun ledger.
++
++    `envelope_units` (budget scelto dal CLIENT) e' vietato in modo esplicito: nel
++    percorso spendibile il prezzo viene dall'autorita' della quote, mai dal
++    chiamante. Il percorso `envelope_units` resta intatto per gli adapter di
++    laboratorio non spendibili."""
++    missing = [n for n, v in (("operation_id", operation_id), ("quote_id", quote_id),
++                              ("envelope_id", envelope_id))
++               if not isinstance(v, str) or not v.strip()]
++    if missing:
++        raise SpendAuthorizationRequired(
++            entry_point, f"input governati mancanti: {', '.join(missing)}")
++    if envelope_units is not None:
++        raise SpendAuthorizationRequired(
++            entry_point, "envelope_units (budget scelto dal client) non e' ammesso per un "
++                         "adapter spendibile: l'importo viene dalla quote fidata")
++
++
++def _ledger_has_reserve(store, job_id: str) -> bool:
++    rows = getattr(store, "ledger", None)
++    if not callable(rows):
++        return False
++    try:
++        return any(r.get("kind") == "RESERVE" for r in rows(job_id) or ())
++    except Exception:                                       # noqa: BLE001
++        return False
++
++
++def authorize_dispatch(store, job_id: str, *, adapter_name: str, adapter_account: str,
++                       spec_key: str, payload_digest: str, attempt_token: str,
++                       entry_point: str = "authorize_dispatch") -> DispatchAuthorization:
++    """Ricostruisce l'autorizzazione al dispatch DAL JOURNAL AUTOREVOLE.
++
++    Non accetta nulla dal chiamante che non venga riconfrontato con la riga
++    persistita. Solleva `SpendAuthorizationInvalid` con un codice parlante al
++    primo fatto che manca: nessun fallback, nessun "quasi"."""
++    def refuse(code: str, msg: str):
++        raise SpendAuthorizationInvalid(code, f"{entry_point}: {msg}")
++
++    persisted = store.get(job_id)
++    if persisted is None:
++        refuse("DISPATCH_JOB_UNKNOWN", f"job {job_id} sconosciuto allo store autorevole")
++    if persisted.state is not JobState.RESERVED or persisted.provider_job_id:
++        refuse("DISPATCH_NOT_PRE_SUBMIT",
++               f"job {job_id} in stato {persisted.state.value} "
++               f"(provider_job_id={persisted.provider_job_id!r}): non e' un pre-submit")
++    if persisted.spec_key != spec_key:
++        refuse("DISPATCH_SPEC_MISMATCH", f"job {job_id} appartiene a un'altra spec")
++    if not persisted.operation_id:
++        refuse("DISPATCH_OPERATION_REQUIRED",
++               f"job {job_id} non ha operation_id: nessuna identita' di operazione")
++    if not persisted.attempt_token or persisted.attempt_token != attempt_token:
++        refuse("DISPATCH_ATTEMPT_TOKEN_MISMATCH",
++               f"job {job_id}: attempt_token persistito {persisted.attempt_token!r} != {attempt_token!r}")
++    if not persisted.payload_digest or persisted.payload_digest != payload_digest:
++        refuse("DISPATCH_PAYLOAD_DIGEST_MISMATCH",
++               f"job {job_id}: digest persistito {str(persisted.payload_digest)[:16]}… != "
++               f"{str(payload_digest)[:16]}…")
++    if persisted.provider != adapter_name or (persisted.provider_account or "") != (adapter_account or ""):
++        refuse("DISPATCH_OWNERSHIP_MISMATCH",
++               f"job {job_id} appartiene a {persisted.provider!r}/{persisted.provider_account!r}, "
++               f"adapter {adapter_name!r}/{adapter_account!r}")
++    if not persisted.quote_id:
++        refuse("DISPATCH_QUOTE_REQUIRED",
++               f"job {job_id} non e' legato a una quote fidata: il client non sceglie il prezzo")
++    get_quote = getattr(store, "quote", None)
++    if not callable(get_quote):
++        refuse("DISPATCH_QUOTE_AUTHORITY_MISSING",
++               "lo store non espone l'autorita' della quote (EconomicLedger)")
++    q = get_quote(persisted.quote_id)
++    if q is None:
++        refuse("DISPATCH_QUOTE_UNKNOWN", f"quote {persisted.quote_id} sconosciuta")
++    if q.get("consumed_by") != job_id:
++        refuse("DISPATCH_QUOTE_NOT_CONSUMED_BY_JOB",
++               f"quote {persisted.quote_id} consumata da {q.get('consumed_by')!r}, non da {job_id!r}: "
++               f"l'importo non e' stato impegnato da questo tentativo")
++    if q.get("operation_id") != persisted.operation_id:
++        refuse("DISPATCH_QUOTE_OPERATION_MISMATCH",
++               f"quote {persisted.quote_id} appartiene all'operazione {q.get('operation_id')!r}")
++    if q.get("spec_key") != spec_key:
++        refuse("DISPATCH_QUOTE_SPEC_MISMATCH", f"quote {persisted.quote_id} appartiene a un'altra spec")
++    if not q.get("envelope_id"):
++        refuse("DISPATCH_ENVELOPE_REQUIRED", f"quote {persisted.quote_id} senza envelope")
++    if not _ledger_has_reserve(store, job_id):
++        refuse("DISPATCH_LEDGER_RESERVE_MISSING",
++               f"nessun movimento RESERVE nel ledger per {job_id}: l'envelope non e' impegnato")
++    return DispatchAuthorization(
++        job_id=job_id, spec_key=spec_key, operation_id=persisted.operation_id,
++        attempt_token=attempt_token, payload_digest=payload_digest,
++        provider=adapter_name, provider_account=adapter_account or "",
++        envelope_id=q["envelope_id"], quote_id=persisted.quote_id,
++        quote_amount=int(q["amount"]), quote_unit=str(q["unit"]))
++
++
++class _DispatchGrant:
++    """Concessione a tempo determinato: vive quanto il `with`, e non oltre.
++
++    Non e' rientrante e non e' ereditabile da un altro thread: il dispatch di un
++    tentativo non presta la propria autorizzazione a nessun altro."""
++
++    def __init__(self, adapter, auth: DispatchAuthorization):
++        self._adapter, self._auth = adapter, auth
++
++    def __enter__(self):
++        slot = _grant_slot(self._adapter)
++        if getattr(slot, "auth", None) is not None:
++            raise SpendAuthorizationInvalid(
++                "DISPATCH_GRANT_REENTRANT",
++                f"l'adapter {getattr(self._adapter, 'name', '?')!r} ha gia' una concessione "
++                f"attiva in questo thread: un tentativo per volta")
++        slot.auth = self._auth
++        return self._auth
++
++    def __exit__(self, *exc):
++        _grant_slot(self._adapter).auth = None
++        return False
++
++
++_GRANT_LOCK = threading.Lock()
++
++
++def _grant_slot(adapter):
++    """Slot THREAD-LOCAL per istanza di adapter: `Batch.go` dispaccia job in
++    thread paralleli con lo STESSO adapter, e una concessione non deve mai
++    attraversare quel confine."""
++    slot = adapter.__dict__.get("_dispatch_grant_slot")
++    if slot is None:
++        with _GRANT_LOCK:
++            slot = adapter.__dict__.get("_dispatch_grant_slot")
++            if slot is None:
++                slot = threading.local()
++                adapter.__dict__["_dispatch_grant_slot"] = slot
++    return slot
++
++
++def grant_dispatch(adapter, auth: DispatchAuthorization) -> _DispatchGrant:
++    """Unico modo di autorizzare `authorize_payload` + `submit` di uno spender."""
++    return _DispatchGrant(adapter, auth)
++
++
++class SpendCapableAdapter:
++    """Base OBBLIGATORIA per ogni adapter che puo' raggiungere un provider reale.
++
++    Un adapter reale (Higgsfield, o chiunque altro) deriva da qui e implementa
++    `_dispatch(spec, auth)` e `_authorize_payload(digest, auth)`. Non implementa
++    `submit` ne' `authorize_payload`: quei due nomi sono il confine, e
++    `__init_subclass__` rifiuta a tempo di definizione della classe qualunque
++    sottoclasse che provi a ridefinirli o a ereditarli da un'altra base. Non e'
++    una convenzione da ricordare: e' un TypeError."""
++
++    spend_capable = True
++
++    def __init_subclass__(cls, **kwargs):
++        super().__init_subclass__(**kwargs)
++        for name in ("submit", "authorize_payload"):
++            if name in cls.__dict__:
++                raise TypeError(
++                    f"{cls.__qualname__}: `{name}` e' il confine dello spender e non si "
++                    f"sovrascrive; implementare `_dispatch` / `_authorize_payload`")
++            if getattr(cls, name, None) is not getattr(SpendCapableAdapter, name):
++                raise TypeError(
++                    f"{cls.__qualname__}: `{name}` risolve a un'altra implementazione "
++                    f"(ordine di risoluzione: {[b.__name__ for b in cls.__mro__]}); "
++                    f"SpendCapableAdapter deve precedere le altre basi")
++
++    # -------------------------------------------------------- confine
++    def _require_dispatch(self, spec, entry_point: str) -> DispatchAuthorization:
++        auth = getattr(_grant_slot(self), "auth", None)
++        if auth is None:
++            raise SpendAuthorizationRequired(
++                f"{type(self).__qualname__}.{entry_point}",
++                "nessuna concessione attiva in questo thread")
++        if not auth.covers(spec):
++            raise SpendAuthorizationInvalid(
++                "DISPATCH_SPEC_NOT_COVERED",
++                f"{type(self).__qualname__}.{entry_point}: la concessione copre la spec "
++                f"{auth.spec_key[:12]}…, non quella presentata")
++        if getattr(self, "name", None) != auth.provider:
++            raise SpendAuthorizationInvalid(
++                "DISPATCH_PROVIDER_NOT_COVERED",
++                f"concessione emessa per {auth.provider!r}, adapter {getattr(self, 'name', None)!r}")
++        return auth
++
++    def authorize_payload(self, digest: str) -> None:
++        auth = self._require_dispatch_digest(digest)
++        return self._authorize_payload(digest, auth)
++
++    def _require_dispatch_digest(self, digest: str) -> DispatchAuthorization:
++        auth = getattr(_grant_slot(self), "auth", None)
++        if auth is None:
++            raise SpendAuthorizationRequired(
++                f"{type(self).__qualname__}.authorize_payload",
++                "nessuna concessione attiva in questo thread")
++        if digest != auth.payload_digest:
++            raise SpendAuthorizationInvalid(
++                "DISPATCH_DIGEST_NOT_COVERED",
++                f"{type(self).__qualname__}.authorize_payload: la concessione copre il digest "
++                f"{auth.payload_digest[:16]}…, non {str(digest)[:16]}…")
++        return auth
++
++    def submit(self, spec: "GenSpec") -> "Job":
++        auth = self._require_dispatch(spec, "submit")
++        return self._dispatch(spec, auth)
++
++    # -------------------------------------------------- da implementare
++    def _authorize_payload(self, digest: str, auth: DispatchAuthorization) -> None:
++        raise NotImplementedError
++
++    def _dispatch(self, spec: "GenSpec", auth: DispatchAuthorization) -> "Job":
++        raise NotImplementedError
++
++
+ class JobStore:
+     """Registro dei job in volo, con riconciliazione.
+ 
+diff --git a/registry/reservations.py b/registry/reservations.py
+index a3baf66..986fd7e 100644
+--- a/registry/reservations.py
++++ b/registry/reservations.py
+@@ -26,6 +26,11 @@ R0-R1 (2026-09-16), nello stesso file e nella stessa autorita' transazionale:
+   RV03   `permits`: permesso di nuovo tentativo consumabile UNA volta, nella
+          stessa transazione della prenotazione; `operation_id`: al massimo un
+          tentativo vivo per operazione (indice univoco), qualunque sia la spec.
++  LEGACY SPEND PATH CLOSURE (2026-09-18): `reconciliation_sources`, allowlist
++         OPZIONALE (default None = invariato) delle provenienze ammesse da
++         `reconcile`. Uno store aperto con un insieme di autorita' riconosciute
++         rifiuta — registrandola — un'evidenza di provenienza estranea.
++
+   P-B03  `envelopes` + `ledger` (append-only): l'invariante e'
+            settled + unsettled_exposure + nuova_reservation <= authorized.
+          Un terminale NON azzera l'esposizione: solo un settlement esplicito
+@@ -132,8 +137,24 @@ class SqliteReservationStore:
+               consumed_by TEXT, consumed_at REAL)""",
+     )
+ 
+-    def __init__(self, path: str):
++    def __init__(self, path: str, *, reconciliation_sources=None):
++        """`reconciliation_sources` (LEGACY SPEND PATH CLOSURE, 2026-09-18):
++
++        allowlist OPZIONALE delle provenienze ammesse per `reconcile`. Default
++        `None` = nessuna restrizione, comportamento invariato (la suite storica e
++        ogni chiamante esistente non sono toccati).
++
++        Quando e' impostata, `reconcile` accetta SOLO evidenze la cui `source`
++        appartiene all'insieme: una riconciliazione e' un'affermazione su cio' che
++        un'AUTORITA' ha osservato, e uno store che sa quali autorita' riconosce puo'
++        rifiutare un'evidenza fabbricata invece di registrarla. Non e' cio' che
++        impedisce a `reconcile` di raggiungere uno spender — quello lo fa il confine
++        di `adapters.base.SpendCapableAdapter`, perche' `reconcile` non dispaccia —
++        ma toglie il percorso con cui si liberava l'identita' di una spec
++        dichiarando una fonte qualunque."""
+         self.path = str(path)
++        self.reconciliation_sources = (
++            None if reconciliation_sources is None else frozenset(reconciliation_sources))
+         with self._conn() as c:
+             c.execute("BEGIN IMMEDIATE")
+             try:
+@@ -804,6 +825,19 @@ class SqliteReservationStore:
+                                     sort_keys=True, ensure_ascii=False, default=str)))],
+             error=reason)
+ 
++    def _require_reconciliation_source(self, job_id: str, ev: dict, now: float | None) -> None:
++        """Allowlist delle provenienze, se lo store e' stato aperto con una. Il
++        rifiuto e' registrato (append-only) e nulla viene applicato."""
++        allowed = self.reconciliation_sources
++        if allowed is None or ev["source"] in allowed:
++            return
++        self.record_anomaly(job_id, "RECONCILIATION_SOURCE_REFUSED",
++                            {"source": ev["source"], "allowed": sorted(allowed),
++                             "remote_ref": ev.get("remote_ref")}, now)
++        raise ReconciliationEvidenceRequired(
++            f"riconciliazione rifiutata: provenienza {ev['source']!r} non e' fra le autorita' "
++            f"riconosciute da questo store {sorted(allowed)}")
++
+     def reconcile(self, job: Job, state: JobState, evidence: Mapping, *,
+                   now: float | None = None) -> Job:
+         """Percorso ESPLICITO di riconciliazione (CR-05): porta RESERVED o
+@@ -812,6 +846,7 @@ class SqliteReservationStore:
+         transazione come anomalia 'RECONCILIATION': verificabile a posteriori.
+         Un `put` ordinario non puo' fare queste transizioni."""
+         ev = validate_reconciliation_evidence(evidence)
++        self._require_reconciliation_source(job.job_id, ev, now)
+         now = time.time() if now is None else now
+         current = self.get(job.job_id)
+         frm = current.state.value if current else None
+diff --git a/tests/run_spender_boundary.py b/tests/run_spender_boundary.py
+new file mode 100644
+index 0000000..e3c478e
+--- /dev/null
++++ b/tests/run_spender_boundary.py
+@@ -0,0 +1,422 @@
++#!/usr/bin/env python3
++"""LEGACY SPEND PATH CLOSURE — CONFINE DELLO SPENDER (2026-09-18).
++
++Controprove a livello di CORE del delta additivo `adapters.base.SpendCapableAdapter`
+++ `authorize_dispatch` + `require_governed_dispatch_inputs`, e dell'allowlist
++opzionale `SqliteReservationStore(reconciliation_sources=...)`.
++
++Il bersaglio non e' "togliere la parola legacy": e' che un adapter capace di
++raggiungere un PROVIDER REALE non possa essere dispacciato se non attraverso il
++percorso governato. Qui il provider reale e' sostituito da una SENTINELLA che
++conta quante volte il confine e' stato attraversato: in ogni percorso non
++governato deve restare a ZERO.
++
++Cosa si dimostra:
++  A  il confine e' strutturale: una sottoclasse che ridefinisce `submit` o
++     `authorize_payload` non esiste (TypeError a tempo di definizione);
++  B  `adapter.submit(spec)` diretto -> SPEND_AUTHORIZATION_REQUIRED, sentinella 0;
++  C  `adapter.authorize_payload(d)` diretto -> SPEND_AUTHORIZATION_REQUIRED, sentinella 0;
++  D  `run_job` con i soli default (#10, il percorso legacy del Core) -> rifiuto
++     PRIMA della prenotazione: zero righe, zero ledger, zero quote consumate;
++  E  `run_job` con `envelope_units` (budget scelto dal client) -> rifiuto;
++  F  `run_job` GOVERNATO (operazione + quote fidata + envelope) -> il dispatch
++     avviene, la sentinella conta 1, il job e' SUCCEEDED;
++  G  l'autorizzazione e' RILETTA dal journal, non ricevuta: manomettere la riga
++     (quote non consumata da questo job, digest diverso, ownership diversa,
++     ledger senza RESERVE) rifiuta il dispatch;
++  H  la concessione e' a tempo determinato: fuori dal `with` non esiste piu',
++     non e' rientrante e non copre un'altra spec;
++  I  uno store senza autorita' di quote (JobStore in memoria) non autorizza;
++  J  `reconcile` (#11) con allowlist rifiuta una provenienza estranea e registra
++     il rifiuto; senza allowlist il comportamento e' invariato;
++  K  NON-REGRESSIONE: un adapter di laboratorio non spendibile passa da `run_job`
++     esattamente come prima, anche senza operazione/quote/envelope.
++
++Nessuna rete, nessun provider reale, nessun credito.
++"""
++from __future__ import annotations
++
++import hashlib
++import os
++import shutil
++import sys
++import tempfile
++
++sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
++
++from adapters.base import (DispatchAuthorization, GenSpec, JobState, JobStore,
++                           ReconciliationEvidenceRequired, SpendAuthorizationInvalid,
++                           SpendAuthorizationRequired, SpendCapableAdapter, authorize_dispatch,
++                           grant_dispatch, is_spend_capable)
++from adapters.fake import FakeAdapter
++from registry.reservations import SqliteReservationStore
++from transport.pipeline import run_job
++
++GREEN, RED, DIM, RESET = "\033[32m", "\033[31m", "\033[2m", "\033[0m"
++RESULTS: list[tuple[str, bool, str]] = []
++
++
++# --------------------------------------------------------------- sentinella
++class SpenderSentinel(SpendCapableAdapter, FakeAdapter):
++    """Confine dello spender FITTIZIO. Al posto del provider reale c'e' un
++    contatore: `reached` sale SOLO se il dispatch e' stato autorizzato.
++
++    Non ridefinisce `submit` ne' `authorize_payload` (non potrebbe): implementa
++    i due hook del confine, che il template method chiama dopo aver verificato
++    la concessione."""
++
++    name = "fake_spender"
++
++    def __init__(self, **kw):
++        FakeAdapter.__init__(self, **kw)
++        self.reached = 0                 # dispatch effettivamente attraversati
++        self.authorized_calls = 0        # authorize_payload attraversate
++        self.seen: list[DispatchAuthorization] = []
++
++    def _authorize_payload(self, digest, auth):
++        self.authorized_calls += 1
++        return FakeAdapter.authorize_payload(self, digest)
++
++    def _dispatch(self, spec, auth):
++        self.reached += 1
++        self.seen.append(auth)
++        return FakeAdapter.submit(self, spec)
++
++
++def spec(prompt: str = "boundary", **kw) -> GenSpec:
++    d = dict(kind="image", model="fake_model_v1", prompt=prompt, project_id="LSPC_TEST")
++    d.update(kw)
++    return GenSpec(**d)
++
++
++def counts(store: SqliteReservationStore) -> dict:
++    import sqlite3
++    with sqlite3.connect(store.path) as c:
++        return {
++            "reservations": c.execute("SELECT COUNT(*) FROM reservations").fetchone()[0],
++            "ledger": c.execute("SELECT COUNT(*) FROM ledger").fetchone()[0],
++            "quotes_consumed": c.execute(
++                "SELECT COUNT(*) FROM quotes WHERE consumed_by IS NOT NULL").fetchone()[0],
++        }
++
++
++def governed(store: SqliteReservationStore, s: GenSpec, *, op: str, env: str = "ENV_LSPC",
++             amount: int = 10) -> dict:
++    """Lato AUTORITA': apre l'envelope ed emette la quote fidata. Il chiamante
++    non sceglie il prezzo: presenta solo il quote_id."""
++    store.open_envelope(env, 100, unit="synthetic_units", scope=None)
++    qid = store.issue_quote(operation_id=op, spec_key=s.spec_key, envelope_id=env,
++                            amount=amount, unit="synthetic_units")
++    return {"operation_id": op, "envelope_id": env, "quote_id": qid, "budget_units": amount}
++
++
++def must_raise(exc_types, fn, *, code=None):
++    try:
++        fn()
++    except exc_types as e:                                      # noqa: BLE001
++        got = getattr(e, "code", None)
++        if code is not None and got != code:
++            raise AssertionError(f"atteso code={code!r}, ottenuto {got!r}: {e}") from None
++        return e
++    raise AssertionError(f"atteso {exc_types}, nessuna eccezione")
++
++
++# ------------------------------------------------------------------- A
++def a_structural(db: str) -> str:
++    try:
++        class Override(SpendCapableAdapter, FakeAdapter):     # noqa: WPS431
++            name = "fake_bad"
++
++            def submit(self, spec):                           # noqa: ANN001
++                return None
++    except TypeError as e:
++        first = str(e)
++    else:
++        raise AssertionError("una sottoclasse che ridefinisce submit non deve esistere")
++    try:
++        class OverrideAuth(SpendCapableAdapter, FakeAdapter):  # noqa: WPS431
++            name = "fake_bad2"
++
++            def authorize_payload(self, digest):               # noqa: ANN001
++                return None
++    except TypeError as e:
++        second = str(e)
++    else:
++        raise AssertionError("una sottoclasse che ridefinisce authorize_payload non deve esistere")
++    # ordine di risoluzione sbagliato: FakeAdapter.submit precederebbe il confine
++    try:
++        class WrongMro(FakeAdapter, SpendCapableAdapter):      # noqa: WPS431
++            name = "fake_bad3"
++    except TypeError as e:
++        third = str(e)
++    else:
++        raise AssertionError("un MRO che scavalca il confine non deve esistere")
++    assert is_spend_capable(SpenderSentinel()) and not is_spend_capable(FakeAdapter())
++    return (f"submit -> TypeError · authorize_payload -> TypeError · MRO invertito -> TypeError "
++            f"({third.split(':')[0]}) · spend_capable: sentinella True, FakeAdapter False")
++
++
++# ------------------------------------------------------------------- B, C
++def b_direct_submit(db: str) -> str:
++    a = SpenderSentinel()
++    s = spec()
++    e = must_raise(SpendAuthorizationRequired, lambda: a.submit(s))
++    assert a.reached == 0 and a.submits == 0 and a.transport.sent_count == 0
++    return (f"submit diretto -> {e.code} · sentinella reached={a.reached} · "
++            f"transport sent={a.transport.sent_count}")
++
++
++def c_direct_authorize(db: str) -> str:
++    a = SpenderSentinel()
++    digest = hashlib.sha256(a.serialize(spec())).hexdigest()
++    e = must_raise(SpendAuthorizationRequired, lambda: a.authorize_payload(digest))
++    assert a.authorized_calls == 0 and not a.transport.authorized
++    return (f"authorize_payload diretto -> {e.code} · attraversamenti={a.authorized_calls} · "
++            f"digest autorizzati nel trasporto={len(a.transport.authorized)}")
++
++
++# ------------------------------------------------------------------- D, E
++def d_legacy_run_job(db: str) -> str:
++    store, a, s = SqliteReservationStore(db), SpenderSentinel(), spec("legacy")
++    before = counts(store)
++    e = must_raise(SpendAuthorizationRequired, lambda: run_job(a, s, store, max_polls=3))
++    after = counts(store)
++    assert before == after == {"reservations": 0, "ledger": 0, "quotes_consumed": 0}
++    assert a.reached == 0 and a.submits == 0 and a.transport.sent_count == 0
++    return (f"run_job coi soli default -> {e.code} · righe {after['reservations']} · "
++            f"ledger {after['ledger']} · quote consumate {after['quotes_consumed']} · "
++            f"sentinella reached=0 · sent=0")
++
++
++def e_envelope_units_forbidden(db: str) -> str:
++    store, a, s = SqliteReservationStore(db), SpenderSentinel(), spec("envunits")
++    g = governed(store, s, op="LSPC:e")
++    e = must_raise(SpendAuthorizationRequired,
++                   lambda: run_job(a, s, store, max_polls=3, budget_units=10,
++                                   envelope_units=1000, operation_id=g["operation_id"],
++                                   quote_id=g["quote_id"], envelope_id=g["envelope_id"]))
++    c = counts(store)
++    assert c["reservations"] == 0 and c["quotes_consumed"] == 0 and a.reached == 0
++    return (f"envelope_units nel percorso spendibile -> {e.code} · righe 0 · "
++            f"quote consumate 0 · sentinella reached=0")
++
++
++# ------------------------------------------------------------------- F
++def f_governed_dispatch(db: str) -> str:
++    store, a, s = SqliteReservationStore(db), SpenderSentinel(), spec("governed")
++    g = governed(store, s, op="LSPC:f")
++    job = run_job(a, s, store, max_polls=5, budget_units=g["budget_units"],
++                  operation_id=g["operation_id"], quote_id=g["quote_id"],
++                  envelope_id=g["envelope_id"])
++    persisted = store.get(job.job_id)
++    auth = a.seen[0]
++    assert persisted.state is JobState.SUCCEEDED, persisted.state
++    assert a.reached == 1 and a.authorized_calls == 1 and a.transport.sent_count == 1
++    assert auth.job_id == job.job_id and auth.quote_id == g["quote_id"]
++    assert auth.envelope_id == g["envelope_id"] and auth.quote_amount == g["budget_units"]
++    assert auth.operation_id == g["operation_id"] and auth.spec_key == s.spec_key
++    assert auth.payload_digest == persisted.payload_digest
++    assert auth.attempt_token == persisted.attempt_token
++    return (f"governato -> {persisted.state.value} · sentinella reached=1 · "
++            f"authorize_payload=1 · autorizzazione: op={auth.operation_id} "
++            f"quote={auth.quote_id[:14]}… env={auth.envelope_id} importo={auth.quote_amount} "
++            f"{auth.quote_unit} · digest e attempt_token = journal")
++
++
++# ------------------------------------------------------------------- G
++def g_authorization_is_reread(db: str) -> str:
++    """L'autorizzazione non e' ricevuta: e' ricostruita dal journal. Qui la si
++    chiede direttamente, con la riga persistita manomessa in ogni modo utile."""
++    import sqlite3
++    store, a, s = SqliteReservationStore(db), SpenderSentinel(), spec("reread")
++    g = governed(store, s, op="LSPC:g")
++    outcome, job = store.reserve_or_get_live(
++        s, budget_units=g["budget_units"], now=1.0, operation_id=g["operation_id"],
++        quote_id=g["quote_id"], envelope_id=g["envelope_id"])
++    payload = a.serialize(s)
++    digest = hashlib.sha256(payload).hexdigest()
++    token = "att_deadbeefdeadbeefdeadbeef"
++    job = store.mark_submitting(job, provider=a.name, provider_account=a.account_id,
++                                payload_digest=digest, attempt_token=token, now=1.0)
++
++    def ask(**over):
++        kw = dict(adapter_name=a.name, adapter_account=a.account_id, spec_key=s.spec_key,
++                  payload_digest=digest, attempt_token=token)
++        kw.update(over)
++        return authorize_dispatch(store, job.job_id, **kw)
++
++    ok = ask()
++    assert ok.job_id == job.job_id
++    codes = []
++    codes.append(must_raise(SpendAuthorizationInvalid, lambda: ask(attempt_token="att_altro")).code)
++    codes.append(must_raise(SpendAuthorizationInvalid, lambda: ask(payload_digest="0" * 64)).code)
++    codes.append(must_raise(SpendAuthorizationInvalid, lambda: ask(adapter_account="altro_conto")).code)
++    codes.append(must_raise(SpendAuthorizationInvalid, lambda: ask(adapter_name="fake_altro")).code)
++    codes.append(must_raise(SpendAuthorizationInvalid,
++                            lambda: authorize_dispatch(store, "res_inesistente_1",
++                                                       adapter_name=a.name,
++                                                       adapter_account=a.account_id,
++                                                       spec_key=s.spec_key, payload_digest=digest,
++                                                       attempt_token=token)).code)
++    # la quote non e' piu' consumata da questo job: l'importo non e' impegnato da lui
++    with sqlite3.connect(store.path) as c:
++        c.execute("UPDATE quotes SET consumed_by='res_altro_1' WHERE quote_id=?", (g["quote_id"],))
++    codes.append(must_raise(SpendAuthorizationInvalid, ask).code)
++    with sqlite3.connect(store.path) as c:
++        c.execute("UPDATE quotes SET consumed_by=? WHERE quote_id=?", (job.job_id, g["quote_id"]))
++    # nessun movimento RESERVE: l'envelope non risulta impegnato
++    with sqlite3.connect(store.path) as c:
++        c.execute("DELETE FROM ledger WHERE job_id=? AND kind='RESERVE'", (job.job_id,))
++    codes.append(must_raise(SpendAuthorizationInvalid, ask).code)
++    # una riga senza quote_id non autorizza nulla
++    with sqlite3.connect(store.path) as c:
++        c.execute("UPDATE reservations SET quote_id=NULL WHERE job_id=?", (job.job_id,))
++    codes.append(must_raise(SpendAuthorizationInvalid, ask).code)
++    assert a.reached == 0
++    return "rifiuti: " + " · ".join(codes) + " · sentinella reached=0"
++
++
++# ------------------------------------------------------------------- H
++def h_grant_is_bounded(db: str) -> str:
++    store, a, s = SqliteReservationStore(db), SpenderSentinel(), spec("grant")
++    g = governed(store, s, op="LSPC:h")
++    run_job(a, s, store, max_polls=5, budget_units=g["budget_units"],
++            operation_id=g["operation_id"], quote_id=g["quote_id"], envelope_id=g["envelope_id"])
++    auth = a.seen[0]
++    reached_after_governed = a.reached
++    # fuori dal `with` la concessione non esiste piu'
++    e1 = must_raise(SpendAuthorizationRequired, lambda: a.submit(s))
++    # non e' rientrante
++    with grant_dispatch(a, auth):
++        e2 = must_raise(SpendAuthorizationInvalid,
++                        lambda: grant_dispatch(a, auth).__enter__(),
++                        code="DISPATCH_GRANT_REENTRANT")
++    # non copre un'altra spec
++    other = spec("grant_altra")
++    with grant_dispatch(a, auth):
++        e3 = must_raise(SpendAuthorizationInvalid, lambda: a.submit(other),
++                        code="DISPATCH_SPEC_NOT_COVERED")
++        e4 = must_raise(SpendAuthorizationInvalid, lambda: a.authorize_payload("0" * 64),
++                        code="DISPATCH_DIGEST_NOT_COVERED")
++    assert a.reached == reached_after_governed == 1
++    return (f"fuori dal with -> {e1.code} · rientrante -> {e2.code} · altra spec -> {e3.code} · "
++            f"altro digest -> {e4.code} · sentinella reached resta {a.reached}")
++
++
++# ------------------------------------------------------------------- I
++def i_store_without_quote_authority(db: str) -> str:
++    """Due modi in cui uno store puo' non essere un'autorita' economica, e nessuno
++    dei due lascia passare un dispatch."""
++    a, s = SpenderSentinel(), spec("inmemory")
++    # i1) lo store in memoria rifiuta gli input governati ancora prima: contratto
++    #     esplicito del Core, invariato da questa fase.
++    from adapters.base import ReservationContractError
++    e1 = must_raise(ReservationContractError,
++                    lambda: run_job(a, s, JobStore(), max_polls=3, budget_units=10,
++                                    operation_id="LSPC:i", quote_id="quote_inventata",
++                                    envelope_id="ENV_X"))
++    # i2) uno store che accettasse quegli input ma non esponesse l'autorita' della
++    #     quote non autorizza comunque: `authorize_dispatch` non ha nulla da rileggere.
++    durable = SqliteReservationStore(db)
++    g = governed(durable, s, op="LSPC:i2")
++    outcome, job = durable.reserve_or_get_live(
++        s, budget_units=g["budget_units"], now=1.0, operation_id=g["operation_id"],
++        quote_id=g["quote_id"], envelope_id=g["envelope_id"])
++    digest = hashlib.sha256(a.serialize(s)).hexdigest()
++    job = durable.mark_submitting(job, provider=a.name, provider_account=a.account_id,
++                                  payload_digest=digest, attempt_token="att_" + "0" * 24, now=1.0)
++
++    class NoQuoteAuthority:
++        """Stesso journal, nessuna autorita' economica esposta."""
++        def get(self, job_id):
++            return durable.get(job_id)
++
++    e2 = must_raise(SpendAuthorizationInvalid,
++                    lambda: authorize_dispatch(NoQuoteAuthority(), job.job_id,
++                                               adapter_name=a.name, adapter_account=a.account_id,
++                                               spec_key=s.spec_key, payload_digest=digest,
++                                               attempt_token="att_" + "0" * 24),
++                    code="DISPATCH_QUOTE_AUTHORITY_MISSING")
++    assert a.reached == 0 and a.transport.sent_count == 0
++    return (f"store in memoria -> ReservationContractError ({str(e1)[:38]}…) · store senza "
++            f"autorita' della quote -> {e2.code} · sentinella reached=0 · sent=0")
++
++
++# ------------------------------------------------------------------- J
++def j_reconciliation_allowlist(db: str) -> str:
++    s = spec("reconcile")
++    restricted = SqliteReservationStore(db, reconciliation_sources=["PROVIDER_API"])
++    _, job = restricted.reserve_or_get_live(s, budget_units=0, now=1.0, operation_id="LSPC:j")
++    forged = {"source": "FABBRICATA", "remote_ref": "x:1"}
++    e = must_raise(ReconciliationEvidenceRequired,
++                   lambda: restricted.reconcile(job, JobState.FAILED, forged, now=2.0))
++    assert restricted.get(job.job_id).state is JobState.RESERVED
++    kinds = [a["kind"] for a in restricted.anomalies(job.job_id)]
++    assert "RECONCILIATION_SOURCE_REFUSED" in kinds, kinds
++    good = restricted.reconcile(job, JobState.FAILED,
++                                {"source": "PROVIDER_API", "remote_ref": "pv:1"}, now=3.0)
++    assert good.state is JobState.FAILED
++    # senza allowlist: comportamento invariato (non-regressione)
++    open_store = SqliteReservationStore(db + ".open")
++    _, j2 = open_store.reserve_or_get_live(s, budget_units=0, now=1.0, operation_id="LSPC:j2")
++    assert open_store.reconcile(j2, JobState.FAILED, forged, now=2.0).state is JobState.FAILED
++    return (f"provenienza estranea -> {str(e)[:52]}… · stato invariato RESERVED · anomalia "
++            f"registrata · provenienza riconosciuta -> FAILED · store senza allowlist: invariato")
++
++
++# ------------------------------------------------------------------- K
++def k_lab_adapter_unchanged(db: str) -> str:
++    """NON-REGRESSIONE. Un adapter di laboratorio non spendibile passa da run_job
++    coi soli default, esattamente come nel Core 9cf9cee1."""
++    store, a, s = SqliteReservationStore(db), FakeAdapter(), spec("lab")
++    job = run_job(a, s, store, max_polls=5)
++    persisted = store.get(job.job_id)
++    assert persisted.state is JobState.SUCCEEDED and a.submits == 1
++    assert persisted.operation_id is None and persisted.quote_id is None
++    # anche envelope_units resta ammesso per il laboratorio
++    b, s2 = FakeAdapter(), spec("lab2")
++    job2 = run_job(b, s2, store, max_polls=5, budget_units=5, envelope_units=50)
++    assert store.get(job2.job_id).state is JobState.SUCCEEDED
++    return (f"FakeAdapter senza operazione/quote/envelope -> {persisted.state.value} "
++            f"(submits {a.submits}) · envelope_units -> "
++            f"{store.get(job2.job_id).state.value} · nessun confine attraversato")
++
++
++def check(name, fn):
++    try:
++        RESULTS.append((name, True, fn() or ""))
++    except Exception as e:                                      # noqa: BLE001
++        import traceback
++        RESULTS.append((name, False, f"{type(e).__name__}: {e}\n{traceback.format_exc(limit=3)}"))
++
++
++def main() -> int:
++    tmp = tempfile.mkdtemp(prefix="lspc_core_")
++    try:
++        for key, name, fn in (
++                ("a", "A. il confine e' strutturale (TypeError a definizione della classe)", a_structural),
++                ("b", "B. submit diretto rifiutato, sentinella a 0", b_direct_submit),
++                ("c", "C. authorize_payload diretto rifiutato, sentinella a 0", c_direct_authorize),
++                ("d", "D. run_job legacy (#10) rifiutato PRIMA della prenotazione", d_legacy_run_job),
++                ("e", "E. envelope_units (budget del client) vietato allo spender", e_envelope_units_forbidden),
++                ("f", "F. percorso governato: il dispatch avviene e porta l'autorizzazione", f_governed_dispatch),
++                ("g", "G. l'autorizzazione e' riletta dal journal, non ricevuta", g_authorization_is_reread),
++                ("h", "H. la concessione e' limitata al with, alla spec e al digest", h_grant_is_bounded),
++                ("i", "I. store senza autorita' economica: nessun dispatch", i_store_without_quote_authority),
++                ("j", "J. reconcile (#11): allowlist delle provenienze", j_reconciliation_allowlist),
++                ("k", "K. NON-REGRESSIONE: adapter di laboratorio invariato", k_lab_adapter_unchanged)):
++            check(name, lambda fn=fn, key=key: fn(os.path.join(tmp, f"{key}.db")))
++    finally:
++        shutil.rmtree(tmp, ignore_errors=True)
++    ok = 0
++    for name, passed, detail in RESULTS:
++        mark = f"{GREEN}PASS{RESET}" if passed else f"{RED}FAIL{RESET}"
++        print(f"{mark}  {name}\n      {DIM}{detail}{RESET}")
++        ok += passed
++    print(f"\nSPENDER BOUNDARY (Core): {ok}/{len(RESULTS)} PASS")
++    print("crediti spesi: 0 · provider reali: 0 · rete generativa: 0")
++    return 0 if ok == len(RESULTS) else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/transport/pipeline.py b/transport/pipeline.py
+index 1431c9e..14871dd 100644
+--- a/transport/pipeline.py
++++ b/transport/pipeline.py
+@@ -22,9 +22,25 @@ R0-R1 (2026-09-16):
+         id remoto, identita' locale, provenienza attestata) prima dei byte.
+   CR-09 `resume_job` riprende un tentativo gia' autorizzato: nessuna nuova
+         spesa, nessun nuovo dispatch, stesse verifiche di ownership.
++
++LEGACY SPEND PATH CLOSURE (2026-09-18). `run_job` resta l'unica arteria, con la
++stessa firma, ma ora distingue un adapter di LABORATORIO da uno SPENDER (un
++adapter che dichiara `spend_capable`, cioe' che puo' raggiungere un provider
++reale). Per uno spender:
++
++  - PRIMA della prenotazione, `require_governed_dispatch_inputs` pretende
++    operazione, quote fidata ed envelope, e VIETA `envelope_units` (il budget
++    scelto dal client). Rifiuto a effetto zero: nessuna riga, nessun ledger.
++  - DOPO `mark_submitting` e PRIMA di `authorize_payload`, `authorize_dispatch`
++    rilegge dal journal autorevole i fatti che autorizzano il dispatch e li
++    concede per la sola durata di `authorize_payload` + `submit`.
++
++Un adapter non spendibile non e' toccato: il contesto e' `nullcontext` e il
++comportamento e' identico a quello del Core `9cf9cee1`.
+ """
+ from __future__ import annotations
+ 
++import contextlib
+ import copy
+ import hashlib
+ import secrets
+@@ -33,7 +49,9 @@ from dataclasses import dataclass
+ 
+ from adapters.base import (AssetBindingError, GeneratedAsset, GenerationAdapter, GenSpec, Job,
+                            JobState, JobStore, PayloadBindingError, PollOwnershipMismatch,
+-                           ProviderMismatch, ReservationOutcome, SpecImmutableError, StaleWrite)
++                           ProviderMismatch, ReservationOutcome, SpecImmutableError, StaleWrite,
++                           authorize_dispatch, grant_dispatch, is_spend_capable,
++                           require_governed_dispatch_inputs)
+ from registry.contracts import Event, InMemoryRegistry, RegistryBinding
+ from transport.hashing import IntegrityError, StreamResult, pump, verify_three_ways
+ from transport.storage import PutResult, StoragePort, content_path
+@@ -86,7 +104,20 @@ def run_job(adapter: GenerationAdapter, spec: GenSpec, store: JobStore, *,
+ 
+     Il webhook, se arriva, ha gia' fatto il suo mestiere: ha messo il job in
+     `due_for_reconcile`. Lo stato lo stabilisce comunque il polling.
++
++    SPENDER BOUNDARY (2026-09-18). Se `adapter` e' spendibile, i due controlli
++    descritti nel docstring del modulo si inseriscono qui e solo qui. Nessuna
++    firma cambia e nessun percorso di laboratorio e' alterato.
+     """
++    # LEGACY SPEND PATH CLOSURE (2026-09-18). Uno SPENDER (adapter che dichiara
++    # `spend_capable`) non si dispaccia senza gli input del percorso governato. Il
++    # rifiuto e' QUI, PRIMA della prenotazione: nessuna riga, nessun ledger, nessuna
++    # quote consumata, nessun envelope impegnato. Un adapter di laboratorio non
++    # spendibile non e' toccato da questo controllo (R0-R1 invariata).
++    if is_spend_capable(adapter):
++        require_governed_dispatch_inputs(
++            operation_id=operation_id, quote_id=quote_id, envelope_id=envelope_id,
++            envelope_units=envelope_units, entry_point="transport.pipeline.run_job")
+     extra = {k: v for k, v in (("envelope_id", envelope_id), ("permit_id", permit_id),
+                                ("operation_id", operation_id), ("quote_id", quote_id))
+              if v is not None}
+@@ -123,30 +154,42 @@ def run_job(adapter: GenerationAdapter, spec: GenSpec, store: JobStore, *,
+         token = f"att_{secrets.token_hex(12)}"
+         job = store.mark_submitting(job, provider=adapter.name, provider_account=account,
+                                     payload_digest=authorized, attempt_token=token, now=clock())
+-        adapter.authorize_payload(authorized)
+-        sent_before = _sent_count(adapter)
+-        try:
+-            provider_job = adapter.submit(spec)
+-        except BaseException as exc:
+-            sent_after = _sent_count(adapter)
+-            attested_not_sent = (sent_before is not None and sent_after == sent_before
+-                                 and isinstance(exc, (SpecImmutableError, PayloadBindingError)))
+-            if attested_not_sent:
+-                # Il trasporto attesta che il marcatore di invio NON e' stato
+-                # raggiunto: nessun effetto esterno, costo attestato zero.
+-                # La spec torna disponibile per un tentativo autorizzato.
+-                reason = f"rifiutato prima dell'invio: {type(exc).__name__}: {exc}"
+-                store.record_anomaly(job.job_id, "REFUSED_BEFORE_SEND",
+-                                     {"error": type(exc).__name__, "message": str(exc),
+-                                      "authorized_digest": authorized,
+-                                      "transport_sent_count": sent_after})
+-                store.mark_refused_before_send(job, reason, clock())
+-                raise PayloadBindingError(reason) from exc
+-            # La richiesta puo' essere stata accettata: l'incertezza si conserva,
+-            # non si cancella. SUBMIT_UNKNOWN non e' terminale e continua a
+-            # occupare l'identita' della spec: nessun retry cieco.
+-            store.mark_submit_unknown(job)
+-            raise
++        # SPENDER BOUNDARY. Per un adapter spendibile la concessione non e' un token
++        # del chiamante: e' l'autorizzazione RILETTA dal journal autorevole (stato
++        # pre-submit, operazione, attempt_token, digest, ownership, quote consumata da
++        # QUESTO job, movimento RESERVE nel ledger). Vive solo dentro il `with`, e
++        # quindi copre esattamente `authorize_payload` + `submit` di questo tentativo.
++        # Per un adapter non spendibile il contesto e' inerte: comportamento invariato.
++        grant = (grant_dispatch(adapter, authorize_dispatch(
++                     store, job.job_id, adapter_name=adapter.name, adapter_account=account,
++                     spec_key=spec.spec_key, payload_digest=authorized, attempt_token=token,
++                     entry_point="transport.pipeline.run_job"))
++                 if is_spend_capable(adapter) else contextlib.nullcontext())
++        with grant:
++            adapter.authorize_payload(authorized)
++            sent_before = _sent_count(adapter)
++            try:
++                provider_job = adapter.submit(spec)
++            except BaseException as exc:
++                sent_after = _sent_count(adapter)
++                attested_not_sent = (sent_before is not None and sent_after == sent_before
++                                     and isinstance(exc, (SpecImmutableError, PayloadBindingError)))
++                if attested_not_sent:
++                    # Il trasporto attesta che il marcatore di invio NON e' stato
++                    # raggiunto: nessun effetto esterno, costo attestato zero.
++                    # La spec torna disponibile per un tentativo autorizzato.
++                    reason = f"rifiutato prima dell'invio: {type(exc).__name__}: {exc}"
++                    store.record_anomaly(job.job_id, "REFUSED_BEFORE_SEND",
++                                         {"error": type(exc).__name__, "message": str(exc),
++                                          "authorized_digest": authorized,
++                                          "transport_sent_count": sent_after})
++                    store.mark_refused_before_send(job, reason, clock())
++                    raise PayloadBindingError(reason) from exc
++                # La richiesta puo' essere stata accettata: l'incertezza si conserva,
++                # non si cancella. SUBMIT_UNKNOWN non e' terminale e continua a
++                # occupare l'identita' della spec: nessun retry cieco.
++                store.mark_submit_unknown(job)
++                raise
+         # RV02: cio' che il trasporto ha inviato deve essere cio' che era
+         # autorizzato. Un adapter che riferisce un digest diverso ha inviato
+         # un'altra richiesta: si registra e si tratta come incerto (un effetto

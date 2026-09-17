@@ -1,0 +1,66 @@
+{
+  "attempts": {
+    "_masked_inner": {
+      "authorized_calls": 0,
+      "boundary": "SPEND_CAPABLE_ADAPTER",
+      "built": true,
+      "grants": [],
+      "reached": 0,
+      "spend_capable": true,
+      "submits": 0,
+      "transport_authorized": 0,
+      "transport_sent": 0
+    },
+    "ambiente_forza_abilitato": {
+      "code": "LEGACY_LAB_NOT_PROVIDER_CAPABLE",
+      "error": "LegacyPathNotProviderCapable",
+      "message": "LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE d",
+      "reached": null,
+      "refused": true
+    },
+    "modalita_disingaggiata": {
+      "code": "LEGACY_LAB_NOT_PROVIDER_CAPABLE",
+      "error": "LegacyPathNotProviderCapable",
+      "message": "LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE d",
+      "reached": null,
+      "refused": true
+    },
+    "modalita_ingaggiata": {
+      "code": "LEGACY_LAB_NOT_PROVIDER_CAPABLE",
+      "error": "LegacyPathNotProviderCapable",
+      "message": "LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE d",
+      "reached": null,
+      "refused": true
+    },
+    "sottoclasse_riprende_submit": {
+      "code": null,
+      "error": "TypeError",
+      "message": "p9_config_switches.<locals>.override.<locals>.Override: `submit` e' il confine dello spender e non si sovrascrive; implementare `_dispatch` / `_authorize_payload`",
+      "reached": null,
+      "refused": true
+    },
+    "wrapper_che_nasconde_la_capability": {
+      "code": "SPEND_AUTHORIZATION_REQUIRED",
+      "error": "SpendAuthorizationRequired",
+      "message": "SPEND_AUTHORIZATION_REQUIRED: sentinel_class.<locals>.Sentinel.authorize_payload richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): nessuna co",
+      "reached": null,
+      "refused": true
+    }
+  },
+  "checks": {
+    "capability_declared": true,
+    "env_cannot_reopen": true,
+    "historic_switch_value_unchanged": true,
+    "masked_inner_sentinel_zero": true,
+    "masking_the_capability_does_not_help": true,
+    "mode_disengaged_refuses_too": true,
+    "mode_engaged_refuses": true,
+    "subclass_cannot_retake_submit": true
+  },
+  "declared": {
+    "LEGACY_LAB_PROVIDER_CAPABILITY": "LAB_ONLY_NON_PROVIDER_CAPABLE",
+    "LEGACY_LAB_SPEND_PATH": "ENABLED_LAB_ONLY",
+    "legacy_spend_path_state()": "ENABLED_LAB_ONLY"
+  },
+  "note": "Il VALORE storico dell'interruttore non e' stato rinominato: i gate approvati lo asseriscono letteralmente e rinominarlo avrebbe indebolito un controllo storico senza aggiungere garanzie. Cio' che cambia e' la CAPABILITY, e a imporla e' il codice, non l'etichetta."
+}

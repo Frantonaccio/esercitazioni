@@ -1,0 +1,462 @@
+{
+  "core_baseline": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+  "note": "`reached` = attraversamenti del confine dello spender osservati dalla SENTINELLA. Su questa coppia canonica il percorso legacy spende davvero.",
+  "probes": {
+    "P1": {
+      "break_pin": false,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_imported_before_go": true,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "envelope_id": null,
+      "governance": "LEGACY_LAB",
+      "job_id": "res_ba7bcf9edd89a600_1",
+      "ok": true,
+      "pid": 5557,
+      "quote_id": null,
+      "reservation_outcome": "RESERVED_NEW",
+      "sentinel": {
+        "authorized_calls": 1,
+        "boundary": "NONE",
+        "built": true,
+        "grants": [],
+        "reached": 1,
+        "spend_capable": true,
+        "submits": 1,
+        "transport_authorized": 1,
+        "transport_sent": 1
+      },
+      "sentinel_zero": false,
+      "snapshots": {
+        "created": true,
+        "files": 4
+      },
+      "state": "SUCCEEDED",
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 1
+      }
+    },
+    "P10": {
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "job_errors": [
+        "None"
+      ],
+      "job_status": [
+        "SUCCEEDED"
+      ],
+      "ok": true,
+      "pid": 5590,
+      "run_verdict": "LOCK_HELD",
+      "sentinel": {
+        "authorized_calls": 2,
+        "boundary": "NONE",
+        "built": true,
+        "grants": [],
+        "reached": 2,
+        "spend_capable": true,
+        "submits": 2,
+        "transport_authorized": 2,
+        "transport_sent": 2
+      },
+      "sentinel_zero": false,
+      "snapshots": {
+        "created": true,
+        "files": 8
+      },
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 2,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 2
+      }
+    },
+    "P1pin": {
+      "break_pin": true,
+      "code": "CORE_PIN_MISMATCH",
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_imported_before_go": true,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "error": "CorePinError",
+      "message": "CORE_PIN_MISMATCH: osservato '9cf9cee1a751f7a2ad6c768574ff5aa38d8db515', richiesto 'deaddeaddeaddeaddeaddeaddeaddeaddeaddead'",
+      "ok": false,
+      "pid": 5562,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "NONE",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "created": false
+      },
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/LEGACY_SPEND_PATH_CLOSURE_01/lspc1/workers.py\", line 174, in p1_legacy_with_spender\n    res = go_candidate.go(_inputs(prompt), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/lspc1_3r78b5h5/runtime_baseline/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 292, in go\n    verdict = require_core_verdict(core_path, required_core_sha)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/lspc1_3r78b5h5/runtime_baseline/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py\", line 152, in require_core_verdict\n    raise CorePinError(v.code, v.observed, v.required, v.dirty)\nruntime.core_pin.CorePinError: CORE_PIN_MISMATCH: osservato '9cf9cee1a751f7a2ad6c768574ff5aa38d8db515', richiesto 'deaddeaddeaddeaddeaddeaddeaddeaddeaddead'\n"
+    },
+    "P2": {
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "governance": "LEGACY_LAB",
+      "lab_adapter": {
+        "submits": 1,
+        "transport_sent": 1
+      },
+      "legacy_resume_as_start": true,
+      "ok": true,
+      "pid": 5566,
+      "sentinel": {
+        "authorized_calls": null,
+        "built": false,
+        "reached": null,
+        "submits": null,
+        "transport_authorized": null,
+        "transport_sent": null
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": true,
+        "files": 4
+      },
+      "state": "SUCCEEDED",
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 1
+      },
+      "submits": 1
+    },
+    "P3": {
+      "budget_units": 10,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "envelope_id": "ENV_LSPC1G",
+      "governance": "GOVERNED_LAB",
+      "job_id": "res_16d317a9cab42b5f_1",
+      "ok": true,
+      "payload_snapshot": {
+        "bytes": 192,
+        "digest": "9a1b0ef7434192d874fffd0809e60fb94e5a989f5387130367e2021ea940ac3d",
+        "ledger_dir": "/tmp/lspc1_3r78b5h5/runtime_baseline/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p3.db.snapshots",
+        "opkey": "f1b985db98b28fc2c3de62e9",
+        "persisted_mode": "0o444",
+        "sealed_at": 1789686800.7254868,
+        "send_attestation": {
+          "attempt_token": "att_d0f21dd41885d337725aabc6",
+          "bytes": 192,
+          "digest": "9a1b0ef7434192d874fffd0809e60fb94e5a989f5387130367e2021ea940ac3d",
+          "exact_bytes_equal": true,
+          "job_id": "res_16d317a9cab42b5f_1",
+          "opkey": "f1b985db98b28fc2c3de62e9",
+          "schema": "payload-snapshot-send-attestation/1",
+          "verified_at": 1789686800.7303505
+        },
+        "send_verified": true
+      },
+      "permit_id": "permit_89dec6ee66c3bb11f22a2646",
+      "pid": 5571,
+      "quote_id": "quote_0a9eb6aa2a2e3a6a57825cfe",
+      "sentinel": {
+        "authorized_calls": 1,
+        "boundary": "NONE",
+        "built": true,
+        "grants": [],
+        "reached": 1,
+        "spend_capable": true,
+        "submits": 1,
+        "transport_authorized": 1,
+        "transport_sent": 1
+      },
+      "sentinel_zero": false,
+      "snapshots": {
+        "created": true,
+        "files": 4
+      },
+      "state": "SUCCEEDED",
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 0,
+        "permits_consumed": 1,
+        "quotes_consumed": 1,
+        "reservations": 1
+      }
+    },
+    "P4": {
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "job_id": "res_f4b3d4c1de0ab44a_1",
+      "ok": true,
+      "operation_id": null,
+      "pid": 5576,
+      "quote_id": null,
+      "sentinel": {
+        "authorized_calls": 1,
+        "boundary": "NONE",
+        "built": true,
+        "grants": [],
+        "reached": 1,
+        "spend_capable": true,
+        "submits": 1,
+        "transport_authorized": 1,
+        "transport_sent": 1
+      },
+      "sentinel_zero": false,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "state": "SUCCEEDED",
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 1
+      }
+    },
+    "P4env": {
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "job_id": "res_f4b3d4c1de0ab44a_1",
+      "ok": true,
+      "operation_id": null,
+      "pid": 5578,
+      "quote_id": null,
+      "sentinel": {
+        "authorized_calls": 1,
+        "boundary": "NONE",
+        "built": true,
+        "grants": [],
+        "reached": 1,
+        "spend_capable": true,
+        "submits": 1,
+        "transport_authorized": 1,
+        "transport_sent": 1
+      },
+      "sentinel_zero": false,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "state": "SUCCEEDED",
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 1
+      }
+    },
+    "P5": {
+      "code": null,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "error": "PayloadBindingError",
+      "message": "trasporto: digest 4e15b2ded08f1795… non autorizzato (autorizzati: []); nessun invio",
+      "ok": false,
+      "pid": 5580,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "NONE",
+        "built": true,
+        "grants": [],
+        "reached": 1,
+        "spend_capable": true,
+        "submits": 1,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": false
+    },
+    "P6": {
+      "authorized_digest": "0944f0ce8addc386",
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "ok": true,
+      "pid": 5582,
+      "sentinel": {
+        "authorized_calls": 1,
+        "boundary": "NONE",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 1,
+        "transport_sent": 0
+      },
+      "sentinel_zero": false
+    },
+    "P7": {
+      "allowlist_supported": false,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "ok": true,
+      "pid": 5584,
+      "reconcile": {
+        "accepted": true,
+        "state": "FAILED"
+      },
+      "reserved": {
+        "job_id": "res_ceb8c06e858c38bd_1",
+        "outcome": "RESERVED_NEW"
+      },
+      "respend": {
+        "ok": true,
+        "state": "SUCCEEDED"
+      },
+      "sentinel": {
+        "authorized_calls": 1,
+        "boundary": "NONE",
+        "built": true,
+        "grants": [],
+        "reached": 1,
+        "spend_capable": true,
+        "submits": 1,
+        "transport_authorized": 1,
+        "transport_sent": 1
+      },
+      "sentinel_zero": false,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 1,
+        "created": true,
+        "ledger": 2,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 2
+      }
+    },
+    "P7al": {
+      "allowlist_supported": false,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "ok": true,
+      "pid": 5586,
+      "reconcile": {
+        "accepted": true,
+        "state": "FAILED"
+      },
+      "reserved": {
+        "job_id": "res_ceb8c06e858c38bd_1",
+        "outcome": "RESERVED_NEW"
+      },
+      "respend": {
+        "ok": true,
+        "state": "SUCCEEDED"
+      },
+      "sentinel": {
+        "authorized_calls": 1,
+        "boundary": "NONE",
+        "built": true,
+        "grants": [],
+        "reached": 1,
+        "spend_capable": true,
+        "submits": 1,
+        "transport_authorized": 1,
+        "transport_sent": 1
+      },
+      "sentinel_zero": false,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 1,
+        "created": true,
+        "ledger": 2,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 2
+      }
+    },
+    "P8": {
+      "allowed_surface": null,
+      "code": null,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "dispatch_reached": true,
+      "error": "TypeError",
+      "message": "SqliteReservationStore.reconcile() missing 3 required positional arguments: 'job', 'state', and 'evidence'",
+      "ok": false,
+      "pid": 5588,
+      "sentinel": {
+        "authorized_calls": null,
+        "built": false,
+        "reached": null,
+        "submits": null,
+        "transport_authorized": null,
+        "transport_sent": null
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 0,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 0
+      },
+      "surface_declared": false
+    }
+  },
+  "reproduced": {
+    "adapter_authorize_payload_direct_crosses": true,
+    "adapter_submit_direct_reaches_spender": true,
+    "core_run_job_direct_reaches_spender": true,
+    "core_run_job_with_client_budget_reaches_spender": true,
+    "hf_batch_legacy_reaches_spender": true,
+    "legacy_lab_go_reaches_spender": true,
+    "reconcile_then_respend_reaches_spender": true,
+    "store_call_dispatches_any_method": true
+  },
+  "runtime_baseline": "fea7b439a63a0100a732e21af4dfde6b8edd0951"
+}

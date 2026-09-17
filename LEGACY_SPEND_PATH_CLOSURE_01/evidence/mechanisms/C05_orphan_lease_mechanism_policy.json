@@ -1,0 +1,357 @@
+{
+  "crash_during_reclaim": {
+    "crash": {
+      "exitcode": 11,
+      "result": null
+    },
+    "job": {
+      "job_id": "res_599e841fdea50aa8_1",
+      "ok": true
+    },
+    "repair": {
+      "ok": true,
+      "repair": {
+        "applied": true,
+        "cost_known": true,
+        "exposure_replaced": 10,
+        "job_id": "res_599e841fdea50aa8_1",
+        "overspend": 0,
+        "settled_units": 0
+      },
+      "repair_idempotent": {
+        "applied": false,
+        "cost_known": true,
+        "duplicate": true,
+        "job_id": "res_599e841fdea50aa8_1",
+        "settled_units": 0
+      },
+      "row_after_crash": {
+        "attempt_token": null,
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_599e841fdea50aa8_1",
+        "operation_id": "lab:orph_crash",
+        "payload_digest": null,
+        "permit_id": null,
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 1,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "599e841fdea50aa8262458f1f9357972b819457e4b67f2c6eb7bcb86e0029df8",
+        "state": "FAILED",
+        "submit_intent_at": null
+      },
+      "row_after_repair": {
+        "attempt_token": null,
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_599e841fdea50aa8_1",
+        "operation_id": "lab:orph_crash",
+        "payload_digest": null,
+        "permit_id": null,
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 1,
+        "settled_units": 0,
+        "settlement_source": "RUNTIME_ORPHAN_RESERVED_RECLAIMED_NOT_DISPATCHED",
+        "spec_key": "599e841fdea50aa8262458f1f9357972b819457e4b67f2c6eb7bcb86e0029df8",
+        "state": "FAILED",
+        "submit_intent_at": null
+      },
+      "totals_after_crash": {
+        "live_reservation_units": 0,
+        "settled_units": 0,
+        "terminal_unsettled_jobs": 1,
+        "unsettled_exposure_units": 10
+      },
+      "totals_after_repair": {
+        "live_reservation_units": 0,
+        "settled_units": 0,
+        "terminal_unsettled_jobs": 0,
+        "unsettled_exposure_units": 0
+      }
+    }
+  },
+  "mechanism": {
+    "cases": {
+      "anomalies_after_reclaim": [
+        "RECONCILIATION",
+        "ORPHAN_RESERVED_RECLAIMED"
+      ],
+      "attempts_for_operation": [
+        "res_f74b32515c74cd17_1"
+      ],
+      "class_not_allowed": {
+        "code": "RECLAIM_CLASS_NOT_ALLOWED",
+        "journal_unchanged": true,
+        "reclaimed": false
+      },
+      "classification_with_intent": "RESERVED_WITH_INTENT",
+      "evidence_incomplete": {
+        "code": "RECLAIM_EVIDENCE_INCOMPLETE",
+        "journal_unchanged": true,
+        "reclaimed": false
+      },
+      "evidence_not_mapping": {
+        "code": "RECLAIM_EVIDENCE_INCOMPLETE",
+        "journal_unchanged": true,
+        "reclaimed": false
+      },
+      "fence_classification_after_neutral_write": "RESERVED_NO_INTENT",
+      "fencing_token_stale": {
+        "code": "FENCING_TOKEN_STALE",
+        "journal_unchanged": true,
+        "reclaimed": false
+      },
+      "fencing_token_stale_after_neutral_write": {
+        "code": "FENCING_TOKEN_STALE",
+        "journal_unchanged": true,
+        "reclaimed": false
+      },
+      "lease_not_expired": {
+        "code": "LEASE_NOT_EXPIRED",
+        "journal_unchanged": true,
+        "reclaimed": false
+      },
+      "ledger_after_reclaim": [
+        {
+          "cost_known": 0,
+          "job_id": "res_f74b32515c74cd17_1",
+          "kind": "RESERVE",
+          "source": "reserve_or_get_live",
+          "units": 10
+        },
+        {
+          "cost_known": 1,
+          "job_id": "res_f74b32515c74cd17_1",
+          "kind": "SETTLE",
+          "source": "RUNTIME_ORPHAN_RESERVED_RECLAIMED_NOT_DISPATCHED",
+          "units": 0
+        }
+      ],
+      "legitimate_reclaim": {
+        "journal_unchanged": false,
+        "reclaimed": true,
+        "report": {
+          "actor": "LAB_TEST_OPERATOR",
+          "classification": {
+            "age_s": 9999.0,
+            "attempt_token": null,
+            "class": "RESERVED_NO_INTENT",
+            "exits_available": [],
+            "job_id": "res_f74b32515c74cd17_1",
+            "operation_id": "lab:orph_nopolicy",
+            "payload_digest": null,
+            "provider": "",
+            "reclaim_policy": "NOT_AUTHORIZED",
+            "reserved_at": 1.0,
+            "state": "RESERVED"
+          },
+          "fencing_token": "res_f74b32515c74cd17_1@0",
+          "job_id": "res_f74b32515c74cd17_1",
+          "new_attempt_created": false,
+          "policy": {
+            "allowed_classes": [
+              "RESERVED_NO_INTENT"
+            ],
+            "label": "LAB_TEST_PARAMETER_NOT_A_POLICY_DECISION",
+            "min_age_s": 3600.0,
+            "reclaim_authority": "LAB_TEST_OPERATOR",
+            "required_evidence_keys": [
+              "incident_ref",
+              "observed_by"
+            ]
+          },
+          "settled": true,
+          "settlement": {
+            "applied": true,
+            "cost_known": true,
+            "exposure_replaced": 10,
+            "job_id": "res_f74b32515c74cd17_1",
+            "overspend": 0,
+            "settled_units": 0
+          },
+          "state": "FAILED",
+          "terminalized": true
+        }
+      },
+      "mark_submitting_after_reclaim": {
+        "accepted": false,
+        "error": "StaleWrite"
+      },
+      "policy_omitted": {
+        "code": "POLICY_DECISION_REQUIRED",
+        "journal_unchanged": true,
+        "reclaimed": false
+      },
+      "policy_wrong_type": {
+        "code": "LEASE_POLICY_INVALID",
+        "journal_unchanged": true,
+        "reclaimed": false
+      },
+      "race_lost_by_reclaim": {
+        "code": "RECLAIM_CLASS_NOT_ALLOWED",
+        "journal_unchanged": true,
+        "reclaimed": false
+      },
+      "race_row_after": {
+        "attempt_token": "att_race",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_10d01c34427dffd1_1",
+        "operation_id": "lab:orph_race",
+        "payload_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "permit_id": null,
+        "provider": "fake",
+        "provider_account": "acct_a",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 1,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "10d01c34427dffd126fd31eef693de24e2fc8cfa74f503dc05ab8b76dbc28e45",
+        "state": "RESERVED",
+        "submit_intent_at": 3.0
+      },
+      "race_won_by_reclaim": {
+        "journal_unchanged": false,
+        "reclaimed": true,
+        "report": {
+          "actor": "LAB_TEST_OPERATOR",
+          "classification": {
+            "age_s": 9999.0,
+            "attempt_token": null,
+            "class": "RESERVED_NO_INTENT",
+            "exits_available": [],
+            "job_id": "res_060aa34bae6f1bdc_1",
+            "operation_id": "lab:orph_winner",
+            "payload_digest": null,
+            "provider": "",
+            "reclaim_policy": "NOT_AUTHORIZED",
+            "reserved_at": 1.0,
+            "state": "RESERVED"
+          },
+          "fencing_token": "res_060aa34bae6f1bdc_1@0",
+          "job_id": "res_060aa34bae6f1bdc_1",
+          "new_attempt_created": false,
+          "policy": {
+            "allowed_classes": [
+              "RESERVED_NO_INTENT"
+            ],
+            "label": "LAB_TEST_PARAMETER_NOT_A_POLICY_DECISION",
+            "min_age_s": 3600.0,
+            "reclaim_authority": "LAB_TEST_OPERATOR",
+            "required_evidence_keys": [
+              "incident_ref",
+              "observed_by"
+            ]
+          },
+          "settled": true,
+          "settlement": {
+            "applied": true,
+            "cost_known": true,
+            "exposure_replaced": 10,
+            "job_id": "res_060aa34bae6f1bdc_1",
+            "overspend": 0,
+            "settled_units": 0
+          },
+          "state": "FAILED",
+          "terminalized": true
+        }
+      },
+      "reclaim_twice": {
+        "code": "RECLAIM_CLASS_NOT_ALLOWED",
+        "journal_unchanged": true,
+        "reclaimed": false
+      },
+      "row_after_reclaim": {
+        "attempt_token": null,
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_f74b32515c74cd17_1",
+        "operation_id": "lab:orph_nopolicy",
+        "payload_digest": null,
+        "permit_id": null,
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 1,
+        "settled_units": 0,
+        "settlement_source": "RUNTIME_ORPHAN_RESERVED_RECLAIMED_NOT_DISPATCHED",
+        "spec_key": "f74b32515c74cd1777d2ccb7112894192f7666200b48156e8ed4dd41ce50321a",
+        "state": "FAILED",
+        "submit_intent_at": null
+      },
+      "totals_after": {
+        "authorized_units": 100,
+        "envelope_id": "ENV_LAB",
+        "envelope_version": 1,
+        "live_reservation_units": 10,
+        "remaining_units": 90,
+        "settled_units": 0,
+        "terminal_unsettled_jobs": 0,
+        "unit": "units",
+        "unsettled_exposure_units": 10
+      },
+      "totals_before": {
+        "authorized_units": 100,
+        "envelope_id": "ENV_LAB",
+        "envelope_version": 1,
+        "live_reservation_units": 20,
+        "remaining_units": 80,
+        "settled_units": 0,
+        "terminal_unsettled_jobs": 0,
+        "unit": "units",
+        "unsettled_exposure_units": 20
+      },
+      "wrong_actor": {
+        "code": "RECLAIM_NOT_AUTHORIZED",
+        "journal_unchanged": true,
+        "reclaimed": false
+      }
+    },
+    "code_mismatches": {},
+    "expected_codes": {
+      "class_not_allowed": "RECLAIM_CLASS_NOT_ALLOWED",
+      "evidence_incomplete": "RECLAIM_EVIDENCE_INCOMPLETE",
+      "evidence_not_mapping": "RECLAIM_EVIDENCE_INCOMPLETE",
+      "fencing_token_stale": "FENCING_TOKEN_STALE",
+      "fencing_token_stale_after_neutral_write": "FENCING_TOKEN_STALE",
+      "lease_not_expired": "LEASE_NOT_EXPIRED",
+      "policy_omitted": "POLICY_DECISION_REQUIRED",
+      "policy_wrong_type": "LEASE_POLICY_INVALID",
+      "race_lost_by_reclaim": "RECLAIM_CLASS_NOT_ALLOWED",
+      "reclaim_twice": "RECLAIM_CLASS_NOT_ALLOWED",
+      "wrong_actor": "RECLAIM_NOT_AUTHORIZED"
+    },
+    "ok": true,
+    "policy_used": {
+      "allowed_classes": [
+        "RESERVED_NO_INTENT"
+      ],
+      "label": "LAB_TEST_PARAMETER_NOT_A_POLICY_DECISION",
+      "min_age_s": 3600.0,
+      "reclaim_authority": "LAB_TEST_OPERATOR",
+      "required_evidence_keys": [
+        "incident_ref",
+        "observed_by"
+      ]
+    },
+    "reclaim_policy_constant": "NOT_AUTHORIZED",
+    "refusals_left_journal_unchanged": true,
+    "verified": true
+  },
+  "note": "il MECCANISMO e' verificato; il requisito NON e' chiuso: finestra, attore, evidenze e classi ammesse restano una decisione umana (ORPHAN_LEASE_MECHANISM_POLICY.md).",
+  "policy_status": "POLICY_DECISION_REQUIRED",
+  "requirement_closed": false
+}

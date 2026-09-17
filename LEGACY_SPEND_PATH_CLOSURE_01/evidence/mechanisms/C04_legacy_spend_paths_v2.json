@@ -1,0 +1,366 @@
+{
+  "checks": {
+    "core_primitives_reachable_in_both_modes": true,
+    "governed_path_works_in_both_modes": true,
+    "legacy_closed_when_engaged": true,
+    "legacy_open_when_disengaged": true,
+    "mode_default_disengaged": true,
+    "mode_engaged_when_asked": true,
+    "static_inventory_non_empty": true,
+    "store_call_closed_when_engaged": true,
+    "store_call_open_when_disengaged": true
+  },
+  "disengaged": {
+    "engaged": false,
+    "entry_points": {
+      "#10_core_run_job": {
+        "governed_by_runtime_switch": false,
+        "reached_spend": true,
+        "state": "SUCCEEDED"
+      },
+      "#11_core_raw_reconcile": {
+        "accepted": true,
+        "governed_by_runtime_switch": false,
+        "state": "FAILED"
+      },
+      "#1_governed": {
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "governance": "GOVERNED_LAB",
+        "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_c04_open.db.snapshots",
+        "ok": true,
+        "permit_id": "permit_d13cd2a2ac9753d3f9b06dfa",
+        "quote_id": "quote_aeb16c58553b61c8bc2c745c",
+        "send_verified": true,
+        "state": "SUCCEEDED",
+        "submits": 1
+      },
+      "#2_go_legacy": {
+        "code": null,
+        "governance": "LEGACY_LAB",
+        "reached_spend": true,
+        "state": "SUCCEEDED"
+      },
+      "#4_hf_batch_bridge_importable": false,
+      "#4_via_switch": {
+        "legacy_switch_state": "ENABLED_LAB_ONLY",
+        "same_switch_as_#2": true
+      },
+      "#7_store_call": {
+        "code": null,
+        "ok": true,
+        "reached_store": true,
+        "store_created": null
+      }
+    },
+    "legacy_switch_state": "ENABLED_LAB_ONLY",
+    "mode": "DISENGAGED",
+    "ok": true,
+    "rows": [
+      {
+        "attempt_token": "att_ba9b900c8a2ecad0401011cf",
+        "budget_units": 0,
+        "envelope_id": null,
+        "error": null,
+        "job_id": "res_9f38ed3d8c5ec45f_1",
+        "operation_id": "lab:e2",
+        "payload_digest": "ed1fe11fcd51fa94a855aa5d7c9e641472aad0cba5bca1c1e421933bb81ee3a3",
+        "permit_id": null,
+        "provider": "fake",
+        "provider_account": "fake_acct_legacy",
+        "provider_job_id": "pv_9f38ed3d",
+        "quote_id": null,
+        "revision": 3,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "9f38ed3d8c5ec45f6e3a1b8380aab25d8d0aa0422b069a5ebca0608c2fa469d9",
+        "state": "SUCCEEDED",
+        "submit_intent_at": 1789686831.2407956
+      },
+      {
+        "attempt_token": null,
+        "budget_units": 0,
+        "envelope_id": null,
+        "error": null,
+        "job_id": "res_ec202dcb9a994049_1",
+        "operation_id": "lab:e7",
+        "payload_digest": null,
+        "permit_id": null,
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 0,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "ec202dcb9a994049e3e476f39a017417208e269e4c3ca0418079834fce6edaf3",
+        "state": "RESERVED",
+        "submit_intent_at": null
+      },
+      {
+        "attempt_token": "att_1e112d338df1b9b9af9640ac",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_3dc579b0748f59b3_1",
+        "operation_id": "lab:e1",
+        "payload_digest": "4fe9f9648308302e92b87604e57c0a331be7e472630d9671b07f8476a2d90039",
+        "permit_id": "permit_d13cd2a2ac9753d3f9b06dfa",
+        "provider": "fake",
+        "provider_account": "fake_acct_governed",
+        "provider_job_id": "pv_3dc579b0",
+        "quote_id": "quote_aeb16c58553b61c8bc2c745c",
+        "revision": 3,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "3dc579b0748f59b3d896080e8f5cdb7ff3c2683b87baac292c1c218662b7c095",
+        "state": "SUCCEEDED",
+        "submit_intent_at": 1789686831.2612135
+      },
+      {
+        "attempt_token": "att_d80f84055bead75f116c8886",
+        "budget_units": 0,
+        "envelope_id": null,
+        "error": null,
+        "job_id": "res_c173cb19857e7799_1",
+        "operation_id": "lab:e10",
+        "payload_digest": "6a03a974aa0be6e8aebb3eaf88db24c51696aa118243ce138f3ba934abbc37e9",
+        "permit_id": null,
+        "provider": "fake",
+        "provider_account": "fake_acct_core_prim",
+        "provider_job_id": "pv_c173cb19",
+        "quote_id": null,
+        "revision": 3,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "c173cb19857e7799d6968d5c7c763f78ea8f334338d52d8d2b62ece706011fa5",
+        "state": "SUCCEEDED",
+        "submit_intent_at": 1.0
+      },
+      {
+        "attempt_token": null,
+        "budget_units": 0,
+        "envelope_id": null,
+        "error": null,
+        "job_id": "res_bd2cdbb6bca8e731_1",
+        "operation_id": "lab:e11",
+        "payload_digest": null,
+        "permit_id": null,
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 1,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "bd2cdbb6bca8e731a6a94e0030fa59108b8f236333c353a321a7e4fe70ac4f93",
+        "state": "FAILED",
+        "submit_intent_at": null
+      }
+    ]
+  },
+  "engaged": {
+    "engaged": true,
+    "entry_points": {
+      "#10_core_run_job": {
+        "governed_by_runtime_switch": false,
+        "reached_spend": true,
+        "state": "SUCCEEDED"
+      },
+      "#11_core_raw_reconcile": {
+        "accepted": true,
+        "governed_by_runtime_switch": false,
+        "state": "FAILED"
+      },
+      "#1_governed": {
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "governance": "GOVERNED_LAB",
+        "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_c04_closed.db.snapshots",
+        "ok": true,
+        "permit_id": "permit_bfebb173dd5a284ce05d42a7",
+        "quote_id": "quote_400d6cbc97efc0e3352648f4",
+        "send_verified": true,
+        "state": "SUCCEEDED",
+        "submits": 1
+      },
+      "#2_go_legacy": {
+        "code": "LEGACY_SPEND_PATH_DISABLED",
+        "reached_spend": false,
+        "state": null
+      },
+      "#4_hf_batch_bridge_importable": false,
+      "#4_via_switch": {
+        "legacy_switch_state": "DISABLED",
+        "same_switch_as_#2": true
+      },
+      "#7_store_call": {
+        "code": "PROVIDER_BOUNDARY_MODE_ENGAGED",
+        "ok": false,
+        "reached_store": false,
+        "store_created": false
+      }
+    },
+    "legacy_switch_state": "DISABLED",
+    "mode": "ENGAGED",
+    "ok": true,
+    "rows": [
+      {
+        "attempt_token": "att_f39155071888c03eadb2fb98",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_3dc579b0748f59b3_1",
+        "operation_id": "lab:e1",
+        "payload_digest": "4fe9f9648308302e92b87604e57c0a331be7e472630d9671b07f8476a2d90039",
+        "permit_id": "permit_bfebb173dd5a284ce05d42a7",
+        "provider": "fake",
+        "provider_account": "fake_acct_governed",
+        "provider_job_id": "pv_3dc579b0",
+        "quote_id": "quote_400d6cbc97efc0e3352648f4",
+        "revision": 3,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "3dc579b0748f59b3d896080e8f5cdb7ff3c2683b87baac292c1c218662b7c095",
+        "state": "SUCCEEDED",
+        "submit_intent_at": 1789686831.3784902
+      },
+      {
+        "attempt_token": "att_352ffd64589aa3d094107dec",
+        "budget_units": 0,
+        "envelope_id": null,
+        "error": null,
+        "job_id": "res_c173cb19857e7799_1",
+        "operation_id": "lab:e10",
+        "payload_digest": "6a03a974aa0be6e8aebb3eaf88db24c51696aa118243ce138f3ba934abbc37e9",
+        "permit_id": null,
+        "provider": "fake",
+        "provider_account": "fake_acct_core_prim",
+        "provider_job_id": "pv_c173cb19",
+        "quote_id": null,
+        "revision": 3,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "c173cb19857e7799d6968d5c7c763f78ea8f334338d52d8d2b62ece706011fa5",
+        "state": "SUCCEEDED",
+        "submit_intent_at": 1.0
+      },
+      {
+        "attempt_token": null,
+        "budget_units": 0,
+        "envelope_id": null,
+        "error": null,
+        "job_id": "res_bd2cdbb6bca8e731_1",
+        "operation_id": "lab:e11",
+        "payload_digest": null,
+        "permit_id": null,
+        "provider": "",
+        "provider_account": "",
+        "provider_job_id": null,
+        "quote_id": null,
+        "revision": 1,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "bd2cdbb6bca8e731a6a94e0030fa59108b8f236333c353a321a7e4fe70ac4f93",
+        "state": "FAILED",
+        "submit_intent_at": null
+      }
+    ]
+  },
+  "inventory_doc": "LEGACY_SPEND_PATHS_V2.md",
+  "note": "la modalita' chiude i percorsi del RUNTIME; le primitive del CORE restano raggiungibili da chiunque abbia il Core in sys.path: e' dichiarato, non aggirato.",
+  "residual_open": [
+    "#10 transport.pipeline.run_job / adapter.submit",
+    "#11 registry.reservations.reconcile raw"
+  ],
+  "residual_state": "CORE_CHANGE_REQUIRED",
+  "static_inventory": {
+    "files_scanned": 19,
+    "hits": {
+      "runtime/__init__.py": [
+        "run_job("
+      ],
+      "runtime/authorization.py": [
+        ".submit("
+      ],
+      "runtime/core_pin.py": [
+        "subprocess."
+      ],
+      "runtime/genspec_bridge.py": [
+        ".submit("
+      ],
+      "runtime/go_candidate.py": [
+        ".reconcile(",
+        ".settle(",
+        ".submit(",
+        "reserve_or_get_live(",
+        "run_job("
+      ],
+      "runtime/hf_batch_bridge.py": [
+        ".submit(",
+        "higgsfield",
+        "run_job("
+      ],
+      "runtime/hf_batch_runtime.py": [
+        ".submit(",
+        "go_candidate.go(",
+        "higgsfield",
+        "run_job(",
+        "subprocess."
+      ],
+      "runtime/orphan_lease.py": [
+        ".reconcile(",
+        ".settle(",
+        ".submit(",
+        "reserve_or_get_live("
+      ],
+      "runtime/payload_snapshot.py": [
+        ".submit(",
+        "run_job("
+      ],
+      "runtime/provider_gate.py": [
+        ".submit(",
+        "higgsfield"
+      ],
+      "runtime/reconciliation.py": [
+        ".reconcile(",
+        ".submit("
+      ],
+      "tests/audit_sentinel.py": [
+        "higgsfield",
+        "subprocess."
+      ],
+      "tests/boundary_mock.py": [
+        ".submit(",
+        "go_candidate.go(",
+        "run_job("
+      ],
+      "tests/run_gate.py": [
+        ".settle(",
+        ".submit(",
+        "higgsfield",
+        "reserve_or_get_live(",
+        "run_job(",
+        "subprocess."
+      ],
+      "tests/static_checks.py": [
+        ".reconcile(",
+        ".submit(",
+        "higgsfield",
+        "reserve_or_get_live(",
+        "run_job("
+      ],
+      "tests/worker.py": [
+        ".reconcile(",
+        ".settle(",
+        ".submit(",
+        "go_candidate.go(",
+        "higgsfield",
+        "reserve_or_get_live(",
+        "run_job(",
+        "subprocess."
+      ]
+    },
+    "ok": true
+  }
+}

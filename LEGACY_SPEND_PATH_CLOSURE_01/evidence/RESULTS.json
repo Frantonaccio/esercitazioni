@@ -1,0 +1,159 @@
+{
+  "results": [
+    {
+      "actual": "Core 44f9ea29cea1 (harden/legacy-spend-core-2026-09-18) · Runtime ad2f9c072b2a (claude/legacy-spend-path-closure-c50coy) · pin=44f9ea29cea1 · P2=637f3a803ee38d04… · controlli falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E00_reality_lock.json",
+      "expected": "coppia canonica verificata, branch dedicati, P2 invariato",
+      "id": "E00",
+      "pass": true,
+      "seconds": 2.1,
+      "title": "Reality Lock"
+    },
+    {
+      "actual": "CORE: 9 file con superficie di spesa, 273 chiamate · RUNTIME: 8 file, 23 chiamate · confine presente nel Core: grant_dispatch/authorize_dispatch",
+      "error": null,
+      "evidence": "evidence/E01_spend_path_inventory_static.json",
+      "expected": "ogni entry point che tocca la catena di spesa, in Core e Runtime",
+      "id": "E01",
+      "pass": true,
+      "seconds": 0.3,
+      "title": "inventario statico dei percorsi di spesa"
+    },
+    {
+      "actual": "sulla coppia canonica: lo spender e' raggiunto da LEGACY_LAB go, run_job diretto, submit diretto, authorize_payload diretto, reconcile+respend e hf_batch · non riprodotto: nessuno",
+      "error": null,
+      "evidence": "evidence/E02_pre_fix_reproduction.json",
+      "expected": "lo spender E' raggiungibile dai percorsi legacy su 9cf9cee1 + fea7b439",
+      "id": "E02",
+      "pass": true,
+      "seconds": 1.3,
+      "title": "riproduzione PRE-FIX sulla coppia canonica"
+    },
+    {
+      "actual": "Core delta additivo (5 file) · suite unitaria del confine: 11/11 PASS, exit 0",
+      "error": null,
+      "evidence": "evidence/E03_core_primitives_classification.json",
+      "expected": "delta additivo, 11/11 PASS",
+      "id": "E03",
+      "pass": true,
+      "seconds": 0.1,
+      "title": "classificazione delle primitive del Core + suite unitaria del confine"
+    },
+    {
+      "actual": "sentinella a 0 in tutti i percorsi legacy, 1 nel governato · controlli falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E04_provider_boundary_counterproofs.json",
+      "expected": "0 attraversamenti in ogni percorso legacy, 1 nel governato",
+      "id": "E04",
+      "pass": true,
+      "seconds": 0.9,
+      "title": "controprove del confine provider (sentinella)"
+    },
+    {
+      "actual": "modalita' ingaggiata/disingaggiata, ambiente, sottoclasse e wrapper che nasconde la capability: tutti rifiutati, sentinella 0 · falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E05_legacy_lab_only_non_provider_capable.json",
+      "expected": "adapter/modalita'/config non riaprono un percorso di spesa",
+      "id": "E05",
+      "pass": true,
+      "seconds": 0.2,
+      "title": "LEGACY_LAB = LAB_ONLY_NON_PROVIDER_CAPABLE"
+    },
+    {
+      "actual": "client budget grezzo non raggiunge il confine dello spender; importo solo dalla quote fidata · falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E06_legacy_envelope_budget_paths.json",
+      "expected": "il client non sceglie il prezzo; envelope_units non raggiunge lo spender",
+      "id": "E06",
+      "pass": true,
+      "seconds": 0.5,
+      "title": "percorsi legacy di envelope/budget"
+    },
+    {
+      "actual": "20/20 equivalenti migrati PASS (19 GOVERNED_PATH + 1 CORE_UNIT) · falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E07_legacy_test_migration.json",
+      "expected": "20/20 equivalenti governati o Core-unit, assert non indeboliti",
+      "id": "E07",
+      "pass": true,
+      "seconds": 8.6,
+      "title": "migrazione dei test storici"
+    },
+    {
+      "actual": "T01-T37 sulla coppia candidate: PASS 36/37 · FAIL nessuno (pre-fix nello stesso ambiente: ['T08']) · BLOCKED ['T29'] · regressioni introdotte da questa fase: nessuna",
+      "error": null,
+      "evidence": "evidence/E08_regression_r0_r1.json",
+      "expected": "nessuna regressione introdotta da questa fase",
+      "id": "E08",
+      "pass": true,
+      "seconds": 18.7,
+      "title": "regressione R0-R1 T01-T37"
+    },
+    {
+      "actual": "meccanismi sul candidate: 4/4 · suite del Core: 9/9 · falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E09_mechanism_and_core_regressions.json",
+      "expected": "P-B01/P-B02, NG-04, legacy spend paths, orphan lease, suite Core: verdi",
+      "id": "E09",
+      "pass": true,
+      "seconds": 3.2,
+      "title": "meccanismi approvati + suite del Core sulla coppia candidate"
+    },
+    {
+      "actual": "pin 44f9ea29cea1 == Core HEAD · 9cf9cee1a751 ora STALE · P2 before==after==637f3a803ee38d04… · falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E10_core_pin_and_p2_freeze.json",
+      "expected": "pin sul candidate, baseline precedente STALE, P2 before == after",
+      "id": "E10",
+      "pass": true,
+      "seconds": 0.0,
+      "title": "Core pin e P2 freeze"
+    },
+    {
+      "actual": "nessun .pyc/__pycache__ · code SHA Core 44f9ea29cea1 / Runtime ad2f9c072b2a distinti da evidence-head · bundle approvati intatti · falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E11_evidence_chain_integrity.json",
+      "expected": "code SHA / evidence-head / base canonica / branch distinti, 0 .pyc",
+      "id": "E11",
+      "pass": true,
+      "seconds": 0.0,
+      "title": "integrita' della catena di evidenza"
+    },
+    {
+      "actual": "stato massimo: LEGACY_SPEND_PATHS_CLOSED — READY_FOR_HUMAN_REVIEW · suite: 12/12 · requisiti aperti: 9 · falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E12_reporting_test_result_vs_readiness.json",
+      "expected": "due oggetti separati; nessun requisito chiuso per errore",
+      "id": "E12",
+      "pass": true,
+      "seconds": 0.0,
+      "title": "reporting: esito della suite vs readiness del requisito"
+    }
+  ],
+  "schema": "legacy-spend-path-closure-results/1",
+  "summary": {
+    "fail": 0,
+    "fail_ids": [],
+    "gate_decision": "LSPC_GATE_COMPLETE",
+    "pass": 13,
+    "pass_ids": [
+      "E00",
+      "E01",
+      "E02",
+      "E03",
+      "E04",
+      "E05",
+      "E06",
+      "E07",
+      "E08",
+      "E09",
+      "E10",
+      "E11",
+      "E12"
+    ],
+    "runner_exit": 0,
+    "schema": "legacy-spend-path-closure-results/1",
+    "total": 13
+  }
+}

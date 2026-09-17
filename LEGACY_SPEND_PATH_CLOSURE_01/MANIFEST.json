@@ -1,0 +1,105 @@
+{
+  "branch_note": "il mandato indicava `harden/legacy-spend-runtime-2026-09-18`; il classifier della sessione impone il branch reale sopra e vieta di pubblicare altrove. Riportato come richiesto da §15.",
+  "canonical_base": {
+    "core_main": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+    "runtime_main": "fea7b439a63a0100a732e21af4dfde6b8edd0951"
+  },
+  "canonical_runtime_base_sha": "fea7b439a63a0100a732e21af4dfde6b8edd0951",
+  "core_branch": "harden/legacy-spend-core-2026-09-18",
+  "core_code_sha": "44f9ea29cea112dfb30c752e5519498e25044c19",
+  "core_pin": {
+    "points_to_core_candidate": true,
+    "previous_canonical_now_stale": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+    "required_core_sha": "44f9ea29cea112dfb30c752e5519498e25044c19"
+  },
+  "core_repo": "Frantonaccio/creative-os",
+  "credential_scan": {
+    "extensions_skipped": [
+      ".zip",
+      ".db",
+      ".bin",
+      ".sock"
+    ],
+    "files_scanned": 55,
+    "hits": [],
+    "patterns_count": 8,
+    "patterns_declared_in": "pbg2/bundle_provenance.py",
+    "patterns_sha256": "06689d729628c280921b323a3e35d68720f6adcec7cbc4e260d30f391e2460ce",
+    "self_reference_excluded": "pbg2/bundle_provenance.py"
+  },
+  "date": "2026-09-18",
+  "explicitly_not_claimed": {
+    "credentials_authorized": false,
+    "human_merge_authorization": false,
+    "merge_authorized": false,
+    "ng04_policy_decided": false,
+    "orphan_lease_policy_decided": false,
+    "production_ready": false,
+    "provider_ready": false,
+    "r2_authorized": false,
+    "real_provider_verified": false,
+    "spend_authorized": false
+  },
+  "file_count": 54,
+  "gate": {
+    "decision": "LSPC_GATE_COMPLETE",
+    "fail": 0,
+    "fail_ids": [],
+    "pass": 13,
+    "steps": 13
+  },
+  "mode": "MOCK ONLY · ZERO PROVIDER REALI · ZERO CREDENZIALI · ZERO CREDITI · NO PRODUZIONE",
+  "p2_frozen": {
+    "declared": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "observed": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
+    "path": "RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/hf_batch.py"
+  },
+  "phase": "LEGACY SPEND PATH CLOSURE + LEGACY TEST MIGRATION",
+  "phase_state": "LEGACY_SPEND_PATHS_CLOSED — READY_FOR_HUMAN_REVIEW",
+  "requirement_readiness": {
+    "all_requirements_verified": false,
+    "all_requirements_verified_reason": "Esistono requisiti aperti nella roadmap complessiva (policy non decise, provider reale non coinvolto, contaminazione e CI indipendente non eseguite, piu' un difetto preesistente scoperto in questa fase). Un PASS di suite non li chiude, e dichiararlo sarebbe falso.",
+    "closed_by_this_phase": [
+      "LEGACY_SPEND_PATHS_CORE_PRIMITIVES",
+      "LEGACY_TESTS_MIGRATION_TO_GOVERNED"
+    ],
+    "open": [
+      "G_N02_SEMANTIC_CLAIM_PARAPHRASE",
+      "INDEPENDENT_CI_STATUS_CHECKS",
+      "ORPHAN_RESERVED_LEASE_POLICY",
+      "REAL_AUTHORIZATION_AND_PRICING",
+      "REAL_PROVIDER_RECONCILIATION",
+      "RECONCILIATION_FRESHNESS_NG04_POLICY",
+      "RUN_CONTAMINATION",
+      "RV07_SCHEDULER_RECOVERY_RESIDUAL",
+      "SNAPSHOT_SEAL_WRITE_RACE"
+    ],
+    "question": "il requisito e' davvero chiuso?",
+    "requirements": {
+      "G_N02_SEMANTIC_CLAIM_PARAPHRASE": "STILL_OPEN",
+      "INDEPENDENT_CI_STATUS_CHECKS": "NOT_RUN",
+      "LEGACY_SPEND_PATHS_CORE_PRIMITIVES": "CLOSED_LAB_VERIFIED",
+      "LEGACY_TESTS_MIGRATION_TO_GOVERNED": "CLOSED_LAB_VERIFIED",
+      "ORPHAN_RESERVED_LEASE_POLICY": "POLICY_DECISION_REQUIRED",
+      "REAL_AUTHORIZATION_AND_PRICING": "REAL_PROVIDER_REQUIRED",
+      "REAL_PROVIDER_RECONCILIATION": "REAL_PROVIDER_REQUIRED",
+      "RECONCILIATION_FRESHNESS_NG04_POLICY": "POLICY_DECISION_REQUIRED",
+      "RUN_CONTAMINATION": "NOT_RUN",
+      "RV07_SCHEDULER_RECOVERY_RESIDUAL": "STILL_OPEN",
+      "SNAPSHOT_SEAL_WRITE_RACE": "STILL_OPEN"
+    }
+  },
+  "runtime_branch": "claude/legacy-spend-path-closure-c50coy",
+  "runtime_code_sha": "ad2f9c072b2a775637eb0b0da0aeca1cb82ca770",
+  "runtime_evidence_head_sha": "DECLARED_IN_EXTERNAL_PROVENANCE",
+  "runtime_repo": "Frantonaccio/esercitazioni",
+  "schema": "legacy-spend-path-closure-manifest/1",
+  "test_suite_result": {
+    "answer": "SI",
+    "fail": 0,
+    "fail_ids": [],
+    "pass": 13,
+    "question": "i test hanno prodotto l'esito atteso?",
+    "total": 13
+  }
+}

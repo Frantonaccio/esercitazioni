@@ -1,0 +1,29 @@
+{
+  "chain": {
+    "canonical_base": {
+      "core_main": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+      "runtime_main": "fea7b439a63a0100a732e21af4dfde6b8edd0951"
+    },
+    "code_sha": {
+      "core": "44f9ea29cea112dfb30c752e5519498e25044c19",
+      "runtime": "ad2f9c072b2a775637eb0b0da0aeca1cb82ca770"
+    },
+    "evidence_head_sha": "assegnato dal commit che pubblica questo bundle (successivo a code_sha: un bundle non puo' contenere il proprio hash)",
+    "real_branch": {
+      "core": "harden/legacy-spend-core-2026-09-18",
+      "runtime": "claude/legacy-spend-path-closure-c50coy"
+    }
+  },
+  "checks": {
+    "approved_bundle_untouched:CORE_RUNTIME_INTEGRATION_01": true,
+    "approved_bundle_untouched:PROVIDER_BOUNDARY_GATE_02": true,
+    "approved_bundle_untouched:PROVIDER_BOUNDARY_HARDENING_01": true,
+    "approved_bundle_untouched:RUNTIME_INTEGRATION_GATE_01/p2_handoff": true,
+    "approved_bundle_untouched:RUNTIME_INTEGRATION_GATE_01/runtime": true,
+    "approved_bundle_untouched:RUNTIME_INTEGRATION_GATE_01/tests": true,
+    "core_code_sha_declared": true,
+    "no_pyc_or_pycache_in_bundle": true,
+    "runtime_code_sha_declared": true
+  },
+  "pyc_found": []
+}

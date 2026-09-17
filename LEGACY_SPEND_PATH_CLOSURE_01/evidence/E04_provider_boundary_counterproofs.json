@@ -1,0 +1,498 @@
+{
+  "checks": {
+    "adapter_authorize_payload_direct_refused": true,
+    "adapter_submit_direct_refused": true,
+    "client_budget_refused_for_spender": true,
+    "core_run_job_direct_refused": true,
+    "governed_path_reaches_spender": true,
+    "hf_batch_legacy_refused": true,
+    "lab_adapter_still_works": true,
+    "legacy_lab_go_refused_before_any_effect": true,
+    "reconcile_allowlist_refuses_forged_evidence": true,
+    "reconcile_cannot_lead_to_spend": true,
+    "refusal_precedes_core_pin_gate": true,
+    "sentinel_zero_on_every_legacy_path": true,
+    "store_call_surface_declared": true
+  },
+  "note": "La sentinella sostituisce il provider reale: `reached` conta gli attraversamenti del confine. Zero in ogni percorso legacy, 1 nel governato: se fosse zero anche li', la controprova non proverebbe nulla.",
+  "probes": {
+    "P1": {
+      "break_pin": false,
+      "code": "LEGACY_LAB_NOT_PROVIDER_CAPABLE",
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_imported_before_go": true,
+      "core_path": "/home/user/creative-os",
+      "error": "LegacyPathNotProviderCapable",
+      "message": "LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.",
+      "ok": false,
+      "pid": 5606,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "created": false
+      },
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/LEGACY_SPEND_PATH_CLOSURE_01/lspc1/workers.py\", line 174, in p1_legacy_with_spender\n    res = go_candidate.go(_inputs(prompt), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 298, in go\n    require_legacy_lab_spend_path(adapter)\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py\", line 242, in require_legacy_lab_spend_path\n    raise LegacyPathNotProviderCapable(\nruntime.provider_gate.LegacyPathNotProviderCapable: LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.\n"
+    },
+    "P10": {
+      "code": "LEGACY_LAB_NOT_PROVIDER_CAPABLE",
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "error": "LegacyPathNotProviderCapable",
+      "message": "LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.",
+      "ok": false,
+      "pid": 5637,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "created": false
+      },
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/LEGACY_SPEND_PATH_CLOSURE_01/lspc1/workers.py\", line 564, in p10_hf_batch_legacy\n    trace = b.go()\n            ^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_runtime.py\", line 275, in go\n    recs = list(ex.map(lambda j: self.run_job(j, lock), self.spec[\"jobs\"]))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/concurrent/futures/_base.py\", line 619, in result_iterator\n    yield _result_or_cancel(fs.pop())\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.11/concurrent/futures/_base.py\", line 317, in _result_or_cancel\n    return fut.result(timeout)\n           ^^^^^^^^^^^^^^^^^^^\nruntime.provider_gate.LegacyPathNotProviderCapable: LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.\n"
+    },
+    "P1pin": {
+      "break_pin": true,
+      "code": "LEGACY_LAB_NOT_PROVIDER_CAPABLE",
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_imported_before_go": true,
+      "core_path": "/home/user/creative-os",
+      "error": "LegacyPathNotProviderCapable",
+      "message": "LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.",
+      "ok": false,
+      "pid": 5609,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "created": false
+      },
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/LEGACY_SPEND_PATH_CLOSURE_01/lspc1/workers.py\", line 174, in p1_legacy_with_spender\n    res = go_candidate.go(_inputs(prompt), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 298, in go\n    require_legacy_lab_spend_path(adapter)\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py\", line 242, in require_legacy_lab_spend_path\n    raise LegacyPathNotProviderCapable(\nruntime.provider_gate.LegacyPathNotProviderCapable: LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.\n"
+    },
+    "P2": {
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "governance": "LEGACY_LAB",
+      "lab_adapter": {
+        "submits": 1,
+        "transport_sent": 1
+      },
+      "legacy_resume_as_start": true,
+      "ok": true,
+      "pid": 5611,
+      "sentinel": {
+        "authorized_calls": null,
+        "built": false,
+        "reached": null,
+        "submits": null,
+        "transport_authorized": null,
+        "transport_sent": null
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": true,
+        "files": 4
+      },
+      "state": "SUCCEEDED",
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 1
+      },
+      "submits": 1
+    },
+    "P3": {
+      "budget_units": 10,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "envelope_id": "ENV_LSPC1G",
+      "governance": "GOVERNED_LAB",
+      "job_id": "res_16d317a9cab42b5f_1",
+      "ok": true,
+      "payload_snapshot": {
+        "bytes": 192,
+        "digest": "9a1b0ef7434192d874fffd0809e60fb94e5a989f5387130367e2021ea940ac3d",
+        "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p3.db.snapshots",
+        "opkey": "f1b985db98b28fc2c3de62e9",
+        "persisted_mode": "0o444",
+        "sealed_at": 1789686801.950093,
+        "send_attestation": {
+          "attempt_token": "att_c45aaee15cc7ad15f4333fa0",
+          "bytes": 192,
+          "digest": "9a1b0ef7434192d874fffd0809e60fb94e5a989f5387130367e2021ea940ac3d",
+          "exact_bytes_equal": true,
+          "job_id": "res_16d317a9cab42b5f_1",
+          "opkey": "f1b985db98b28fc2c3de62e9",
+          "schema": "payload-snapshot-send-attestation/1",
+          "verified_at": 1789686801.9559164
+        },
+        "send_verified": true
+      },
+      "permit_id": "permit_9142a5522ac80cd2378ea1c0",
+      "pid": 5617,
+      "quote_id": "quote_14523dd66f2cc40088f26b5a",
+      "sentinel": {
+        "authorized_calls": 1,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [
+          [
+            "authorize_payload",
+            "res_16d317a9cab42b5f_1",
+            "quote_14523dd66f2cc40088f26b5a"
+          ],
+          [
+            "submit",
+            "res_16d317a9cab42b5f_1",
+            "quote_14523dd66f2cc40088f26b5a"
+          ]
+        ],
+        "reached": 1,
+        "spend_capable": true,
+        "submits": 1,
+        "transport_authorized": 1,
+        "transport_sent": 1
+      },
+      "sentinel_zero": false,
+      "snapshots": {
+        "created": true,
+        "files": 4
+      },
+      "state": "SUCCEEDED",
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 0,
+        "permits_consumed": 1,
+        "quotes_consumed": 1,
+        "reservations": 1
+      }
+    },
+    "P4": {
+      "code": "SPEND_AUTHORIZATION_REQUIRED",
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "error": "SpendAuthorizationRequired",
+      "message": "SPEND_AUTHORIZATION_REQUIRED: transport.pipeline.run_job richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): input governati mancanti: operation_id, quote_id, envelope_id. Nessun invio, nessuna spesa.",
+      "ok": false,
+      "pid": 5623,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 0,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 0
+      }
+    },
+    "P4env": {
+      "code": "SPEND_AUTHORIZATION_REQUIRED",
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "error": "SpendAuthorizationRequired",
+      "message": "SPEND_AUTHORIZATION_REQUIRED: transport.pipeline.run_job richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): input governati mancanti: operation_id, quote_id, envelope_id. Nessun invio, nessuna spesa.",
+      "ok": false,
+      "pid": 5625,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 0,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 0
+      }
+    },
+    "P5": {
+      "code": "SPEND_AUTHORIZATION_REQUIRED",
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "error": "SpendAuthorizationRequired",
+      "message": "SPEND_AUTHORIZATION_REQUIRED: sentinel_class.<locals>.Sentinel.submit richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): nessuna concessione attiva in questo thread. Nessun invio, nessuna spesa.",
+      "ok": false,
+      "pid": 5627,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true
+    },
+    "P6": {
+      "code": "SPEND_AUTHORIZATION_REQUIRED",
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "error": "SpendAuthorizationRequired",
+      "message": "SPEND_AUTHORIZATION_REQUIRED: sentinel_class.<locals>.Sentinel.authorize_payload richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): nessuna concessione attiva in questo thread. Nessun invio, nessuna spesa.",
+      "ok": false,
+      "pid": 5629,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true
+    },
+    "P7": {
+      "allowlist_supported": false,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "ok": true,
+      "pid": 5631,
+      "reconcile": {
+        "accepted": true,
+        "state": "FAILED"
+      },
+      "reserved": {
+        "job_id": "res_ceb8c06e858c38bd_1",
+        "outcome": "RESERVED_NEW"
+      },
+      "respend": {
+        "code": "SPEND_AUTHORIZATION_REQUIRED",
+        "error": "SpendAuthorizationRequired",
+        "message": "SPEND_AUTHORIZATION_REQUIRED: transport.pipeline.run_job richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): input governati mancanti: operation_id, quote_id, enve",
+        "ok": false
+      },
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 1,
+        "created": true,
+        "ledger": 1,
+        "live": 0,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 1
+      }
+    },
+    "P7al": {
+      "allowlist_supported": true,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "ok": true,
+      "pid": 5633,
+      "reconcile": {
+        "accepted": false,
+        "error": "ReconciliationEvidenceRequired",
+        "message": "riconciliazione rifiutata: provenienza 'FABBRICATA_DAL_CHIAMANTE' non e' fra le autorita' riconosciute da questo store ['PROVIDER_API']",
+        "state": "RESERVED"
+      },
+      "reserved": {
+        "job_id": "res_ceb8c06e858c38bd_1",
+        "outcome": "RESERVED_NEW"
+      },
+      "respend": {
+        "code": "SPEND_AUTHORIZATION_REQUIRED",
+        "error": "SpendAuthorizationRequired",
+        "message": "SPEND_AUTHORIZATION_REQUIRED: transport.pipeline.run_job richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): input governati mancanti: operation_id, quote_id, enve",
+        "ok": false
+      },
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 1,
+        "created": true,
+        "ledger": 1,
+        "live": 1,
+        "permits_consumed": 0,
+        "quotes_consumed": 0,
+        "reservations": 1
+      }
+    },
+    "P8": {
+      "allowed_surface": [
+        "anomalies",
+        "due_for_reconcile",
+        "find_latest_by_operation",
+        "find_latest_by_spec",
+        "find_live_by_operation",
+        "find_live_by_spec",
+        "get",
+        "history",
+        "issue_lab_quote",
+        "issue_permit",
+        "issue_quote",
+        "ledger",
+        "ledger_totals",
+        "open_envelope",
+        "permit",
+        "quote",
+        "record_anomaly",
+        "recover_orphaned_submits",
+        "reserve_or_get_live_by_prompt",
+        "reserve_or_get_live_by_prompt_op",
+        "reserved_units",
+        "settle",
+        "spec_key_of"
+      ],
+      "code": "STORE_CALL_METHOD_NOT_ALLOWED",
+      "core_imported": false,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "dispatch_reached": false,
+      "error": "StoreCallMethodNotAllowed",
+      "message": "'reconcile' non e' nella superficie dichiarata di store_call (lettura / autorita' / sonda del Core). Una transizione di stato si prova sul Core, non da un helper del Runtime.",
+      "ok": false,
+      "pid": 5635,
+      "sentinel": {
+        "authorized_calls": null,
+        "built": false,
+        "reached": null,
+        "submits": null,
+        "transport_authorized": null,
+        "transport_sent": null
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "created": false
+      },
+      "store_created": false,
+      "surface_declared": true
+    }
+  },
+  "sentinel_reached": {
+    "P1": 0,
+    "P10": 0,
+    "P1pin": 0,
+    "P2": null,
+    "P3": 1,
+    "P4": 0,
+    "P4env": 0,
+    "P5": 0,
+    "P6": 0,
+    "P7": 0,
+    "P7al": 0,
+    "P8": null
+  }
+}

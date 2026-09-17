@@ -1,0 +1,347 @@
+{
+  "matrix": {
+    "applied_mismatches": [],
+    "cases": {
+      "ancient_1970": {
+        "applied": false,
+        "code": "REPORT_STALE",
+        "journal_unchanged": true
+      },
+      "back_to_unknown": {
+        "ok": true,
+        "state": "SUBMIT_UNKNOWN"
+      },
+      "boundary_age_eq_max": {
+        "applied": true,
+        "journal_unchanged": false,
+        "state": "SUCCEEDED"
+      },
+      "boundary_age_eq_max_plus_eps": {
+        "applied": false,
+        "code": "REPORT_STALE",
+        "journal_unchanged": true
+      },
+      "boundary_skew_eq_max": {
+        "applied": true,
+        "journal_unchanged": false,
+        "state": "SUCCEEDED"
+      },
+      "fresh_now": {
+        "applied": true,
+        "journal_unchanged": false,
+        "state": "SUCCEEDED"
+      },
+      "from_future_beyond_skew": {
+        "applied": false,
+        "code": "REPORT_FROM_FUTURE",
+        "journal_unchanged": true
+      },
+      "parametric_strict_refuses": {
+        "applied": false,
+        "code": "REPORT_STALE",
+        "journal_unchanged": true
+      },
+      "policy_bool": {
+        "applied": false,
+        "code": "FRESHNESS_POLICY_INVALID",
+        "journal_unchanged": true
+      },
+      "policy_inf": {
+        "applied": false,
+        "code": "FRESHNESS_POLICY_INVALID",
+        "journal_unchanged": true
+      },
+      "policy_nan": {
+        "applied": false,
+        "code": "FRESHNESS_POLICY_INVALID",
+        "journal_unchanged": true
+      },
+      "policy_negative_max_age": {
+        "applied": false,
+        "code": "FRESHNESS_POLICY_INVALID",
+        "journal_unchanged": true
+      },
+      "policy_no_label": {
+        "applied": false,
+        "code": "FRESHNESS_POLICY_INVALID",
+        "journal_unchanged": true
+      },
+      "policy_none": {
+        "applied": false,
+        "code": "FRESHNESS_POLICY_REQUIRED",
+        "journal_unchanged": true
+      },
+      "policy_omitted": {
+        "applied": false,
+        "code": "FRESHNESS_POLICY_REQUIRED",
+        "journal_unchanged": true
+      },
+      "policy_wrong_type": {
+        "applied": false,
+        "code": "FRESHNESS_POLICY_INVALID",
+        "journal_unchanged": true
+      },
+      "replay_first_apply": {
+        "applied": true,
+        "journal_unchanged": false,
+        "state": "RUNNING"
+      },
+      "replay_second": {
+        "applied": false,
+        "code": "REPLAY",
+        "journal_unchanged": true
+      },
+      "same_nonce_after_stale_refusal": {
+        "applied": true,
+        "journal_unchanged": false,
+        "state": "SUCCEEDED"
+      },
+      "stale_with_nonce": {
+        "applied": false,
+        "code": "REPORT_STALE",
+        "journal_unchanged": true
+      },
+      "timestamp_malformed_bool": {
+        "applied": false,
+        "code": "REPORT_TIMESTAMP_MALFORMED",
+        "journal_unchanged": true
+      },
+      "timestamp_malformed_str": {
+        "applied": false,
+        "code": "REPORT_TIMESTAMP_MALFORMED",
+        "journal_unchanged": true
+      },
+      "timestamp_missing": {
+        "applied": false,
+        "code": "REPORT_TIMESTAMP_MISSING",
+        "journal_unchanged": true
+      },
+      "too_old": {
+        "applied": false,
+        "code": "REPORT_STALE",
+        "journal_unchanged": true
+      }
+    },
+    "code_mismatches": {},
+    "expected_codes": {
+      "ancient_1970": "REPORT_STALE",
+      "boundary_age_eq_max_plus_eps": "REPORT_STALE",
+      "from_future_beyond_skew": "REPORT_FROM_FUTURE",
+      "parametric_strict_refuses": "REPORT_STALE",
+      "policy_bool": "FRESHNESS_POLICY_INVALID",
+      "policy_inf": "FRESHNESS_POLICY_INVALID",
+      "policy_nan": "FRESHNESS_POLICY_INVALID",
+      "policy_negative_max_age": "FRESHNESS_POLICY_INVALID",
+      "policy_no_label": "FRESHNESS_POLICY_INVALID",
+      "policy_none": "FRESHNESS_POLICY_REQUIRED",
+      "policy_omitted": "FRESHNESS_POLICY_REQUIRED",
+      "policy_wrong_type": "FRESHNESS_POLICY_INVALID",
+      "replay_second": "REPLAY",
+      "stale_with_nonce": "REPORT_STALE",
+      "timestamp_malformed_bool": "REPORT_TIMESTAMP_MALFORMED",
+      "timestamp_malformed_str": "REPORT_TIMESTAMP_MALFORMED",
+      "timestamp_missing": "REPORT_TIMESTAMP_MISSING",
+      "too_old": "REPORT_STALE"
+    },
+    "freshness_attestation": {
+      "age_s": 0.0,
+      "checked_at": 1000000.0,
+      "issued_at": 1000000.0,
+      "policy": {
+        "label": "LAB_TEST_PARAMETER_NOT_A_POLICY_DECISION",
+        "max_age_s": 120.0,
+        "max_future_skew_s": 5.0
+      },
+      "verdict": "FRESH"
+    },
+    "ok": true,
+    "policy_used": {
+      "label": "LAB_TEST_PARAMETER_NOT_A_POLICY_DECISION",
+      "max_age_s": 120.0,
+      "max_future_skew_s": 5.0
+    },
+    "refusals_left_journal_unchanged": true,
+    "verified": true
+  },
+  "prepare": {
+    "jobs": [
+      {
+        "go_error": "ConnectionResetError",
+        "go_ok": false,
+        "job_id": null,
+        "ok": true,
+        "op": "lab:c03_0",
+        "persisted_state": "SUBMIT_UNKNOWN",
+        "state": null
+      },
+      {
+        "go_error": "ConnectionResetError",
+        "go_ok": false,
+        "job_id": null,
+        "ok": true,
+        "op": "lab:c03_1",
+        "persisted_state": "SUBMIT_UNKNOWN",
+        "state": null
+      },
+      {
+        "go_error": "ConnectionResetError",
+        "go_ok": false,
+        "job_id": null,
+        "ok": true,
+        "op": "lab:c03_2",
+        "persisted_state": "SUBMIT_UNKNOWN",
+        "state": null
+      },
+      {
+        "go_error": "ConnectionResetError",
+        "go_ok": false,
+        "job_id": null,
+        "ok": true,
+        "op": "lab:c03_3",
+        "persisted_state": "SUBMIT_UNKNOWN",
+        "state": null
+      },
+      {
+        "go_error": "ConnectionResetError",
+        "go_ok": false,
+        "job_id": null,
+        "ok": true,
+        "op": "lab:c03_4",
+        "persisted_state": "SUBMIT_UNKNOWN",
+        "state": null
+      },
+      {
+        "go_error": "ConnectionResetError",
+        "go_ok": false,
+        "job_id": null,
+        "ok": true,
+        "op": "lab:c03_5",
+        "persisted_state": "SUBMIT_UNKNOWN",
+        "state": null
+      }
+    ],
+    "ok": true,
+    "rows": [
+      {
+        "attempt_token": "att_15a24b3532c2afdb4d7415a8",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_a7841f4d476e96ca_1",
+        "operation_id": "lab:c03_0",
+        "payload_digest": "76e565f73f6a58361782c198e17167669516bbbd7e2daff82c53669573535f83",
+        "permit_id": "permit_34721f2db58d89c5163548c6",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_4d0a0a7f51c56361d4b693da",
+        "revision": 2,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "a7841f4d476e96caf2c381524760f053918fadaf00ad82fd447374b43130287c",
+        "state": "SUBMIT_UNKNOWN",
+        "submit_intent_at": 1789686830.8407698
+      },
+      {
+        "attempt_token": "att_fc1606c2982edd62fc755f26",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_a8200218f0b005c1_1",
+        "operation_id": "lab:c03_1",
+        "payload_digest": "3e5be000ef17fe73b6525415731343a622877910ab770ea53705333354f51e6a",
+        "permit_id": "permit_e2a4a5585f20400481d4d03f",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_7a84add91b39ba022f7c3884",
+        "revision": 2,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "a8200218f0b005c140e1d4ef9dfa9602ec0a0ce4200514e053967830cc1b84c6",
+        "state": "SUBMIT_UNKNOWN",
+        "submit_intent_at": 1789686830.857118
+      },
+      {
+        "attempt_token": "att_80f87ea117d173fd08218e4c",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_9ff16581e4a8b26a_1",
+        "operation_id": "lab:c03_2",
+        "payload_digest": "19e83d020a6f4c9bbe2b6c7e6baaf4465b741dd05a826af158268aa43f61bfc9",
+        "permit_id": "permit_2de6dd6fd986325b82d62d54",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_33f4baf71c415cd7c4097b0a",
+        "revision": 2,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "9ff16581e4a8b26af098bb4942d0d054d939f05a5ab57c644b55e9b3200c186b",
+        "state": "SUBMIT_UNKNOWN",
+        "submit_intent_at": 1789686830.8720117
+      },
+      {
+        "attempt_token": "att_71ee3a8480dfd9214a1077ea",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_0c92d24fcd48d4fc_1",
+        "operation_id": "lab:c03_3",
+        "payload_digest": "9bc23ff8426b64f6b71f88c400e7eaa9c7d376b5c014d6d8d4516c46c1a0bdc1",
+        "permit_id": "permit_0797921308d892383351b116",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_81921efa41ea8f9398036539",
+        "revision": 2,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "0c92d24fcd48d4fc812d1f6cc7bcc97adf97aba02eab70fc8d6ae57346de9c02",
+        "state": "SUBMIT_UNKNOWN",
+        "submit_intent_at": 1789686830.8865917
+      },
+      {
+        "attempt_token": "att_494669c090a61f76c111fde0",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_9264bbd44e63f60f_1",
+        "operation_id": "lab:c03_4",
+        "payload_digest": "9a023bb636ab78aeb4f2a69aab2ef4a20306a32e3cda07632abd5ad83ac570df",
+        "permit_id": "permit_fffae40fd17cbbaae79d943b",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_e3b13f6d3c2afb1be94dcb44",
+        "revision": 2,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "9264bbd44e63f60f892c4acc4c97379c0f0428631b6705f3d999d3a54e40001d",
+        "state": "SUBMIT_UNKNOWN",
+        "submit_intent_at": 1789686830.9001162
+      },
+      {
+        "attempt_token": "att_def67bd710bd294360611315",
+        "budget_units": 10,
+        "envelope_id": "ENV_LAB",
+        "error": null,
+        "job_id": "res_17aab5cd5ad55f51_1",
+        "operation_id": "lab:c03_5",
+        "payload_digest": "34c3fc87c7581c0398b610fef90c63d89ff55e101847f730aec83aafb9b78004",
+        "permit_id": "permit_e3b1a085987d1648df572de6",
+        "provider": "fake",
+        "provider_account": "fake_acct_a",
+        "provider_job_id": null,
+        "quote_id": "quote_334a76723f9ed17fc8938528",
+        "revision": 2,
+        "settled_units": null,
+        "settlement_source": null,
+        "spec_key": "17aab5cd5ad55f5109e657a454f33a936dcf49c4a5ada943b5e88cd0891828bb",
+        "state": "SUBMIT_UNKNOWN",
+        "submit_intent_at": 1789686830.9132886
+      }
+    ]
+  }
+}

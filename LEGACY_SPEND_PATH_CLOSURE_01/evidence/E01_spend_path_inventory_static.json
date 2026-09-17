@@ -1,0 +1,2911 @@
+{
+  "closure_harness": {
+    "call_totals": {
+      "authorize_payload": 4,
+      "go": 10,
+      "issue_quote": 3,
+      "open_envelope": 2,
+      "reconcile": 1,
+      "reserve_or_get_live": 2,
+      "run_job": 2,
+      "submit": 4
+    },
+    "files_with_spend_surface": 7,
+    "per_file": {
+      "lspc1/inventory.py": {
+        "budget_kwargs": [],
+        "calls": [],
+        "legacy_markers": 5
+      },
+      "lspc1/migrated.py": {
+        "budget_kwargs": [
+          {
+            "call": "reserve_or_get_live",
+            "in": "m13",
+            "kwarg": "budget_units",
+            "line": 370
+          }
+        ],
+        "calls": [
+          {
+            "call": "reserve_or_get_live",
+            "in": "m13",
+            "line": 370,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "issue_quote",
+            "in": "m13",
+            "line": 380,
+            "role": "AUTORITA': emissione di una quote fidata"
+          }
+        ],
+        "legacy_markers": 9
+      },
+      "lspc1/probe_main.py": {
+        "budget_kwargs": [
+          {
+            "call": "run",
+            "in": "budget",
+            "kwarg": "envelope_units",
+            "line": 69
+          },
+          {
+            "call": "run",
+            "in": "budget",
+            "kwarg": "envelope_units",
+            "line": 72
+          },
+          {
+            "call": "run",
+            "in": "budget",
+            "kwarg": "budget_units",
+            "line": 77
+          },
+          {
+            "call": "run",
+            "in": "budget",
+            "kwarg": "budget_units",
+            "line": 82
+          }
+        ],
+        "calls": [],
+        "legacy_markers": 0
+      },
+      "lspc1/run_gate_e.py": {
+        "budget_kwargs": [],
+        "calls": [],
+        "legacy_markers": 22
+      },
+      "lspc1/runner.py": {
+        "budget_kwargs": [],
+        "calls": [],
+        "legacy_markers": 2
+      },
+      "lspc1/spenders.py": {
+        "budget_kwargs": [],
+        "calls": [
+          {
+            "call": "authorize_payload",
+            "in": "_authorize_payload",
+            "line": 82,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "submit",
+            "in": "_dispatch",
+            "line": 87,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "authorize_payload",
+            "in": "authorize_payload",
+            "line": 61,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "submit",
+            "in": "submit",
+            "line": 65,
+            "role": "SPENDER: invio al provider"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "lspc1/workers.py": {
+        "budget_kwargs": [
+          {
+            "call": "update",
+            "in": "p3_governed_with_spender",
+            "kwarg": "budget_units",
+            "line": 240
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "p7_reconcile_raw",
+            "kwarg": "budget_units",
+            "line": 358
+          },
+          {
+            "call": "dict",
+            "in": "gov_run",
+            "kwarg": "budget_units",
+            "line": 640
+          },
+          {
+            "call": "dict",
+            "in": "gov_run",
+            "kwarg": "envelope_units",
+            "line": 640
+          },
+          {
+            "call": "update",
+            "in": "gov_run",
+            "kwarg": "budget_units",
+            "line": 651
+          },
+          {
+            "call": "update",
+            "in": "p4_core_run_job_direct",
+            "kwarg": "budget_units",
+            "line": 272
+          },
+          {
+            "call": "update",
+            "in": "p4_core_run_job_direct",
+            "kwarg": "envelope_units",
+            "line": 272
+          }
+        ],
+        "calls": [
+          {
+            "call": "open_envelope",
+            "in": "_authority_quote",
+            "line": 141,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "_authority_quote",
+            "line": 143,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "go",
+            "in": "p1_legacy_with_spender",
+            "line": 174,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "go",
+            "in": "p2_legacy_with_lab_adapter",
+            "line": 200,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "go",
+            "in": "p3_governed_with_spender",
+            "line": 234,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "run_job",
+            "in": "p4_core_run_job_direct",
+            "line": 273,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "submit",
+            "in": "p5_adapter_submit_direct",
+            "line": 296,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "authorize_payload",
+            "in": "p6_authorize_payload_direct",
+            "line": 319,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "p7_reconcile_raw",
+            "line": 358,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "go",
+            "in": "disengaged",
+            "line": 456,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "go",
+            "in": "masked",
+            "line": 514,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "go",
+            "in": "p10_hf_batch_legacy",
+            "line": 564,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "go",
+            "in": "gov_run",
+            "line": 650,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "open_envelope",
+            "in": "gov_hf_batch",
+            "line": 750,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "reconcile",
+            "in": "p7_reconcile_raw",
+            "line": 364,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "run_job",
+            "in": "p7_reconcile_raw",
+            "line": 373,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "go",
+            "in": "engaged",
+            "line": 446,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "go",
+            "in": "env_enabled",
+            "line": 466,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "authorize_payload",
+            "in": "authorize_payload",
+            "line": 509,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "submit",
+            "in": "submit",
+            "line": 512,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "issue_quote",
+            "in": "gov_hf_batch",
+            "line": 755,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "go",
+            "in": "gov_hf_batch",
+            "line": 786,
+            "role": "verbo `go` del runtime"
+          }
+        ],
+        "legacy_markers": 18
+      }
+    },
+    "root": "/home/user/esercitazioni/LEGACY_SPEND_PATH_CLOSURE_01"
+  },
+  "core": {
+    "call_totals": {
+      "authorize_dispatch": 4,
+      "authorize_payload": 5,
+      "expire": 3,
+      "grant_dispatch": 4,
+      "issue_permit": 7,
+      "issue_quote": 13,
+      "mark_refused_before_send": 2,
+      "mark_refused_pre_submit": 15,
+      "mark_submitted": 3,
+      "mark_submitting": 5,
+      "open_envelope": 20,
+      "reconcile": 15,
+      "recover_orphaned_submits": 2,
+      "reserve_or_get_live": 61,
+      "resume_job": 8,
+      "run_job": 84,
+      "settle": 14,
+      "submit": 8
+    },
+    "files_with_spend_surface": 9,
+    "per_file": {
+      "registry/reservations.py": {
+        "budget_kwargs": [
+          {
+            "call": "check_quote_binding",
+            "in": "reserve_or_get_live",
+            "kwarg": "budget_units",
+            "line": 567
+          }
+        ],
+        "calls": [],
+        "legacy_markers": 0
+      },
+      "tests/run_block2.py": {
+        "budget_kwargs": [],
+        "calls": [
+          {
+            "call": "run_job",
+            "in": "t_idempotent_submit",
+            "line": 173,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "t_idempotent_submit",
+            "line": 174,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "authorize_payload",
+            "in": "t_webhook_is_a_hint",
+            "line": 188,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "run_job",
+            "in": "t_never_terminal_times_out",
+            "line": 215,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "t_never_terminal_times_out",
+            "line": 219,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "t_failed_job_no_asset",
+            "line": 226,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "t_three_way_ok",
+            "line": 235,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "t_corruption_leaves_nothing",
+            "line": 251,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "t_mime_refused",
+            "line": 275,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "t_p2_guard",
+            "line": 293,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "submit",
+            "in": "t_webhook_is_a_hint",
+            "line": 189,
+            "role": "SPENDER: invio al provider"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "tests/run_ng05_pre_submit_atomicity.py": {
+        "budget_kwargs": [
+          {
+            "call": "reserve_or_get_live",
+            "in": "reserved",
+            "kwarg": "budget_units",
+            "line": 75
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "h_contract_and_jobstore",
+            "kwarg": "budget_units",
+            "line": 270
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "h_contract_and_jobstore",
+            "kwarg": "envelope_units",
+            "line": 270
+          }
+        ],
+        "calls": [
+          {
+            "call": "open_envelope",
+            "in": "reserved",
+            "line": 73,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "reserved",
+            "line": 75,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "_crash_child",
+            "line": 95,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "a_single_transaction",
+            "line": 115,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "b_parametric_provenance",
+            "line": 126,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_submitting",
+            "in": "d_only_pre_submit",
+            "line": 176,
+            "role": "persistenza dell'intento di submit"
+          },
+          {
+            "call": "mark_submitted",
+            "in": "d_only_pre_submit",
+            "line": 182,
+            "role": "persistenza dell'identita' remota"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "d_only_pre_submit",
+            "line": 194,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_submitting",
+            "in": "e_cas_stale_write",
+            "line": 205,
+            "role": "persistenza dell'intento di submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "f_economics",
+            "line": 224,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "settle",
+            "in": "f_economics",
+            "line": 235,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "mark_refused_before_send",
+            "in": "g_mark_refused_before_send_unchanged",
+            "line": 249,
+            "role": "chiusura con attestazione del trasporto"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "h_contract_and_jobstore",
+            "line": 270,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "h_contract_and_jobstore",
+            "line": 276,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "c_transport_provenance_refused",
+            "line": 147,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "c_transport_provenance_refused",
+            "line": 152,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "c_transport_provenance_refused",
+            "line": 155,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "c_transport_provenance_refused",
+            "line": 159,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "c_transport_provenance_refused",
+            "line": 163,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "d_only_pre_submit",
+            "line": 184,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "e_cas_stale_write",
+            "line": 207,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "f_economics",
+            "line": 230,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "h_contract_and_jobstore",
+            "line": 273,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "tests/run_r0_r1_hardening.py": {
+        "budget_kwargs": [
+          {
+            "call": "run_job",
+            "in": "ledger_three_settled_saturate_fourth_refused",
+            "kwarg": "budget_units",
+            "line": 585
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_terminal_does_not_release_unsettled_exposure",
+            "kwarg": "budget_units",
+            "line": 594
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_terminal_does_not_release_unsettled_exposure",
+            "kwarg": "envelope_units",
+            "line": 594
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_terminal_does_not_release_unsettled_exposure",
+            "kwarg": "budget_units",
+            "line": 603
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_terminal_does_not_release_unsettled_exposure",
+            "kwarg": "envelope_units",
+            "line": 603
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_settlement_semantics",
+            "kwarg": "budget_units",
+            "line": 612
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_settlement_semantics",
+            "kwarg": "budget_units",
+            "line": 613
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_settlement_semantics",
+            "kwarg": "budget_units",
+            "line": 626
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_settlement_semantics",
+            "kwarg": "budget_units",
+            "line": 631
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_reservation_and_state_share_one_authority",
+            "kwarg": "budget_units",
+            "line": 647
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_race_on_last_remainder",
+            "kwarg": "budget_units",
+            "line": 672
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_crash_during_settlement",
+            "kwarg": "budget_units",
+            "line": 696
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr02_quote_binding_in_reservation",
+            "kwarg": "budget_units",
+            "line": 841
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr02_quote_binding_in_reservation",
+            "kwarg": "budget_units",
+            "line": 846
+          },
+          {
+            "call": "run_job",
+            "in": "cr07_settlement_above_reservation_is_recorded",
+            "kwarg": "budget_units",
+            "line": 951
+          },
+          {
+            "call": "run_job",
+            "in": "cr07_settlement_above_reservation_is_recorded",
+            "kwarg": "budget_units",
+            "line": 964
+          },
+          {
+            "call": "run_job",
+            "in": "d02_quote_single_use_lifecycle",
+            "kwarg": "budget_units",
+            "line": 977
+          },
+          {
+            "call": "run_job",
+            "in": "d02_quote_single_use_lifecycle",
+            "kwarg": "budget_units",
+            "line": 985
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "kwarg": "budget_units",
+            "line": 1052
+          },
+          {
+            "call": "run_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "kwarg": "budget_units",
+            "line": 1071
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_three_settled_saturate_fourth_refused",
+            "kwarg": "budget_units",
+            "line": 573
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "_reserve_child",
+            "kwarg": "budget_units",
+            "line": 660
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "_quote_race_child",
+            "kwarg": "budget_units",
+            "line": 1014
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_three_settled_saturate_fourth_refused",
+            "kwarg": "budget_units",
+            "line": 581
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_terminal_does_not_release_unsettled_exposure",
+            "kwarg": "budget_units",
+            "line": 596
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_terminal_does_not_release_unsettled_exposure",
+            "kwarg": "envelope_units",
+            "line": 596
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "ledger_reservation_and_state_share_one_authority",
+            "kwarg": "budget_units",
+            "line": 649
+          },
+          {
+            "call": "dict",
+            "in": "cr02_quote_binding_in_reservation",
+            "kwarg": "budget_units",
+            "line": 826
+          },
+          {
+            "call": "dict",
+            "in": "cr02_quote_binding_in_reservation",
+            "kwarg": "budget_units",
+            "line": 827
+          },
+          {
+            "call": "dict",
+            "in": "cr02_quote_binding_in_reservation",
+            "kwarg": "budget_units",
+            "line": 828
+          },
+          {
+            "call": "dict",
+            "in": "cr02_quote_binding_in_reservation",
+            "kwarg": "budget_units",
+            "line": 829
+          },
+          {
+            "call": "dict",
+            "in": "cr02_quote_binding_in_reservation",
+            "kwarg": "budget_units",
+            "line": 830
+          },
+          {
+            "call": "dict",
+            "in": "cr02_quote_binding_in_reservation",
+            "kwarg": "budget_units",
+            "line": 831
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr02_quote_binding_in_reservation",
+            "kwarg": "budget_units",
+            "line": 850
+          },
+          {
+            "call": "run_job",
+            "in": "cr07_settlement_above_reservation_is_recorded",
+            "kwarg": "budget_units",
+            "line": 962
+          },
+          {
+            "call": "run_job",
+            "in": "d02_quote_single_use_lifecycle",
+            "kwarg": "budget_units",
+            "line": 981
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "d02_quote_single_use_lifecycle",
+            "kwarg": "budget_units",
+            "line": 995
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "d02_quote_single_use_lifecycle",
+            "kwarg": "budget_units",
+            "line": 1001
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "d02_quote_single_use_lifecycle",
+            "kwarg": "budget_units",
+            "line": 1005
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "kwarg": "budget_units",
+            "line": 1049
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "kwarg": "budget_units",
+            "line": 1079
+          }
+        ],
+        "calls": [
+          {
+            "call": "reserve_or_get_live",
+            "in": "rv01_stale_put_cannot_regress_terminal",
+            "line": 83,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reconcile",
+            "in": "rv01_stale_put_cannot_regress_terminal",
+            "line": 85,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "rv01_stale_write_after_new_attempt_is_controlled",
+            "line": 105,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reconcile",
+            "in": "rv01_stale_write_after_new_attempt_is_controlled",
+            "line": 107,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "rv01_stale_write_after_new_attempt_is_controlled",
+            "line": 108,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv01_two_pollers_newer_first_older_after",
+            "line": 140,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv01_two_pollers_newer_first_older_after",
+            "line": 149,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "rv01_all_write_paths_are_guarded",
+            "line": 165,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reconcile",
+            "in": "rv01_all_write_paths_are_guarded",
+            "line": 167,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "rv01_inmemory_store_has_same_contract",
+            "line": 185,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reconcile",
+            "in": "rv01_inmemory_store_has_same_contract",
+            "line": 187,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "run_job",
+            "in": "rv02_payload_digest_before_after",
+            "line": 317,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "_live_job",
+            "line": 339,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv06_correct_response_is_accepted",
+            "line": 409,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "_ingested_job",
+            "line": 431,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv08_wrong_job_state_and_stale_object",
+            "line": 496,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv03_permit_is_consumed_once",
+            "line": 514,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "issue_permit",
+            "in": "rv03_permit_is_consumed_once",
+            "line": 516,
+            "role": "AUTORITA': emissione di un permesso di nuovo tentativo"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "rv03_permit_is_consumed_once",
+            "line": 517,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reconcile",
+            "in": "rv03_permit_is_consumed_once",
+            "line": 520,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "issue_permit",
+            "in": "rv03_permit_is_consumed_once",
+            "line": 523,
+            "role": "AUTORITA': emissione di un permesso di nuovo tentativo"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "rv03_operation_uncertain_blocks_new_spec",
+            "line": 549,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv03_resume_primitive_returns_latest",
+            "line": 557,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "open_envelope",
+            "in": "ledger_three_settled_saturate_fourth_refused",
+            "line": 570,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_three_settled_saturate_fourth_refused",
+            "line": 585,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_terminal_does_not_release_unsettled_exposure",
+            "line": 594,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_terminal_does_not_release_unsettled_exposure",
+            "line": 600,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_terminal_does_not_release_unsettled_exposure",
+            "line": 603,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "open_envelope",
+            "in": "ledger_settlement_semantics",
+            "line": 611,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_settlement_semantics",
+            "line": 612,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_settlement_semantics",
+            "line": 613,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_settlement_semantics",
+            "line": 615,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_settlement_semantics",
+            "line": 616,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_settlement_semantics",
+            "line": 622,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_settlement_semantics",
+            "line": 626,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_settlement_semantics",
+            "line": 627,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_settlement_semantics",
+            "line": 631,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_settlement_semantics",
+            "line": 632,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "open_envelope",
+            "in": "ledger_reservation_and_state_share_one_authority",
+            "line": 645,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_reservation_and_state_share_one_authority",
+            "line": 647,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "issue_permit",
+            "in": "ledger_reservation_and_state_share_one_authority",
+            "line": 648,
+            "role": "AUTORITA': emissione di un permesso di nuovo tentativo"
+          },
+          {
+            "call": "open_envelope",
+            "in": "ledger_race_on_last_remainder",
+            "line": 671,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_race_on_last_remainder",
+            "line": 672,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_race_on_last_remainder",
+            "line": 673,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "settle",
+            "in": "_settle_crash_child",
+            "line": 689,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "open_envelope",
+            "in": "ledger_crash_during_settlement",
+            "line": 695,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_crash_during_settlement",
+            "line": 696,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_crash_during_settlement",
+            "line": 703,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "run_job",
+            "in": "_submit_crash_child",
+            "line": 716,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "recover_orphaned_submits",
+            "in": "recovery_crash_after_send_before_journal",
+            "line": 728,
+            "role": "recovery: RESERVED -> SUBMIT_UNKNOWN"
+          },
+          {
+            "call": "run_job",
+            "in": "recovery_crash_after_send_before_journal",
+            "line": 733,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "_reserve_only_crash_child",
+            "line": 740,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "run_job",
+            "in": "recovery_crash_after_reservation_is_declared_gap",
+            "line": 757,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "cr01_live_spec_not_shared_across_operations",
+            "line": 769,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "cr01_live_spec_not_shared_across_operations",
+            "line": 780,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "cr01_permit_bound_to_operation",
+            "line": 789,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "issue_permit",
+            "in": "cr01_permit_bound_to_operation",
+            "line": 791,
+            "role": "AUTORITA': emissione di un permesso di nuovo tentativo"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr01_permit_bound_to_operation",
+            "line": 795,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "issue_permit",
+            "in": "cr01_permit_bound_to_operation",
+            "line": 798,
+            "role": "AUTORITA': emissione di un permesso di nuovo tentativo"
+          },
+          {
+            "call": "run_job",
+            "in": "cr01_resume_reads_the_operation_not_the_spec",
+            "line": 808,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "cr01_resume_reads_the_operation_not_the_spec",
+            "line": 809,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "open_envelope",
+            "in": "cr02_quote_binding_in_reservation",
+            "line": 821,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "cr02_quote_binding_in_reservation",
+            "line": 823,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr02_quote_binding_in_reservation",
+            "line": 841,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "issue_quote",
+            "in": "cr02_quote_binding_in_reservation",
+            "line": 845,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr02_quote_binding_in_reservation",
+            "line": 846,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "issue_quote",
+            "in": "cr02_quote_binding_in_reservation",
+            "line": 849,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr05_direct_reserved_transitions_only_via_reconcile",
+            "line": 905,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reconcile",
+            "in": "cr05_direct_reserved_transitions_only_via_reconcile",
+            "line": 916,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "reconcile",
+            "in": "cr05_direct_reserved_transitions_only_via_reconcile",
+            "line": 935,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr05_direct_reserved_transitions_only_via_reconcile",
+            "line": 938,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reconcile",
+            "in": "cr05_direct_reserved_transitions_only_via_reconcile",
+            "line": 942,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "open_envelope",
+            "in": "cr07_settlement_above_reservation_is_recorded",
+            "line": 950,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "run_job",
+            "in": "cr07_settlement_above_reservation_is_recorded",
+            "line": 951,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "settle",
+            "in": "cr07_settlement_above_reservation_is_recorded",
+            "line": 952,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "run_job",
+            "in": "cr07_settlement_above_reservation_is_recorded",
+            "line": 964,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "open_envelope",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 974,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 976,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "run_job",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 977,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "issue_permit",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 979,
+            "role": "AUTORITA': emissione di un permesso di nuovo tentativo"
+          },
+          {
+            "call": "issue_quote",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 984,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "run_job",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 985,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "resume_job",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 988,
+            "role": "ripresa di un tentativo autorizzato (nessuna nuova spesa)"
+          },
+          {
+            "call": "open_envelope",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 992,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 994,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "run_job",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 999,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "issue_quote",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 1000,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "issue_quote",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 1004,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "open_envelope",
+            "in": "d02_quote_concurrent_single_reservation",
+            "line": 1024,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "d02_quote_concurrent_single_reservation",
+            "line": 1027,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "open_envelope",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "line": 1045,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "line": 1047,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "issue_quote",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "line": 1048,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "line": 1052,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "open_envelope",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "line": 1055,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "open_envelope",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1067,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1069,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "run_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1071,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "resume_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1075,
+            "role": "ripresa di un tentativo autorizzato (nessuna nuova spesa)"
+          },
+          {
+            "call": "resume_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1090,
+            "role": "ripresa di un tentativo autorizzato (nessuna nuova spesa)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1093,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "resume_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1094,
+            "role": "ripresa di un tentativo autorizzato (nessuna nuova spesa)"
+          },
+          {
+            "call": "resume_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1097,
+            "role": "ripresa di un tentativo autorizzato (nessuna nuova spesa)"
+          },
+          {
+            "call": "run_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1103,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv03_operation_uncertain_blocks_new_spec",
+            "line": 538,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_three_settled_saturate_fourth_refused",
+            "line": 573,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_three_settled_saturate_fourth_refused",
+            "line": 575,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "_reserve_child",
+            "line": 660,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "recover_orphaned_submits",
+            "in": "recovery_crash_after_reservation_is_declared_gap",
+            "line": 754,
+            "role": "recovery: RESERVED -> SUBMIT_UNKNOWN"
+          },
+          {
+            "call": "open_envelope",
+            "in": "cr02_quote_binding_in_reservation",
+            "line": 832,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "run_job",
+            "in": "cr05_direct_reserved_transitions_only_via_reconcile",
+            "line": 928,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "_quote_race_child",
+            "line": 1014,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "run_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1086,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "_init_child",
+            "line": 1115,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "submit",
+            "in": "submit",
+            "line": 205,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "run_job",
+            "in": "rv02_nested_mutation_before_send_is_refused",
+            "line": 207,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv02_serializer_divergence_blocked_before_send",
+            "line": 303,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv06_poll_with_other_remote_job_id_is_refused",
+            "line": 352,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv06_poll_with_other_provider_is_refused",
+            "line": 368,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv06_other_account_same_provider_same_remote_id",
+            "line": 378,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv06_other_account_same_provider_same_remote_id",
+            "line": 386,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv06_revision_or_identity_tampering_in_response",
+            "line": 396,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "rv06_revision_or_identity_tampering_in_response",
+            "line": 400,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "rv03_permit_is_consumed_once",
+            "line": 521,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "rv03_permit_is_consumed_once",
+            "line": 524,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "rv03_permit_is_consumed_once",
+            "line": 525,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "issue_permit",
+            "in": "rv03_permit_is_consumed_once",
+            "line": 526,
+            "role": "AUTORITA': emissione di un permesso di nuovo tentativo"
+          },
+          {
+            "call": "run_job",
+            "in": "rv03_operation_uncertain_blocks_new_spec",
+            "line": 544,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_three_settled_saturate_fourth_refused",
+            "line": 581,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "ledger_terminal_does_not_release_unsettled_exposure",
+            "line": 596,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_settlement_semantics",
+            "line": 618,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "settle",
+            "in": "ledger_settlement_semantics",
+            "line": 637,
+            "role": "AUTORITA': regolazione economica"
+          },
+          {
+            "call": "open_envelope",
+            "in": "ledger_settlement_semantics",
+            "line": 638,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "ledger_reservation_and_state_share_one_authority",
+            "line": 649,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "run_job",
+            "in": "cr01_live_spec_not_shared_across_operations",
+            "line": 772,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "cr01_live_spec_not_shared_across_operations",
+            "line": 773,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr01_permit_bound_to_operation",
+            "line": 792,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr01_permit_bound_to_operation",
+            "line": 793,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr01_permit_bound_to_operation",
+            "line": 799,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr02_quote_binding_in_reservation",
+            "line": 835,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr02_quote_binding_in_reservation",
+            "line": 850,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reconcile",
+            "in": "cr05_direct_reserved_transitions_only_via_reconcile",
+            "line": 911,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "reconcile",
+            "in": "cr05_direct_reserved_transitions_only_via_reconcile",
+            "line": 912,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "reconcile",
+            "in": "cr05_direct_reserved_transitions_only_via_reconcile",
+            "line": 941,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "run_job",
+            "in": "cr07_settlement_above_reservation_is_recorded",
+            "line": 962,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 981,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 995,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 1001,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "d02_quote_single_use_lifecycle",
+            "line": 1005,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "line": 1049,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "open_envelope",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "line": 1057,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "open_envelope",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "line": 1058,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "open_envelope",
+            "in": "cr11_unit_binding_and_envelope_idempotency",
+            "line": 1059,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1079,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "resume_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1104,
+            "role": "ripresa di un tentativo autorizzato (nessuna nuova spesa)"
+          },
+          {
+            "call": "resume_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1105,
+            "role": "ripresa di un tentativo autorizzato (nessuna nuova spesa)"
+          },
+          {
+            "call": "resume_job",
+            "in": "cr09_resume_is_not_new_spend_nor_dispatch",
+            "line": 1106,
+            "role": "ripresa di un tentativo autorizzato (nessuna nuova spesa)"
+          },
+          {
+            "call": "expire",
+            "in": "rv01_all_write_paths_are_guarded",
+            "line": 177,
+            "role": "deadline locale -> SUBMIT_UNKNOWN"
+          },
+          {
+            "call": "mark_submitted",
+            "in": "rv01_all_write_paths_are_guarded",
+            "line": 171,
+            "role": "persistenza dell'identita' remota"
+          },
+          {
+            "call": "expire",
+            "in": "rv01_all_write_paths_are_guarded",
+            "line": 174,
+            "role": "deadline locale -> SUBMIT_UNKNOWN"
+          },
+          {
+            "call": "run_job",
+            "in": "rv01_two_pollers_newer_first_older_after",
+            "line": 146,
+            "role": "dispatch (arteria del Core)"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "tests/run_reservation.py": {
+        "budget_kwargs": [
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_budget_atomic_with_identity",
+            "kwarg": "budget_units",
+            "line": 151
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_budget_atomic_with_identity",
+            "kwarg": "envelope_units",
+            "line": 151
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "_reserve_in_child",
+            "kwarg": "budget_units",
+            "line": 50
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "_reserve_in_child",
+            "kwarg": "envelope_units",
+            "line": 50
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_budget_atomic_with_identity",
+            "kwarg": "budget_units",
+            "line": 154
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_budget_atomic_with_identity",
+            "kwarg": "envelope_units",
+            "line": 154
+          }
+        ],
+        "calls": [
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_two_outcomes_only",
+            "line": 69,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_two_outcomes_only",
+            "line": 70,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_unique_index_is_physical",
+            "line": 82,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_terminal_frees_identity",
+            "line": 101,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reconcile",
+            "in": "t_terminal_frees_identity",
+            "line": 104,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_terminal_frees_identity",
+            "line": 106,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_budget_atomic_with_identity",
+            "line": 151,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_submit_unknown_is_live_and_not_retryable",
+            "line": 192,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_state_survives_new_process",
+            "line": 199,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_inmemory_declares_its_limit",
+            "line": 214,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_inmemory_declares_its_limit",
+            "line": 215,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "_reserve_in_child",
+            "line": 50,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "t_budget_atomic_with_identity",
+            "line": 154,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "run_job",
+            "in": "t_submit_unknown_is_live_and_not_retryable",
+            "line": 186,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "t_run_job_submits_once_under_threads",
+            "line": 143,
+            "role": "dispatch (arteria del Core)"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "tests/run_review_pr2.py": {
+        "budget_kwargs": [
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4a_negative_budget_units_durable",
+            "kwarg": "budget_units",
+            "line": 176
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4a_negative_budget_units_durable",
+            "kwarg": "envelope_units",
+            "line": 176
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4b_negative_envelope_durable",
+            "kwarg": "budget_units",
+            "line": 187
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4b_negative_envelope_durable",
+            "kwarg": "envelope_units",
+            "line": 187
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4d_negative_budget_inmemory",
+            "kwarg": "budget_units",
+            "line": 210
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4d_negative_budget_inmemory",
+            "kwarg": "envelope_units",
+            "line": 210
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4c_bool_and_float_units_durable",
+            "kwarg": "budget_units",
+            "line": 200
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4c_bool_and_float_units_durable",
+            "kwarg": "envelope_units",
+            "line": 200
+          }
+        ],
+        "calls": [
+          {
+            "call": "run_job",
+            "in": "r1_local_timeout_must_not_free_uncertain_spec",
+            "line": 56,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r1_local_timeout_must_not_free_uncertain_spec",
+            "line": 64,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "run_job",
+            "in": "r1_chain_would_allow_second_submit",
+            "line": 79,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "r1_chain_would_allow_second_submit",
+            "line": 80,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "r2_existing_reserved_job_must_not_be_polled",
+            "line": 114,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r3_inmemory_store_preserves_attempt_history",
+            "line": 144,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r3_inmemory_store_preserves_attempt_history",
+            "line": 147,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r3_inmemory_store_preserves_attempt_history",
+            "line": 154,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "submit",
+            "in": "submit",
+            "line": 97,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "run_job",
+            "in": "thread_a",
+            "line": 109,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4a_negative_budget_units_durable",
+            "line": 176,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4b_negative_envelope_durable",
+            "line": 187,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4d_negative_budget_inmemory",
+            "line": 210,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r4c_bool_and_float_units_durable",
+            "line": 200,
+            "role": "prenotazione atomica (identita' + budget)"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "tests/run_review_pr2_final.py": {
+        "budget_kwargs": [
+          {
+            "call": "run_job",
+            "in": "r5c_failed_is_persisted_and_releases",
+            "kwarg": "budget_units",
+            "line": 75
+          },
+          {
+            "call": "run_job",
+            "in": "r5c_failed_is_persisted_and_releases",
+            "kwarg": "envelope_units",
+            "line": 75
+          }
+        ],
+        "calls": [
+          {
+            "call": "run_job",
+            "in": "r5a_terminal_success_is_persisted",
+            "line": 48,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r5a_terminal_success_is_persisted",
+            "line": 55,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "run_job",
+            "in": "r5b_intermediate_running_is_persisted",
+            "line": 63,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "r5c_failed_is_persisted_and_releases",
+            "line": 75,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "r5_control_local_mutation_is_not_persistence",
+            "line": 88,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "run_job",
+            "in": "r6_wrong_adapter_must_not_poll",
+            "line": 111,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "r6_control_right_adapter_may_poll",
+            "line": 131,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "r6_control_right_adapter_may_poll",
+            "line": 133,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "r6_wrong_adapter_must_not_poll",
+            "line": 117,
+            "role": "dispatch (arteria del Core)"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "tests/run_spender_boundary.py": {
+        "budget_kwargs": [
+          {
+            "call": "run_job",
+            "in": "f_governed_dispatch",
+            "kwarg": "budget_units",
+            "line": 208
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "g_authorization_is_reread",
+            "kwarg": "budget_units",
+            "line": 233
+          },
+          {
+            "call": "run_job",
+            "in": "h_grant_is_bounded",
+            "kwarg": "budget_units",
+            "line": 283
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "i_store_without_quote_authority",
+            "kwarg": "budget_units",
+            "line": 322
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "j_reconciliation_allowlist",
+            "kwarg": "budget_units",
+            "line": 349
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "j_reconciliation_allowlist",
+            "kwarg": "budget_units",
+            "line": 361
+          },
+          {
+            "call": "run_job",
+            "in": "k_lab_adapter_unchanged",
+            "kwarg": "budget_units",
+            "line": 378
+          },
+          {
+            "call": "run_job",
+            "in": "k_lab_adapter_unchanged",
+            "kwarg": "envelope_units",
+            "line": 378
+          },
+          {
+            "call": "run_job",
+            "in": "e_envelope_units_forbidden",
+            "kwarg": "budget_units",
+            "line": 195
+          },
+          {
+            "call": "run_job",
+            "in": "e_envelope_units_forbidden",
+            "kwarg": "envelope_units",
+            "line": 195
+          },
+          {
+            "call": "run_job",
+            "in": "i_store_without_quote_authority",
+            "kwarg": "budget_units",
+            "line": 315
+          }
+        ],
+        "calls": [
+          {
+            "call": "open_envelope",
+            "in": "governed",
+            "line": 107,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "governed",
+            "line": 108,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "run_job",
+            "in": "f_governed_dispatch",
+            "line": 208,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "g_authorization_is_reread",
+            "line": 233,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "mark_submitting",
+            "in": "g_authorization_is_reread",
+            "line": 239,
+            "role": "persistenza dell'intento di submit"
+          },
+          {
+            "call": "run_job",
+            "in": "h_grant_is_bounded",
+            "line": 283,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "i_store_without_quote_authority",
+            "line": 322,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "mark_submitting",
+            "in": "i_store_without_quote_authority",
+            "line": 326,
+            "role": "persistenza dell'intento di submit"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "j_reconciliation_allowlist",
+            "line": 349,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reconcile",
+            "in": "j_reconciliation_allowlist",
+            "line": 356,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "j_reconciliation_allowlist",
+            "line": 361,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "run_job",
+            "in": "k_lab_adapter_unchanged",
+            "line": 372,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "k_lab_adapter_unchanged",
+            "line": 378,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "authorize_payload",
+            "in": "_authorize_payload",
+            "line": 78,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "submit",
+            "in": "_dispatch",
+            "line": 83,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "authorize_dispatch",
+            "in": "ask",
+            "line": 246,
+            "role": "CONFINE: autorizzazione riletta dal journal"
+          },
+          {
+            "call": "grant_dispatch",
+            "in": "h_grant_is_bounded",
+            "line": 290,
+            "role": "CONFINE: concessione del dispatch"
+          },
+          {
+            "call": "grant_dispatch",
+            "in": "h_grant_is_bounded",
+            "line": 296,
+            "role": "CONFINE: concessione del dispatch"
+          },
+          {
+            "call": "submit",
+            "in": "b_direct_submit",
+            "line": 163,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "authorize_payload",
+            "in": "c_direct_authorize",
+            "line": 172,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "run_job",
+            "in": "d_legacy_run_job",
+            "line": 182,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "run_job",
+            "in": "e_envelope_units_forbidden",
+            "line": 195,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "submit",
+            "in": "h_grant_is_bounded",
+            "line": 288,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "run_job",
+            "in": "i_store_without_quote_authority",
+            "line": 315,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "authorize_dispatch",
+            "in": "i_store_without_quote_authority",
+            "line": 335,
+            "role": "CONFINE: autorizzazione riletta dal journal"
+          },
+          {
+            "call": "reconcile",
+            "in": "j_reconciliation_allowlist",
+            "line": 352,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "reconcile",
+            "in": "j_reconciliation_allowlist",
+            "line": 362,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "submit",
+            "in": "h_grant_is_bounded",
+            "line": 297,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "authorize_payload",
+            "in": "h_grant_is_bounded",
+            "line": 299,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "authorize_dispatch",
+            "in": "g_authorization_is_reread",
+            "line": 256,
+            "role": "CONFINE: autorizzazione riletta dal journal"
+          },
+          {
+            "call": "grant_dispatch",
+            "in": "h_grant_is_bounded",
+            "line": 292,
+            "role": "CONFINE: concessione del dispatch"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "transport/pipeline.py": {
+        "budget_kwargs": [
+          {
+            "call": "reserve_or_get_live",
+            "in": "run_job",
+            "kwarg": "budget_units",
+            "line": 124
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "run_job",
+            "kwarg": "envelope_units",
+            "line": 124
+          },
+          {
+            "call": "require_governed_dispatch_inputs",
+            "in": "run_job",
+            "kwarg": "envelope_units",
+            "line": 118
+          }
+        ],
+        "calls": [
+          {
+            "call": "reserve_or_get_live",
+            "in": "run_job",
+            "line": 124,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "mark_submitting",
+            "in": "run_job",
+            "line": 155,
+            "role": "persistenza dell'intento di submit"
+          },
+          {
+            "call": "mark_submitted",
+            "in": "run_job",
+            "line": 215,
+            "role": "persistenza dell'identita' remota"
+          },
+          {
+            "call": "grant_dispatch",
+            "in": "run_job",
+            "line": 163,
+            "role": "CONFINE: concessione del dispatch"
+          },
+          {
+            "call": "authorize_payload",
+            "in": "run_job",
+            "line": 169,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "authorize_dispatch",
+            "in": "run_job",
+            "line": 163,
+            "role": "CONFINE: autorizzazione riletta dal journal"
+          },
+          {
+            "call": "submit",
+            "in": "run_job",
+            "line": 172,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "expire",
+            "in": "_poll_until_terminal",
+            "line": 240,
+            "role": "deadline locale -> SUBMIT_UNKNOWN"
+          },
+          {
+            "call": "mark_refused_before_send",
+            "in": "run_job",
+            "line": 186,
+            "role": "chiusura con attestazione del trasporto"
+          }
+        ],
+        "legacy_markers": 0
+      }
+    },
+    "root": "/home/user/creative-os"
+  },
+  "runtime": {
+    "call_totals": {
+      "go": 7,
+      "issue_permit": 1,
+      "issue_quote": 2,
+      "mark_refused_pre_submit": 1,
+      "mark_submitting": 1,
+      "open_envelope": 2,
+      "reconcile": 2,
+      "reserve_or_get_live": 3,
+      "resume_job": 1,
+      "run_job": 2,
+      "settle": 1
+    },
+    "files_with_spend_surface": 8,
+    "per_file": {
+      "runtime/go_candidate.py": {
+        "budget_kwargs": [
+          {
+            "call": "run_job",
+            "in": "go",
+            "kwarg": "budget_units",
+            "line": 422
+          },
+          {
+            "call": "run_job",
+            "in": "go",
+            "kwarg": "envelope_units",
+            "line": 422
+          },
+          {
+            "call": "GoResult",
+            "in": "go",
+            "kwarg": "budget_units",
+            "line": 428
+          },
+          {
+            "call": "GoResult",
+            "in": "go",
+            "kwarg": "budget_units",
+            "line": 334
+          },
+          {
+            "call": "check_quote_binding",
+            "in": "go",
+            "kwarg": "budget_units",
+            "line": 393
+          }
+        ],
+        "calls": [
+          {
+            "call": "run_job",
+            "in": "go",
+            "line": 422,
+            "role": "dispatch (arteria del Core)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "reserve_or_get_live",
+            "line": 203,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "mark_submitting",
+            "in": "mark_submitting",
+            "line": 214,
+            "role": "persistenza dell'intento di submit"
+          },
+          {
+            "call": "issue_permit",
+            "in": "go",
+            "line": 405,
+            "role": "AUTORITA': emissione di un permesso di nuovo tentativo"
+          },
+          {
+            "call": "resume_job",
+            "in": "go",
+            "line": 332,
+            "role": "ripresa di un tentativo autorizzato (nessuna nuova spesa)"
+          },
+          {
+            "call": "mark_refused_pre_submit",
+            "in": "_refuse_pre_submit",
+            "line": 240,
+            "role": "chiusura atomica di un rifiuto pre-submit"
+          }
+        ],
+        "legacy_markers": 19
+      },
+      "runtime/hf_batch_runtime.py": {
+        "budget_kwargs": [
+          {
+            "call": "go",
+            "in": "run_job",
+            "kwarg": "budget_units",
+            "line": 249
+          },
+          {
+            "call": "go",
+            "in": "run_job",
+            "kwarg": "envelope_units",
+            "line": 249
+          },
+          {
+            "call": "update",
+            "in": "run_job",
+            "kwarg": "budget_units",
+            "line": 257
+          }
+        ],
+        "calls": [
+          {
+            "call": "go",
+            "in": "run_job",
+            "line": 249,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "run_job",
+            "in": "go",
+            "line": 275,
+            "role": "dispatch (arteria del Core)"
+          }
+        ],
+        "legacy_markers": 7
+      },
+      "runtime/orphan_lease.py": {
+        "budget_kwargs": [],
+        "calls": [
+          {
+            "call": "reconcile",
+            "in": "reclaim_orphan_reserved",
+            "line": 253,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          },
+          {
+            "call": "settle",
+            "in": "reclaim_orphan_reserved",
+            "line": 257,
+            "role": "AUTORITA': regolazione economica"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "runtime/provider_gate.py": {
+        "budget_kwargs": [],
+        "calls": [],
+        "legacy_markers": 37
+      },
+      "runtime/reconciliation.py": {
+        "budget_kwargs": [],
+        "calls": [
+          {
+            "call": "reconcile",
+            "in": "reconcile_authenticated",
+            "line": 378,
+            "role": "riconciliazione: libera l'identita' di una spec"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "tests/boundary_mock.py": {
+        "budget_kwargs": [
+          {
+            "call": "go",
+            "in": "worker_main",
+            "kwarg": "budget_units",
+            "line": 165
+          }
+        ],
+        "calls": [
+          {
+            "call": "go",
+            "in": "worker_main",
+            "line": 165,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "open_envelope",
+            "in": "worker_main",
+            "line": 157,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "worker_main",
+            "line": 160,
+            "role": "AUTORITA': emissione di una quote fidata"
+          }
+        ],
+        "legacy_markers": 0
+      },
+      "tests/run_gate.py": {
+        "budget_kwargs": [
+          {
+            "call": "in_process",
+            "in": "t06",
+            "kwarg": "budget_units",
+            "line": 210
+          },
+          {
+            "call": "in_process",
+            "in": "t06",
+            "kwarg": "envelope_units",
+            "line": 210
+          },
+          {
+            "call": "in_process",
+            "in": "t10",
+            "kwarg": "budget_units",
+            "line": 298
+          },
+          {
+            "call": "in_process",
+            "in": "t10",
+            "kwarg": "envelope_units",
+            "line": 298
+          },
+          {
+            "call": "in_process",
+            "in": "t10",
+            "kwarg": "budget_units",
+            "line": 301
+          },
+          {
+            "call": "in_process",
+            "in": "t10",
+            "kwarg": "envelope_units",
+            "line": 301
+          },
+          {
+            "call": "in_process",
+            "in": "t12",
+            "kwarg": "budget_units",
+            "line": 349
+          },
+          {
+            "call": "in_process",
+            "in": "t12",
+            "kwarg": "envelope_units",
+            "line": 349
+          },
+          {
+            "call": "in_process",
+            "in": "t12",
+            "kwarg": "budget_units",
+            "line": 351
+          },
+          {
+            "call": "in_process",
+            "in": "t12",
+            "kwarg": "envelope_units",
+            "line": 351
+          },
+          {
+            "call": "in_process",
+            "in": "t13",
+            "kwarg": "budget_units",
+            "line": 367
+          },
+          {
+            "call": "in_process",
+            "in": "t13",
+            "kwarg": "envelope_units",
+            "line": 367
+          },
+          {
+            "call": "in_process",
+            "in": "t27",
+            "kwarg": "budget_units",
+            "line": 790
+          },
+          {
+            "call": "in_process",
+            "in": "t27",
+            "kwarg": "budget_units",
+            "line": 794
+          },
+          {
+            "call": "in_process",
+            "in": "t27",
+            "kwarg": "budget_units",
+            "line": 795
+          },
+          {
+            "call": "_first",
+            "in": "t31",
+            "kwarg": "envelope_units",
+            "line": 1048
+          },
+          {
+            "call": "_first",
+            "in": "t32",
+            "kwarg": "budget_units",
+            "line": 1074
+          },
+          {
+            "call": "_first",
+            "in": "t32",
+            "kwarg": "budget_units",
+            "line": 1075
+          },
+          {
+            "call": "in_process",
+            "in": "t13",
+            "kwarg": "budget_units",
+            "line": 365
+          },
+          {
+            "call": "in_process",
+            "in": "t13",
+            "kwarg": "envelope_units",
+            "line": 365
+          },
+          {
+            "call": "in_process",
+            "in": "t27",
+            "kwarg": "budget_units",
+            "line": 785
+          },
+          {
+            "call": "dict",
+            "in": "t12",
+            "kwarg": "budget_units",
+            "line": 337
+          },
+          {
+            "call": "dict",
+            "in": "t12",
+            "kwarg": "envelope_units",
+            "line": 337
+          },
+          {
+            "call": "dict",
+            "in": "t12",
+            "kwarg": "budget_units",
+            "line": 339
+          },
+          {
+            "call": "dict",
+            "in": "t12",
+            "kwarg": "envelope_units",
+            "line": 339
+          },
+          {
+            "call": "NA",
+            "in": "t28",
+            "kwarg": "budget_units",
+            "line": 871
+          }
+        ],
+        "calls": [
+          {
+            "call": "go",
+            "in": "t07",
+            "line": 244,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "go",
+            "in": "t07",
+            "line": 245,
+            "role": "verbo `go` del runtime"
+          }
+        ],
+        "legacy_markers": 10
+      },
+      "tests/worker.py": {
+        "budget_kwargs": [
+          {
+            "call": "dict",
+            "in": "run_go",
+            "kwarg": "budget_units",
+            "line": 89
+          },
+          {
+            "call": "dict",
+            "in": "run_go",
+            "kwarg": "envelope_units",
+            "line": 89
+          },
+          {
+            "call": "update",
+            "in": "run_go",
+            "kwarg": "budget_units",
+            "line": 106
+          }
+        ],
+        "calls": [
+          {
+            "call": "go",
+            "in": "run_go",
+            "line": 105,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "go",
+            "in": "pin_probe_clean",
+            "line": 287,
+            "role": "verbo `go` del runtime"
+          },
+          {
+            "call": "open_envelope",
+            "in": "store_call",
+            "line": 251,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "store_call",
+            "line": 253,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "store_call",
+            "line": 258,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "store_call",
+            "line": 263,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "go",
+            "in": "hf_batch_runtime_go",
+            "line": 397,
+            "role": "verbo `go` del runtime"
+          }
+        ],
+        "legacy_markers": 0
+      }
+    },
+    "root": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01"
+  }
+}

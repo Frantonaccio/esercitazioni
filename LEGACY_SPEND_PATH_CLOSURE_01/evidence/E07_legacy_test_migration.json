@@ -1,0 +1,3552 @@
+{
+  "cases": {
+    "M01": {
+      "actual": "core_pin=CORE_PIN_OK verdict=CORE_PIN_OK state=SUCCEEDED governance=GOVERNED_LAB",
+      "detail": {
+        "go": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M01",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_15156707321c3b9a_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M01:asset",
+          "operation_id": "M01:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_22b80244796459ba5d1f42a2",
+          "persisted": {
+            "attempt_token": "att_7bdb92809aa5aeda5a85392a",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_15156707321c3b9a_1",
+            "operation_id": "M01:asset",
+            "payload_digest": "ae131b7a9d1edf73a63a8f2f8ec99a83da9eb14dd12374e2c0ebf3ac0ceefd4b",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_15156707",
+            "quote_id": "quote_e1d1f84924d263293b6b807f",
+            "revision": 3,
+            "spec_key": "15156707321c3b9aa7b92bb52d8b1645b348bb4a69bcaaba32fd28b5e0722503",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686803.2938225,
+            "terminal_by": 1789687103.2938225,
+            "webhook_hints": 0
+          },
+          "pid": 5676,
+          "provider": "fake",
+          "provider_job_id": "pv_15156707",
+          "quote_id": "quote_e1d1f84924d263293b6b807f",
+          "quote_issued": "quote_e1d1f84924d263293b6b807f",
+          "requested_spec_key": "15156707321c3b9aa7b92bb52d8b1645b348bb4a69bcaaba32fd28b5e0722503",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "15156707321c3b9aa7b92bb52d8b1645b348bb4a69bcaaba32fd28b5e0722503",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "pure_verdict": "CORE_PIN_OK"
+      },
+      "migrated_from": "T01",
+      "pass": true,
+      "title": "pin corretto, `go` procede (governato)"
+    },
+    "M04": {
+      "actual": "A==B==C==altro_processo: True (e355dd3ed48831f2…)",
+      "detail": {
+        "go": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M04",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_e355dd3ed48831f2_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M04:asset",
+          "operation_id": "M04:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_e60c4dedaeda75f5c343c846",
+          "persisted": {
+            "attempt_token": "att_acf378120223df45dbf03b5c",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_e355dd3ed48831f2_1",
+            "operation_id": "M04:asset",
+            "payload_digest": "eaf2a92fe24592f138cb56112e65d8aace96a08e7947a234f9fa435aaca27302",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_e355dd3e",
+            "quote_id": "quote_d1c3c10e0137b8081f8436d5",
+            "revision": 3,
+            "spec_key": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686803.4083304,
+            "terminal_by": 1789687103.4083304,
+            "webhook_hints": 0
+          },
+          "pid": 5682,
+          "provider": "fake",
+          "provider_job_id": "pv_e355dd3e",
+          "quote_id": "quote_d1c3c10e0137b8081f8436d5",
+          "quote_issued": "quote_d1c3c10e0137b8081f8436d5",
+          "requested_spec_key": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "run_A": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1",
+        "run_B": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1",
+        "run_C_reordered": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1",
+        "run_other_process": "e355dd3ed48831f259df962f0a1e3aa586d62f221f4657ec37e2ccd3c2fde7c1"
+      },
+      "migrated_from": "T04",
+      "pass": true,
+      "title": "spec_key deterministico anche da altro processo (governato)"
+    },
+    "M06": {
+      "actual": "state=SUCCEEDED submits=1 restart_read=SUCCEEDED reserved_after=0 · importo dalla quote=10 (quote consumate 1)",
+      "detail": {
+        "go": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M06",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_f155d17c47cf26f9_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M06:asset",
+          "operation_id": "M06:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_778a7abb9750d8a0c298633d",
+          "persisted": {
+            "attempt_token": "att_d8bdc382a1c0bf22e93b8bbe",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_f155d17c47cf26f9_1",
+            "operation_id": "M06:asset",
+            "payload_digest": "8e6c884fb26f2a82949e0710fd5ba0a51d2683e5eaaf3f01f9eada7e42ca1a2d",
+            "polls": 2,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_f155d17c",
+            "quote_id": "quote_290475b323ab7acc7ae58ed5",
+            "revision": 4,
+            "spec_key": "f155d17c47cf26f916db27e3654ac35e653086191136c990da2b633fb72fdd36",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686803.5205574,
+            "terminal_by": 1789687103.5205574,
+            "webhook_hints": 0
+          },
+          "pid": 5688,
+          "provider": "fake",
+          "provider_job_id": "pv_f155d17c",
+          "quote_id": "quote_290475b323ab7acc7ae58ed5",
+          "quote_issued": "quote_290475b323ab7acc7ae58ed5",
+          "requested_spec_key": "f155d17c47cf26f916db27e3654ac35e653086191136c990da2b633fb72fdd36",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "f155d17c47cf26f916db27e3654ac35e653086191136c990da2b633fb72fdd36",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "restart_read": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 1,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_d8bdc382a1c0bf22e93b8bbe",
+              "envelope_id": "ENV_M06",
+              "job_id": "res_f155d17c47cf26f9_1",
+              "operation_id": "M06:asset",
+              "permit_id": "permit_778a7abb9750d8a0c298633d",
+              "provider_account": "fake_acct_a",
+              "revision": 4,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 5694,
+          "quotes_consumed": 1,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_f155d17c47cf26f9_1",
+              "polls": 2,
+              "provider": "fake",
+              "provider_job_id": "pv_f155d17c",
+              "spec_key": "f155d17c47cf26f916db27e3654ac35e653086191136c990da2b633fb72fdd36",
+              "state": "SUCCEEDED"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T06",
+      "pass": true,
+      "title": "happy path + durabilita' + esposizione azzerata (governato)"
+    },
+    "M07": {
+      "actual": "GO#1=RESERVED_NEW GO#2=SUCCEEDED submits GO#2=0 stesso job_id=True",
+      "detail": {
+        "go1": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M07",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_6e95ea1d3f841e65_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M07:asset",
+          "operation_id": "M07:asset",
+          "outcome": "RUNNING",
+          "permit_id": "permit_109c2fce718f1822a62abe38",
+          "persisted": {
+            "attempt_token": "att_8496c37f6566e7d0958de71a",
+            "cost_credits": null,
+            "error": null,
+            "job_id": "res_6e95ea1d3f841e65_1",
+            "operation_id": "M07:asset",
+            "payload_digest": "23ac6ebbab584ce14d4cb0eb19089338405b55fffdb143a09426e618ebee845d",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_6e95ea1d",
+            "quote_id": "quote_a035166a9dff35fd2c56a497",
+            "revision": 3,
+            "spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+            "state": "RUNNING",
+            "submitted_at": 1789686803.7011986,
+            "terminal_by": 1789687103.7011986,
+            "webhook_hints": 0
+          },
+          "pid": 5696,
+          "provider": "fake",
+          "provider_job_id": "pv_6e95ea1d",
+          "quote_id": "quote_a035166a9dff35fd2c56a497",
+          "quote_issued": "quote_a035166a9dff35fd2c56a497",
+          "requested_spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+          "state": "RUNNING",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "go2": {
+          "budget_units": null,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": null,
+          "governance": "GOVERNED_LAB",
+          "intent": "resume",
+          "job_id": "res_6e95ea1d3f841e65_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M07:asset",
+          "operation_id": "M07:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": null,
+          "persisted": {
+            "attempt_token": "att_8496c37f6566e7d0958de71a",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_6e95ea1d3f841e65_1",
+            "operation_id": "M07:asset",
+            "payload_digest": "23ac6ebbab584ce14d4cb0eb19089338405b55fffdb143a09426e618ebee845d",
+            "polls": 2,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_6e95ea1d",
+            "quote_id": "quote_a035166a9dff35fd2c56a497",
+            "revision": 4,
+            "spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686803.7011986,
+            "terminal_by": 1789687103.7011986,
+            "webhook_hints": 0
+          },
+          "pid": 5702,
+          "provider": "fake",
+          "provider_job_id": "pv_6e95ea1d",
+          "quote_id": "quote_a035166a9dff35fd2c56a497",
+          "quote_issued": null,
+          "requested_spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+          "reservation_outcome": "EXISTING_LIVE_JOB",
+          "resumed": true,
+          "resumed_terminal": false,
+          "spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+          "state": "SUCCEEDED",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 1,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_8496c37f6566e7d0958de71a",
+              "envelope_id": "ENV_M07",
+              "job_id": "res_6e95ea1d3f841e65_1",
+              "operation_id": "M07:asset",
+              "permit_id": "permit_109c2fce718f1822a62abe38",
+              "provider_account": "fake_acct_a",
+              "revision": 4,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 5707,
+          "quotes_consumed": 1,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_6e95ea1d3f841e65_1",
+              "polls": 2,
+              "provider": "fake",
+              "provider_job_id": "pv_6e95ea1d",
+              "spec_key": "6e95ea1d3f841e653f13c84af46ea0787d48a1956db1a2357d80585a6bd77f54",
+              "state": "SUCCEEDED"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T07",
+      "pass": true,
+      "title": "duplicato sequenziale su spec viva (governato)"
+    },
+    "M08": {
+      "actual": "outcomes=['EXISTING_LIVE_JOB', 'RESERVED_NEW'] submit totali=1 processi=2 righe=1 quote consumate=1/1",
+      "detail": {
+        "processes": [
+          {
+            "budget_units": 10,
+            "core_imported": true,
+            "core_pin": "CORE_PIN_OK",
+            "envelope_id": "ENV_M08",
+            "governance": "GOVERNED_LAB",
+            "intent": "new_attempt",
+            "job_id": "res_6968d4436fef21d3_1",
+            "legacy_resume_as_start": false,
+            "ok": true,
+            "op": "M08:asset",
+            "operation_id": "M08:asset",
+            "outcome": "EXISTING_LIVE_JOB/reserved-no-dispatch",
+            "permit_id": "permit_7e22f477bc362894d3fcb98f",
+            "persisted": {
+              "attempt_token": "att_fe7927eb3c3ff593f3901b2f",
+              "cost_credits": null,
+              "error": null,
+              "job_id": "res_6968d4436fef21d3_1",
+              "operation_id": "M08:asset",
+              "payload_digest": "328861ec8a32ce22f135bde80df4114f2c61aef6939a844da13bfc44bd069680",
+              "polls": 0,
+              "provider": "fake",
+              "provider_account": "fake_acct_a",
+              "provider_job_id": null,
+              "quote_id": "quote_e2fdbd2a88ececa90b29912a",
+              "revision": 1,
+              "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+              "state": "RESERVED",
+              "submitted_at": 1789686804.0408332,
+              "terminal_by": 0.0,
+              "webhook_hints": 0
+            },
+            "pid": 5712,
+            "provider": "fake",
+            "provider_job_id": null,
+            "quote_id": "quote_e2fdbd2a88ececa90b29912a",
+            "quote_issued": "quote_e2fdbd2a88ececa90b29912a",
+            "requested_spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+            "reservation_outcome": "EXISTING_LIVE_JOB",
+            "resumed": false,
+            "resumed_terminal": false,
+            "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+            "state": "RESERVED",
+            "submits": 0,
+            "transport_sent": 0
+          },
+          {
+            "budget_units": 10,
+            "core_imported": true,
+            "core_pin": "CORE_PIN_OK",
+            "envelope_id": "ENV_M08",
+            "governance": "GOVERNED_LAB",
+            "intent": "new_attempt",
+            "job_id": "res_6968d4436fef21d3_1",
+            "legacy_resume_as_start": false,
+            "ok": true,
+            "op": "M08:asset",
+            "operation_id": "M08:asset",
+            "outcome": "RUNNING",
+            "permit_id": "permit_89608b8a6332ab55a26f6b53",
+            "persisted": {
+              "attempt_token": "att_fe7927eb3c3ff593f3901b2f",
+              "cost_credits": null,
+              "error": null,
+              "job_id": "res_6968d4436fef21d3_1",
+              "operation_id": "M08:asset",
+              "payload_digest": "328861ec8a32ce22f135bde80df4114f2c61aef6939a844da13bfc44bd069680",
+              "polls": 1,
+              "provider": "fake",
+              "provider_account": "fake_acct_a",
+              "provider_job_id": "pv_6968d443",
+              "quote_id": "quote_e2fdbd2a88ececa90b29912a",
+              "revision": 3,
+              "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+              "state": "RUNNING",
+              "submitted_at": 1789686804.0467758,
+              "terminal_by": 1789687104.0467758,
+              "webhook_hints": 0
+            },
+            "pid": 5711,
+            "provider": "fake",
+            "provider_job_id": "pv_6968d443",
+            "quote_id": "quote_e2fdbd2a88ececa90b29912a",
+            "quote_issued": "quote_e2fdbd2a88ececa90b29912a",
+            "requested_spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+            "reservation_outcome": "RESERVED_NEW",
+            "resumed": false,
+            "resumed_terminal": false,
+            "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+            "state": "RUNNING",
+            "submits": 1,
+            "transport_sent": 1
+          }
+        ],
+        "quote": "quote_e2fdbd2a88ececa90b29912a",
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 10,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_fe7927eb3c3ff593f3901b2f",
+              "envelope_id": "ENV_M08",
+              "job_id": "res_6968d4436fef21d3_1",
+              "operation_id": "M08:asset",
+              "permit_id": "permit_89608b8a6332ab55a26f6b53",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 2,
+          "permits_consumed": 1,
+          "pid": 5722,
+          "quotes_consumed": 1,
+          "reserved_units": 10,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": null,
+              "job_id": "res_6968d4436fef21d3_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_6968d443",
+              "spec_key": "6968d4436fef21d3aeafd69e305efb8b0439dd33157634db779efb8aa5aab257",
+              "state": "RUNNING"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T08",
+      "pass": true,
+      "title": "duplicato concorrente, 2 processi reali (governato)"
+    },
+    "M09": {
+      "actual": "A: submits=1 stato=RUNNING · B (nuovo processo): submits=0 resumed=True stesso job=True · righe=1 · quote consumate=1",
+      "detail": {
+        "end": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 1,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_3d280effaa05c56b82e7d692",
+              "envelope_id": "ENV_M09",
+              "job_id": "res_29f82fa26eb391cc_1",
+              "operation_id": "M09:asset",
+              "permit_id": "permit_6fcc53a3c9b09438e138bf53",
+              "provider_account": "fake_acct_a",
+              "revision": 5,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 5737,
+          "quotes_consumed": 1,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_29f82fa26eb391cc_1",
+              "polls": 3,
+              "provider": "fake",
+              "provider_job_id": "pv_29f82fa2",
+              "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+              "state": "SUCCEEDED"
+            }
+          ]
+        },
+        "go_a": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M09",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_29f82fa26eb391cc_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M09:asset",
+          "operation_id": "M09:asset",
+          "outcome": "RUNNING",
+          "permit_id": "permit_6fcc53a3c9b09438e138bf53",
+          "persisted": {
+            "attempt_token": "att_3d280effaa05c56b82e7d692",
+            "cost_credits": null,
+            "error": null,
+            "job_id": "res_29f82fa26eb391cc_1",
+            "operation_id": "M09:asset",
+            "payload_digest": "0bd0ec4f48cddc55422309f05177e427b47dd4f48f50088868d822faf216d801",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_29f82fa2",
+            "quote_id": "quote_c4b368473a6bf8d11c7e8a71",
+            "revision": 3,
+            "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+            "state": "RUNNING",
+            "submitted_at": 1789686804.2049592,
+            "terminal_by": 1789687104.2049592,
+            "webhook_hints": 0
+          },
+          "pid": 5724,
+          "provider": "fake",
+          "provider_job_id": "pv_29f82fa2",
+          "quote_id": "quote_c4b368473a6bf8d11c7e8a71",
+          "quote_issued": "quote_c4b368473a6bf8d11c7e8a71",
+          "requested_spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+          "state": "RUNNING",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "go_b": {
+          "budget_units": null,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": null,
+          "governance": "GOVERNED_LAB",
+          "intent": "resume",
+          "job_id": "res_29f82fa26eb391cc_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M09:asset",
+          "operation_id": "M09:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": null,
+          "persisted": {
+            "attempt_token": "att_3d280effaa05c56b82e7d692",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_29f82fa26eb391cc_1",
+            "operation_id": "M09:asset",
+            "payload_digest": "0bd0ec4f48cddc55422309f05177e427b47dd4f48f50088868d822faf216d801",
+            "polls": 3,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_29f82fa2",
+            "quote_id": "quote_c4b368473a6bf8d11c7e8a71",
+            "revision": 5,
+            "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686804.2049592,
+            "terminal_by": 1789687104.2049592,
+            "webhook_hints": 0
+          },
+          "pid": 5732,
+          "provider": "fake",
+          "provider_job_id": "pv_29f82fa2",
+          "quote_id": "quote_c4b368473a6bf8d11c7e8a71",
+          "quote_issued": null,
+          "requested_spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+          "reservation_outcome": "EXISTING_LIVE_JOB",
+          "resumed": true,
+          "resumed_terminal": false,
+          "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+          "state": "SUCCEEDED",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "mid": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 10,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_3d280effaa05c56b82e7d692",
+              "envelope_id": "ENV_M09",
+              "job_id": "res_29f82fa26eb391cc_1",
+              "operation_id": "M09:asset",
+              "permit_id": "permit_6fcc53a3c9b09438e138bf53",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 5730,
+          "quotes_consumed": 1,
+          "reserved_units": 10,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": null,
+              "job_id": "res_29f82fa26eb391cc_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_29f82fa2",
+              "spec_key": "29f82fa26eb391ccce696d905400d3270073ae75d1637e5dd22388cf578ccab9",
+              "state": "RUNNING"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T09",
+      "pass": true,
+      "title": "restart/resume: nessuna nuova spesa (governato)"
+    },
+    "M10": {
+      "actual": "GO#1 -> SUBMIT_UNKNOWN (impegnati 30 dalla quote) | GO#2 -> EXISTING_LIVE_JOB/reconciliation-required submits=0 impegnati ancora 30",
+      "detail": {
+        "after_go1": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 30,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 30
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_c06777d18fb297903968859f",
+              "envelope_id": "ENV_M10",
+              "job_id": "res_8e57ea78b131d60e_1",
+              "operation_id": "M10:asset",
+              "permit_id": "permit_5ccf5aae9fe11fb744c2a9db",
+              "provider_account": "fake_acct_a",
+              "revision": 2,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 5745,
+          "quotes_consumed": 1,
+          "reserved_units": 30,
+          "rows": [
+            {
+              "budget_units": 30,
+              "cost_credits": null,
+              "job_id": "res_8e57ea78b131d60e_1",
+              "polls": 0,
+              "provider": "fake",
+              "provider_job_id": null,
+              "spec_key": "8e57ea78b131d60ef8c7cf9009103b9aa1d72a2de31b3b6f756a616fb0c79bea",
+              "state": "SUBMIT_UNKNOWN"
+            }
+          ]
+        },
+        "after_go2": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 30,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 30
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_c06777d18fb297903968859f",
+              "envelope_id": "ENV_M10",
+              "job_id": "res_8e57ea78b131d60e_1",
+              "operation_id": "M10:asset",
+              "permit_id": "permit_5ccf5aae9fe11fb744c2a9db",
+              "provider_account": "fake_acct_a",
+              "revision": 2,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 5752,
+          "quotes_consumed": 1,
+          "reserved_units": 30,
+          "rows": [
+            {
+              "budget_units": 30,
+              "cost_credits": null,
+              "job_id": "res_8e57ea78b131d60e_1",
+              "polls": 0,
+              "provider": "fake",
+              "provider_job_id": null,
+              "spec_key": "8e57ea78b131d60ef8c7cf9009103b9aa1d72a2de31b3b6f756a616fb0c79bea",
+              "state": "SUBMIT_UNKNOWN"
+            }
+          ]
+        },
+        "go1": {
+          "code": null,
+          "core_imported": true,
+          "error": "ConnectionResetError",
+          "message": "risposta del provider persa dopo l'invio",
+          "ok": false,
+          "op": "M10:asset",
+          "pid": 5739,
+          "quote_issued": "quote_8e7bd612c841e48444a4ac7b",
+          "submits": 1,
+          "transport_sent": 0
+        },
+        "go2": {
+          "budget_units": null,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": null,
+          "governance": "GOVERNED_LAB",
+          "intent": "resume",
+          "job_id": "res_8e57ea78b131d60e_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M10:asset",
+          "operation_id": "M10:asset",
+          "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
+          "permit_id": null,
+          "persisted": {
+            "attempt_token": "att_c06777d18fb297903968859f",
+            "cost_credits": null,
+            "error": null,
+            "job_id": "res_8e57ea78b131d60e_1",
+            "operation_id": "M10:asset",
+            "payload_digest": "41ea478614ffcd019a9d0ab425461e50d8abaa5b0d31fbf6189041de095d16bf",
+            "polls": 0,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": null,
+            "quote_id": "quote_8e7bd612c841e48444a4ac7b",
+            "revision": 2,
+            "spec_key": "8e57ea78b131d60ef8c7cf9009103b9aa1d72a2de31b3b6f756a616fb0c79bea",
+            "state": "SUBMIT_UNKNOWN",
+            "submitted_at": 1789686804.5365686,
+            "terminal_by": 0.0,
+            "webhook_hints": 0
+          },
+          "pid": 5747,
+          "provider": "fake",
+          "provider_job_id": null,
+          "quote_id": "quote_8e7bd612c841e48444a4ac7b",
+          "quote_issued": null,
+          "requested_spec_key": "8e57ea78b131d60ef8c7cf9009103b9aa1d72a2de31b3b6f756a616fb0c79bea",
+          "reservation_outcome": "EXISTING_LIVE_JOB",
+          "resumed": true,
+          "resumed_terminal": false,
+          "spec_key": "8e57ea78b131d60ef8c7cf9009103b9aa1d72a2de31b3b6f756a616fb0c79bea",
+          "state": "SUBMIT_UNKNOWN",
+          "submits": 0,
+          "transport_sent": 0
+        }
+      },
+      "migrated_from": "T10",
+      "pass": true,
+      "title": "SUBMIT_UNKNOWN: nessun re-submit, budget non rilasciato (governato)"
+    },
+    "M11": {
+      "actual": "fake_a RUNNING | fake_b -> ProviderMismatch submits=0 reservation intatta=fake_a/RUNNING",
+      "detail": {
+        "go_fake_a": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M11",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_cc30c00d25b6e122_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M11:asset",
+          "operation_id": "M11:asset",
+          "outcome": "RUNNING",
+          "permit_id": "permit_bb16f6d9dd3d3d352edd2c01",
+          "persisted": {
+            "attempt_token": "att_d0681ff0cb48ed18b1d33d06",
+            "cost_credits": null,
+            "error": null,
+            "job_id": "res_cc30c00d25b6e122_1",
+            "operation_id": "M11:asset",
+            "payload_digest": "1ff59699d27ecdf1a8d988f48032a74d3095a4488db8938326490f380cd5ed1f",
+            "polls": 1,
+            "provider": "fake_a",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_cc30c00d",
+            "quote_id": "quote_746d91ab89c868a06293cf06",
+            "revision": 3,
+            "spec_key": "cc30c00d25b6e1223286c67e0a99c8a97c3ee3f64aa0f88c708b20acc7f19b6a",
+            "state": "RUNNING",
+            "submitted_at": 1789686804.8840222,
+            "terminal_by": 1789687104.8840222,
+            "webhook_hints": 0
+          },
+          "pid": 5754,
+          "provider": "fake_a",
+          "provider_job_id": "pv_cc30c00d",
+          "quote_id": "quote_746d91ab89c868a06293cf06",
+          "quote_issued": "quote_746d91ab89c868a06293cf06",
+          "requested_spec_key": "cc30c00d25b6e1223286c67e0a99c8a97c3ee3f64aa0f88c708b20acc7f19b6a",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "cc30c00d25b6e1223286c67e0a99c8a97c3ee3f64aa0f88c708b20acc7f19b6a",
+          "state": "RUNNING",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "go_fake_b": {
+          "code": null,
+          "core_imported": true,
+          "error": "ProviderMismatch",
+          "message": "job res_cc30c00d25b6e122_1 appartiene al provider 'fake_a', adapter fornito 'fake_b': riconciliare con l'adapter corretto",
+          "ok": false,
+          "op": "M11:asset",
+          "pid": 5760,
+          "quote_issued": null,
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 10,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_d0681ff0cb48ed18b1d33d06",
+              "envelope_id": "ENV_M11",
+              "job_id": "res_cc30c00d25b6e122_1",
+              "operation_id": "M11:asset",
+              "permit_id": "permit_bb16f6d9dd3d3d352edd2c01",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 5765,
+          "quotes_consumed": 1,
+          "reserved_units": 10,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": null,
+              "job_id": "res_cc30c00d25b6e122_1",
+              "polls": 1,
+              "provider": "fake_a",
+              "provider_job_id": "pv_cc30c00d",
+              "spec_key": "cc30c00d25b6e1223286c67e0a99c8a97c3ee3f64aa0f88c708b20acc7f19b6a",
+              "state": "RUNNING"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T11",
+      "pass": true,
+      "title": "provider mismatch: reservation intatta (governato)"
+    },
+    "M12": {
+      "actual": "concorrente: ['BudgetExceeded', 'OK'] impegnati=70/100 | sequenziale: A ok, B=BudgetExceeded impegnati=70",
+      "detail": {
+        "concurrent": [
+          {
+            "budget_units": 70,
+            "core_imported": true,
+            "core_pin": "CORE_PIN_OK",
+            "envelope_id": "ENV_M12",
+            "governance": "GOVERNED_LAB",
+            "intent": "new_attempt",
+            "job_id": "res_91b4cffdfbbef08f_1",
+            "legacy_resume_as_start": false,
+            "ok": true,
+            "op": "M12:a",
+            "operation_id": "M12:a",
+            "outcome": "RUNNING",
+            "permit_id": "permit_62a067e8cb912fc288cb4bf8",
+            "persisted": {
+              "attempt_token": "att_a18d751e1ada8c774066c53a",
+              "cost_credits": null,
+              "error": null,
+              "job_id": "res_91b4cffdfbbef08f_1",
+              "operation_id": "M12:a",
+              "payload_digest": "70c318cf6121ebb9f513f7ca455cad2cfe70bd2f229dad5023e6f0d9d43dbb51",
+              "polls": 1,
+              "provider": "fake",
+              "provider_account": "fake_acct_a",
+              "provider_job_id": "pv_91b4cffd",
+              "quote_id": "quote_3c3ba62b6d17b70f0de4fe21",
+              "revision": 3,
+              "spec_key": "91b4cffdfbbef08fbf75d4a0f9067beea792b71e9a8b91818909a482e0faf4cf",
+              "state": "RUNNING",
+              "submitted_at": 1789686805.30735,
+              "terminal_by": 1789687105.30735,
+              "webhook_hints": 0
+            },
+            "pid": 5771,
+            "provider": "fake",
+            "provider_job_id": "pv_91b4cffd",
+            "quote_id": "quote_3c3ba62b6d17b70f0de4fe21",
+            "quote_issued": "quote_3c3ba62b6d17b70f0de4fe21",
+            "requested_spec_key": "91b4cffdfbbef08fbf75d4a0f9067beea792b71e9a8b91818909a482e0faf4cf",
+            "reservation_outcome": "RESERVED_NEW",
+            "resumed": false,
+            "resumed_terminal": false,
+            "spec_key": "91b4cffdfbbef08fbf75d4a0f9067beea792b71e9a8b91818909a482e0faf4cf",
+            "state": "RUNNING",
+            "submits": 1,
+            "transport_sent": 1
+          },
+          {
+            "code": null,
+            "core_imported": true,
+            "error": "BudgetExceeded",
+            "message": "envelope ENV_M12 v1: autorizzati 100, regolati 0, esposti 70, richiesti 50",
+            "ok": false,
+            "op": "M12:b",
+            "pid": 5772,
+            "quote_issued": "quote_119b5671f31d6b6a19a24524",
+            "submits": 0,
+            "transport_sent": 0
+          }
+        ],
+        "concurrent_state": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 70,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 70
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_a18d751e1ada8c774066c53a",
+              "envelope_id": "ENV_M12",
+              "job_id": "res_91b4cffdfbbef08f_1",
+              "operation_id": "M12:a",
+              "permit_id": "permit_62a067e8cb912fc288cb4bf8",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 2,
+          "permits_consumed": 1,
+          "pid": 5782,
+          "quotes_consumed": 1,
+          "reserved_units": 70,
+          "rows": [
+            {
+              "budget_units": 70,
+              "cost_credits": null,
+              "job_id": "res_91b4cffdfbbef08f_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_91b4cffd",
+              "spec_key": "91b4cffdfbbef08fbf75d4a0f9067beea792b71e9a8b91818909a482e0faf4cf",
+              "state": "RUNNING"
+            }
+          ]
+        },
+        "sequential": [
+          {
+            "budget_units": 70,
+            "core_imported": true,
+            "core_pin": "CORE_PIN_OK",
+            "envelope_id": "ENV_M12b",
+            "governance": "GOVERNED_LAB",
+            "intent": "new_attempt",
+            "job_id": "res_91b4cffdfbbef08f_1",
+            "legacy_resume_as_start": false,
+            "ok": true,
+            "op": "M12b:a",
+            "operation_id": "M12b:a",
+            "outcome": "RUNNING",
+            "permit_id": "permit_fb2f699f4f0ff97a618d8b88",
+            "persisted": {
+              "attempt_token": "att_eaf01ad1cb720c822cdc827f",
+              "cost_credits": null,
+              "error": null,
+              "job_id": "res_91b4cffdfbbef08f_1",
+              "operation_id": "M12b:a",
+              "payload_digest": "70c318cf6121ebb9f513f7ca455cad2cfe70bd2f229dad5023e6f0d9d43dbb51",
+              "polls": 1,
+              "provider": "fake",
+              "provider_account": "fake_acct_a",
+              "provider_job_id": "pv_91b4cffd",
+              "quote_id": "quote_d07b6e43850b94d15d98e559",
+              "revision": 3,
+              "spec_key": "91b4cffdfbbef08fbf75d4a0f9067beea792b71e9a8b91818909a482e0faf4cf",
+              "state": "RUNNING",
+              "submitted_at": 1789686805.612881,
+              "terminal_by": 1789687105.612881,
+              "webhook_hints": 0
+            },
+            "pid": 5788,
+            "provider": "fake",
+            "provider_job_id": "pv_91b4cffd",
+            "quote_id": "quote_d07b6e43850b94d15d98e559",
+            "quote_issued": "quote_d07b6e43850b94d15d98e559",
+            "requested_spec_key": "91b4cffdfbbef08fbf75d4a0f9067beea792b71e9a8b91818909a482e0faf4cf",
+            "reservation_outcome": "RESERVED_NEW",
+            "resumed": false,
+            "resumed_terminal": false,
+            "spec_key": "91b4cffdfbbef08fbf75d4a0f9067beea792b71e9a8b91818909a482e0faf4cf",
+            "state": "RUNNING",
+            "submits": 1,
+            "transport_sent": 1
+          },
+          {
+            "code": null,
+            "core_imported": true,
+            "error": "BudgetExceeded",
+            "message": "envelope ENV_M12b v1: autorizzati 100, regolati 0, esposti 70, richiesti 50",
+            "ok": false,
+            "op": "M12b:b",
+            "pid": 5794,
+            "quote_issued": "quote_d760b9a0e7b089665f795140",
+            "submits": 0,
+            "transport_sent": 0
+          }
+        ],
+        "sequential_state": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 70,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 70
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_eaf01ad1cb720c822cdc827f",
+              "envelope_id": "ENV_M12b",
+              "job_id": "res_91b4cffdfbbef08f_1",
+              "operation_id": "M12b:a",
+              "permit_id": "permit_fb2f699f4f0ff97a618d8b88",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 2,
+          "permits_consumed": 1,
+          "pid": 5799,
+          "quotes_consumed": 1,
+          "reserved_units": 70,
+          "rows": [
+            {
+              "budget_units": 70,
+              "cost_credits": null,
+              "job_id": "res_91b4cffdfbbef08f_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_91b4cffd",
+              "spec_key": "91b4cffdfbbef08fbf75d4a0f9067beea792b71e9a8b91818909a482e0faf4cf",
+              "state": "RUNNING"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T12",
+      "pass": true,
+      "title": "atomicita' del budget: envelope + quote (governato)"
+    },
+    "M13": {
+      "actual": "5 valori non ammessi -> ReservationContractError (funzione pura, prenotazione del Core e emissione della quote), 0 submit, 0 righe",
+      "detail": {
+        "issue_quote": {
+          "bool": "ReservationContractError",
+          "float": "ReservationContractError",
+          "negative": "ReservationContractError",
+          "str": "ReservationContractError"
+        },
+        "reserve_or_get_live": {
+          "bool": "ReservationContractError: budget_units deve essere un intero >= 0, ricevuto True",
+          "float": "ReservationContractError: budget_units deve essere un intero >= 0, ricevuto 1.5",
+          "negative": "ReservationContractError: budget_units deve essere un intero >= 0, ricevuto -1",
+          "str": "ReservationContractError: budget_units deve essere un intero >= 0, ricevuto '10'"
+        },
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 0,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 0
+          },
+          "ownership": [],
+          "permits": 0,
+          "permits_consumed": 0,
+          "pid": 5801,
+          "quotes_consumed": 0,
+          "reserved_units": 0,
+          "rows": []
+        },
+        "validate_units": {
+          "bool": {
+            "error": "ReservationContractError",
+            "message": "budget_units deve essere un intero >= 0, ricevuto True",
+            "refused": true
+          },
+          "float": {
+            "error": "ReservationContractError",
+            "message": "budget_units deve essere un intero >= 0, ricevuto 1.5",
+            "refused": true
+          },
+          "negative": {
+            "error": "ReservationContractError",
+            "message": "budget_units deve essere un intero >= 0, ricevuto -1",
+            "refused": true
+          },
+          "negative_envelope": {
+            "error": "ReservationContractError",
+            "message": "envelope_units deve essere None o un intero >= 0, ricevuto -5",
+            "refused": true
+          },
+          "str": {
+            "error": "ReservationContractError",
+            "message": "budget_units deve essere un intero >= 0, ricevuto '10'",
+            "refused": true
+          }
+        }
+      },
+      "migrated_from": "T13",
+      "pass": true,
+      "title": "budget non ammesso: primitive del Core (CORE_UNIT)"
+    },
+    "M18": {
+      "actual": "SUCCEEDED letto da nuovo processo; replay = RESUMED/SUCCEEDED (0 submit, 1 riga); new_attempt con permesso = RESERVED_NEW (2 righe, 0 impegnato, 2 quote consumate)",
+      "detail": {
+        "after_resume": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 1,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_632d753f9123567d11c7e3f3",
+              "envelope_id": "ENV_M18",
+              "job_id": "res_26e1a616f7633f1d_1",
+              "operation_id": "M18:asset",
+              "permit_id": "permit_ca287e7557a627837ac04dc8",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 5816,
+          "quotes_consumed": 1,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_26e1a616f7633f1d_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_26e1a616",
+              "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+              "state": "SUCCEEDED"
+            }
+          ]
+        },
+        "go": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M18",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_26e1a616f7633f1d_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M18:asset",
+          "operation_id": "M18:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_ca287e7557a627837ac04dc8",
+          "persisted": {
+            "attempt_token": "att_632d753f9123567d11c7e3f3",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_26e1a616f7633f1d_1",
+            "operation_id": "M18:asset",
+            "payload_digest": "1fd8f35185bb6be916b715398df215dd7bb2299c73a9ca79cf4a1115f931aa27",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_26e1a616",
+            "quote_id": "quote_3e745900d2664a3ed6882b42",
+            "revision": 3,
+            "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686805.9698782,
+            "terminal_by": 1789687105.9698782,
+            "webhook_hints": 0
+          },
+          "pid": 5803,
+          "provider": "fake",
+          "provider_job_id": "pv_26e1a616",
+          "quote_id": "quote_3e745900d2664a3ed6882b42",
+          "quote_issued": "quote_3e745900d2664a3ed6882b42",
+          "requested_spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "go_new_attempt": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M18",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_26e1a616f7633f1d_2",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M18:asset",
+          "operation_id": "M18:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_b4fc8fee842fae7c22d6e281",
+          "persisted": {
+            "attempt_token": "att_81e3c4227c7d520b45f676f1",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_26e1a616f7633f1d_2",
+            "operation_id": "M18:asset",
+            "payload_digest": "1fd8f35185bb6be916b715398df215dd7bb2299c73a9ca79cf4a1115f931aa27",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_26e1a616",
+            "quote_id": "quote_774b4ec9f798dd6ed6b50469",
+            "revision": 3,
+            "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686806.2815077,
+            "terminal_by": 1789687106.2815077,
+            "webhook_hints": 0
+          },
+          "pid": 5818,
+          "provider": "fake",
+          "provider_job_id": "pv_26e1a616",
+          "quote_id": "quote_774b4ec9f798dd6ed6b50469",
+          "quote_issued": "quote_774b4ec9f798dd6ed6b50469",
+          "requested_spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "go_replay_resume": {
+          "budget_units": null,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": null,
+          "governance": "GOVERNED_LAB",
+          "intent": "resume",
+          "job_id": "res_26e1a616f7633f1d_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M18:asset",
+          "operation_id": "M18:asset",
+          "outcome": "RESUMED/SUCCEEDED",
+          "permit_id": null,
+          "persisted": {
+            "attempt_token": "att_632d753f9123567d11c7e3f3",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_26e1a616f7633f1d_1",
+            "operation_id": "M18:asset",
+            "payload_digest": "1fd8f35185bb6be916b715398df215dd7bb2299c73a9ca79cf4a1115f931aa27",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_26e1a616",
+            "quote_id": "quote_3e745900d2664a3ed6882b42",
+            "revision": 3,
+            "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686805.9698782,
+            "terminal_by": 1789687105.9698782,
+            "webhook_hints": 0
+          },
+          "pid": 5811,
+          "provider": "fake",
+          "provider_job_id": "pv_26e1a616",
+          "quote_id": "quote_3e745900d2664a3ed6882b42",
+          "quote_issued": null,
+          "requested_spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+          "reservation_outcome": "NONE",
+          "resumed": true,
+          "resumed_terminal": true,
+          "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+          "state": "SUCCEEDED",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "history": {
+          "anomalies": 0,
+          "ledger_entries": 2,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 2,
+            "unsettled_exposure_units": 20
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_632d753f9123567d11c7e3f3",
+              "envelope_id": "ENV_M18",
+              "job_id": "res_26e1a616f7633f1d_1",
+              "operation_id": "M18:asset",
+              "permit_id": "permit_ca287e7557a627837ac04dc8",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            },
+            {
+              "attempt_token": "att_81e3c4227c7d520b45f676f1",
+              "envelope_id": "ENV_M18",
+              "job_id": "res_26e1a616f7633f1d_2",
+              "operation_id": "M18:asset",
+              "permit_id": "permit_b4fc8fee842fae7c22d6e281",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 2,
+          "permits_consumed": 2,
+          "pid": 5823,
+          "quotes_consumed": 2,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_26e1a616f7633f1d_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_26e1a616",
+              "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+              "state": "SUCCEEDED"
+            },
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_26e1a616f7633f1d_2",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_26e1a616",
+              "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+              "state": "SUCCEEDED"
+            }
+          ]
+        },
+        "read_new_process": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 1,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_632d753f9123567d11c7e3f3",
+              "envelope_id": "ENV_M18",
+              "job_id": "res_26e1a616f7633f1d_1",
+              "operation_id": "M18:asset",
+              "permit_id": "permit_ca287e7557a627837ac04dc8",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 5809,
+          "quotes_consumed": 1,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_26e1a616f7633f1d_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_26e1a616",
+              "spec_key": "26e1a616f7633f1d957b7834e58dd3fc8609ec404c17d694a94db0466381d29c",
+              "state": "SUCCEEDED"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T18",
+      "pass": true,
+      "title": "terminale durevole + nuovo tentativo con permesso (governato)"
+    },
+    "M22": {
+      "actual": "round#1: 2 RESERVED_NEW governati, 2 submit, quote legate per asset · round#2 (nuovo processo): 0 submit, tutti resumed · righe=2",
+      "detail": {
+        "round1": {
+          "namespace": "M22",
+          "ok": true,
+          "pid": 5825,
+          "quotes": {
+            "B1_NEW_CLIP": "quote_7e217dff0314c3c5df3bbfb4",
+            "B4C_NEW_CLIP": "quote_25979919573591cd4d2fc14d"
+          },
+          "submits": 2,
+          "traces": [
+            {
+              "jobs": [
+                {
+                  "asset": "B1_NEW_CLIP",
+                  "budget_units": 10,
+                  "error": null,
+                  "governance": "GOVERNED_LAB",
+                  "job_id": "res_f4076e463c1fbcd9_1",
+                  "legacy_resume_as_start": false,
+                  "operation_id": "M22:B1_NEW_CLIP",
+                  "permit_id": "permit_26efea7aa3631353158a2ba4",
+                  "quote_id": "quote_7e217dff0314c3c5df3bbfb4",
+                  "reservation_outcome": "RESERVED_NEW",
+                  "resumed": false,
+                  "run_status": "SUCCEEDED"
+                },
+                {
+                  "asset": "B4C_NEW_CLIP",
+                  "budget_units": 10,
+                  "error": null,
+                  "governance": "GOVERNED_LAB",
+                  "job_id": "res_6d687b11cfaf4fd0_1",
+                  "legacy_resume_as_start": false,
+                  "operation_id": "M22:B4C_NEW_CLIP",
+                  "permit_id": "permit_4bac11c666848dbdd66670a6",
+                  "quote_id": "quote_25979919573591cd4d2fc14d",
+                  "reservation_outcome": "RESERVED_NEW",
+                  "resumed": false,
+                  "run_status": "SUCCEEDED"
+                }
+              ],
+              "run_verdict": "LOCK_HELD"
+            }
+          ]
+        },
+        "round2": {
+          "namespace": "M22",
+          "ok": true,
+          "pid": 5834,
+          "quotes": {},
+          "submits": 0,
+          "traces": [
+            {
+              "jobs": [
+                {
+                  "asset": "B1_NEW_CLIP",
+                  "budget_units": null,
+                  "error": null,
+                  "governance": "GOVERNED_LAB",
+                  "job_id": "res_f4076e463c1fbcd9_1",
+                  "legacy_resume_as_start": false,
+                  "operation_id": "M22:B1_NEW_CLIP",
+                  "permit_id": null,
+                  "quote_id": "quote_7e217dff0314c3c5df3bbfb4",
+                  "reservation_outcome": "NONE",
+                  "resumed": true,
+                  "run_status": "RESUMED/SUCCEEDED"
+                },
+                {
+                  "asset": "B4C_NEW_CLIP",
+                  "budget_units": null,
+                  "error": null,
+                  "governance": "GOVERNED_LAB",
+                  "job_id": "res_6d687b11cfaf4fd0_1",
+                  "legacy_resume_as_start": false,
+                  "operation_id": "M22:B4C_NEW_CLIP",
+                  "permit_id": null,
+                  "quote_id": "quote_25979919573591cd4d2fc14d",
+                  "reservation_outcome": "NONE",
+                  "resumed": true,
+                  "run_status": "RESUMED/SUCCEEDED"
+                }
+              ],
+              "run_verdict": "LOCK_HELD"
+            }
+          ]
+        },
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 2,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 2,
+            "unsettled_exposure_units": 20
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_a0f69197b7c8a6c4d42b051f",
+              "envelope_id": "ENV_M22",
+              "job_id": "res_6d687b11cfaf4fd0_1",
+              "operation_id": "M22:B4C_NEW_CLIP",
+              "permit_id": "permit_4bac11c666848dbdd66670a6",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            },
+            {
+              "attempt_token": "att_8cff35f0af7f6c1ada7dec7e",
+              "envelope_id": "ENV_M22",
+              "job_id": "res_f4076e463c1fbcd9_1",
+              "operation_id": "M22:B1_NEW_CLIP",
+              "permit_id": "permit_26efea7aa3631353158a2ba4",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 2,
+          "permits_consumed": 2,
+          "pid": 5842,
+          "quotes_consumed": 2,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_6d687b11cfaf4fd0_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_6d687b11",
+              "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
+              "state": "SUCCEEDED"
+            },
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_f4076e463c1fbcd9_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_f4076e46",
+              "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+              "state": "SUCCEEDED"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T22",
+      "pass": true,
+      "title": "hf_batch su spec reale attraverso il Core (governato)"
+    },
+    "M24": {
+      "actual": "GO#1 SUCCEEDED (1 submit) · replay nuovo processo -> RESUMED/SUCCEEDED submits=0 · altro run stessa operazione -> RESUMED/SUCCEEDED submits=0 · altra operazione -> RESERVED_NEW · FAILED replay -> RESUMED/FAILED submits=0 · quote consumate 3 = 3 spese, 0 resume",
+      "detail": {
+        "end": {
+          "anomalies": 0,
+          "ledger_entries": 3,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 3,
+            "unsettled_exposure_units": 30
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_8604a2e55bce51371af3880c",
+              "envelope_id": "ENV_M24",
+              "job_id": "res_7811bd0648573db9_1",
+              "operation_id": "M24:failed",
+              "permit_id": "permit_74ebc7ca66e0859c8bbb8e26",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            },
+            {
+              "attempt_token": "att_ba4746f3c49885795d98f791",
+              "envelope_id": "ENV_M24",
+              "job_id": "res_bd09825eef167b6e_1",
+              "operation_id": "M24:asset",
+              "permit_id": "permit_414f31dd2ed8736f119350dc",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            },
+            {
+              "attempt_token": "att_3e273678d2184def6cf14ee4",
+              "envelope_id": "ENV_M24",
+              "job_id": "res_bd09825eef167b6e_2",
+              "operation_id": "M24:other",
+              "permit_id": "permit_cbfcf5715e8151b38e70355a",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 3,
+          "permits_consumed": 3,
+          "pid": 5877,
+          "quotes_consumed": 3,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": null,
+              "job_id": "res_7811bd0648573db9_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_7811bd06",
+              "spec_key": "7811bd0648573db97083c944a9e42bcee276bf1f63f586a1229958c74968b99e",
+              "state": "FAILED"
+            },
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_bd09825eef167b6e_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_bd09825e",
+              "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+              "state": "SUCCEEDED"
+            },
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_bd09825eef167b6e_2",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_bd09825e",
+              "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+              "state": "SUCCEEDED"
+            }
+          ]
+        },
+        "failed": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M24",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_7811bd0648573db9_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M24:failed",
+          "operation_id": "M24:failed",
+          "outcome": "FAILED",
+          "permit_id": "permit_74ebc7ca66e0859c8bbb8e26",
+          "persisted": {
+            "attempt_token": "att_8604a2e55bce51371af3880c",
+            "cost_credits": null,
+            "error": "provider ha rifiutato il prompt",
+            "job_id": "res_7811bd0648573db9_1",
+            "operation_id": "M24:failed",
+            "payload_digest": "2688f089ad68c83afd811687ea304e3211fd9bc0c164f2eea5404a162da20738",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_7811bd06",
+            "quote_id": "quote_23e0e323461f0259e804d004",
+            "revision": 3,
+            "spec_key": "7811bd0648573db97083c944a9e42bcee276bf1f63f586a1229958c74968b99e",
+            "state": "FAILED",
+            "submitted_at": 1789686807.1699252,
+            "terminal_by": 1789687107.1699252,
+            "webhook_hints": 0
+          },
+          "pid": 5867,
+          "provider": "fake",
+          "provider_job_id": "pv_7811bd06",
+          "quote_id": "quote_23e0e323461f0259e804d004",
+          "quote_issued": "quote_23e0e323461f0259e804d004",
+          "requested_spec_key": "7811bd0648573db97083c944a9e42bcee276bf1f63f586a1229958c74968b99e",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "7811bd0648573db97083c944a9e42bcee276bf1f63f586a1229958c74968b99e",
+          "state": "FAILED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "failed_replay": {
+          "budget_units": null,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": null,
+          "governance": "GOVERNED_LAB",
+          "intent": "resume",
+          "job_id": "res_7811bd0648573db9_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M24:failed",
+          "operation_id": "M24:failed",
+          "outcome": "RESUMED/FAILED",
+          "permit_id": null,
+          "persisted": {
+            "attempt_token": "att_8604a2e55bce51371af3880c",
+            "cost_credits": null,
+            "error": "provider ha rifiutato il prompt",
+            "job_id": "res_7811bd0648573db9_1",
+            "operation_id": "M24:failed",
+            "payload_digest": "2688f089ad68c83afd811687ea304e3211fd9bc0c164f2eea5404a162da20738",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_7811bd06",
+            "quote_id": "quote_23e0e323461f0259e804d004",
+            "revision": 3,
+            "spec_key": "7811bd0648573db97083c944a9e42bcee276bf1f63f586a1229958c74968b99e",
+            "state": "FAILED",
+            "submitted_at": 1789686807.1699252,
+            "terminal_by": 1789687107.1699252,
+            "webhook_hints": 0
+          },
+          "pid": 5872,
+          "provider": "fake",
+          "provider_job_id": "pv_7811bd06",
+          "quote_id": "quote_23e0e323461f0259e804d004",
+          "quote_issued": null,
+          "requested_spec_key": "7811bd0648573db97083c944a9e42bcee276bf1f63f586a1229958c74968b99e",
+          "reservation_outcome": "NONE",
+          "resumed": true,
+          "resumed_terminal": true,
+          "spec_key": "7811bd0648573db97083c944a9e42bcee276bf1f63f586a1229958c74968b99e",
+          "state": "FAILED",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "go1": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M24",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_bd09825eef167b6e_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M24:asset",
+          "operation_id": "M24:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_414f31dd2ed8736f119350dc",
+          "persisted": {
+            "attempt_token": "att_ba4746f3c49885795d98f791",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_bd09825eef167b6e_1",
+            "operation_id": "M24:asset",
+            "payload_digest": "fe74706ddc0ebff2608877b3c208c314ce10ee5a59661856216e51684e8b05e8",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_bd09825e",
+            "quote_id": "quote_3698155e9c29cd57f31d080f",
+            "revision": 3,
+            "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686806.749894,
+            "terminal_by": 1789687106.749894,
+            "webhook_hints": 0
+          },
+          "pid": 5844,
+          "provider": "fake",
+          "provider_job_id": "pv_bd09825e",
+          "quote_id": "quote_3698155e9c29cd57f31d080f",
+          "quote_issued": "quote_3698155e9c29cd57f31d080f",
+          "requested_spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "other_operation": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M24",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_bd09825eef167b6e_2",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M24:other",
+          "operation_id": "M24:other",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_cbfcf5715e8151b38e70355a",
+          "persisted": {
+            "attempt_token": "att_3e273678d2184def6cf14ee4",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_bd09825eef167b6e_2",
+            "operation_id": "M24:other",
+            "payload_digest": "fe74706ddc0ebff2608877b3c208c314ce10ee5a59661856216e51684e8b05e8",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_bd09825e",
+            "quote_id": "quote_80eea7d945563ea6267edd23",
+            "revision": 3,
+            "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686807.0044749,
+            "terminal_by": 1789687107.0044749,
+            "webhook_hints": 0
+          },
+          "pid": 5860,
+          "provider": "fake",
+          "provider_job_id": "pv_bd09825e",
+          "quote_id": "quote_80eea7d945563ea6267edd23",
+          "quote_issued": "quote_80eea7d945563ea6267edd23",
+          "requested_spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "other_run_same_operation": {
+          "budget_units": null,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": null,
+          "governance": "GOVERNED_LAB",
+          "intent": "resume",
+          "job_id": "res_bd09825eef167b6e_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M24:asset",
+          "operation_id": "M24:asset",
+          "outcome": "RESUMED/SUCCEEDED",
+          "permit_id": null,
+          "persisted": {
+            "attempt_token": "att_ba4746f3c49885795d98f791",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_bd09825eef167b6e_1",
+            "operation_id": "M24:asset",
+            "payload_digest": "fe74706ddc0ebff2608877b3c208c314ce10ee5a59661856216e51684e8b05e8",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_bd09825e",
+            "quote_id": "quote_3698155e9c29cd57f31d080f",
+            "revision": 3,
+            "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686806.749894,
+            "terminal_by": 1789687106.749894,
+            "webhook_hints": 0
+          },
+          "pid": 5855,
+          "provider": "fake",
+          "provider_job_id": "pv_bd09825e",
+          "quote_id": "quote_3698155e9c29cd57f31d080f",
+          "quote_issued": null,
+          "requested_spec_key": "9807d3bc5afccd5ed85b8c6067dd88ec1f10fe0ee28f534965e3af0713cf39bc",
+          "reservation_outcome": "NONE",
+          "resumed": true,
+          "resumed_terminal": true,
+          "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+          "state": "SUCCEEDED",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "replay_new_process": {
+          "budget_units": null,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": null,
+          "governance": "GOVERNED_LAB",
+          "intent": "resume",
+          "job_id": "res_bd09825eef167b6e_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M24:asset",
+          "operation_id": "M24:asset",
+          "outcome": "RESUMED/SUCCEEDED",
+          "permit_id": null,
+          "persisted": {
+            "attempt_token": "att_ba4746f3c49885795d98f791",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_bd09825eef167b6e_1",
+            "operation_id": "M24:asset",
+            "payload_digest": "fe74706ddc0ebff2608877b3c208c314ce10ee5a59661856216e51684e8b05e8",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_bd09825e",
+            "quote_id": "quote_3698155e9c29cd57f31d080f",
+            "revision": 3,
+            "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686806.749894,
+            "terminal_by": 1789687106.749894,
+            "webhook_hints": 0
+          },
+          "pid": 5850,
+          "provider": "fake",
+          "provider_job_id": "pv_bd09825e",
+          "quote_id": "quote_3698155e9c29cd57f31d080f",
+          "quote_issued": null,
+          "requested_spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+          "reservation_outcome": "NONE",
+          "resumed": true,
+          "resumed_terminal": true,
+          "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+          "state": "SUCCEEDED",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 2,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 2,
+            "unsettled_exposure_units": 20
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_ba4746f3c49885795d98f791",
+              "envelope_id": "ENV_M24",
+              "job_id": "res_bd09825eef167b6e_1",
+              "operation_id": "M24:asset",
+              "permit_id": "permit_414f31dd2ed8736f119350dc",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            },
+            {
+              "attempt_token": "att_3e273678d2184def6cf14ee4",
+              "envelope_id": "ENV_M24",
+              "job_id": "res_bd09825eef167b6e_2",
+              "operation_id": "M24:other",
+              "permit_id": "permit_cbfcf5715e8151b38e70355a",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 2,
+          "permits_consumed": 2,
+          "pid": 5865,
+          "quotes_consumed": 2,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_bd09825eef167b6e_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_bd09825e",
+              "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+              "state": "SUCCEEDED"
+            },
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_bd09825eef167b6e_2",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_bd09825e",
+              "spec_key": "bd09825eef167b6e5d186d01fbfa0b564695241f3b73c1d5a234b6f32f5b61f9",
+              "state": "SUCCEEDED"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T24",
+      "pass": true,
+      "title": "RESUME dopo terminale: zero submit (governato)"
+    },
+    "M25": {
+      "actual": "senza motivo -> REASON_REQUIRED · senza permesso -> PERMIT_REQUIRED · senza operazione -> OPERATION_ID_REQUIRED · con permesso -> RESERVED_NEW · replay permesso -> PermitError · permit(OP_A) con OP_B -> PermitError · storico 2",
+      "detail": {
+        "go1": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M25",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_5a5a1b7379a3ad18_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M25:asset",
+          "operation_id": "M25:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_06bf07bf413d028bf2193e25",
+          "persisted": {
+            "attempt_token": "att_be07a81e8f4428a5008f0457",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_5a5a1b7379a3ad18_1",
+            "operation_id": "M25:asset",
+            "payload_digest": "67cd5997ff02991976faaa103abb9adeba41a2680bb3dea1fb60ed2d12f2300c",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_5a5a1b73",
+            "quote_id": "quote_72f9e6e2aa1d670eebbf3853",
+            "revision": 3,
+            "spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686807.4345615,
+            "terminal_by": 1789687107.4345615,
+            "webhook_hints": 0
+          },
+          "pid": 5879,
+          "provider": "fake",
+          "provider_job_id": "pv_5a5a1b73",
+          "quote_id": "quote_72f9e6e2aa1d670eebbf3853",
+          "quote_issued": "quote_72f9e6e2aa1d670eebbf3853",
+          "requested_spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "new_attempt": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M25",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_5a5a1b7379a3ad18_2",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M25:asset",
+          "operation_id": "M25:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_03f46833bee9d36081c0869a",
+          "persisted": {
+            "attempt_token": "att_951691d1398fa31e992a3d8c",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_5a5a1b7379a3ad18_2",
+            "operation_id": "M25:asset",
+            "payload_digest": "67cd5997ff02991976faaa103abb9adeba41a2680bb3dea1fb60ed2d12f2300c",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_5a5a1b73",
+            "quote_id": "quote_1c9ad5305f8e6705563691bc",
+            "revision": 3,
+            "spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686807.8506296,
+            "terminal_by": 1789687107.8506296,
+            "webhook_hints": 0
+          },
+          "pid": 5903,
+          "provider": "fake",
+          "provider_job_id": "pv_5a5a1b73",
+          "quote_id": "quote_1c9ad5305f8e6705563691bc",
+          "quote_issued": "quote_1c9ad5305f8e6705563691bc",
+          "requested_spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "no_operation": {
+          "code": "OPERATION_ID_REQUIRED",
+          "core_imported": true,
+          "error": "IntentRefused",
+          "message": "OPERATION_ID_REQUIRED: operation_id obbligatorio per ogni operazione (RESUME e NEW_ATTEMPT)",
+          "ok": false,
+          "op": "",
+          "pid": 5900,
+          "quote_issued": null,
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "no_permit": {
+          "code": "PERMIT_REQUIRED",
+          "core_imported": true,
+          "error": "IntentRefused",
+          "message": "PERMIT_REQUIRED: nuovo tentativo senza permesso e senza delega automatica",
+          "ok": false,
+          "op": "M25:asset",
+          "pid": 5890,
+          "quote_issued": "quote_6d0d5ec33d5d309e893ae60f",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "no_reason": {
+          "code": "REASON_REQUIRED",
+          "core_imported": true,
+          "error": "IntentRefused",
+          "message": "REASON_REQUIRED: un nuovo tentativo richiede un motivo esplicito",
+          "ok": false,
+          "op": "M25:asset",
+          "pid": 5885,
+          "quote_issued": "quote_bb9984713feb0b7e73f01457",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "permit": {
+          "method": "permit",
+          "ok": true,
+          "pid": 5920,
+          "result": {
+            "consumed_at": 1789686807.8446798,
+            "consumed_by": "res_5a5a1b7379a3ad18_2",
+            "issued_at": 1789686807.8428345,
+            "operation_id": "M25:asset",
+            "permit_id": "permit_03f46833bee9d36081c0869a",
+            "reason": "CREATIVE_ITERATION",
+            "spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf"
+          }
+        },
+        "permit_other_operation": {
+          "code": null,
+          "core_imported": true,
+          "error": "PermitError",
+          "message": "permesso permit_5478ad7561c9f54ed4e5f2f4 riferito a un'altra spec",
+          "ok": false,
+          "op": "M25:altro",
+          "pid": 5915,
+          "quote_issued": "quote_b9538dadcd12f6b7aa6b9cc5",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "permit_replay": {
+          "code": null,
+          "core_imported": true,
+          "error": "PermitError",
+          "message": "permesso permit_03f46833bee9d36081c0869a gia' consumato da res_5a5a1b7379a3ad18_2",
+          "ok": false,
+          "op": "M25:asset",
+          "pid": 5908,
+          "quote_issued": "quote_ddd63e00b8ecac0dfb3945eb",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 2,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 2,
+            "unsettled_exposure_units": 20
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_be07a81e8f4428a5008f0457",
+              "envelope_id": "ENV_M25",
+              "job_id": "res_5a5a1b7379a3ad18_1",
+              "operation_id": "M25:asset",
+              "permit_id": "permit_06bf07bf413d028bf2193e25",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            },
+            {
+              "attempt_token": "att_951691d1398fa31e992a3d8c",
+              "envelope_id": "ENV_M25",
+              "job_id": "res_5a5a1b7379a3ad18_2",
+              "operation_id": "M25:asset",
+              "permit_id": "permit_03f46833bee9d36081c0869a",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 3,
+          "permits_consumed": 2,
+          "pid": 5922,
+          "quotes_consumed": 2,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_5a5a1b7379a3ad18_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_5a5a1b73",
+              "spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf",
+              "state": "SUCCEEDED"
+            },
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_5a5a1b7379a3ad18_2",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_5a5a1b73",
+              "spec_key": "5a5a1b7379a3ad185b44279e21b14e916469f3b6fa7e2537c0b73d78b4754edf",
+              "state": "SUCCEEDED"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T25",
+      "pass": true,
+      "title": "nuovo tentativo: motivo + permesso monouso legato (governato)"
+    },
+    "M26": {
+      "actual": "risposta persa -> SUBMIT_UNKNOWN · stessa spec -> EXISTING_LIVE_JOB/reconciliation-required (0 submit) · altro run -> LIVE_OR_UNCERTAIN_ATTEMPT · altro modello -> LIVE_OR_UNCERTAIN_ATTEMPT · righe=1",
+      "detail": {
+        "lost": {
+          "code": null,
+          "core_imported": true,
+          "error": "ConnectionResetError",
+          "message": "risposta del provider persa dopo l'invio",
+          "ok": false,
+          "op": "M26:asset",
+          "pid": 5924,
+          "quote_issued": "quote_e9b3877bae4578e78bc1a14f",
+          "submits": 1,
+          "transport_sent": 0
+        },
+        "other_model": {
+          "code": "LIVE_OR_UNCERTAIN_ATTEMPT",
+          "core_imported": true,
+          "error": "IntentRefused",
+          "message": "LIVE_OR_UNCERTAIN_ATTEMPT: il tentativo res_dfa211197f228e3c_1 e' SUBMIT_UNKNOWN: nessun nuovo submit finche' non e' concluso o riconciliato (usare RESUME)",
+          "ok": false,
+          "op": "M26:asset",
+          "pid": 5940,
+          "quote_issued": null,
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "other_run": {
+          "code": "LIVE_OR_UNCERTAIN_ATTEMPT",
+          "core_imported": true,
+          "error": "IntentRefused",
+          "message": "LIVE_OR_UNCERTAIN_ATTEMPT: il tentativo res_dfa211197f228e3c_1 e' SUBMIT_UNKNOWN: nessun nuovo submit finche' non e' concluso o riconciliato (usare RESUME)",
+          "ok": false,
+          "op": "M26:asset",
+          "pid": 5935,
+          "quote_issued": null,
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "same": {
+          "budget_units": null,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": null,
+          "governance": "GOVERNED_LAB",
+          "intent": "resume",
+          "job_id": "res_dfa211197f228e3c_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M26:asset",
+          "operation_id": "M26:asset",
+          "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
+          "permit_id": null,
+          "persisted": {
+            "attempt_token": "att_22f2c5c70f57d18917f98264",
+            "cost_credits": null,
+            "error": null,
+            "job_id": "res_dfa211197f228e3c_1",
+            "operation_id": "M26:asset",
+            "payload_digest": "925d340a4592fe30ab662ce462e1e7c1e1d1031d22252a5fed10494142b9fc45",
+            "polls": 0,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": null,
+            "quote_id": "quote_e9b3877bae4578e78bc1a14f",
+            "revision": 2,
+            "spec_key": "dfa211197f228e3cd311525f0cd3300aadffcb6b79f7d702cc6b350cab6c845b",
+            "state": "SUBMIT_UNKNOWN",
+            "submitted_at": 1789686808.338515,
+            "terminal_by": 0.0,
+            "webhook_hints": 0
+          },
+          "pid": 5930,
+          "provider": "fake",
+          "provider_job_id": null,
+          "quote_id": "quote_e9b3877bae4578e78bc1a14f",
+          "quote_issued": null,
+          "requested_spec_key": "dfa211197f228e3cd311525f0cd3300aadffcb6b79f7d702cc6b350cab6c845b",
+          "reservation_outcome": "EXISTING_LIVE_JOB",
+          "resumed": true,
+          "resumed_terminal": false,
+          "spec_key": "dfa211197f228e3cd311525f0cd3300aadffcb6b79f7d702cc6b350cab6c845b",
+          "state": "SUBMIT_UNKNOWN",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 10,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_22f2c5c70f57d18917f98264",
+              "envelope_id": "ENV_M26",
+              "job_id": "res_dfa211197f228e3c_1",
+              "operation_id": "M26:asset",
+              "permit_id": "permit_bfe7fc5f7b7c65a3cf9ed867",
+              "provider_account": "fake_acct_a",
+              "revision": 2,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 5945,
+          "quotes_consumed": 1,
+          "reserved_units": 10,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": null,
+              "job_id": "res_dfa211197f228e3c_1",
+              "polls": 0,
+              "provider": "fake",
+              "provider_job_id": null,
+              "spec_key": "dfa211197f228e3cd311525f0cd3300aadffcb6b79f7d702cc6b350cab6c845b",
+              "state": "SUBMIT_UNKNOWN"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T26",
+      "pass": true,
+      "title": "SUBMIT_UNKNOWN blocca i fallback di run/modello (governato)"
+    },
+    "M27": {
+      "actual": "3 job regolati: settled=90/100 · quarto -> BudgetExceeded con 0 vivi · non regolato a terminale: esposizione 10 mantenuta (1 job)",
+      "detail": {
+        "fourth": {
+          "code": null,
+          "core_imported": true,
+          "error": "BudgetExceeded",
+          "message": "envelope ENV_M27 v1: autorizzati 100, regolati 90, esposti 0, richiesti 30",
+          "ok": false,
+          "op": "M27:4",
+          "pid": 5979,
+          "quote_issued": "quote_44aac48813725fa2a46c1d67",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "settled_jobs": [
+          {
+            "budget_units": 30,
+            "core_imported": true,
+            "core_pin": "CORE_PIN_OK",
+            "envelope_id": "ENV_M27",
+            "governance": "GOVERNED_LAB",
+            "intent": "new_attempt",
+            "job_id": "res_75cafdf0d91d92fa_1",
+            "legacy_resume_as_start": false,
+            "ok": true,
+            "op": "M27:1",
+            "operation_id": "M27:1",
+            "outcome": "SUCCEEDED",
+            "permit_id": "permit_6c1f719a74a5df0635e65563",
+            "persisted": {
+              "attempt_token": "att_6f370f2fd91e07ccca3b6448",
+              "cost_credits": 4.0,
+              "error": null,
+              "job_id": "res_75cafdf0d91d92fa_1",
+              "operation_id": "M27:1",
+              "payload_digest": "eac0fe22a04a17c56b970c6eed2d613db5ee8d409895ba20a866dfec6384f211",
+              "polls": 1,
+              "provider": "fake",
+              "provider_account": "fake_acct_a",
+              "provider_job_id": "pv_75cafdf0",
+              "quote_id": "quote_052b15772529f6edede191db",
+              "revision": 3,
+              "spec_key": "75cafdf0d91d92fa2af5b83f3a36515982de4a40bd3e17256a6eae6b0b4d7454",
+              "state": "SUCCEEDED",
+              "submitted_at": 1789686808.8296502,
+              "terminal_by": 1789687108.8296502,
+              "webhook_hints": 0
+            },
+            "pid": 5949,
+            "provider": "fake",
+            "provider_job_id": "pv_75cafdf0",
+            "quote_id": "quote_052b15772529f6edede191db",
+            "quote_issued": "quote_052b15772529f6edede191db",
+            "requested_spec_key": "75cafdf0d91d92fa2af5b83f3a36515982de4a40bd3e17256a6eae6b0b4d7454",
+            "reservation_outcome": "RESERVED_NEW",
+            "resumed": false,
+            "resumed_terminal": false,
+            "spec_key": "75cafdf0d91d92fa2af5b83f3a36515982de4a40bd3e17256a6eae6b0b4d7454",
+            "state": "SUCCEEDED",
+            "submits": 1,
+            "transport_sent": 1
+          },
+          {
+            "budget_units": 30,
+            "core_imported": true,
+            "core_pin": "CORE_PIN_OK",
+            "envelope_id": "ENV_M27",
+            "governance": "GOVERNED_LAB",
+            "intent": "new_attempt",
+            "job_id": "res_b69c68673b0f3de3_1",
+            "legacy_resume_as_start": false,
+            "ok": true,
+            "op": "M27:2",
+            "operation_id": "M27:2",
+            "outcome": "SUCCEEDED",
+            "permit_id": "permit_0b671331420d66af2f806a60",
+            "persisted": {
+              "attempt_token": "att_5a0654886e2e6b3a40061eb1",
+              "cost_credits": 4.0,
+              "error": null,
+              "job_id": "res_b69c68673b0f3de3_1",
+              "operation_id": "M27:2",
+              "payload_digest": "3fcfd2aaf2298f2bd892ce0be85606b2f42342ebf4c2ed5240f21996268c926f",
+              "polls": 1,
+              "provider": "fake",
+              "provider_account": "fake_acct_a",
+              "provider_job_id": "pv_b69c6867",
+              "quote_id": "quote_51b20d73e04e090cbe73a16f",
+              "revision": 3,
+              "spec_key": "b69c68673b0f3de374b56b46f49ae7e5bfff71efbec9eff33525c1cedbd78d2d",
+              "state": "SUCCEEDED",
+              "submitted_at": 1789686809.0411177,
+              "terminal_by": 1789687109.0411177,
+              "webhook_hints": 0
+            },
+            "pid": 5959,
+            "provider": "fake",
+            "provider_job_id": "pv_b69c6867",
+            "quote_id": "quote_51b20d73e04e090cbe73a16f",
+            "quote_issued": "quote_51b20d73e04e090cbe73a16f",
+            "requested_spec_key": "b69c68673b0f3de374b56b46f49ae7e5bfff71efbec9eff33525c1cedbd78d2d",
+            "reservation_outcome": "RESERVED_NEW",
+            "resumed": false,
+            "resumed_terminal": false,
+            "spec_key": "b69c68673b0f3de374b56b46f49ae7e5bfff71efbec9eff33525c1cedbd78d2d",
+            "state": "SUCCEEDED",
+            "submits": 1,
+            "transport_sent": 1
+          },
+          {
+            "budget_units": 30,
+            "core_imported": true,
+            "core_pin": "CORE_PIN_OK",
+            "envelope_id": "ENV_M27",
+            "governance": "GOVERNED_LAB",
+            "intent": "new_attempt",
+            "job_id": "res_0d3dbfc647c5fc7c_1",
+            "legacy_resume_as_start": false,
+            "ok": true,
+            "op": "M27:3",
+            "operation_id": "M27:3",
+            "outcome": "SUCCEEDED",
+            "permit_id": "permit_b81d086b82d064fe61f868db",
+            "persisted": {
+              "attempt_token": "att_a804674c71fb645332c153ec",
+              "cost_credits": 4.0,
+              "error": null,
+              "job_id": "res_0d3dbfc647c5fc7c_1",
+              "operation_id": "M27:3",
+              "payload_digest": "0489d379456389dc5037526ee27a6d955a81f78c0687c4da5be794f713d58ed1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_account": "fake_acct_a",
+              "provider_job_id": "pv_0d3dbfc6",
+              "quote_id": "quote_8a1651997e7e38d308502d93",
+              "revision": 3,
+              "spec_key": "0d3dbfc647c5fc7cd42236eb8fd972177c2bcaeb86410b87f374b7e5abb0071f",
+              "state": "SUCCEEDED",
+              "submitted_at": 1789686809.2783124,
+              "terminal_by": 1789687109.2783124,
+              "webhook_hints": 0
+            },
+            "pid": 5968,
+            "provider": "fake",
+            "provider_job_id": "pv_0d3dbfc6",
+            "quote_id": "quote_8a1651997e7e38d308502d93",
+            "quote_issued": "quote_8a1651997e7e38d308502d93",
+            "requested_spec_key": "0d3dbfc647c5fc7cd42236eb8fd972177c2bcaeb86410b87f374b7e5abb0071f",
+            "reservation_outcome": "RESERVED_NEW",
+            "resumed": false,
+            "resumed_terminal": false,
+            "spec_key": "0d3dbfc647c5fc7cd42236eb8fd972177c2bcaeb86410b87f374b7e5abb0071f",
+            "state": "SUCCEEDED",
+            "submits": 1,
+            "transport_sent": 1
+          }
+        ],
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 6,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 90,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 0
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_a804674c71fb645332c153ec",
+              "envelope_id": "ENV_M27",
+              "job_id": "res_0d3dbfc647c5fc7c_1",
+              "operation_id": "M27:3",
+              "permit_id": "permit_b81d086b82d064fe61f868db",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": 30
+            },
+            {
+              "attempt_token": "att_6f370f2fd91e07ccca3b6448",
+              "envelope_id": "ENV_M27",
+              "job_id": "res_75cafdf0d91d92fa_1",
+              "operation_id": "M27:1",
+              "permit_id": "permit_6c1f719a74a5df0635e65563",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": 30
+            },
+            {
+              "attempt_token": "att_5a0654886e2e6b3a40061eb1",
+              "envelope_id": "ENV_M27",
+              "job_id": "res_b69c68673b0f3de3_1",
+              "operation_id": "M27:2",
+              "permit_id": "permit_0b671331420d66af2f806a60",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": 30
+            }
+          ],
+          "permits": 4,
+          "permits_consumed": 3,
+          "pid": 5984,
+          "quotes_consumed": 3,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 30,
+              "cost_credits": 4.0,
+              "job_id": "res_0d3dbfc647c5fc7c_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_0d3dbfc6",
+              "spec_key": "0d3dbfc647c5fc7cd42236eb8fd972177c2bcaeb86410b87f374b7e5abb0071f",
+              "state": "SUCCEEDED"
+            },
+            {
+              "budget_units": 30,
+              "cost_credits": 4.0,
+              "job_id": "res_75cafdf0d91d92fa_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_75cafdf0",
+              "spec_key": "75cafdf0d91d92fa2af5b83f3a36515982de4a40bd3e17256a6eae6b0b4d7454",
+              "state": "SUCCEEDED"
+            },
+            {
+              "budget_units": 30,
+              "cost_credits": 4.0,
+              "job_id": "res_b69c68673b0f3de3_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_b69c6867",
+              "spec_key": "b69c68673b0f3de374b56b46f49ae7e5bfff71efbec9eff33525c1cedbd78d2d",
+              "state": "SUCCEEDED"
+            }
+          ]
+        },
+        "totals_after_3": {
+          "authorized_units": 100,
+          "envelope_id": "ENV_M27",
+          "envelope_version": 1,
+          "live_reservation_units": 0,
+          "remaining_units": 10,
+          "settled_units": 90,
+          "terminal_unsettled_jobs": 0,
+          "unit": "synthetic_units",
+          "unsettled_exposure_units": 0
+        },
+        "totals_unsettled": {
+          "authorized_units": 100,
+          "envelope_id": "ENV_M27b",
+          "envelope_version": 1,
+          "live_reservation_units": 0,
+          "remaining_units": 90,
+          "settled_units": 0,
+          "terminal_unsettled_jobs": 1,
+          "unit": "synthetic_units",
+          "unsettled_exposure_units": 10
+        },
+        "unsettled": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M27b",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_cbc9f940211c8c04_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M27:5",
+          "operation_id": "M27:5",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_c38cfb65abcd15939b56d7fe",
+          "persisted": {
+            "attempt_token": "att_2d91b3ee08e851b8aa5ae9f6",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_cbc9f940211c8c04_1",
+            "operation_id": "M27:5",
+            "payload_digest": "ca331e58e381d69c52389b2de3dc997fdd306636cd2608a8b8b8900b45433b8d",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_cbc9f940",
+            "quote_id": "quote_54f1dec510973ea4b4e6bf7b",
+            "revision": 3,
+            "spec_key": "cbc9f940211c8c0410243847f89982bca249cc978e672add5979d96444f200ea",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686809.8152373,
+            "terminal_by": 1789687109.8152373,
+            "webhook_hints": 0
+          },
+          "pid": 5988,
+          "provider": "fake",
+          "provider_job_id": "pv_cbc9f940",
+          "quote_id": "quote_54f1dec510973ea4b4e6bf7b",
+          "quote_issued": "quote_54f1dec510973ea4b4e6bf7b",
+          "requested_spec_key": "cbc9f940211c8c0410243847f89982bca249cc978e672add5979d96444f200ea",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "cbc9f940211c8c0410243847f89982bca249cc978e672add5979d96444f200ea",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        }
+      },
+      "migrated_from": "T27",
+      "pass": true,
+      "title": "ledger cumulativo attraverso il runtime (governato)"
+    },
+    "M30": {
+      "actual": "crash exit=4 dopo l'invio -> riga RESERVED con ownership/token persistiti · recovery -> SUBMIT_UNKNOWN · replay: submits=0 (EXISTING_LIVE_JOB/reconciliation-required)",
+      "detail": {
+        "after": {
+          "anomalies": 1,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 10,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_8f58cbd52ef59cc34c2bd41c",
+              "envelope_id": "ENV_M30",
+              "job_id": "res_d3b853fa747beed8_1",
+              "operation_id": "M30:asset",
+              "permit_id": "permit_b9bb26c01c91656357fdce49",
+              "provider_account": "fake_acct_a",
+              "revision": 2,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 6004,
+          "quotes_consumed": 1,
+          "reserved_units": 10,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": null,
+              "job_id": "res_d3b853fa747beed8_1",
+              "polls": 0,
+              "provider": "fake",
+              "provider_job_id": null,
+              "spec_key": "d3b853fa747beed8af7a064e5cf89485376a580486961d1af1a2222a83b3a1d0",
+              "state": "SUBMIT_UNKNOWN"
+            }
+          ]
+        },
+        "crashed": {
+          "exitcode": 4,
+          "queue_empty": true
+        },
+        "end": {
+          "anomalies": 1,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 10,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_8f58cbd52ef59cc34c2bd41c",
+              "envelope_id": "ENV_M30",
+              "job_id": "res_d3b853fa747beed8_1",
+              "operation_id": "M30:asset",
+              "permit_id": "permit_b9bb26c01c91656357fdce49",
+              "provider_account": "fake_acct_a",
+              "revision": 2,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 6011,
+          "quotes_consumed": 1,
+          "reserved_units": 10,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": null,
+              "job_id": "res_d3b853fa747beed8_1",
+              "polls": 0,
+              "provider": "fake",
+              "provider_job_id": null,
+              "spec_key": "d3b853fa747beed8af7a064e5cf89485376a580486961d1af1a2222a83b3a1d0",
+              "state": "SUBMIT_UNKNOWN"
+            }
+          ]
+        },
+        "mid": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 10,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 0,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_8f58cbd52ef59cc34c2bd41c",
+              "envelope_id": "ENV_M30",
+              "job_id": "res_d3b853fa747beed8_1",
+              "operation_id": "M30:asset",
+              "permit_id": "permit_b9bb26c01c91656357fdce49",
+              "provider_account": "fake_acct_a",
+              "revision": 1,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 6000,
+          "quotes_consumed": 1,
+          "reserved_units": 10,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": null,
+              "job_id": "res_d3b853fa747beed8_1",
+              "polls": 0,
+              "provider": "fake",
+              "provider_job_id": null,
+              "spec_key": "d3b853fa747beed8af7a064e5cf89485376a580486961d1af1a2222a83b3a1d0",
+              "state": "RESERVED"
+            }
+          ]
+        },
+        "recovery": {
+          "method": "recover_orphaned_submits",
+          "ok": true,
+          "pid": 6002,
+          "result": [
+            {
+              "attempt_token": "att_8f58cbd52ef59cc34c2bd41c",
+              "cost_credits": null,
+              "error": "intento di submit registrato senza esito: riconciliazione richiesta",
+              "job_id": "res_d3b853fa747beed8_1",
+              "operation_id": "M30:asset",
+              "payload_digest": "4e798496a59cea6d7d5955bf125257efd4bf94188e3ab993760dd9c598c70783",
+              "polls": 0,
+              "provider": "fake",
+              "provider_account": "fake_acct_a",
+              "provider_job_id": null,
+              "quote_id": "quote_b0f40c8dacadea3eec3520f7",
+              "revision": 2,
+              "spec_key": "d3b853fa747beed8af7a064e5cf89485376a580486961d1af1a2222a83b3a1d0",
+              "state": "SUBMIT_UNKNOWN",
+              "submitted_at": 1789686809.9760194,
+              "terminal_by": 0.0,
+              "webhook_hints": 0
+            }
+          ]
+        },
+        "replay": {
+          "budget_units": null,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": null,
+          "governance": "GOVERNED_LAB",
+          "intent": "resume",
+          "job_id": "res_d3b853fa747beed8_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M30:asset",
+          "operation_id": "M30:asset",
+          "outcome": "EXISTING_LIVE_JOB/reconciliation-required",
+          "permit_id": null,
+          "persisted": {
+            "attempt_token": "att_8f58cbd52ef59cc34c2bd41c",
+            "cost_credits": null,
+            "error": "intento di submit registrato senza esito: riconciliazione richiesta",
+            "job_id": "res_d3b853fa747beed8_1",
+            "operation_id": "M30:asset",
+            "payload_digest": "4e798496a59cea6d7d5955bf125257efd4bf94188e3ab993760dd9c598c70783",
+            "polls": 0,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": null,
+            "quote_id": "quote_b0f40c8dacadea3eec3520f7",
+            "revision": 2,
+            "spec_key": "d3b853fa747beed8af7a064e5cf89485376a580486961d1af1a2222a83b3a1d0",
+            "state": "SUBMIT_UNKNOWN",
+            "submitted_at": 1789686809.9760194,
+            "terminal_by": 0.0,
+            "webhook_hints": 0
+          },
+          "pid": 6006,
+          "provider": "fake",
+          "provider_job_id": null,
+          "quote_id": "quote_b0f40c8dacadea3eec3520f7",
+          "quote_issued": null,
+          "requested_spec_key": "d3b853fa747beed8af7a064e5cf89485376a580486961d1af1a2222a83b3a1d0",
+          "reservation_outcome": "EXISTING_LIVE_JOB",
+          "resumed": true,
+          "resumed_terminal": false,
+          "spec_key": "d3b853fa747beed8af7a064e5cf89485376a580486961d1af1a2222a83b3a1d0",
+          "state": "SUBMIT_UNKNOWN",
+          "submits": 0,
+          "transport_sent": 0
+        }
+      },
+      "migrated_from": "T30",
+      "pass": true,
+      "title": "recovery: crash dopo invio, prima del journal (governato)"
+    },
+    "M33": {
+      "actual": "OP_B su spec viva di OP_A -> OperationConflict (0 submit) · RESUME(OP_A) riprende res_0a2d7cb6976713d7_1 · RESUME(OP_B) -> NO_EXISTING_ATTEMPT · righe=1",
+      "detail": {
+        "op_a": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M33A",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_0a2d7cb6976713d7_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M33A:asset",
+          "operation_id": "M33A:asset",
+          "outcome": "RUNNING",
+          "permit_id": "permit_fb496601acc47b9807b6b23e",
+          "persisted": {
+            "attempt_token": "att_98c4a75b1e6ecd111b3dbc4d",
+            "cost_credits": null,
+            "error": null,
+            "job_id": "res_0a2d7cb6976713d7_1",
+            "operation_id": "M33A:asset",
+            "payload_digest": "deb97dcf6d27bae1372038e92c8bebc3b876d822a7a0c30256f2d4e5bed4027b",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_0a2d7cb6",
+            "quote_id": "quote_f53d9dc3354e9380781e9ff6",
+            "revision": 3,
+            "spec_key": "0a2d7cb6976713d7fb4b2724dd9b6184e7558cdd4b657846e2750e148e007b7a",
+            "state": "RUNNING",
+            "submitted_at": 1789686810.4129002,
+            "terminal_by": 1789687110.4129002,
+            "webhook_hints": 0
+          },
+          "pid": 6013,
+          "provider": "fake",
+          "provider_job_id": "pv_0a2d7cb6",
+          "quote_id": "quote_f53d9dc3354e9380781e9ff6",
+          "quote_issued": "quote_f53d9dc3354e9380781e9ff6",
+          "requested_spec_key": "0a2d7cb6976713d7fb4b2724dd9b6184e7558cdd4b657846e2750e148e007b7a",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "0a2d7cb6976713d7fb4b2724dd9b6184e7558cdd4b657846e2750e148e007b7a",
+          "state": "RUNNING",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "op_b": {
+          "code": null,
+          "core_imported": true,
+          "error": "OperationConflict",
+          "message": "spec 0a2d7cb69767… viva sotto l'operazione 'M33A:asset' (job res_0a2d7cb6976713d7_1), richiesta da 'M33B:asset': nessuna condivisione fra operazioni",
+          "ok": false,
+          "op": "M33B:asset",
+          "pid": 6021,
+          "quote_issued": "quote_6882596a30468e976ba6768c",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "resume_a": {
+          "budget_units": null,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": null,
+          "governance": "GOVERNED_LAB",
+          "intent": "resume",
+          "job_id": "res_0a2d7cb6976713d7_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M33A:asset",
+          "operation_id": "M33A:asset",
+          "outcome": "SUCCEEDED",
+          "permit_id": null,
+          "persisted": {
+            "attempt_token": "att_98c4a75b1e6ecd111b3dbc4d",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_0a2d7cb6976713d7_1",
+            "operation_id": "M33A:asset",
+            "payload_digest": "deb97dcf6d27bae1372038e92c8bebc3b876d822a7a0c30256f2d4e5bed4027b",
+            "polls": 2,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_0a2d7cb6",
+            "quote_id": "quote_f53d9dc3354e9380781e9ff6",
+            "revision": 4,
+            "spec_key": "0a2d7cb6976713d7fb4b2724dd9b6184e7558cdd4b657846e2750e148e007b7a",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686810.4129002,
+            "terminal_by": 1789687110.4129002,
+            "webhook_hints": 0
+          },
+          "pid": 6026,
+          "provider": "fake",
+          "provider_job_id": "pv_0a2d7cb6",
+          "quote_id": "quote_f53d9dc3354e9380781e9ff6",
+          "quote_issued": null,
+          "requested_spec_key": "0a2d7cb6976713d7fb4b2724dd9b6184e7558cdd4b657846e2750e148e007b7a",
+          "reservation_outcome": "EXISTING_LIVE_JOB",
+          "resumed": true,
+          "resumed_terminal": false,
+          "spec_key": "0a2d7cb6976713d7fb4b2724dd9b6184e7558cdd4b657846e2750e148e007b7a",
+          "state": "SUCCEEDED",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "resume_b": {
+          "code": "NO_EXISTING_ATTEMPT",
+          "core_imported": true,
+          "error": "IntentRefused",
+          "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'M33B:asset': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
+          "ok": false,
+          "op": "M33B:asset",
+          "pid": 6031,
+          "quote_issued": null,
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "state": {
+          "anomalies": 1,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 1,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_98c4a75b1e6ecd111b3dbc4d",
+              "envelope_id": "ENV_M33A",
+              "job_id": "res_0a2d7cb6976713d7_1",
+              "operation_id": "M33A:asset",
+              "permit_id": "permit_fb496601acc47b9807b6b23e",
+              "provider_account": "fake_acct_a",
+              "revision": 4,
+              "settled_units": null
+            }
+          ],
+          "permits": 2,
+          "permits_consumed": 1,
+          "pid": 6036,
+          "quotes_consumed": 1,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_0a2d7cb6976713d7_1",
+              "polls": 2,
+              "provider": "fake",
+              "provider_job_id": "pv_0a2d7cb6",
+              "spec_key": "0a2d7cb6976713d7fb4b2724dd9b6184e7558cdd4b657846e2750e148e007b7a",
+              "state": "SUCCEEDED"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T33",
+      "pass": true,
+      "title": "identita' fra operazioni (governato)"
+    },
+    "M34": {
+      "actual": "WO_A operazioni ['M34A:B1_NEW_CLIP', 'M34A:B4C_NEW_CLIP'] stabili in 2 round (round#2 resumed) · WO_B stessi asset -> ['M34B:B1_NEW_CLIP', 'M34B:B4C_NEW_CLIP'] RESERVED_NEW · righe=4 su 2 spec distinte",
+      "detail": {
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 4,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 4,
+            "unsettled_exposure_units": 40
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_241b3eeced0c689a363a96db",
+              "envelope_id": "ENV_M34A",
+              "job_id": "res_6d687b11cfaf4fd0_1",
+              "operation_id": "M34A:B4C_NEW_CLIP",
+              "permit_id": "permit_8e244c79604b34cf009f4fa5",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            },
+            {
+              "attempt_token": "att_cb79e1e371550b1ea671d732",
+              "envelope_id": "ENV_M34B",
+              "job_id": "res_6d687b11cfaf4fd0_2",
+              "operation_id": "M34B:B4C_NEW_CLIP",
+              "permit_id": "permit_9a0ec1904f560b803a0d11de",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            },
+            {
+              "attempt_token": "att_50bdaf38ecb0622c48641c23",
+              "envelope_id": "ENV_M34A",
+              "job_id": "res_f4076e463c1fbcd9_1",
+              "operation_id": "M34A:B1_NEW_CLIP",
+              "permit_id": "permit_3ee10f808c77ab6a406964e2",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            },
+            {
+              "attempt_token": "att_9183d773048f041dec5678de",
+              "envelope_id": "ENV_M34B",
+              "job_id": "res_f4076e463c1fbcd9_2",
+              "operation_id": "M34B:B1_NEW_CLIP",
+              "permit_id": "permit_a9ace212b93c9eec8181807a",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 4,
+          "permits_consumed": 4,
+          "pid": 6061,
+          "quotes_consumed": 4,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_6d687b11cfaf4fd0_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_6d687b11",
+              "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
+              "state": "SUCCEEDED"
+            },
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_6d687b11cfaf4fd0_2",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_6d687b11",
+              "spec_key": "6d687b11cfaf4fd0b1cd8fdc23d08781a25255fe2813589a5a9a96c757f61b6f",
+              "state": "SUCCEEDED"
+            },
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_f4076e463c1fbcd9_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_f4076e46",
+              "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+              "state": "SUCCEEDED"
+            },
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_f4076e463c1fbcd9_2",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_f4076e46",
+              "spec_key": "f4076e463c1fbcd9fb4d12b9b008931fe1c6c3074f999257cb57df18a4ae17db",
+              "state": "SUCCEEDED"
+            }
+          ]
+        },
+        "wo_a": {
+          "namespace": "M34A",
+          "ok": true,
+          "pid": 6038,
+          "quotes": {
+            "B1_NEW_CLIP": "quote_1f0d64ecf33f8d58188456c8",
+            "B4C_NEW_CLIP": "quote_0b2ae5946b2f766354221605"
+          },
+          "submits": 2,
+          "traces": [
+            {
+              "jobs": [
+                {
+                  "asset": "B1_NEW_CLIP",
+                  "budget_units": 10,
+                  "error": null,
+                  "governance": "GOVERNED_LAB",
+                  "job_id": "res_f4076e463c1fbcd9_1",
+                  "legacy_resume_as_start": false,
+                  "operation_id": "M34A:B1_NEW_CLIP",
+                  "permit_id": "permit_3ee10f808c77ab6a406964e2",
+                  "quote_id": "quote_1f0d64ecf33f8d58188456c8",
+                  "reservation_outcome": "RESERVED_NEW",
+                  "resumed": false,
+                  "run_status": "SUCCEEDED"
+                },
+                {
+                  "asset": "B4C_NEW_CLIP",
+                  "budget_units": 10,
+                  "error": null,
+                  "governance": "GOVERNED_LAB",
+                  "job_id": "res_6d687b11cfaf4fd0_1",
+                  "legacy_resume_as_start": false,
+                  "operation_id": "M34A:B4C_NEW_CLIP",
+                  "permit_id": "permit_8e244c79604b34cf009f4fa5",
+                  "quote_id": "quote_0b2ae5946b2f766354221605",
+                  "reservation_outcome": "RESERVED_NEW",
+                  "resumed": false,
+                  "run_status": "SUCCEEDED"
+                }
+              ],
+              "run_verdict": "LOCK_HELD"
+            },
+            {
+              "jobs": [
+                {
+                  "asset": "B1_NEW_CLIP",
+                  "budget_units": null,
+                  "error": null,
+                  "governance": "GOVERNED_LAB",
+                  "job_id": "res_f4076e463c1fbcd9_1",
+                  "legacy_resume_as_start": false,
+                  "operation_id": "M34A:B1_NEW_CLIP",
+                  "permit_id": null,
+                  "quote_id": "quote_1f0d64ecf33f8d58188456c8",
+                  "reservation_outcome": "NONE",
+                  "resumed": true,
+                  "run_status": "RESUMED/SUCCEEDED"
+                },
+                {
+                  "asset": "B4C_NEW_CLIP",
+                  "budget_units": null,
+                  "error": null,
+                  "governance": "GOVERNED_LAB",
+                  "job_id": "res_6d687b11cfaf4fd0_1",
+                  "legacy_resume_as_start": false,
+                  "operation_id": "M34A:B4C_NEW_CLIP",
+                  "permit_id": null,
+                  "quote_id": "quote_0b2ae5946b2f766354221605",
+                  "reservation_outcome": "NONE",
+                  "resumed": true,
+                  "run_status": "RESUMED/SUCCEEDED"
+                }
+              ],
+              "run_verdict": "LOCK_HELD"
+            }
+          ]
+        },
+        "wo_b": {
+          "namespace": "M34B",
+          "ok": true,
+          "pid": 6053,
+          "quotes": {
+            "B1_NEW_CLIP": "quote_77818074e6438111d6ef41fb",
+            "B4C_NEW_CLIP": "quote_af677bc9f63dcf8fc31fef85"
+          },
+          "submits": 2,
+          "traces": [
+            {
+              "jobs": [
+                {
+                  "asset": "B1_NEW_CLIP",
+                  "budget_units": 10,
+                  "error": null,
+                  "governance": "GOVERNED_LAB",
+                  "job_id": "res_f4076e463c1fbcd9_2",
+                  "legacy_resume_as_start": false,
+                  "operation_id": "M34B:B1_NEW_CLIP",
+                  "permit_id": "permit_a9ace212b93c9eec8181807a",
+                  "quote_id": "quote_77818074e6438111d6ef41fb",
+                  "reservation_outcome": "RESERVED_NEW",
+                  "resumed": false,
+                  "run_status": "SUCCEEDED"
+                },
+                {
+                  "asset": "B4C_NEW_CLIP",
+                  "budget_units": 10,
+                  "error": null,
+                  "governance": "GOVERNED_LAB",
+                  "job_id": "res_6d687b11cfaf4fd0_2",
+                  "legacy_resume_as_start": false,
+                  "operation_id": "M34B:B4C_NEW_CLIP",
+                  "permit_id": "permit_9a0ec1904f560b803a0d11de",
+                  "quote_id": "quote_af677bc9f63dcf8fc31fef85",
+                  "reservation_outcome": "RESERVED_NEW",
+                  "resumed": false,
+                  "run_status": "SUCCEEDED"
+                }
+              ],
+              "run_verdict": "LOCK_HELD"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T34",
+      "pass": true,
+      "title": "namespace di operazione per work order (governato)"
+    },
+    "M37": {
+      "actual": "governed resume senza attempt -> NO_EXISTING_ATTEMPT (anche con quote valida: NO_EXISTING_ATTEMPT) · prima spesa solo new_attempt -> RESERVED_NEW · LEGACY_LAB con adapter di laboratorio: resume-as-start=True · LEGACY_LAB con SPENDER -> LEGACY_LAB_NOT_PROVIDER_CAPABLE, sentinella 0",
+      "detail": {
+        "governed_resume_no_attempt": {
+          "code": "NO_EXISTING_ATTEMPT",
+          "core_imported": true,
+          "error": "IntentRefused",
+          "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'M37:a': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
+          "ok": false,
+          "op": "M37:a",
+          "pid": 6063,
+          "quote_issued": "quote_a48d15b7f44ba8176b895579",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "governed_resume_with_quote": {
+          "code": "NO_EXISTING_ATTEMPT",
+          "core_imported": true,
+          "error": "IntentRefused",
+          "message": "NO_EXISTING_ATTEMPT: nessun tentativo persistito per l'operazione 'M37:a': RESUME non autorizza una prima spesa (prima generazione = intent='new_attempt' con reason)",
+          "ok": false,
+          "op": "M37:a",
+          "pid": 6070,
+          "quote_issued": "quote_be22279a1106766552baf67c",
+          "submits": 0,
+          "transport_sent": 0
+        },
+        "legacy_lab_adapter": {
+          "core_imported": true,
+          "core_imported_at_entry": false,
+          "core_path": "/home/user/creative-os",
+          "governance": "LEGACY_LAB",
+          "lab_adapter": {
+            "submits": 1,
+            "transport_sent": 1
+          },
+          "legacy_resume_as_start": true,
+          "ok": true,
+          "pid": 6083,
+          "sentinel": {
+            "authorized_calls": null,
+            "built": false,
+            "reached": null,
+            "submits": null,
+            "transport_authorized": null,
+            "transport_sent": null
+          },
+          "sentinel_zero": true,
+          "snapshots": {
+            "created": true,
+            "files": 4
+          },
+          "state": "SUCCEEDED",
+          "store": {
+            "anomalies": 0,
+            "created": true,
+            "ledger": 1,
+            "live": 0,
+            "permits_consumed": 0,
+            "quotes_consumed": 0,
+            "reservations": 1
+          },
+          "submits": 1
+        },
+        "legacy_lab_spender": {
+          "break_pin": false,
+          "code": "LEGACY_LAB_NOT_PROVIDER_CAPABLE",
+          "core_imported": true,
+          "core_imported_at_entry": false,
+          "core_imported_before_go": true,
+          "core_path": "/home/user/creative-os",
+          "error": "LegacyPathNotProviderCapable",
+          "message": "LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.",
+          "ok": false,
+          "pid": 6089,
+          "sentinel": {
+            "authorized_calls": 0,
+            "boundary": "SPEND_CAPABLE_ADAPTER",
+            "built": true,
+            "grants": [],
+            "reached": 0,
+            "spend_capable": true,
+            "submits": 0,
+            "transport_authorized": 0,
+            "transport_sent": 0
+          },
+          "sentinel_zero": true,
+          "snapshots": {
+            "created": false,
+            "files": 0
+          },
+          "store": {
+            "created": false
+          },
+          "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/LEGACY_SPEND_PATH_CLOSURE_01/lspc1/workers.py\", line 174, in p1_legacy_with_spender\n    res = go_candidate.go(_inputs(prompt), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 298, in go\n    require_legacy_lab_spend_path(adapter)\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py\", line 242, in require_legacy_lab_spend_path\n    raise LegacyPathNotProviderCapable(\nruntime.provider_gate.LegacyPathNotProviderCapable: LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.\n"
+        },
+        "new_attempt": {
+          "budget_units": 10,
+          "core_imported": true,
+          "core_pin": "CORE_PIN_OK",
+          "envelope_id": "ENV_M37",
+          "governance": "GOVERNED_LAB",
+          "intent": "new_attempt",
+          "job_id": "res_594750f98732949d_1",
+          "legacy_resume_as_start": false,
+          "ok": true,
+          "op": "M37:a",
+          "operation_id": "M37:a",
+          "outcome": "SUCCEEDED",
+          "permit_id": "permit_6fa568106b920aa2c29f26aa",
+          "persisted": {
+            "attempt_token": "att_241b60b2659a8acf4bf2ab75",
+            "cost_credits": 4.0,
+            "error": null,
+            "job_id": "res_594750f98732949d_1",
+            "operation_id": "M37:a",
+            "payload_digest": "d190404b421ced90cd9822a29fc5a319bd59bd32ef25f4f824dcb1de84c82fbc",
+            "polls": 1,
+            "provider": "fake",
+            "provider_account": "fake_acct_a",
+            "provider_job_id": "pv_594750f9",
+            "quote_id": "quote_4c0509a39b7eb5fabdca0745",
+            "revision": 3,
+            "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+            "state": "SUCCEEDED",
+            "submitted_at": 1789686811.526056,
+            "terminal_by": 1789687111.526056,
+            "webhook_hints": 0
+          },
+          "pid": 6075,
+          "provider": "fake",
+          "provider_job_id": "pv_594750f9",
+          "quote_id": "quote_4c0509a39b7eb5fabdca0745",
+          "quote_issued": "quote_4c0509a39b7eb5fabdca0745",
+          "requested_spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+          "reservation_outcome": "RESERVED_NEW",
+          "resumed": false,
+          "resumed_terminal": false,
+          "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+          "state": "SUCCEEDED",
+          "submits": 1,
+          "transport_sent": 1
+        },
+        "state": {
+          "anomalies": 0,
+          "ledger_entries": 1,
+          "ledger_totals": {
+            "live_reservation_units": 0,
+            "settled_units": 0,
+            "terminal_unsettled_jobs": 1,
+            "unsettled_exposure_units": 10
+          },
+          "ownership": [
+            {
+              "attempt_token": "att_241b60b2659a8acf4bf2ab75",
+              "envelope_id": "ENV_M37",
+              "job_id": "res_594750f98732949d_1",
+              "operation_id": "M37:a",
+              "permit_id": "permit_6fa568106b920aa2c29f26aa",
+              "provider_account": "fake_acct_a",
+              "revision": 3,
+              "settled_units": null
+            }
+          ],
+          "permits": 1,
+          "permits_consumed": 1,
+          "pid": 6081,
+          "quotes_consumed": 1,
+          "reserved_units": 0,
+          "rows": [
+            {
+              "budget_units": 10,
+              "cost_credits": 4.0,
+              "job_id": "res_594750f98732949d_1",
+              "polls": 1,
+              "provider": "fake",
+              "provider_job_id": "pv_594750f9",
+              "spec_key": "594750f98732949d4ed0a6e75f5390ac527bc9e7a2b747088eeb1f2adbdc34db",
+              "state": "SUCCEEDED"
+            }
+          ]
+        }
+      },
+      "migrated_from": "T37",
+      "pass": true,
+      "title": "RESUME non e' START, in ogni percorso (governato + legacy)"
+    }
+  },
+  "mode_by_case": {
+    "M01": "GOVERNED_PATH",
+    "M04": "GOVERNED_PATH",
+    "M06": "GOVERNED_PATH",
+    "M07": "GOVERNED_PATH",
+    "M08": "GOVERNED_PATH",
+    "M09": "GOVERNED_PATH",
+    "M10": "GOVERNED_PATH",
+    "M11": "GOVERNED_PATH",
+    "M12": "GOVERNED_PATH",
+    "M13": "CORE_UNIT",
+    "M18": "GOVERNED_PATH",
+    "M22": "GOVERNED_PATH",
+    "M24": "GOVERNED_PATH",
+    "M25": "GOVERNED_PATH",
+    "M26": "GOVERNED_PATH",
+    "M27": "GOVERNED_PATH",
+    "M30": "GOVERNED_PATH",
+    "M33": "GOVERNED_PATH",
+    "M34": "GOVERNED_PATH",
+    "M37": "GOVERNED_PATH"
+  },
+  "note": "`tests/run_gate.py` NON e' stato toccato: resta la base di non-regressione. Questa suite dimostra che cio' che i test storici verificavano e' verificabile dal percorso governato o dal Core, quindi non richiede un bypass spendibile."
+}

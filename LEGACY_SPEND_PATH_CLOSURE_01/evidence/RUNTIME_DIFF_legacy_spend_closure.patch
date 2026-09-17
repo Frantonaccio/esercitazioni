@@ -1,0 +1,271 @@
+diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py b/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py
+index e18a2b4..7ce1acf 100644
+--- a/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py
++++ b/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py
+@@ -30,23 +30,32 @@ from dataclasses import dataclass
+ 
+ # Core richiesto da questo runtime.
+ #
+-# COORDINATED CORE + RUNTIME INTEGRATION — NG-05 (2026-09-17). Il runtime consuma ora
+-# `store.mark_refused_pre_submit(...)`, l'API additiva del Core candidate approvato da
+-# Human Review (`APPROVED_PROPOSAL`), quindi il pin si sposta su quel commit: un runtime
+-# che pretende quell'API non puo' dichiararsi compatibile con un Core che non ce l'ha.
++# LEGACY SPEND PATH CLOSURE (2026-09-18). Il runtime pretende ora il CONFINE DELLO
++# SPENDER del Core (`adapters.base.SpendCapableAdapter`, `authorize_dispatch`,
++# `grant_dispatch`, `require_governed_dispatch_inputs`): senza quel confine, un adapter
++# capace di raggiungere un provider reale sarebbe dispacciabile da
++# `transport.pipeline.run_job` e da `adapter.submit` diretto, cioe' la garanzia che
++# questo runtime dichiara non esisterebbe. Il pin si sposta quindi sul commit che la
++# porta: un runtime che pretende quell'invariante non puo' dichiararsi compatibile con
++# un Core che non ce l'ha.
+ # Core candidate: Frantonaccio/creative-os, branch
+-# harden/provider-boundary-core-atomicity-2026-09-17, figlio diretto della baseline
+-# 740ee979300fe20a9382992528604dee70cb2fcf.
+-REQUIRED_CORE_SHA = "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
++# harden/legacy-spend-core-2026-09-18, figlio diretto della baseline canonica
++# 9cf9cee1a751f7a2ad6c768574ff5aa38d8db515.
++REQUIRED_CORE_SHA = "44f9ea29cea112dfb30c752e5519498e25044c19"
+ 
+ # Pin storici noti: un Core a questo SHA NON e' un Core sconosciuto, e' un Core
+ # VECCHIO. Va rifiutato con un esito che lo dica.
+ KNOWN_STALE_CORE_SHAS = frozenset({
+     "9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7",   # commit iniziale del Core
+-    # Baseline canonica precedente: e' il PADRE del candidate. Un runtime che consuma
++    # Baseline canonica di COORDINATED CORE + RUNTIME INTEGRATION. Un runtime che consuma
+     # `mark_refused_pre_submit` contro questo Core fallirebbe con AttributeError a meta'
+     # percorso; qui fallisce PRIMA dell'import, con un codice che dice perche'.
+     "740ee979300fe20a9382992528604dee70cb2fcf",
++    # Baseline canonica PROVIDER_BOUNDARY_CORE_RUNTIME_PAIR_MERGED: e' il PADRE del
++    # candidate di LEGACY SPEND PATH CLOSURE. Ha `mark_refused_pre_submit` ma NON ha il
++    # confine dello spender: un adapter spendibile vi sarebbe dispacciabile. Non e' un
++    # Core sconosciuto, e' un Core VECCHIO, e va rifiutato con un esito che lo dica.
++    "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+ })
+ 
+ 
+diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py b/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py
+index 9bbb222..7854721 100644
+--- a/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py
++++ b/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py
+@@ -28,6 +28,12 @@
+       1b. LEGACY SPEND PATH       -> authorization=None (LEGACY_LAB) e' ammesso SOLO se
+                                      provider_gate.LEGACY_LAB_SPEND_PATH lo consente
+                                      (LEGACY_SPEND_PATH_DISABLED altrimenti, prima di ogni effetto)
++                                     e SOLO per un adapter NON spendibile: un adapter che
++                                     dichiara `spend_capable` e' rifiutato sempre, in entrambe
++                                     le modalita', con LEGACY_LAB_NOT_PROVIDER_CAPABLE, prima
++                                     del pin e prima dell'import del Core (2026-09-18). Lo
++                                     stesso confine e' imposto in modo indipendente dal Core
++                                     (`adapters.base.SpendCapableAdapter`).
+       7c. SNAPSHOT (P-B04)        -> byte canonici del payload persistiti write-once e sigillati
+                                      (runtime/payload_snapshot.py); a mark_submitting legati
+                                      all'attempt; riverificati byte per byte prima del send.
+@@ -287,7 +293,9 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
+     #     fail-closed (provider_gate.LEGACY_LAB_SPEND_PATH). Verificato PRIMA di pin, import,
+     #     store: se chiuso, nessun effetto di alcun tipo (LEGACY_SPEND_PATH_DISABLED).
+     if authorization is None:
+-        require_legacy_lab_spend_path()
++        # LEGACY SPEND PATH CLOSURE (2026-09-18): il rifiuto di uno SPENDER e' qui,
++        # prima del pin e prima dell'import del Core (e' un `getattr`, non un isinstance).
++        require_legacy_lab_spend_path(adapter)
+     # 2) CORE PIN: il Core non autorizzato non viene nemmeno importato.
+     verdict = require_core_verdict(core_path, required_core_sha)
+     core_sha = verdict.observed
+diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py b/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py
+index 4f67e28..a818b34 100644
+--- a/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py
++++ b/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py
+@@ -74,13 +74,45 @@ def require_fake_adapter(adapter, fake_adapter_cls) -> None:
+ # esplicito, verificato e fail-closed, PRIMA di qualunque effetto:
+ #
+ #   LEGACY_LAB_SPEND_PATH = "ENABLED_LAB_ONLY"   (stato attuale, LAB)
++#       dal 2026-09-18: LAB_ONLY_NON_PROVIDER_CAPABLE (vedi sotto)
+ #   LEGACY_LAB_SPEND_PATH = "DISABLED"           (Provider Boundary Gate: obbligatorio)
+ #
+ # L'ambiente puo' solo CHIUDERE (CREATIVE_OS_LEGACY_LAB_SPEND_PATH=disabled), mai
+ # riaprire un percorso chiuso in codice.
+ # ---------------------------------------------------------------------------
++#
++# LEGACY SPEND PATH CLOSURE (2026-09-18). Lo stato del percorso non e' piu'
++# "abilitato": e' `LAB_ONLY_NON_PROVIDER_CAPABLE`, e il nome dice esattamente cio'
++# che il codice impone. Il percorso resta percorribile per il LABORATORIO (adapter
++# deterministici, nessun provider: e' cio' che la suite storica R0-R1 usa e che il
++# mandato autorizza a conservare), ma NON e' piu' un percorso spendibile:
++#
++#   - `require_legacy_lab_spend_path(adapter)` rifiuta un adapter SPENDIBILE
++#     (`spend_capable`) SEMPRE, in entrambe le modalita', PRIMA del pin, PRIMA
++#     dell'import del Core, PRIMA dello store: nessuna reservation, nessun permit,
++#     nessuna quote, nessuno snapshot, nessun submit;
++#   - il controllo e' un `getattr` sull'oggetto adapter, quindi non richiede il
++#     Core in `sys.path`: non c'e' un ordine di import da azzeccare;
++#   - a valle, il CORE impone lo stesso confine in modo indipendente
++#     (`adapters.base.SpendCapableAdapter` + `transport.pipeline.run_job`): un
++#     adapter spendibile non si dispaccia senza operazione, quote fidata ed
++#     envelope. Due lati, la stessa invariante: cambiare adapter/mode/config non
++#     riapre un percorso di spesa.
++#
++# Cio' che questo NON significa: non significa provider reale verificato, ne'
++# credenziali autorizzate, ne' spend autorizzato.
++# Il VALORE dell'interruttore resta quello canonico: i gate approvati
++# (PROVIDER_BOUNDARY_HARDENING_01, PROVIDER_BOUNDARY_GATE_02) lo asseriscono
++# LETTERALMENTE, e rinominarlo indebolirebbe un controllo storico senza aggiungere
++# una sola garanzia. Cio' che cambia non e' il nome dello stato: e' la CAPABILITY,
++# dichiarata a parte e imposta dal codice.
+ LEGACY_LAB_SPEND_PATH = "ENABLED_LAB_ONLY"
+ LEGACY_SPEND_PATH_ENV = "CREATIVE_OS_LEGACY_LAB_SPEND_PATH"
++SPEND_CAPABLE_ATTR = "spend_capable"
++
++# Fatto machine-readable di QUESTA fase: il percorso LEGACY_LAB non e' un percorso
++# capace di provider. Non e' un'etichetta: `require_legacy_lab_spend_path` la impone.
++LEGACY_LAB_PROVIDER_CAPABILITY = "LAB_ONLY_NON_PROVIDER_CAPABLE"
+ 
+ 
+ class LegacySpendPathDisabled(RuntimeError):
+@@ -96,6 +128,30 @@ class LegacySpendPathDisabled(RuntimeError):
+             "Nessuna reservation, nessun permit, nessun submit.")
+ 
+ 
++class LegacyPathNotProviderCapable(RuntimeError):
++    """Un adapter capace di raggiungere un provider reale ha chiesto il percorso
++    LEGACY_LAB. Rifiuto strutturale, non condizionato dalla modalita'."""
++
++    code = "LEGACY_LAB_NOT_PROVIDER_CAPABLE"
++
++    def __init__(self, adapter_repr: str):
++        self.adapter = adapter_repr
++        super().__init__(
++            f"{self.code}: {adapter_repr} dichiara `spend_capable` e il percorso LEGACY_LAB "
++            f"(authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa "
++            f"ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + "
++            f"permit). Nessun pin letto, nessun Core importato, nessuno store aperto, "
++            f"nessuna reservation, nessun submit.")
++
++
++def adapter_is_spend_capable(adapter) -> bool:
++    """Vero se l'adapter dichiara di poter raggiungere un provider reale.
++
++    Deliberatamente un `getattr`: non importa il Core e non isinstance-a nulla,
++    cosi' il rifiuto puo' precedere il gate di pin e l'import."""
++    return bool(getattr(adapter, SPEND_CAPABLE_ATTR, False))
++
++
+ # ---------------------------------------------------------------------------
+ # PROVIDER BOUNDARY MODE (OPEN-GAP CLOSURE, 2026-09-17).
+ #
+@@ -155,6 +211,11 @@ def refuse_if_provider_boundary_mode(entry_point: str) -> str:
+     return state
+ 
+ 
++def legacy_lab_provider_capability() -> str:
++    """Costante dichiarata + verificabile: vedi `require_legacy_lab_spend_path`."""
++    return LEGACY_LAB_PROVIDER_CAPABILITY
++
++
+ def legacy_spend_path_state() -> str:
+     if LEGACY_LAB_SPEND_PATH != "ENABLED_LAB_ONLY":
+         return "DISABLED"
+@@ -167,8 +228,19 @@ def legacy_spend_path_state() -> str:
+     return "ENABLED_LAB_ONLY"
+ 
+ 
+-def require_legacy_lab_spend_path() -> str:
+-    """Chiamata da `go()` quando authorization is None, PRIMA di pin/import/store."""
++def require_legacy_lab_spend_path(adapter=None) -> str:
++    """Chiamata da `go()` quando authorization is None, PRIMA di pin/import/store.
++
++    Due rifiuti, in quest'ordine:
++      1. adapter SPENDIBILE -> LEGACY_LAB_NOT_PROVIDER_CAPABLE. Incondizionato: non
++         dipende dalla modalita', dall'ambiente o dalla configurazione. E' il senso
++         del nome `LAB_ONLY_NON_PROVIDER_CAPABLE`;
++      2. percorso chiuso del tutto (modalita' ingaggiata o ambiente) ->
++         LEGACY_SPEND_PATH_DISABLED, come prima.
++    """
++    if adapter_is_spend_capable(adapter):
++        raise LegacyPathNotProviderCapable(
++            f"{type(adapter).__module__}.{type(adapter).__qualname__}")
+     state = legacy_spend_path_state()
+     if state != "ENABLED_LAB_ONLY":
+         raise LegacySpendPathDisabled(state)
+diff --git a/RUNTIME_INTEGRATION_GATE_01/tests/worker.py b/RUNTIME_INTEGRATION_GATE_01/tests/worker.py
+index 8702dcb..a4cb5e4 100644
+--- a/RUNTIME_INTEGRATION_GATE_01/tests/worker.py
++++ b/RUNTIME_INTEGRATION_GATE_01/tests/worker.py
+@@ -164,14 +164,59 @@ def read_state(db: str, core_path: str) -> dict:
+             "reserved_units": store.reserved_units()}
+ 
+ 
++# ---------------------------------------------------------------------------
++# LEGACY #7 — SUPERFICIE DI AUTORITA' DICHIARATA (LEGACY SPEND PATH CLOSURE, 2026-09-18)
++#
++# `store_call` dispacciava QUALUNQUE metodo dello store (`getattr(store, method)`).
++# Non era un percorso di spesa — non esiste adapter qui, quindi non esiste submit —
++# ma era una superficie APERTA: qualunque nome passasse di li' veniva eseguito.
++#
++# Da qui in avanti la superficie e' CHIUSA e DICHIARATA. Tre insiemi, nessun altro
++# nome ammesso (`STORE_CALL_METHOD_NOT_ALLOWED`, prima di aprire lo store):
++#
++#   READ_ONLY   letture del journal e della contabilita';
++#   AUTHORITY   cio' che in produzione appartiene al lato AUTORITA' (aprire un
++#               envelope, emettere una quote o un permesso, regolare un costo,
++#               recuperare un submit orfano): e' il ruolo che i test simulano;
++#   CORE_PROBE  due sonde esplicite su una primitive del Core (prenotazione con
++#               permesso / con operazione). Creano una RESERVED e nulla piu': con il
++#               confine dello spender del Core una riga cosi' non e' dispacciabile
++#               (nessuna quote consumata -> DISPATCH_QUOTE_REQUIRED), quindi non e'
++#               un percorso di spesa. Restano dichiarate come sonde, non nascoste.
++#
++# Cio' che NON e' ammesso, e che prima lo era per omissione: transizioni di stato
++# (`put`, `reconcile`, `mark_*`, `expire`) e qualunque altro metodo. Un test che
++# volesse provarle prova il CORE direttamente (tests/run_*.py del Core), senza
++# passare per un helper del Runtime.
++# ---------------------------------------------------------------------------
++STORE_CALL_READ_ONLY = frozenset({
++    "get", "find_live_by_spec", "find_latest_by_spec", "find_latest_by_operation",
++    "find_live_by_operation", "history", "reserved_units", "anomalies",
++    "ledger", "ledger_totals", "permit", "quote", "due_for_reconcile",
++})
++STORE_CALL_AUTHORITY = frozenset({
++    "open_envelope", "issue_permit", "issue_quote", "settle", "recover_orphaned_submits",
++    "record_anomaly",
++})
++STORE_CALL_CORE_PROBE = frozenset({
++    "spec_key_of", "issue_lab_quote",
++    "reserve_or_get_live_by_prompt", "reserve_or_get_live_by_prompt_op",
++})
++STORE_CALL_ALLOWED = STORE_CALL_READ_ONLY | STORE_CALL_AUTHORITY | STORE_CALL_CORE_PROBE
++
++
+ def store_call(db: str, core_path: str, method: str, *args, **kwargs) -> dict:
+-    """Nuovo interprete: invoca un metodo dello store durevole (recovery, ledger, permessi, quote).
+-    Due helper di test: `spec_key_of(prompt, over)` e `reserve_or_get_live_by_prompt(prompt, permit_id)`.
++    """Nuovo interprete: invoca UNO dei metodi DICHIARATI dello store durevole
++    (lettura, autorita' economica/recovery, due sonde esplicite sul Core).
+ 
+     LEGACY #7 (OPEN-GAP CLOSURE 2026-09-17): questo helper dispaccia DIRETTAMENTE sullo store,
+     fuori dal percorso governato, nello stesso UID del chiamante. E' ammesso solo mentre la
+     modalita' Provider Boundary e' disingaggiata (suite storica R0-R1). Ingaggiata, rifiuta
+-    PRIMA di importare il Core e prima di aprire lo store: nessun effetto di alcun tipo."""
++    PRIMA di importare il Core e prima di aprire lo store: nessun effetto di alcun tipo.
++
++    LEGACY SPEND PATH CLOSURE (2026-09-18): il dispatch non e' piu' arbitrario. Un
++    metodo fuori da `STORE_CALL_ALLOWED` e' rifiutato PRIMA dell'import del Core e
++    PRIMA di aprire lo store, come il rifiuto di modalita'."""
+     from runtime.provider_gate import ProviderBoundaryModeEngaged, refuse_if_provider_boundary_mode
+     try:
+         refuse_if_provider_boundary_mode("tests.worker.store_call")
+@@ -179,6 +224,15 @@ def store_call(db: str, core_path: str, method: str, *args, **kwargs) -> dict:
+         return {"pid": os.getpid(), "ok": False, "error": type(e).__name__, "code": e.code,
+                 "message": str(e), "core_imported": "registry.reservations" in sys.modules,
+                 "store_created": False}
++    if method not in STORE_CALL_ALLOWED:
++        return {"pid": os.getpid(), "ok": False, "error": "StoreCallMethodNotAllowed",
++                "code": "STORE_CALL_METHOD_NOT_ALLOWED",
++                "message": (f"{method!r} non e' nella superficie dichiarata di store_call "
++                            f"(lettura / autorita' / sonda del Core). Una transizione di stato "
++                            f"si prova sul Core, non da un helper del Runtime."),
++                "allowed": sorted(STORE_CALL_ALLOWED),
++                "core_imported": "registry.reservations" in sys.modules,
++                "store_created": False}
+     if core_path not in sys.path:
+         sys.path.insert(0, core_path)
+     from adapters.base import GenSpec

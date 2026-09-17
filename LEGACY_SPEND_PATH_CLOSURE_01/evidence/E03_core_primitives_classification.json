@@ -1,0 +1,23 @@
+{
+  "classification": {
+    "adapters.*.submit / authorize_payload": "E — confine dello spender: template method non sovrascrivibile in SpendCapableAdapter",
+    "go(authorization=None) LEGACY_LAB": "B — percorso di compatibilita' del Runtime; reso LAB_ONLY_NON_PROVIDER_CAPABLE",
+    "registry.reservations.reconcile": "A/D — primitive interna valida (non dispaccia); allowlist OPZIONALE delle provenienze, default inerte",
+    "tests.worker.store_call": "C — helper di test che invocava lo store direttamente; superficie ora DICHIARATA (lettura/autorita'/sonda)",
+    "transport.pipeline.run_job": "E — primitive che poteva diventare un bypass provider; ristretta SOLO per adapter spendibili, firma invariata"
+  },
+  "core_delta_stat": [
+    "adapters/base.py              | 326 ++++++++++++++++++++++++++++++++",
+    " registry/reservations.py      |  37 +++-",
+    " tests/run_spender_boundary.py | 422 ++++++++++++++++++++++++++++++++++++++++++",
+    " transport/pipeline.py         |  93 +++++++---",
+    " 4 files changed, 852 insertions(+), 26 deletions(-)"
+  ],
+  "unit_suite": {
+    "log": "regression/core_spender_boundary.log",
+    "pass": 11,
+    "returncode": 0,
+    "tail": "THORIZATION_REQUIRED · sentinella reached=0 · transport sent=0\u001b[0m\n\u001b[32mPASS\u001b[0m  C. authorize_payload diretto rifiutato, sentinella a 0\n      \u001b[2mauthorize_payload diretto -> SPEND_AUTHORIZATION_REQUIRED · attraversamenti=0 · digest autorizzati nel trasporto=0\u001b[0m\n\u001b[32mPASS\u001b[0m  D. run_job legacy (#10) rifiutato PRIMA della prenotazione\n      \u001b[2mrun_job coi soli default -> SPEND_AUTHORIZATION_REQUIRED · righe 0 · ledger 0 · quote consumate 0 · sentinella reached=0 · sent=0\u001b[0m\n\u001b[32mPASS\u001b[0m  E. envelope_units (budget del client) vietato allo spender\n      \u001b[2menvelope_units nel percorso spendibile -> SPEND_AUTHORIZATION_REQUIRED · righe 0 · quote consumate 0 · sentinella reached=0\u001b[0m\n\u001b[32mPASS\u001b[0m  F. percorso governato: il dispatch avviene e porta l'autorizzazione\n      \u001b[2mgovernato -> SUCCEEDED · sentinella reached=1 · authorize_payload=1 · autorizzazione: op=LSPC:f quote=quote_0894e790… env=ENV_LSPC importo=10 synthetic_units · digest e attempt_token = journal\u001b[0m\n\u001b[32mPASS\u001b[0m  G. l'autorizzazione e' riletta dal journal, non ricevuta\n      \u001b[2mrifiuti: DISPATCH_ATTEMPT_TOKEN_MISMATCH · DISPATCH_PAYLOAD_DIGEST_MISMATCH · DISPATCH_OWNERSHIP_MISMATCH · DISPATCH_OWNERSHIP_MISMATCH · DISPATCH_JOB_UNKNOWN · DISPATCH_QUOTE_NOT_CONSUMED_BY_JOB · DISPATCH_LEDGER_RESERVE_MISSING · DISPATCH_QUOTE_REQUIRED · sentinella reached=0\u001b[0m\n\u001b[32mPASS\u001b[0m  H. la concessione e' limitata al with, alla spec e al digest\n      \u001b[2mfuori dal with -> SPEND_AUTHORIZATION_REQUIRED · rientrante -> DISPATCH_GRANT_REENTRANT · altra spec -> DISPATCH_SPEC_NOT_COVERED · altro digest -> DISPATCH_DIGEST_NOT_COVERED · sentinella reached resta 1\u001b[0m\n\u001b[32mPASS\u001b[0m  I. store senza autorita' economica: nessun dispatch\n      \u001b[2mstore in memoria -> ReservationContractError (JobStore in memoria non supporta envel…) · store senza autorita' della quote -> DISPATCH_QUOTE_AUTHORITY_MISSING · sentinella reached=0 · sent=0\u001b[0m\n\u001b[32mPASS\u001b[0m  J. reconcile (#11): allowlist delle provenienze\n      \u001b[2mprovenienza estranea -> riconciliazione rifiutata: provenienza 'FABBRICATA' … · stato invariato RESERVED · anomalia registrata · provenienza riconosciuta -> FAILED · store senza allowlist: invariato\u001b[0m\n\u001b[32mPASS\u001b[0m  K. NON-REGRESSIONE: adapter di laboratorio invariato\n      \u001b[2mFakeAdapter senza operazione/quote/envelope -> SUCCEEDED (submits 1) · envelope_units -> SUCCEEDED · nessun confine attraversato\u001b[0m\n\nSPENDER BOUNDARY (Core): 11/11 PASS\ncrediti spesi: 0 · provider reali: 0 · rete generativa: 0\n",
+    "total": 11
+  }
+}

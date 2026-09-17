@@ -1,0 +1,66 @@
+{
+  "core_path": "/home/user/creative-os",
+  "core_suites": {
+    "run_block2": {
+      "returncode": 0,
+      "tail": " di chiave nel layer di trasporto\u001b[0m\n\n==============================================================================\n\u001b[32mBLOCCO 2: 18/18 test superati — 0 crediti, 0 chiamate a provider esterni.\u001b[0m"
+    },
+    "run_boot_paths": {
+      "returncode": 0,
+      "tail": "mpio non ha…\u001b[0m\n\n==============================================================================\n\u001b[32mBOOT_PATHS_EXIST — nessun riferimento obbligatorio punta nel vuoto, e il controllo sa fallire.\u001b[0m"
+    },
+    "run_case_collision": {
+      "returncode": 0,
+      "tail": "\u001b[32mOK  \u001b[0m creative-os  — 0 collisioni su 69 path (file e directory, NFC + casefold)\n\n\u001b[32mCASE_COLLISION_PREFLIGHT PASS — nessun path collassa sullo stesso nome logico.\u001b[0m"
+    },
+    "run_golden": {
+      "returncode": 0,
+      "tail": "===============================================================\n\nESITO: 1 REJECT · 1 PASS  (atteso: 1 REJECT · 1 PASS)\n\u001b[32mBLOCCO 1 APPROVATO — costo di esecuzione: 0 crediti, 0 chiamate di rete.\u001b[0m"
+    },
+    "run_ng05_pre_submit_atomicity": {
+      "returncode": 0,
+      "tail": "t; SqliteReservationStore e JobStore la implementano con firme compatibili (CR-03); JobStore rifiuta la provenance del trasporto e registra quella parametrica\u001b[0m\n\nNG-05 pre-submit atomicity: 8/8 PASS"
+    },
+    "run_r0_r1_hardening": {
+      "returncode": 0,
+      "tail": "1\n  CR-05    1/1\n  CR-07    1/1\n  QUOTE    2/2\n  CR-11    1/1\n  CR-09    1/1\n  STORE    1/1\n\u001b[32mR0-R1 HARDENING: 47/47 test superati — 0 crediti, 0 chiamate a provider esterni, unita' sintetiche.\u001b[0m"
+    },
+    "run_reservation": {
+      "returncode": 0,
+      "tail": "i-processo dichiarato\u001b[0m\n\n==============================================================================\n\u001b[32mPRENOTAZIONE ATOMICA: 10/10 test superati — 0 crediti, 0 chiamate a provider esterni.\u001b[0m"
+    },
+    "run_review_pr2": {
+      "returncode": 0,
+      "tail": "\u001b[0m\n\n==============================================================================\n  R1: \u001b[32mNOT_CONFIRMED\u001b[0m\n  R2: \u001b[32mNOT_CONFIRMED\u001b[0m\n  R3: \u001b[32mNOT_CONFIRMED\u001b[0m\n  R4: \u001b[32mNOT_CONFIRMED\u001b[0m"
+    },
+    "run_review_pr2_final": {
+      "returncode": 0,
+      "tail": "vider_a (altra istanza): poll=2, submit=0, stato=SUCCEEDED\u001b[0m\n\n==============================================================================\n  R5: \u001b[32mNOT_CONFIRMED\u001b[0m\n  R6: \u001b[32mNOT_CONFIRMED\u001b[0m"
+    }
+  },
+  "mechanisms": {
+    "composition_pb01_pb02": {
+      "actual": "orchestrator uid 65531 vs spender 65532 · segreto di riconciliazione BLOCKED (PermissionError) · chiave: /proc/mem BLOCKED (PermissionError), ready-file senza chiave True, 0 hex64 estranei sul canale · forge -> UNAUTHENTICATED · terzo uid -> PEER_UID_NOT_AUTHORIZED · report dello spender -> SUCCEEDED · replay: orchestrator -> NOT_RECONCILABLE, nonce dentro lo spender -> REPLAY · binding {'wrong_provider': 'PROVIDER_MISMATCH', 'wrong_account': 'ACCOUNT_MISMATCH', 'wrong_job': 'JOB_UNKNOWN', 'wrong_operation': 'OPERATION_MISMATCH', 'wrong_attempt': 'ATTEMPT_TOKEN_MISMATCH', 'wrong_payload_digest': 'PAYLOAD_DIGEST_MISMATCH', 'stale': 'REPORT_STALE', 'from_future': 'REPORT_FROM_FUTURE', 'replay': 'REPLAY'} · check falliti: nessuno",
+      "evidence": "../LEGACY_SPEND_PATH_CLOSURE_01/evidence/mechanisms/C02_pb01_pb02_composition.json",
+      "ok": true
+    },
+    "freshness_ng04": {
+      "actual": "18 controprove fail-closed (scarti: nessuno) · casi che devono passare: tutti · policy omessa -> FRESHNESS_POLICY_REQUIRED · 1970 -> REPORT_STALE · futuro -> REPORT_FROM_FUTURE · confine age==max -> applicato=True · nonce non bruciato da un rifiuto -> applicato=True · replay -> REPLAY · journal invariato sui rifiuti: True",
+      "evidence": "../LEGACY_SPEND_PATH_CLOSURE_01/evidence/mechanisms/C03_ng04_freshness_mechanism.json",
+      "ok": true
+    },
+    "legacy_spend_paths": {
+      "actual": "modalita' disingaggiata: legacy #2 spende (SUCCEEDED), helper #7 ok · ingaggiata: #2 -> LEGACY_SPEND_PATH_DISABLED, #7 -> PROVIDER_BOUNDARY_MODE_ENGAGED (store non creato), #1 governato -> SUCCEEDED · primitive del Core #10/#11 raggiungibili in ENTRAMBE le modalita' (CORE_CHANGE_REQUIRED) · check falliti: nessuno",
+      "evidence": "../LEGACY_SPEND_PATH_CLOSURE_01/evidence/mechanisms/C04_legacy_spend_paths_v2.json",
+      "ok": true
+    },
+    "orphan_lease": {
+      "actual": "policy omessa -> POLICY_DECISION_REQUIRED · attore errato -> RECLAIM_NOT_AUTHORIZED · evidenza incompleta -> RECLAIM_EVIDENCE_INCOMPLETE · lease non scaduto -> LEASE_NOT_EXPIRED · fence stantio -> FENCING_TOKEN_STALE · classe non ammessa -> RECLAIM_CLASS_NOT_ALLOWED · corsa persa dal reclaim -> RECLAIM_CLASS_NOT_ALLOWED (riga intatta) · fence dopo scrittura neutra -> FENCING_TOKEN_STALE · corsa vinta dal reclaim -> mark_submitting successivo StaleWrite · reclaim legittimo -> FAILED settled 0 · zero nuovi attempt · crash durante il reclaim (exit 11): terminale non regolato VISIBILE e riparato idempotentemente · RECLAIM_POLICY = NOT_AUTHORIZED (requisito NON chiuso)",
+      "evidence": "../LEGACY_SPEND_PATH_CLOSURE_01/evidence/mechanisms/C05_orphan_lease_mechanism_policy.json",
+      "ok": true
+    }
+  },
+  "not_run": {
+    "tests/run_contamination.py": "RUN_CONTAMINATION resta NOT_RUN per mandato: non viene chiuso incidentalmente eseguendolo come segnale di non-regressione."
+  }
+}
