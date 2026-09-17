@@ -14,9 +14,9 @@ Questo modulo NON cambia il Core: mette DAVANTI a `store.reconcile` un
 verificatore fail-closed. La riconciliazione avviene solo se:
 
   1. il REPORT e' ben formato e AUTENTICATO: HMAC-SHA256 sui campi canonici con
-     una chiave derivata dal segreto dello spender per (provider, conto). E' l'
-     equivalente LAB di "risposta autenticata del provider": chi non ha il segreto
-     dello spender non puo' produrre un report valido (l'orchestrator non lo ha);
+     una chiave derivata da un segreto per (provider, conto). E' l'equivalente LAB
+     di "risposta autenticata del provider": chi non possiede quel segreto non puo'
+     produrre un report che superi la verifica;
   2. il job esiste nello store AUTOREVOLE ed e' in uno stato riconciliabile
      (RESERVED con intento di submit persistito, oppure SUBMIT_UNKNOWN);
   3. l'ADAPTER che riconcilia e' il proprietario del job (provider + conto: la
@@ -35,9 +35,26 @@ validare la transizione (RECONCILIATION_TRANSITIONS), il CAS sulla revisione e a
 registrare l'evidenza. Ogni rifiuto e' `ReconciliationRefused(code)` PRIMA di
 qualunque scrittura sul journal.
 
-Questo e' un hardening LAB: la chiave e la firma sono un equivalente
-verificabile dell'interlocutore autenticato, NON una verifica contro un provider
-reale. Nessun claim di "real provider reconciliation".
+PERIMETRO DI CIO' CHE E' VERIFICATO (HUMAN REVIEW 01 — correzione di classificazione):
+
+  VERIFICATO (B03/B04)  il BINDING e l'AUTENTICAZIONE HMAC: un report non firmato, firmato
+                        con un'altra chiave, alterato dopo la firma, riferito ad altro
+                        provider/conto/job/operazione/token/digest, o riproposto (nonce
+                        gia' consumato) non produce alcuna transizione.
+  NON VERIFICATO        la COMPOSIZIONE con P-B01: in B03/B04 il segreto e la chiave sono
+                        FIXTURE di test, create e usate nel processo del gate, NON dentro
+                        il daemon spender isolato. Che il segreto e la chiave non escano mai
+                        dal dominio dello spender e' un requisito di DESIGN di questa fase,
+                        non un fatto dimostrato dai test correnti; l'API stessa espone la
+                        chiave derivata (`LabProviderStatusAuthority.key`, `derive_report_key`),
+                        quindi la custodia dipende da chi la invoca e da dove.
+  NON VERIFICATO        il provider reale: nessuna verifica contro un sistema di provider.
+                        Nessun claim di "real provider reconciliation".
+  APERTO                FRESHNESS: `max_age_s` e' OPZIONALE. Senza di esso un report valido e
+                        mai consumato resta accettabile indefinitamente (il nonce monouso
+                        impedisce il riuso, non l'eta'). Renderlo obbligatorio e fail-closed
+                        e' una precondizione del futuro Provider Boundary Gate, non di questo
+                        delta correttivo (vedi OPEN_GAPS.md).
 """
 from __future__ import annotations
 
@@ -71,8 +88,13 @@ def nonce_dir_for(store_path: str) -> str:
 
 
 def derive_report_key(secret: str | bytes, provider: str, provider_account: str) -> bytes:
-    """Chiave di autenticazione dei report, derivata dal segreto dello spender per
-    (provider, conto). Il segreto non lascia mai lo spender; la chiave nemmeno."""
+    """Chiave di autenticazione dei report, derivata da un segreto per (provider, conto).
+
+    NOTA DI PERIMETRO (HUMAN REVIEW 01): nel design di questa fase il segreto vive solo nel
+    processo spender (P-B01) e la chiave e' derivata li'. Questa funzione NON impone quella
+    custodia — la garantisce l'isolamento del processo che la chiama, non la firma. I test
+    B03/B04 la usano come fixture fuori dal daemon: dimostrano il binding e l'autenticazione,
+    non la custodia del segreto."""
     if isinstance(secret, str):
         secret = secret.encode("utf-8")
     if not secret or not provider or not provider_account:
@@ -102,7 +124,9 @@ def verify_report_signature(key: bytes, report: dict) -> bool:
 
 class LabProviderStatusAuthority:
     """Equivalente LAB dell'endpoint di stato autenticato del provider, per UN conto.
-    Vive dal lato dello spender (che possiede il segreto). Emette report firmati."""
+    Nel design va istanziata SOLO dal lato spender, che possiede il segreto; la classe non
+    puo' imporlo (espone `key`), quindi la custodia e' una proprieta' del processo che la
+    costruisce, non di questa API. Vedi il perimetro dichiarato in testa al modulo."""
 
     def __init__(self, secret: str | bytes, provider: str, provider_account: str):
         self.provider, self.provider_account = provider, provider_account
@@ -160,6 +184,7 @@ def _claim_nonce(nonce_dir: str, nonce: str, payload: dict) -> str:
 def reconcile_authenticated(store, adapter, report, *, job_id: str, key: bytes, nonce_dir: str,
                             snapshot_ledger=None, now: float | None = None,
                             max_age_s: float | None = None):
+    # `max_age_s=None` NON impone freshness: gap dichiarato APERTO (vedi testa del modulo).
     """Verifica tutto, poi (e solo poi) `store.reconcile`. Restituisce il Job aggiornato.
     `job_id` e' il job che il CHIAMANTE intende riconciliare: un report valido ma di un altro
     job/operazione non viene mai applicato altrove (JOB_MISMATCH)."""

@@ -37,7 +37,7 @@
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "schema": "payload-snapshot-seal/1",
-        "sealed_at": 1789635832.0410664,
+        "sealed_at": 1789637574.6530025,
         "spec_key": "960233d9ff6c0a272eab94834be32cba39bf164a40e5168f378b8c35f83a93e8"
       }
     },
@@ -60,21 +60,21 @@
       "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb_b05.db.snapshots",
       "opkey": "13e6166ead237637b4d269ff",
       "persisted_mode": "0o444",
-      "sealed_at": 1789635832.0410664,
+      "sealed_at": 1789637574.6530025,
       "send_attestation": {
-        "attempt_token": "att_eed5e2224fc9818548bace7e",
+        "attempt_token": "att_fcef50bf4fd8670d37a72058",
         "bytes": 174,
         "digest": "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00",
         "exact_bytes_equal": true,
         "job_id": "res_960233d9ff6c0a27_1",
         "opkey": "13e6166ead237637b4d269ff",
         "schema": "payload-snapshot-send-attestation/1",
-        "verified_at": 1789635832.0480826
+        "verified_at": 1789637574.6584048
       },
       "send_verified": true
     },
     "persisted": {
-      "attempt_token": "att_eed5e2224fc9818548bace7e",
+      "attempt_token": "att_fcef50bf4fd8670d37a72058",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_960233d9ff6c0a27_1",
@@ -84,16 +84,16 @@
       "provider": "fake",
       "provider_account": "fake_acct_a",
       "provider_job_id": "pv_960233d9",
-      "quote_id": "quote_0cc584e157e634860496f616",
+      "quote_id": "quote_40ef58ecfb099051ad2608b1",
       "revision": 3,
       "spec_key": "960233d9ff6c0a272eab94834be32cba39bf164a40e5168f378b8c35f83a93e8",
       "state": "SUCCEEDED",
-      "submitted_at": 1789635832.0490935,
-      "terminal_by": 1789636132.0490935,
+      "submitted_at": 1789637574.658848,
+      "terminal_by": 1789637874.658848,
       "webhook_hints": 0
     },
-    "pid": 3746,
-    "quote_id": "quote_0cc584e157e634860496f616",
+    "pid": 2460,
+    "quote_id": "quote_40ef58ecfb099051ad2608b1",
     "reservation_outcome": "RESERVED_NEW",
     "resumed": false,
     "spec_key": "960233d9ff6c0a272eab94834be32cba39bf164a40e5168f378b8c35f83a93e8",
@@ -116,8 +116,8 @@
       "send_attested": true
     },
     "bind": {
-      "attempt_token": "att_eed5e2224fc9818548bace7e",
-      "bound_at": 1789635832.0449321,
+      "attempt_token": "att_fcef50bf4fd8670d37a72058",
+      "bound_at": 1789637574.6562068,
       "digest": "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00",
       "job_id": "res_960233d9ff6c0a27_1",
       "operation_id": "T32:b05",
@@ -129,31 +129,31 @@
     "bytes": 174,
     "digest": "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00",
     "job": {
-      "attempt_token": "att_eed5e2224fc9818548bace7e",
+      "attempt_token": "att_fcef50bf4fd8670d37a72058",
       "budget_units": 10,
       "envelope_id": "ENV_T32",
       "error": null,
       "job_id": "res_960233d9ff6c0a27_1",
       "operation_id": "T32:b05",
       "payload_digest": "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00",
-      "permit_id": "permit_f1158050e0ab555f1720056d",
+      "permit_id": "permit_236a80a480a282b4d37e4564",
       "provider": "fake",
       "provider_account": "fake_acct_a",
       "provider_job_id": "pv_960233d9",
-      "quote_id": "quote_0cc584e157e634860496f616",
+      "quote_id": "quote_40ef58ecfb099051ad2608b1",
       "revision": 3,
       "settled_units": null,
       "settlement_source": null,
       "spec_key": "960233d9ff6c0a272eab94834be32cba39bf164a40e5168f378b8c35f83a93e8",
       "state": "SUCCEEDED",
-      "submit_intent_at": 1789635832.0449321
+      "submit_intent_at": 1789637574.6562068
     },
     "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb_b05.db.snapshots",
     "listing": [
       "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00.bin",
       "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff.seal.json",
-      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_eed5e2224fc9818548bace7e.bind.json",
-      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_eed5e2224fc9818548bace7e.send.json"
+      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_fcef50bf4fd8670d37a72058.bind.json",
+      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_fcef50bf4fd8670d37a72058.send.json"
     ],
     "ok": true,
     "persisted_equals_recomputed_canonical": true,
@@ -166,18 +166,18 @@
       "provider": "fake",
       "provider_account": "fake_acct_a",
       "schema": "payload-snapshot-seal/1",
-      "sealed_at": 1789635832.0410664,
+      "sealed_at": 1789637574.6530025,
       "spec_key": "960233d9ff6c0a272eab94834be32cba39bf164a40e5168f378b8c35f83a93e8"
     },
     "send_attestation": {
-      "attempt_token": "att_eed5e2224fc9818548bace7e",
+      "attempt_token": "att_fcef50bf4fd8670d37a72058",
       "bytes": 174,
       "digest": "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00",
       "exact_bytes_equal": true,
       "job_id": "res_960233d9ff6c0a27_1",
       "opkey": "13e6166ead237637b4d269ff",
       "schema": "payload-snapshot-send-attestation/1",
-      "verified_at": 1789635832.0480826
+      "verified_at": 1789637574.6584048
     },
     "sha256_of_persisted_equals_job_digest": true
   },
@@ -186,8 +186,8 @@
     "files": [
       "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00.bin",
       "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff.seal.json",
-      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_eed5e2224fc9818548bace7e.bind.json",
-      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_eed5e2224fc9818548bace7e.send.json"
+      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_fcef50bf4fd8670d37a72058.bind.json",
+      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_fcef50bf4fd8670d37a72058.send.json"
     ]
   },
   "listing_after_resume": {
@@ -195,8 +195,8 @@
     "files": [
       "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00.bin",
       "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff.seal.json",
-      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_eed5e2224fc9818548bace7e.bind.json",
-      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_eed5e2224fc9818548bace7e.send.json"
+      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_fcef50bf4fd8670d37a72058.bind.json",
+      "8e3c6a583559a5a3c38b3cef949b76bfd7d09d52fc2a50860ab553828a2b8b00__13e6166ead237637b4d269ff__att_fcef50bf4fd8670d37a72058.send.json"
     ]
   },
   "resume": {
@@ -214,7 +214,7 @@
     "outcome": "RESUMED/SUCCEEDED",
     "permit_id": null,
     "persisted": {
-      "attempt_token": "att_eed5e2224fc9818548bace7e",
+      "attempt_token": "att_fcef50bf4fd8670d37a72058",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_960233d9ff6c0a27_1",
@@ -224,18 +224,18 @@
       "provider": "fake",
       "provider_account": "fake_acct_a",
       "provider_job_id": "pv_960233d9",
-      "quote_id": "quote_0cc584e157e634860496f616",
+      "quote_id": "quote_40ef58ecfb099051ad2608b1",
       "revision": 3,
       "spec_key": "960233d9ff6c0a272eab94834be32cba39bf164a40e5168f378b8c35f83a93e8",
       "state": "SUCCEEDED",
-      "submitted_at": 1789635832.0490935,
-      "terminal_by": 1789636132.0490935,
+      "submitted_at": 1789637574.658848,
+      "terminal_by": 1789637874.658848,
       "webhook_hints": 0
     },
-    "pid": 3755,
+    "pid": 2469,
     "provider": "fake",
     "provider_job_id": "pv_960233d9",
-    "quote_id": "quote_0cc584e157e634860496f616",
+    "quote_id": "quote_40ef58ecfb099051ad2608b1",
     "requested_spec_key": "960233d9ff6c0a272eab94834be32cba39bf164a40e5168f378b8c35f83a93e8",
     "reservation_outcome": "NONE",
     "resumed": true,

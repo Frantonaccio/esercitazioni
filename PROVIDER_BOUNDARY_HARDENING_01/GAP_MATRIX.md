@@ -1,5 +1,9 @@
 # GAP MATRIX — PRE-FIX (Phase A: RECEIVE / INSPECT / REPRODUCE)
 
+> **v2**: questa matrice descrive lo stato PRE-FIX della prima consegna e resta immutata come evidenza storica.
+> Il delta correttivo richiesto da Human Review 01 (blocker NG-03) e' documentato in `CORRECTIVE_DELTA_NG03.md`
+> con la propria riproduzione (`evidence/pre_fix/reproduction_ng03.json`) e le proprie controprove (B12).
+
 Baseline: Runtime `39c82968` · Core `740ee979` · P2 `637f3a80…` frozen. Riproduzioni eseguite sul codice NON modificato:
 `evidence/pre_fix/reproduction_baseline.json` (script: `pbgate/reproduce_pre_fix.py`). Nessun provider, nessuna credenziale, 0 crediti.
 

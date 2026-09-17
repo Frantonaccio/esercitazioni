@@ -1,4 +1,14 @@
 {
+  "expected_call_sites": [
+    [
+      "go_candidate.py",
+      "_refuse_pre_submit"
+    ],
+    [
+      "reconciliation.py",
+      "reconcile_authenticated"
+    ]
+  ],
   "jobs": {
     "raw": {
       "attempt_token": null,
@@ -26,9 +36,9 @@
         "error": "ConnectionResetError",
         "message": "risposta del provider persa dopo l'invio",
         "ok": false,
-        "pid": 3704,
+        "pid": 2417,
         "submits": 1,
-        "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 168, in go_governed\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 345, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 73, in submit\n    raise ConnectionResetError(\"risposta del provider persa dopo l'invio\")\nConnectionResetError: risposta del provider persa dopo l'invio\n",
+        "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 181, in go_governed\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 413, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 73, in submit\n    raise ConnectionResetError(\"risposta del provider persa dopo l'invio\")\nConnectionResetError: risposta del provider persa dopo l'invio\n",
         "transport_guarded": "SnapshotGuardedTransport",
         "transport_refused": [],
         "transport_sent": [
@@ -37,24 +47,24 @@
         "transport_sent_count": 1
       },
       "row": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
         "operation_id": "T31:b04c",
         "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
-        "permit_id": "permit_a10cc5dbbdb30cf09a4b33fb",
+        "permit_id": "permit_b27d5fcd007cec5a485ae98b",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": null,
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 2,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "SUBMIT_UNKNOWN",
-        "submit_intent_at": 1789635830.3468485
+        "submit_intent_at": 1789637572.9907908
       }
     },
     "u4": {
@@ -63,9 +73,9 @@
         "error": "ConnectionResetError",
         "message": "risposta del provider persa dopo l'invio",
         "ok": false,
-        "pid": 3709,
+        "pid": 2423,
         "submits": 1,
-        "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 168, in go_governed\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 345, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 73, in submit\n    raise ConnectionResetError(\"risposta del provider persa dopo l'invio\")\nConnectionResetError: risposta del provider persa dopo l'invio\n",
+        "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 181, in go_governed\n    res = go_candidate.go(make_inputs(prompt, **(inputs_over or {})), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 413, in go\n    job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/creative-os/transport/pipeline.py\", line 129, in run_job\n    provider_job = adapter.submit(spec)\n                   ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 73, in submit\n    raise ConnectionResetError(\"risposta del provider persa dopo l'invio\")\nConnectionResetError: risposta del provider persa dopo l'invio\n",
         "transport_guarded": "SnapshotGuardedTransport",
         "transport_refused": [],
         "transport_sent": [
@@ -74,32 +84,39 @@
         "transport_sent_count": 1
       },
       "row": {
-        "attempt_token": "att_785513317ee12f01b0b83dcc",
+        "attempt_token": "att_b1e46fc112db176d238205b6",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5f8d9ad714a4538f_1",
         "operation_id": "T31:b04d",
         "payload_digest": "a01044a95286ba85d1aacdd53cbcf07e082b3efe57fe427ac1c97db34899f06a",
-        "permit_id": "permit_1f19d0d5e60830455cf9baeb",
+        "permit_id": "permit_57ba4d3deb0836e1d1ccb28a",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": null,
-        "quote_id": "quote_65b24e067e689d508ef6910e",
+        "quote_id": "quote_3a460bf55f24bf920d2d2c0e",
         "revision": 2,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5f8d9ad714a4538ff52948059b69f97b15d09a6e0eeb437ab769e3884a122a26",
         "state": "SUBMIT_UNKNOWN",
-        "submit_intent_at": 1789635830.4733288
+        "submit_intent_at": 1789637573.097958
       }
     }
   },
   "removed_snapshot_files": [
-    "a01044a95286ba85d1aacdd53cbcf07e082b3efe57fe427ac1c97db34899f06a__4cc5b293011560f7f30302fa__att_785513317ee12f01b0b83dcc.bind.json"
+    "a01044a95286ba85d1aacdd53cbcf07e082b3efe57fe427ac1c97db34899f06a__4cc5b293011560f7f30302fa__att_b1e46fc112db176d238205b6.bind.json"
   ],
-  "runtime_callers_of_store_reconcile": [
-    "reconciliation.py"
+  "runtime_reconcile_call_sites": [
+    [
+      "go_candidate.py",
+      "_refuse_pre_submit"
+    ],
+    [
+      "reconciliation.py",
+      "reconcile_authenticated"
+    ]
   ],
   "steps": {
     "back_to_unknown": {
@@ -108,37 +125,37 @@
     },
     "first_apply": {
       "after": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
         "operation_id": "T31:b04c",
         "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
-        "permit_id": "permit_a10cc5dbbdb30cf09a4b33fb",
+        "permit_id": "permit_b27d5fcd007cec5a485ae98b",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 3,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "RUNNING",
-        "submit_intent_at": 1789635830.3468485
+        "submit_intent_at": 1789637572.9907908
       },
       "anomalies": [
         {
           "detail": {
             "evidence": {
-              "nonce_claim": "143b8f74bdc5d413912da079518188de589ec1d4d44c6fef72654a34b1e043ba.json",
+              "nonce_claim": "41467ea833cf8cd7f66fd1280260cdcab0639df45ce69f4eaa24fd21c1dbec2c.json",
               "provider_job_id": "pv_remote_1",
               "remote_ref": "remote:pv_remote_1",
               "report": {
-                "attempt_token": "att_3993a25a9823308bdf00696f",
-                "issued_at": 1789635830.5584297,
+                "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
+                "issued_at": 1789637573.1799283,
                 "job_id": "res_5d209244b740cb13_1",
-                "nonce": "nonce_f9ef98e74d4c6d1340f63297c9cae9ca",
+                "nonce": "nonce_8ec9990f70cbff2288fcd5903bbec160",
                 "operation_id": "T31:b04c",
                 "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
                 "provider": "fake",
@@ -172,27 +189,27 @@
         }
       ],
       "before": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
         "operation_id": "T31:b04c",
         "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
-        "permit_id": "permit_a10cc5dbbdb30cf09a4b33fb",
+        "permit_id": "permit_b27d5fcd007cec5a485ae98b",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": null,
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 2,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "SUBMIT_UNKNOWN",
-        "submit_intent_at": 1789635830.3468485
+        "submit_intent_at": 1789637572.9907908
       },
       "job": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "cost_credits": null,
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
@@ -202,11 +219,11 @@
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 3,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "RUNNING",
-        "submitted_at": 1789635830.344511,
+        "submitted_at": 1789637572.988447,
         "terminal_by": 0.0,
         "webhook_hints": 0
       },
@@ -216,37 +233,37 @@
     },
     "fresh_report_after_replay": {
       "after": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
         "operation_id": "T31:b04c",
         "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
-        "permit_id": "permit_a10cc5dbbdb30cf09a4b33fb",
+        "permit_id": "permit_b27d5fcd007cec5a485ae98b",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 5,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "SUCCEEDED",
-        "submit_intent_at": 1789635830.3468485
+        "submit_intent_at": 1789637572.9907908
       },
       "anomalies": [
         {
           "detail": {
             "evidence": {
-              "nonce_claim": "143b8f74bdc5d413912da079518188de589ec1d4d44c6fef72654a34b1e043ba.json",
+              "nonce_claim": "41467ea833cf8cd7f66fd1280260cdcab0639df45ce69f4eaa24fd21c1dbec2c.json",
               "provider_job_id": "pv_remote_1",
               "remote_ref": "remote:pv_remote_1",
               "report": {
-                "attempt_token": "att_3993a25a9823308bdf00696f",
-                "issued_at": 1789635830.5584297,
+                "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
+                "issued_at": 1789637573.1799283,
                 "job_id": "res_5d209244b740cb13_1",
-                "nonce": "nonce_f9ef98e74d4c6d1340f63297c9cae9ca",
+                "nonce": "nonce_8ec9990f70cbff2288fcd5903bbec160",
                 "operation_id": "T31:b04c",
                 "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
                 "provider": "fake",
@@ -281,14 +298,14 @@
         {
           "detail": {
             "evidence": {
-              "nonce_claim": "b8449ef7c03b2af4ec6ac1e5534e7ce51c9c9fe273f5aada016628758048a3f0.json",
+              "nonce_claim": "6d2e3797f0def3d2daf883eada4968ca3599b3a324c7e3e6de6ed91fc466c012.json",
               "provider_job_id": "pv_remote_1",
               "remote_ref": "remote:pv_remote_1",
               "report": {
-                "attempt_token": "att_3993a25a9823308bdf00696f",
-                "issued_at": 1789635830.9135582,
+                "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
+                "issued_at": 1789637573.5224555,
                 "job_id": "res_5d209244b740cb13_1",
-                "nonce": "nonce_c9d6a761e0c77c0928776b8e333faab1",
+                "nonce": "nonce_c00434462034afc81d3bc02d27400905",
                 "operation_id": "T31:b04c",
                 "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
                 "provider": "fake",
@@ -322,27 +339,27 @@
         }
       ],
       "before": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
         "operation_id": "T31:b04c",
         "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
-        "permit_id": "permit_a10cc5dbbdb30cf09a4b33fb",
+        "permit_id": "permit_b27d5fcd007cec5a485ae98b",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 4,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "SUBMIT_UNKNOWN",
-        "submit_intent_at": 1789635830.3468485
+        "submit_intent_at": 1789637572.9907908
       },
       "job": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "cost_credits": null,
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
@@ -352,11 +369,11 @@
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 5,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "SUCCEEDED",
-        "submitted_at": 1789635830.344511,
+        "submitted_at": 1789637572.988447,
         "terminal_by": 0.0,
         "webhook_hints": 0
       },
@@ -418,37 +435,37 @@
     },
     "replay_same_nonce": {
       "after": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
         "operation_id": "T31:b04c",
         "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
-        "permit_id": "permit_a10cc5dbbdb30cf09a4b33fb",
+        "permit_id": "permit_b27d5fcd007cec5a485ae98b",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 4,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "SUBMIT_UNKNOWN",
-        "submit_intent_at": 1789635830.3468485
+        "submit_intent_at": 1789637572.9907908
       },
       "anomalies": [
         {
           "detail": {
             "evidence": {
-              "nonce_claim": "143b8f74bdc5d413912da079518188de589ec1d4d44c6fef72654a34b1e043ba.json",
+              "nonce_claim": "41467ea833cf8cd7f66fd1280260cdcab0639df45ce69f4eaa24fd21c1dbec2c.json",
               "provider_job_id": "pv_remote_1",
               "remote_ref": "remote:pv_remote_1",
               "report": {
-                "attempt_token": "att_3993a25a9823308bdf00696f",
-                "issued_at": 1789635830.5584297,
+                "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
+                "issued_at": 1789637573.1799283,
                 "job_id": "res_5d209244b740cb13_1",
-                "nonce": "nonce_f9ef98e74d4c6d1340f63297c9cae9ca",
+                "nonce": "nonce_8ec9990f70cbff2288fcd5903bbec160",
                 "operation_id": "T31:b04c",
                 "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
                 "provider": "fake",
@@ -482,64 +499,64 @@
         }
       ],
       "before": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
         "operation_id": "T31:b04c",
         "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
-        "permit_id": "permit_a10cc5dbbdb30cf09a4b33fb",
+        "permit_id": "permit_b27d5fcd007cec5a485ae98b",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 4,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "SUBMIT_UNKNOWN",
-        "submit_intent_at": 1789635830.3468485
+        "submit_intent_at": 1789637572.9907908
       },
       "code": "REPLAY",
       "error": "ReconciliationRefused",
       "journal_unchanged": true,
-      "message": "REPLAY: nonce nonce_f9ef98… gia' consumato: report riproposto",
+      "message": "REPLAY: nonce nonce_8ec999… gia' consumato: report riproposto",
       "ok": false
     },
     "same_without_snapshot_audit": {
       "after": {
-        "attempt_token": "att_785513317ee12f01b0b83dcc",
+        "attempt_token": "att_b1e46fc112db176d238205b6",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5f8d9ad714a4538f_1",
         "operation_id": "T31:b04d",
         "payload_digest": "a01044a95286ba85d1aacdd53cbcf07e082b3efe57fe427ac1c97db34899f06a",
-        "permit_id": "permit_1f19d0d5e60830455cf9baeb",
+        "permit_id": "permit_57ba4d3deb0836e1d1ccb28a",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_65b24e067e689d508ef6910e",
+        "quote_id": "quote_3a460bf55f24bf920d2d2c0e",
         "revision": 3,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5f8d9ad714a4538ff52948059b69f97b15d09a6e0eeb437ab769e3884a122a26",
         "state": "SUCCEEDED",
-        "submit_intent_at": 1789635830.4733288
+        "submit_intent_at": 1789637573.097958
       },
       "anomalies": [
         {
           "detail": {
             "evidence": {
-              "nonce_claim": "3d7dea310be8ea3377b3660cb6f79624e031fc1416a7226e1a38bac1d5e4f2d0.json",
+              "nonce_claim": "8e6cddbb74444cd203bc15ffbfed3d48fff71854cea1725dd8948196e7d7adf6.json",
               "provider_job_id": "pv_remote_1",
               "remote_ref": "remote:pv_remote_1",
               "report": {
-                "attempt_token": "att_785513317ee12f01b0b83dcc",
-                "issued_at": 1789635831.7137492,
+                "attempt_token": "att_b1e46fc112db176d238205b6",
+                "issued_at": 1789637574.3080044,
                 "job_id": "res_5f8d9ad714a4538f_1",
-                "nonce": "nonce_66fb0471dfbe4091cd1204a7d3fa3e5c",
+                "nonce": "nonce_076c493fa104d13a668d5818c137be4c",
                 "operation_id": "T31:b04d",
                 "payload_digest": "a01044a95286ba85d1aacdd53cbcf07e082b3efe57fe427ac1c97db34899f06a",
                 "provider": "fake",
@@ -566,27 +583,27 @@
         }
       ],
       "before": {
-        "attempt_token": "att_785513317ee12f01b0b83dcc",
+        "attempt_token": "att_b1e46fc112db176d238205b6",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5f8d9ad714a4538f_1",
         "operation_id": "T31:b04d",
         "payload_digest": "a01044a95286ba85d1aacdd53cbcf07e082b3efe57fe427ac1c97db34899f06a",
-        "permit_id": "permit_1f19d0d5e60830455cf9baeb",
+        "permit_id": "permit_57ba4d3deb0836e1d1ccb28a",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": null,
-        "quote_id": "quote_65b24e067e689d508ef6910e",
+        "quote_id": "quote_3a460bf55f24bf920d2d2c0e",
         "revision": 2,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5f8d9ad714a4538ff52948059b69f97b15d09a6e0eeb437ab769e3884a122a26",
         "state": "SUBMIT_UNKNOWN",
-        "submit_intent_at": 1789635830.4733288
+        "submit_intent_at": 1789637573.097958
       },
       "job": {
-        "attempt_token": "att_785513317ee12f01b0b83dcc",
+        "attempt_token": "att_b1e46fc112db176d238205b6",
         "cost_credits": null,
         "error": null,
         "job_id": "res_5f8d9ad714a4538f_1",
@@ -596,11 +613,11 @@
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_65b24e067e689d508ef6910e",
+        "quote_id": "quote_3a460bf55f24bf920d2d2c0e",
         "revision": 3,
         "spec_key": "5f8d9ad714a4538ff52948059b69f97b15d09a6e0eeb437ab769e3884a122a26",
         "state": "SUCCEEDED",
-        "submitted_at": 1789635830.4710114,
+        "submitted_at": 1789637573.0956893,
         "terminal_by": 0.0,
         "webhook_hints": 0
       },
@@ -610,45 +627,45 @@
     },
     "snapshot_bind_removed_then_reconcile": {
       "after": {
-        "attempt_token": "att_785513317ee12f01b0b83dcc",
+        "attempt_token": "att_b1e46fc112db176d238205b6",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5f8d9ad714a4538f_1",
         "operation_id": "T31:b04d",
         "payload_digest": "a01044a95286ba85d1aacdd53cbcf07e082b3efe57fe427ac1c97db34899f06a",
-        "permit_id": "permit_1f19d0d5e60830455cf9baeb",
+        "permit_id": "permit_57ba4d3deb0836e1d1ccb28a",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": null,
-        "quote_id": "quote_65b24e067e689d508ef6910e",
+        "quote_id": "quote_3a460bf55f24bf920d2d2c0e",
         "revision": 2,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5f8d9ad714a4538ff52948059b69f97b15d09a6e0eeb437ab769e3884a122a26",
         "state": "SUBMIT_UNKNOWN",
-        "submit_intent_at": 1789635830.4733288
+        "submit_intent_at": 1789637573.097958
       },
       "anomalies": [],
       "before": {
-        "attempt_token": "att_785513317ee12f01b0b83dcc",
+        "attempt_token": "att_b1e46fc112db176d238205b6",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5f8d9ad714a4538f_1",
         "operation_id": "T31:b04d",
         "payload_digest": "a01044a95286ba85d1aacdd53cbcf07e082b3efe57fe427ac1c97db34899f06a",
-        "permit_id": "permit_1f19d0d5e60830455cf9baeb",
+        "permit_id": "permit_57ba4d3deb0836e1d1ccb28a",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": null,
-        "quote_id": "quote_65b24e067e689d508ef6910e",
+        "quote_id": "quote_3a460bf55f24bf920d2d2c0e",
         "revision": 2,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5f8d9ad714a4538ff52948059b69f97b15d09a6e0eeb437ab769e3884a122a26",
         "state": "SUBMIT_UNKNOWN",
-        "submit_intent_at": 1789635830.4733288
+        "submit_intent_at": 1789637573.097958
       },
       "code": "SNAPSHOT_AUDIT_FAILED",
       "error": "ReconciliationRefused",
@@ -658,37 +675,37 @@
     },
     "valid_report_other_job_applied_to_u3": {
       "after": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
         "operation_id": "T31:b04c",
         "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
-        "permit_id": "permit_a10cc5dbbdb30cf09a4b33fb",
+        "permit_id": "permit_b27d5fcd007cec5a485ae98b",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 5,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "SUCCEEDED",
-        "submit_intent_at": 1789635830.3468485
+        "submit_intent_at": 1789637572.9907908
       },
       "anomalies": [
         {
           "detail": {
             "evidence": {
-              "nonce_claim": "143b8f74bdc5d413912da079518188de589ec1d4d44c6fef72654a34b1e043ba.json",
+              "nonce_claim": "41467ea833cf8cd7f66fd1280260cdcab0639df45ce69f4eaa24fd21c1dbec2c.json",
               "provider_job_id": "pv_remote_1",
               "remote_ref": "remote:pv_remote_1",
               "report": {
-                "attempt_token": "att_3993a25a9823308bdf00696f",
-                "issued_at": 1789635830.5584297,
+                "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
+                "issued_at": 1789637573.1799283,
                 "job_id": "res_5d209244b740cb13_1",
-                "nonce": "nonce_f9ef98e74d4c6d1340f63297c9cae9ca",
+                "nonce": "nonce_8ec9990f70cbff2288fcd5903bbec160",
                 "operation_id": "T31:b04c",
                 "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
                 "provider": "fake",
@@ -723,14 +740,14 @@
         {
           "detail": {
             "evidence": {
-              "nonce_claim": "b8449ef7c03b2af4ec6ac1e5534e7ce51c9c9fe273f5aada016628758048a3f0.json",
+              "nonce_claim": "6d2e3797f0def3d2daf883eada4968ca3599b3a324c7e3e6de6ed91fc466c012.json",
               "provider_job_id": "pv_remote_1",
               "remote_ref": "remote:pv_remote_1",
               "report": {
-                "attempt_token": "att_3993a25a9823308bdf00696f",
-                "issued_at": 1789635830.9135582,
+                "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
+                "issued_at": 1789637573.5224555,
                 "job_id": "res_5d209244b740cb13_1",
-                "nonce": "nonce_c9d6a761e0c77c0928776b8e333faab1",
+                "nonce": "nonce_c00434462034afc81d3bc02d27400905",
                 "operation_id": "T31:b04c",
                 "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
                 "provider": "fake",
@@ -764,24 +781,24 @@
         }
       ],
       "before": {
-        "attempt_token": "att_3993a25a9823308bdf00696f",
+        "attempt_token": "att_a70bea3ef2982139d7f2e4f5",
         "budget_units": 10,
         "envelope_id": "ENV_T31",
         "error": null,
         "job_id": "res_5d209244b740cb13_1",
         "operation_id": "T31:b04c",
         "payload_digest": "29515e97c757107eb93407e09788be38735733250c609da7741124f3922d4090",
-        "permit_id": "permit_a10cc5dbbdb30cf09a4b33fb",
+        "permit_id": "permit_b27d5fcd007cec5a485ae98b",
         "provider": "fake",
         "provider_account": "fake_acct_a",
         "provider_job_id": "pv_remote_1",
-        "quote_id": "quote_8a7b0ce6850a53e143b92092",
+        "quote_id": "quote_26af66d6be2212a28a12ddee",
         "revision": 5,
         "settled_units": null,
         "settlement_source": null,
         "spec_key": "5d209244b740cb134e0a950453dadda7b1c2ca6c16d2d4b733a0ebe85eac5e17",
         "state": "SUCCEEDED",
-        "submit_intent_at": 1789635830.3468485
+        "submit_intent_at": 1789637572.9907908
       },
       "code": "JOB_MISMATCH",
       "error": "ReconciliationRefused",

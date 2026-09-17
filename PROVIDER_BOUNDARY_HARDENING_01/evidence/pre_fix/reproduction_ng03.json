@@ -1,0 +1,84 @@
+{
+  "case_A_refusal_at_mark_submitting": {
+    "FINDING": "settlement_source e reconciliation evidence registrano TRANSPORT_ATTESTED_NOT_SENT, ma in questo punto il trasporto NON ha attestato nulla: mark_submitting precede adapter.authorize_payload() e qualunque tentativo di send; il Core non ha letto sent_before/sent_after perche' l'eccezione nasce PRIMA del blocco try del submit. La provenance registrata non corrisponde all'evidenza osservata.",
+    "adapter": "drift_nested (serialize() cambia fra sigillo e run_job)",
+    "error": "SERIALIZATION_DRIFT: digest calcolato dal Core 65e1d1e2a23446e4… != snapshot sigillato ca6a58884f4c994a…: l'adapter ha serializzato byte diversi fra sigillo e submit",
+    "ledger": [
+      {
+        "cost_known": 0,
+        "job_id": "res_d0529896ebc1b949_1",
+        "kind": "RESERVE",
+        "source": "reserve_or_get_live",
+        "units": 10
+      },
+      {
+        "cost_known": 1,
+        "job_id": "res_d0529896ebc1b949_1",
+        "kind": "SETTLE",
+        "source": "TRANSPORT_ATTESTED_NOT_SENT",
+        "units": 0
+      }
+    ],
+    "reconciliation_anomalies": [
+      {
+        "detail": {
+          "evidence": {
+            "reason": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core 65e1d1e2a23446e4… != snapshot sigillato ca6a58884f4c994a…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato prima di autorizzare/inviare)",
+            "remote_ref": "none:not_sent",
+            "source": "TRANSPORT_ATTESTED_NOT_SENT"
+          },
+          "from": "RESERVED",
+          "to": "FAILED"
+        },
+        "job_id": "res_d0529896ebc1b949_1",
+        "kind": "RECONCILIATION",
+        "seq": 2
+      }
+    ],
+    "refusal_code": "SERIALIZATION_DRIFT",
+    "row": {
+      "budget_units": 10,
+      "error": "snapshot guard: SERIALIZATION_DRIFT: digest calcolato dal Core 65e1d1e2a23446e4… != snapshot sigillato ca6a58884f4c994a…: l'adapter ha serializzato byte diversi fra sigillo e submit (rifiutato prima di autorizzare/inviare)",
+      "job_id": "res_d0529896ebc1b949_1",
+      "settled_units": 0,
+      "settlement_source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "state": "FAILED"
+    },
+    "status": "REPRODUCED",
+    "transport_sent_count": 0
+  },
+  "case_B_control_refusal_inside_adapter_submit": {
+    "NOTE": "qui TRANSPORT_ATTESTED_NOT_SENT e' veritiero: il Core ha letto sent_before/sent_after attorno ad adapter.submit e il marcatore di invio non e' stato raggiunto",
+    "adapter": "reorder (send con byte diversi: il guard rifiuta dentro submit)",
+    "error": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 0b09b66bca9e4c5c…; nessun invio",
+    "reconciliation_anomalies": [
+      {
+        "detail": {
+          "evidence": {
+            "reason": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 0b09b66bca9e4c5c…; nessun invio",
+            "remote_ref": "none:not_sent",
+            "source": "TRANSPORT_ATTESTED_NOT_SENT"
+          },
+          "from": "RESERVED",
+          "to": "FAILED"
+        },
+        "job_id": "res_cc1dc08f41f3ebd4_1",
+        "kind": "RECONCILIATION",
+        "seq": 2
+      }
+    ],
+    "row": {
+      "error": "rifiutato prima dell'invio: PayloadBindingError: snapshot guard: SNAPSHOT_MISSING: nessun snapshot per il digest 0b09b66bca9e4c5c…; nessun invio",
+      "job_id": "res_cc1dc08f41f3ebd4_1",
+      "settled_units": 0,
+      "settlement_source": "TRANSPORT_ATTESTED_NOT_SENT",
+      "state": "FAILED"
+    },
+    "status": "CORRECT_AS_IS",
+    "transport_sent_count": 0
+  },
+  "code_under_test": {
+    "path": "runtime/go_candidate.py:ReservationObserver.mark_submitting",
+    "runtime_commit": "9aafe9b16f10861846ec7527191009c6e0dabbd6"
+  }
+}

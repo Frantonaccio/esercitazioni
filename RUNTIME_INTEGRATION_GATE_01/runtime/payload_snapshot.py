@@ -56,6 +56,14 @@ import threading
 import time
 
 SNAPSHOT_DIR_SUFFIX = ".snapshots"
+# PROVENANCE del rifiuto PRE-SUBMIT (HUMAN REVIEW 01, NG-03). Il Core riserva
+# `TRANSPORT_ATTESTED_NOT_SENT` al caso in cui e' il TRASPORTO ad attestare zero invii
+# (run_job legge sent_before/sent_after attorno ad adapter.submit). Un rifiuto che avviene
+# a `mark_submitting` — cioe' PRIMA di adapter.authorize_payload e prima di qualunque
+# tentativo di invio — non ha quell'attestazione e non deve usarne il nome: la sua
+# provenance e' una verifica del RUNTIME, con i fatti osservati registrati accanto.
+PRE_SUBMIT_REFUSAL_SOURCE = "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED"
+PRE_SUBMIT_REFUSAL_REMOTE_REF = "none:never_dispatched"
 SEAL_SCHEMA = "payload-snapshot-seal/1"
 BIND_SCHEMA = "payload-snapshot-bind/1"
 SEND_SCHEMA = "payload-snapshot-send-attestation/1"
@@ -130,6 +138,15 @@ class SnapshotLedger:
 
     def send_path(self, digest: str, key: str, attempt_token: str) -> str:
         return os.path.join(self.root, f"{digest}__{key}__{attempt_token}.send.json")
+
+    def send_attested(self, *, digest: str, operation_id: str, provider: str, provider_account: str,
+                      attempt_token: str | None) -> bool:
+        """Esiste un'attestazione di verifica pre-send per questo attempt? Fatto osservabile,
+        usato come evidenza del rifiuto pre-submit (deve essere False)."""
+        if not attempt_token:
+            return False
+        return os.path.isfile(self.send_path(digest, opkey(operation_id, provider, provider_account),
+                                             attempt_token))
 
     # ------------------------------------------------------------ seal
     def seal(self, payload: bytes, *, operation_id: str, spec_key: str, provider: str,
@@ -341,6 +358,12 @@ class SnapshotGuardedTransport:
         self._ctx.binding = None
 
     @property
+    def armed(self) -> bool:
+        """Vero solo se un attempt e' legato in QUESTO thread: senza binding il guard
+        rifiuta ogni `send` prima di delegarlo al trasporto."""
+        return getattr(self._ctx, "binding", None) is not None
+
+    @property
     def last_proof(self):
         return getattr(self._ctx, "last_proof", None)
 
@@ -397,6 +420,44 @@ class SnapshotBinding:
         self.operation_id, self.provider, self.provider_account = operation_id, provider, provider_account
         self.digest, self.clock = digest, clock
         self.bound: dict | None = None
+        # marcatore di invio del trasporto al momento del sigillo: confrontabile dopo un
+        # rifiuto per dimostrare che nessun invio e' avvenuto durante questo tentativo.
+        self.sent_count_at_seal = guard.sent_count
+
+    def observe_not_dispatched(self, kw: dict) -> dict:
+        """FATTI OSSERVATI al momento di un rifiuto a `mark_submitting` (NG-03). Non e'
+        un'attestazione del trasporto: e' cio' che il runtime puo' verificare direttamente,
+        e va registrato con la provenance PRE_SUBMIT_REFUSAL_SOURCE.
+
+        Perche' provano che nessun effetto esterno e' possibile per QUESTO tentativo:
+        il Core chiama `adapter.authorize_payload(digest)` DOPO `mark_submitting`, e il
+        trasporto fittizio rifiuta ogni digest non autorizzato prima del marcatore di invio;
+        il guard, non armato, rifiuterebbe comunque ogni `send` in questo thread."""
+        core_digest = kw.get("payload_digest")
+        authorized = set(self.guard.authorized)
+        now_sent = self.guard.sent_count
+        return {
+            "refused_at": "store.mark_submitting (prima di adapter.authorize_payload e di ogni send)",
+            "transport_sent_count_at_seal": self.sent_count_at_seal,
+            "transport_sent_count_now": now_sent,
+            "transport_sent_count_unchanged": now_sent == self.sent_count_at_seal,
+            "sealed_digest_authorized_in_transport": self.digest in authorized,
+            "core_digest_authorized_in_transport": bool(core_digest) and core_digest in authorized,
+            "guard_armed_for_this_attempt": self.guard.armed,
+            "send_attestation_present": self.ledger.send_attested(
+                digest=self.digest, operation_id=self.operation_id, provider=self.provider,
+                provider_account=self.provider_account, attempt_token=kw.get("attempt_token")),
+            "core_digest": core_digest, "sealed_digest": self.digest,
+        }
+
+    @staticmethod
+    def not_dispatched(observed: dict) -> bool:
+        """Tutti i fatti devono concordare: nessun invio possibile per questo tentativo."""
+        return (observed.get("transport_sent_count_unchanged") is True
+                and observed.get("sealed_digest_authorized_in_transport") is False
+                and observed.get("core_digest_authorized_in_transport") is False
+                and observed.get("guard_armed_for_this_attempt") is False
+                and observed.get("send_attestation_present") is False)
 
     def bind(self, job, kw: dict) -> dict:
         core_digest = kw.get("payload_digest")

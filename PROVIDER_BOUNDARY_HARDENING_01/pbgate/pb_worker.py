@@ -122,6 +122,19 @@ def _adapter(kind: str, core_path: str, account_id: str = "fake_acct_a", ledger_
                            provider_account=self.account_id, payload_digest=digest, submitted_at=now,
                            terminal_by=now + 300)
         return Substitute(account_id=account_id)
+    if kind == "identity_drift":
+        class IdentityDrift(FakeAdapter):
+            """`account_id` cambia DOPO la lettura fatta dal runtime per il sigillo: il Core
+            persistera' un'ownership diversa da quella sigillata -> IDENTITY_DRIFT."""
+            reads = 0
+            @property
+            def account_id(self):
+                type(self).reads += 1
+                return account_id if type(self).reads <= 1 else "acct_other"
+            @account_id.setter
+            def account_id(self, v):
+                pass
+        return IdentityDrift(account_id=account_id)
     if kind in ("snapshot_missing", "snapshot_corrupt"):
         class Tamper(FakeAdapter):
             """Prima del send il file .bin dello snapshot sparisce (missing) o viene corrotto
@@ -270,6 +283,74 @@ def ledger_api_counterproofs(db: str, core_path: str, prompt: str, job_id: str) 
                                                     job_id=job_id, attempt_token=row["attempt_token"], **ctx)
         out["ok"] = True
     except Exception as e:                                  # noqa: BLE001
+        out.update(_err(e))
+    return out
+
+
+def pre_submit_race(db: str, core_path: str, prompt: str, op: str) -> dict:
+    """Controprova 5 (NG-03): due terminalizzazioni pre-submit concorrenti sullo stesso job.
+    La seconda porta una revisione obsoleta: il Core deve rifiutarla (CAS) e il runtime non
+    deve tentare alcun secondo settlement. Verifica anche l'idempotenza esplicita di settle."""
+    import copy
+    from runtime.authorization import DEFAULT_LAB_AUTHORIZATION, LAB_QUOTE_UNIT, lab_price_for
+    from runtime.genspec_bridge import build_genspec
+    from runtime.go_candidate import ReservationObserver
+    from runtime.payload_snapshot import (PRE_SUBMIT_REFUSAL_SOURCE, PayloadSnapshotError, SnapshotBinding,
+                                          SnapshotLedger, install_snapshot_guard, ledger_dir_for)
+    _core(core_path)
+    from adapters.base import GenSpec
+    from adapters.fake import FakeAdapter
+    from registry.reservations import SqliteReservationStore
+    out: dict = {}
+    try:
+        inner = SqliteReservationStore(db)
+        spec = build_genspec(make_inputs(prompt), GenSpec)
+        env = DEFAULT_LAB_AUTHORIZATION.envelope_for(op)
+        inner.open_envelope(env, 100, unit=LAB_QUOTE_UNIT, scope=op.split(":")[0])
+        amount = lab_price_for(spec.model)
+        qid = inner.issue_quote(operation_id=op, spec_key=spec.spec_key, envelope_id=env,
+                                amount=amount, unit=LAB_QUOTE_UNIT)
+        outcome, job = inner.reserve_or_get_live(spec, budget_units=amount, envelope_id=env,
+                                                 operation_id=op, quote_id=qid, now=1.0)
+        adapter = FakeAdapter(account_id="fake_acct_a")
+        ledger = SnapshotLedger(ledger_dir_for(db))
+        seal = ledger.seal(adapter.serialize(spec), operation_id=op, spec_key=spec.spec_key,
+                           provider=adapter.name, provider_account=adapter.account_id, now=1.0)
+        guard = install_snapshot_guard(adapter)
+        observer = ReservationObserver(inner)
+        observer.attach_snapshot(SnapshotBinding(ledger, guard, operation_id=op, provider=adapter.name,
+                                                 provider_account=adapter.account_id,
+                                                 digest=seal["digest"], clock=lambda: 2.0))
+        stale = copy.copy(job)                      # la copia conserva la revisione pre-terminalizzazione
+        kw = dict(provider=adapter.name, provider_account=adapter.account_id,
+                  payload_digest="f" * 64,          # digest diverso dal sigillo -> SERIALIZATION_DRIFT
+                  attempt_token="att_race_1", now=2.0)
+        # primo scrittore: terminalizza con provenance veritiera
+        try:
+            observer.mark_submitting(job, **kw)
+            out["first"] = {"refused": False}
+        except PayloadSnapshotError as e:
+            out["first"] = {"refused": True, "code": e.code, "report": observer.pre_submit_refusal}
+        out["state_after_first"] = {"rows": _rows(db), "ledger": _ledger(db)}
+        # secondo scrittore: stessa riga, revisione obsoleta (un altro ha gia' scritto)
+        try:
+            observer.mark_submitting(stale, **dict(kw, attempt_token="att_race_2"))
+            out["second_stale"] = {"refused": False}
+        except PayloadSnapshotError as e:
+            out["second_stale"] = {"refused": True, "code": e.code, "report": observer.pre_submit_refusal}
+        out["state_after_second"] = {"rows": _rows(db), "ledger": _ledger(db)}
+        # idempotenza esplicita del settlement e conflitto su importo diverso
+        out["settle_same_amount_again"] = inner.settle(job.job_id, units=0,
+                                                       source=PRE_SUBMIT_REFUSAL_SOURCE, now=3.0)
+        try:
+            inner.settle(job.job_id, units=7, source="SOMEONE_ELSE", now=3.0)
+            out["settle_other_amount"] = {"applied": True}
+        except Exception as e:                                  # noqa: BLE001
+            out["settle_other_amount"] = {"applied": False, "error": type(e).__name__, "message": str(e)}
+        out["state_end"] = {"rows": _rows(db), "ledger": _ledger(db), "anomalies": _anomalies(db)}
+        out["ledger_totals"] = inner.ledger_totals(env)
+        out["ok"] = True
+    except Exception as e:                                      # noqa: BLE001
         out.update(_err(e))
     return out
 

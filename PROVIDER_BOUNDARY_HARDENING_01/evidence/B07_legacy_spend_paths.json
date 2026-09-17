@@ -20,21 +20,21 @@
       "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb_b07c.db.snapshots",
       "opkey": "f64a4cdecc5ae91f2dc8ecad",
       "persisted_mode": "0o444",
-      "sealed_at": 1789635833.7120438,
+      "sealed_at": 1789637576.360756,
       "send_attestation": {
-        "attempt_token": "att_7a9e755b6468bc70fd5f8f72",
+        "attempt_token": "att_8ef1b872f6737baa980f917e",
         "bytes": 177,
         "digest": "67deb5a0d40ab942a064e7bad7100656b844c932e52e65a19ceed8745f320347",
         "exact_bytes_equal": true,
         "job_id": "res_2dcf9e75700d0c90_1",
         "opkey": "f64a4cdecc5ae91f2dc8ecad",
         "schema": "payload-snapshot-send-attestation/1",
-        "verified_at": 1789635833.7184603
+        "verified_at": 1789637576.3668356
       },
       "send_verified": true
     },
     "persisted": {
-      "attempt_token": "att_7a9e755b6468bc70fd5f8f72",
+      "attempt_token": "att_8ef1b872f6737baa980f917e",
       "cost_credits": 4.0,
       "error": null,
       "job_id": "res_2dcf9e75700d0c90_1",
@@ -44,16 +44,16 @@
       "provider": "fake",
       "provider_account": "fake_acct_a",
       "provider_job_id": "pv_2dcf9e75",
-      "quote_id": "quote_a2b7f451f51437430b5d994c",
+      "quote_id": "quote_5957b4ed5649f7634e73feca",
       "revision": 3,
       "spec_key": "2dcf9e75700d0c90f9c4e4eaff000025c4960e3a71c4a3173e14b6544ea99310",
       "state": "SUCCEEDED",
-      "submitted_at": 1789635833.719144,
-      "terminal_by": 1789636133.719144,
+      "submitted_at": 1789637576.3677778,
+      "terminal_by": 1789637876.3677778,
       "webhook_hints": 0
     },
-    "pid": 3798,
-    "quote_id": "quote_a2b7f451f51437430b5d994c",
+    "pid": 2512,
+    "quote_id": "quote_5957b4ed5649f7634e73feca",
     "reservation_outcome": "RESERVED_NEW",
     "resumed": false,
     "spec_key": "2dcf9e75700d0c90f9c4e4eaff000025c4960e3a71c4a3173e14b6544ea99310",
@@ -147,7 +147,7 @@
     "ok": false,
     "store_created": false,
     "switch_state": "ENABLED_LAB_ONLY",
-    "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 378, in legacy_go_disabled\n    res = go_candidate.go(make_inputs(prompt), adapter=None, provider_mode=\"fake\", store_path=db,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 233, in go\n    require_fake_adapter(adapter, FakeAdapter)\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py\", line 57, in require_fake_adapter\n    raise RealProviderDisabled(\nruntime.provider_gate.RealProviderDisabled: REAL_PROVIDER_DISABLED: provider_mode='adapter:builtins.NoneType'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.\n"
+    "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py\", line 459, in legacy_go_disabled\n    res = go_candidate.go(make_inputs(prompt), adapter=None, provider_mode=\"fake\", store_path=db,\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 301, in go\n    require_fake_adapter(adapter, FakeAdapter)\n  File \"/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/runtime/provider_gate.py\", line 57, in require_fake_adapter\n    raise RealProviderDisabled(\nruntime.provider_gate.RealProviderDisabled: REAL_PROVIDER_DISABLED: provider_mode='adapter:builtins.NoneType'; ammesso solo 'fake'. Nessuna credenziale letta, nessun subprocess, nessuna rete, nessun credito.\n"
   },
   "p2_frozen": {
     "has_real_cli_submit": true,
@@ -193,18 +193,22 @@
         "file": "RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py",
         "hits": {
           "go_candidate_go": [
-            200
+            268
+          ],
+          "reconcile": [
+            163,
+            225
           ],
           "reserve_or_get_live": [
-            162,
-            163
+            189,
+            190
           ],
           "run_job_call": [
-            40,
-            345
+            43,
+            413
           ]
         },
-        "sha256": "38b2cceaf0bbfc68"
+        "sha256": "f60d15491a0222a1"
       },
       {
         "file": "RUNTIME_INTEGRATION_GATE_01/runtime/hf_batch_bridge.py",
@@ -256,10 +260,10 @@
         "hits": {
           "reconcile": [
             33,
-            235
+            260
           ]
         },
-        "sha256": "9abde363fd6f1703"
+        "sha256": "5cbc4805f1fa7c75"
       },
       {
         "file": "RUNTIME_INTEGRATION_GATE_01/tests/audit_sentinel.py",
@@ -355,22 +359,23 @@
         "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/pb_worker.py",
         "hits": {
           "go_candidate_go": [
-            168,
-            378,
-            466,
-            470
+            181,
+            459,
+            547,
+            551
           ],
           "reconcile": [
-            347
+            428
           ],
           "reserve_or_get_live": [
-            462
+            313,
+            543
           ],
           "run_job_call": [
-            411
+            492
           ]
         },
-        "sha256": "3f9628a2f54fa9d1"
+        "sha256": "596c4d823f0148e9"
       },
       {
         "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/reproduce_pre_fix.py",
@@ -403,26 +408,26 @@
         "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/run_boundary_gate.py",
         "hits": {
           "higgsfield_cli": [
-            329,
-            586
+            350,
+            622
           ],
           "reconcile": [
-            411
+            305
           ],
           "subprocess": [
-            97,
-            126,
-            129,
-            145,
-            184,
-            581,
-            586,
-            686,
-            694,
-            696
+            98,
+            127,
+            130,
+            146,
+            185,
+            617,
+            622,
+            722,
+            730,
+            732
           ]
         },
-        "sha256": "4e6129adc838fb5f"
+        "sha256": "84db235704e05459"
       },
       {
         "file": "PROVIDER_BOUNDARY_HARDENING_01/pbgate/spender_daemon.py",

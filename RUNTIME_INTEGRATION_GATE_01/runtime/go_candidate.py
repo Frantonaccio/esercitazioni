@@ -30,7 +30,10 @@
                                      (LEGACY_SPEND_PATH_DISABLED altrimenti, prima di ogni effetto)
       7c. SNAPSHOT (P-B04)        -> byte canonici del payload persistiti write-once e sigillati
                                      (runtime/payload_snapshot.py); a mark_submitting legati
-                                     all'attempt; riverificati byte per byte prima del send
+                                     all'attempt; riverificati byte per byte prima del send.
+                                     Un rifiuto a mark_submitting (pre-authorize, pre-send) chiude
+                                     il tentativo con provenance RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED
+                                     + settlement 0, MAI con l'attestazione del trasporto (NG-03)
       7. AUTORIZZAZIONE (CR-02)   -> percorso GOVERNATO (authorization dato): envelope DERIVATO dallo
                                      scope dell'operazione (un envelope presentato viene solo
                                      validato); importo DERIVATO da una quote fidata (quote_id),
@@ -68,7 +71,8 @@ from typing import Any
 from runtime.authorization import AuthorizationRefused, LabAuthorization
 from runtime.core_pin import REQUIRED_CORE_SHA, require_core_verdict
 from runtime.genspec_bridge import GoInputs, build_genspec
-from runtime.payload_snapshot import (PayloadSnapshotError, SnapshotBinding, SnapshotLedger,
+from runtime.payload_snapshot import (PRE_SUBMIT_REFUSAL_REMOTE_REF, PRE_SUBMIT_REFUSAL_SOURCE,
+                                      PayloadSnapshotError, SnapshotBinding, SnapshotLedger,
                                       install_snapshot_guard, ledger_dir_for)
 from runtime.provider_gate import (require_fake_adapter, require_fake_mode,
                                    require_legacy_lab_spend_path)
@@ -146,15 +150,38 @@ class ReservationObserver:
     il Core persiste chi tenta cosa, PRIMA di autorizzare i byte e PRIMA del marcatore di
     invio — il proxy verifica che il digest calcolato dal Core coincida con lo snapshot
     exact-byte sigillato dal runtime, lega lo snapshot all'attempt (job_id + attempt_token,
-    write-once) e arma il guard del trasporto per QUESTO thread. Una deriva qui e' un
-    rifiuto PRIMA di qualunque effetto esterno: l'attempt viene chiuso come
-    rifiutato-prima-dell'invio (settlement 0 attestato) tramite il percorso esplicito del
-    Core (`mark_refused_before_send`), cosi' il rifiuto non lascia una RESERVED orfana."""
+    write-once) e arma il guard del trasporto per QUESTO thread.
+
+    PROVENANCE DEL RIFIUTO (HUMAN REVIEW 01, blocker NG-03). Un rifiuto in questo punto NON
+    ha un'attestazione del trasporto: `adapter.authorize_payload` non e' ancora stato
+    chiamato e il Core non ha letto sent_before/sent_after (quelle letture stanno attorno ad
+    `adapter.submit`, che non verra' mai raggiunto). Percio' il runtime NON usa
+    `mark_refused_before_send`, che scriverebbe `TRANSPORT_ATTESTED_NOT_SENT` — una
+    provenance mai prodotta. Usa invece i due percorsi espliciti del Core con una provenance
+    veritiera e i fatti osservati allegati:
+
+        1. `store.reconcile(job, FAILED, evidence)` con `source=RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED`
+           e `remote_ref=none:never_dispatched`: transizione RESERVED -> FAILED ammessa dal
+           contratto di riconciliazione, CAS sulla revisione, evidenza registrata;
+        2. `store.settle(job_id, units=0, source=<stessa provenance>)`: settlement 0 con la
+           stessa fonte, riga di ledger coerente.
+
+    L'ordine e' deliberato: se il processo muore fra 1 e 2 il tentativo e' terminale ma NON
+    regolato, quindi l'esposizione resta impegnata (comportamento conservativo del Core:
+    "costo ignoto resta ignoto") ed e' visibile in `terminal_unsettled_jobs`; `settle` e'
+    idempotente, quindi la chiusura e' ripetibile. L'ordine inverso avrebbe scaricato
+    l'esposizione lasciando la riga viva.
+
+    Se i fatti osservati NON dimostrano che nessun invio e' possibile, il runtime non
+    terminalizza e non regola nulla: registra `PRE_SUBMIT_REFUSAL_NOT_PROVABLE` e lascia la
+    prenotazione al suo stato (fail-closed: un settlement 0 non provato sarebbe una
+    sottostima economica; una RESERVED non liberata e' il gap noto, gia' dichiarato)."""
 
     def __init__(self, inner):
         self._inner = inner
         self._snapshot = None
         self.last_outcome = None
+        self.pre_submit_refusal = None      # evidenza dell'ultimo rifiuto pre-submit (audit/test)
 
     def attach_snapshot(self, binding: SnapshotBinding) -> None:
         self._snapshot = binding
@@ -169,15 +196,56 @@ class ReservationObserver:
             try:
                 self._snapshot.bind(job, kw)
             except PayloadSnapshotError as e:
-                now = kw.get("now")
-                reason = f"snapshot guard: {e} (rifiutato prima di autorizzare/inviare)"
-                self._inner.record_anomaly(job.job_id, "SNAPSHOT_REFUSED_BEFORE_SEND",
-                                           {"code": e.code, "message": str(e),
-                                            "core_digest": kw.get("payload_digest"),
-                                            "sealed_digest": self._snapshot.digest}, now)
-                self._inner.mark_refused_before_send(job, reason, now)
+                self.pre_submit_refusal = self._refuse_pre_submit(job, kw, e)
                 raise
         return self._inner.mark_submitting(job, **kw)
+
+    def _refuse_pre_submit(self, job, kw: dict, error: PayloadSnapshotError) -> dict:
+        """Chiude il tentativo rifiutato PRIMA del submit con provenance veritiera.
+        Non solleva mai: l'errore che conta e' quello del binding, che il chiamante propaga."""
+        now = kw.get("now")
+        observed = self._snapshot.observe_not_dispatched(kw)
+        provable = SnapshotBinding.not_dispatched(observed)
+        reason = (f"snapshot guard: {error} (rifiutato a mark_submitting: nessuna autorizzazione "
+                  f"del payload, nessun invio, nessuna attestazione del trasporto)")
+        report = {"code": error.code, "message": str(error), "reason": reason,
+                  "provenance": PRE_SUBMIT_REFUSAL_SOURCE, "observed": observed,
+                  "not_dispatched_provable": provable, "terminalized": False, "settled": False}
+        extra_kind = None
+        if not provable:
+            # Fail-closed: senza prova non si regola e non si terminalizza.
+            extra_kind = "PRE_SUBMIT_REFUSAL_NOT_PROVABLE"
+        else:
+            evidence = {"source": PRE_SUBMIT_REFUSAL_SOURCE, "remote_ref": PRE_SUBMIT_REFUSAL_REMOTE_REF,
+                        "reason": reason, "refusal_code": error.code, "observed": observed,
+                        "attested_by": "runtime_snapshot_guard", "transport_attestation": None}
+            try:
+                # lo stato terminale si ricava dall'enum del Job persistito: nessun import
+                # aggiuntivo del Core nel runtime (l'inventario degli import resta chiuso).
+                self._inner.reconcile(job, type(job.state)("FAILED"), evidence, now=now)
+                report["terminalized"] = True
+            except Exception as e:                              # noqa: BLE001
+                # StaleWrite / TransitionRefused: un altro scrittore ha gia' cambiato la riga.
+                # Il journal autorevole vince; nessun settlement viene tentato su una
+                # terminalizzazione che non e' nostra.
+                report["terminalize_error"] = f"{type(e).__name__}: {e}"
+                extra_kind = "PRE_SUBMIT_TERMINALIZE_REFUSED"
+            if report["terminalized"]:
+                try:
+                    report["settlement"] = self._inner.settle(job.job_id, units=0,
+                                                              source=PRE_SUBMIT_REFUSAL_SOURCE, now=now)
+                    report["settled"] = True
+                except Exception as e:                          # noqa: BLE001
+                    # SettlementConflict: qualcuno ha gia' regolato con un altro importo.
+                    # Il Core non applica nulla; qui resta registrato.
+                    report["settle_error"] = f"{type(e).__name__}: {e}"
+                    extra_kind = "PRE_SUBMIT_SETTLEMENT_REFUSED"
+        # UNA anomalia con l'esito COMPLETO (rifiuto + fatti osservati + terminalizzazione +
+        # settlement): registrata alla fine, cosi' non afferma nulla prima di averlo prodotto.
+        self._inner.record_anomaly(job.job_id, "SNAPSHOT_REFUSED_PRE_SUBMIT", report, now)
+        if extra_kind:
+            self._inner.record_anomaly(job.job_id, extra_kind, report, now)
+        return report
 
     def __getattr__(self, name):
         return getattr(self._inner, name)

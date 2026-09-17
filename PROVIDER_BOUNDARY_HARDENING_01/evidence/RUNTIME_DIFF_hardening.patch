@@ -1,8 +1,8 @@
 diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py b/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py
-index 5d4464a..7783694 100644
+index 5d4464a..9235692 100644
 --- a/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py
 +++ b/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py
-@@ -25,6 +25,12 @@
+@@ -25,6 +25,15 @@
                                       (OperationConflict) e un'operazione incerta con spec diversa
                                       (OperationBusy): cambiare run/modello/spec senza operation_id
                                       non e' possibile, perche' senza operation_id non si parte.
@@ -11,23 +11,27 @@ index 5d4464a..7783694 100644
 +                                     (LEGACY_SPEND_PATH_DISABLED altrimenti, prima di ogni effetto)
 +      7c. SNAPSHOT (P-B04)        -> byte canonici del payload persistiti write-once e sigillati
 +                                     (runtime/payload_snapshot.py); a mark_submitting legati
-+                                     all'attempt; riverificati byte per byte prima del send
++                                     all'attempt; riverificati byte per byte prima del send.
++                                     Un rifiuto a mark_submitting (pre-authorize, pre-send) chiude
++                                     il tentativo con provenance RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED
++                                     + settlement 0, MAI con l'attestazione del trasporto (NG-03)
        7. AUTORIZZAZIONE (CR-02)   -> percorso GOVERNATO (authorization dato): envelope DERIVATO dallo
                                       scope dell'operazione (un envelope presentato viene solo
                                       validato); importo DERIVATO da una quote fidata (quote_id),
-@@ -62,7 +68,10 @@ from typing import Any
+@@ -62,7 +71,11 @@ from typing import Any
  from runtime.authorization import AuthorizationRefused, LabAuthorization
  from runtime.core_pin import REQUIRED_CORE_SHA, require_core_verdict
  from runtime.genspec_bridge import GoInputs, build_genspec
 -from runtime.provider_gate import require_fake_adapter, require_fake_mode
-+from runtime.payload_snapshot import (PayloadSnapshotError, SnapshotBinding, SnapshotLedger,
++from runtime.payload_snapshot import (PRE_SUBMIT_REFUSAL_REMOTE_REF, PRE_SUBMIT_REFUSAL_SOURCE,
++                                      PayloadSnapshotError, SnapshotBinding, SnapshotLedger,
 +                                      install_snapshot_guard, ledger_dir_for)
 +from runtime.provider_gate import (require_fake_adapter, require_fake_mode,
 +                                   require_legacy_lab_spend_path)
  
  GATE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
  STATE_DIR = os.path.join(GATE_ROOT, "state")
-@@ -110,6 +119,9 @@ class GoResult:
+@@ -110,6 +123,9 @@ class GoResult:
      # accade SOLO nel percorso LEGACY_LAB (compatibilita' T01-T23/P2) ed e' marcato qui;
      # nel percorso GOVERNED e' un rifiuto fail-closed (NO_EXISTING_ATTEMPT), mai un avvio.
      legacy_resume_as_start: bool = False
@@ -37,7 +41,7 @@ index 5d4464a..7783694 100644
  
      @property
      def outcome(self) -> str:
-@@ -128,21 +140,58 @@ class GoResult:
+@@ -128,21 +144,122 @@ class GoResult:
  
  
  class ReservationObserver:
@@ -48,19 +52,42 @@ index 5d4464a..7783694 100644
 +    il Core persiste chi tenta cosa, PRIMA di autorizzare i byte e PRIMA del marcatore di
 +    invio — il proxy verifica che il digest calcolato dal Core coincida con lo snapshot
 +    exact-byte sigillato dal runtime, lega lo snapshot all'attempt (job_id + attempt_token,
-+    write-once) e arma il guard del trasporto per QUESTO thread. Una deriva qui e' un
-+    rifiuto PRIMA di qualunque effetto esterno: l'attempt viene chiuso come
-+    rifiutato-prima-dell'invio (settlement 0 attestato) tramite il percorso esplicito del
-+    Core (`mark_refused_before_send`), cosi' il rifiuto non lascia una RESERVED orfana."""
++    write-once) e arma il guard del trasporto per QUESTO thread.
++
++    PROVENANCE DEL RIFIUTO (HUMAN REVIEW 01, blocker NG-03). Un rifiuto in questo punto NON
++    ha un'attestazione del trasporto: `adapter.authorize_payload` non e' ancora stato
++    chiamato e il Core non ha letto sent_before/sent_after (quelle letture stanno attorno ad
++    `adapter.submit`, che non verra' mai raggiunto). Percio' il runtime NON usa
++    `mark_refused_before_send`, che scriverebbe `TRANSPORT_ATTESTED_NOT_SENT` — una
++    provenance mai prodotta. Usa invece i due percorsi espliciti del Core con una provenance
++    veritiera e i fatti osservati allegati:
++
++        1. `store.reconcile(job, FAILED, evidence)` con `source=RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED`
++           e `remote_ref=none:never_dispatched`: transizione RESERVED -> FAILED ammessa dal
++           contratto di riconciliazione, CAS sulla revisione, evidenza registrata;
++        2. `store.settle(job_id, units=0, source=<stessa provenance>)`: settlement 0 con la
++           stessa fonte, riga di ledger coerente.
++
++    L'ordine e' deliberato: se il processo muore fra 1 e 2 il tentativo e' terminale ma NON
++    regolato, quindi l'esposizione resta impegnata (comportamento conservativo del Core:
++    "costo ignoto resta ignoto") ed e' visibile in `terminal_unsettled_jobs`; `settle` e'
++    idempotente, quindi la chiusura e' ripetibile. L'ordine inverso avrebbe scaricato
++    l'esposizione lasciando la riga viva.
++
++    Se i fatti osservati NON dimostrano che nessun invio e' possibile, il runtime non
++    terminalizza e non regola nulla: registra `PRE_SUBMIT_REFUSAL_NOT_PROVABLE` e lascia la
++    prenotazione al suo stato (fail-closed: un settlement 0 non provato sarebbe una
++    sottostima economica; una RESERVED non liberata e' il gap noto, gia' dichiarato)."""
  
      def __init__(self, inner):
          self._inner = inner
 +        self._snapshot = None
          self.last_outcome = None
- 
++        self.pre_submit_refusal = None      # evidenza dell'ultimo rifiuto pre-submit (audit/test)
++
 +    def attach_snapshot(self, binding: SnapshotBinding) -> None:
 +        self._snapshot = binding
-+
+ 
      def reserve_or_get_live(self, spec, **kw):
          outcome, job = self._inner.reserve_or_get_live(spec, **kw)
          self.last_outcome = outcome
@@ -71,15 +98,56 @@ index 5d4464a..7783694 100644
 +            try:
 +                self._snapshot.bind(job, kw)
 +            except PayloadSnapshotError as e:
-+                now = kw.get("now")
-+                reason = f"snapshot guard: {e} (rifiutato prima di autorizzare/inviare)"
-+                self._inner.record_anomaly(job.job_id, "SNAPSHOT_REFUSED_BEFORE_SEND",
-+                                           {"code": e.code, "message": str(e),
-+                                            "core_digest": kw.get("payload_digest"),
-+                                            "sealed_digest": self._snapshot.digest}, now)
-+                self._inner.mark_refused_before_send(job, reason, now)
++                self.pre_submit_refusal = self._refuse_pre_submit(job, kw, e)
 +                raise
 +        return self._inner.mark_submitting(job, **kw)
++
++    def _refuse_pre_submit(self, job, kw: dict, error: PayloadSnapshotError) -> dict:
++        """Chiude il tentativo rifiutato PRIMA del submit con provenance veritiera.
++        Non solleva mai: l'errore che conta e' quello del binding, che il chiamante propaga."""
++        now = kw.get("now")
++        observed = self._snapshot.observe_not_dispatched(kw)
++        provable = SnapshotBinding.not_dispatched(observed)
++        reason = (f"snapshot guard: {error} (rifiutato a mark_submitting: nessuna autorizzazione "
++                  f"del payload, nessun invio, nessuna attestazione del trasporto)")
++        report = {"code": error.code, "message": str(error), "reason": reason,
++                  "provenance": PRE_SUBMIT_REFUSAL_SOURCE, "observed": observed,
++                  "not_dispatched_provable": provable, "terminalized": False, "settled": False}
++        extra_kind = None
++        if not provable:
++            # Fail-closed: senza prova non si regola e non si terminalizza.
++            extra_kind = "PRE_SUBMIT_REFUSAL_NOT_PROVABLE"
++        else:
++            evidence = {"source": PRE_SUBMIT_REFUSAL_SOURCE, "remote_ref": PRE_SUBMIT_REFUSAL_REMOTE_REF,
++                        "reason": reason, "refusal_code": error.code, "observed": observed,
++                        "attested_by": "runtime_snapshot_guard", "transport_attestation": None}
++            try:
++                # lo stato terminale si ricava dall'enum del Job persistito: nessun import
++                # aggiuntivo del Core nel runtime (l'inventario degli import resta chiuso).
++                self._inner.reconcile(job, type(job.state)("FAILED"), evidence, now=now)
++                report["terminalized"] = True
++            except Exception as e:                              # noqa: BLE001
++                # StaleWrite / TransitionRefused: un altro scrittore ha gia' cambiato la riga.
++                # Il journal autorevole vince; nessun settlement viene tentato su una
++                # terminalizzazione che non e' nostra.
++                report["terminalize_error"] = f"{type(e).__name__}: {e}"
++                extra_kind = "PRE_SUBMIT_TERMINALIZE_REFUSED"
++            if report["terminalized"]:
++                try:
++                    report["settlement"] = self._inner.settle(job.job_id, units=0,
++                                                              source=PRE_SUBMIT_REFUSAL_SOURCE, now=now)
++                    report["settled"] = True
++                except Exception as e:                          # noqa: BLE001
++                    # SettlementConflict: qualcuno ha gia' regolato con un altro importo.
++                    # Il Core non applica nulla; qui resta registrato.
++                    report["settle_error"] = f"{type(e).__name__}: {e}"
++                    extra_kind = "PRE_SUBMIT_SETTLEMENT_REFUSED"
++        # UNA anomalia con l'esito COMPLETO (rifiuto + fatti osservati + terminalizzazione +
++        # settlement): registrata alla fine, cosi' non afferma nulla prima di averlo prodotto.
++        self._inner.record_anomaly(job.job_id, "SNAPSHOT_REFUSED_PRE_SUBMIT", report, now)
++        if extra_kind:
++            self._inner.record_anomaly(job.job_id, extra_kind, report, now)
++        return report
 +
      def __getattr__(self, name):
          return getattr(self._inner, name)
@@ -97,7 +165,7 @@ index 5d4464a..7783694 100644
  def _ensure_core_on_path(core_path: str) -> None:
      if core_path not in sys.path:
          sys.path.insert(0, core_path)
-@@ -165,6 +214,11 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
+@@ -165,6 +282,11 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
      if not isinstance(operation_id, str) or not operation_id.strip():
          raise IntentRefused("OPERATION_ID_REQUIRED",
                              "operation_id obbligatorio per ogni operazione (RESUME e NEW_ATTEMPT)")
@@ -109,7 +177,7 @@ index 5d4464a..7783694 100644
      # 2) CORE PIN: il Core non autorizzato non viene nemmeno importato.
      verdict = require_core_verdict(core_path, required_core_sha)
      core_sha = verdict.observed
-@@ -184,7 +238,8 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
+@@ -184,7 +306,8 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
      if not store_path.startswith(STATE_DIR + os.sep):
          raise ValueError(f"store fuori da state/: {store_path}")
      os.makedirs(os.path.dirname(store_path), exist_ok=True)
@@ -119,7 +187,7 @@ index 5d4464a..7783694 100644
      # 6) INTENTO sull'OPERAZIONE (RV03 + CR-01). Il Core dice qual e' l'ultimo
      #    tentativo di QUESTA operazione, qualunque spec avesse.
      latest = store.find_latest_by_operation(operation_id)
-@@ -271,6 +326,20 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
+@@ -271,6 +394,20 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
      #     e LEGATO all'operazione; e' il Core a consumarlo nella prenotazione.
      if intent == INTENT_NEW_ATTEMPT and used_permit is None:
          used_permit = store.issue_permit(spec.spec_key, reason, operation_id=operation_id)
@@ -140,7 +208,7 @@ index 5d4464a..7783694 100644
      # 8) Il Core fa tutto: prenotazione atomica (operazione, permesso, quote,
      #    envelope), submit, poll, persistenza.
      job = run_job(adapter, spec, store, clock=clock, max_polls=max_polls,
-@@ -288,4 +357,5 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
+@@ -288,4 +425,5 @@ def go(inputs: GoInputs, *, adapter, provider_mode: str, store_path: str,
          operation_id=persisted.operation_id, core_pin=core_pin, governance=governance,
          envelope_id=envelope_id, quote_id=persisted.quote_id, budget_units=budget_units,
          resumed=False, requested_spec_key=spec.spec_key,
@@ -239,10 +307,10 @@ index 0000000..b1a4397
 +    return out
 diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py b/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py
 new file mode 100644
-index 0000000..8952af2
+index 0000000..69a0443
 --- /dev/null
 +++ b/RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py
-@@ -0,0 +1,420 @@
+@@ -0,0 +1,481 @@
 +"""P-B04 — SNAPSHOT EXACT-BYTE, IMMUTABILE E VERIFICABILE del payload autorizzato (LAB).
 +
 +Cosa il Core gia' garantisce (RV02, transport/pipeline.run_job + adapters/fake.MockTransport):
@@ -301,6 +369,14 @@ index 0000000..8952af2
 +import time
 +
 +SNAPSHOT_DIR_SUFFIX = ".snapshots"
++# PROVENANCE del rifiuto PRE-SUBMIT (HUMAN REVIEW 01, NG-03). Il Core riserva
++# `TRANSPORT_ATTESTED_NOT_SENT` al caso in cui e' il TRASPORTO ad attestare zero invii
++# (run_job legge sent_before/sent_after attorno ad adapter.submit). Un rifiuto che avviene
++# a `mark_submitting` — cioe' PRIMA di adapter.authorize_payload e prima di qualunque
++# tentativo di invio — non ha quell'attestazione e non deve usarne il nome: la sua
++# provenance e' una verifica del RUNTIME, con i fatti osservati registrati accanto.
++PRE_SUBMIT_REFUSAL_SOURCE = "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED"
++PRE_SUBMIT_REFUSAL_REMOTE_REF = "none:never_dispatched"
 +SEAL_SCHEMA = "payload-snapshot-seal/1"
 +BIND_SCHEMA = "payload-snapshot-bind/1"
 +SEND_SCHEMA = "payload-snapshot-send-attestation/1"
@@ -375,6 +451,15 @@ index 0000000..8952af2
 +
 +    def send_path(self, digest: str, key: str, attempt_token: str) -> str:
 +        return os.path.join(self.root, f"{digest}__{key}__{attempt_token}.send.json")
++
++    def send_attested(self, *, digest: str, operation_id: str, provider: str, provider_account: str,
++                      attempt_token: str | None) -> bool:
++        """Esiste un'attestazione di verifica pre-send per questo attempt? Fatto osservabile,
++        usato come evidenza del rifiuto pre-submit (deve essere False)."""
++        if not attempt_token:
++            return False
++        return os.path.isfile(self.send_path(digest, opkey(operation_id, provider, provider_account),
++                                             attempt_token))
 +
 +    # ------------------------------------------------------------ seal
 +    def seal(self, payload: bytes, *, operation_id: str, spec_key: str, provider: str,
@@ -586,6 +671,12 @@ index 0000000..8952af2
 +        self._ctx.binding = None
 +
 +    @property
++    def armed(self) -> bool:
++        """Vero solo se un attempt e' legato in QUESTO thread: senza binding il guard
++        rifiuta ogni `send` prima di delegarlo al trasporto."""
++        return getattr(self._ctx, "binding", None) is not None
++
++    @property
 +    def last_proof(self):
 +        return getattr(self._ctx, "last_proof", None)
 +
@@ -642,6 +733,44 @@ index 0000000..8952af2
 +        self.operation_id, self.provider, self.provider_account = operation_id, provider, provider_account
 +        self.digest, self.clock = digest, clock
 +        self.bound: dict | None = None
++        # marcatore di invio del trasporto al momento del sigillo: confrontabile dopo un
++        # rifiuto per dimostrare che nessun invio e' avvenuto durante questo tentativo.
++        self.sent_count_at_seal = guard.sent_count
++
++    def observe_not_dispatched(self, kw: dict) -> dict:
++        """FATTI OSSERVATI al momento di un rifiuto a `mark_submitting` (NG-03). Non e'
++        un'attestazione del trasporto: e' cio' che il runtime puo' verificare direttamente,
++        e va registrato con la provenance PRE_SUBMIT_REFUSAL_SOURCE.
++
++        Perche' provano che nessun effetto esterno e' possibile per QUESTO tentativo:
++        il Core chiama `adapter.authorize_payload(digest)` DOPO `mark_submitting`, e il
++        trasporto fittizio rifiuta ogni digest non autorizzato prima del marcatore di invio;
++        il guard, non armato, rifiuterebbe comunque ogni `send` in questo thread."""
++        core_digest = kw.get("payload_digest")
++        authorized = set(self.guard.authorized)
++        now_sent = self.guard.sent_count
++        return {
++            "refused_at": "store.mark_submitting (prima di adapter.authorize_payload e di ogni send)",
++            "transport_sent_count_at_seal": self.sent_count_at_seal,
++            "transport_sent_count_now": now_sent,
++            "transport_sent_count_unchanged": now_sent == self.sent_count_at_seal,
++            "sealed_digest_authorized_in_transport": self.digest in authorized,
++            "core_digest_authorized_in_transport": bool(core_digest) and core_digest in authorized,
++            "guard_armed_for_this_attempt": self.guard.armed,
++            "send_attestation_present": self.ledger.send_attested(
++                digest=self.digest, operation_id=self.operation_id, provider=self.provider,
++                provider_account=self.provider_account, attempt_token=kw.get("attempt_token")),
++            "core_digest": core_digest, "sealed_digest": self.digest,
++        }
++
++    @staticmethod
++    def not_dispatched(observed: dict) -> bool:
++        """Tutti i fatti devono concordare: nessun invio possibile per questo tentativo."""
++        return (observed.get("transport_sent_count_unchanged") is True
++                and observed.get("sealed_digest_authorized_in_transport") is False
++                and observed.get("core_digest_authorized_in_transport") is False
++                and observed.get("guard_armed_for_this_attempt") is False
++                and observed.get("send_attestation_present") is False)
 +
 +    def bind(self, job, kw: dict) -> dict:
 +        core_digest = kw.get("payload_digest")
@@ -733,10 +862,10 @@ index d7f875d..12f9957 100644
 +    return state
 diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/reconciliation.py b/RUNTIME_INTEGRATION_GATE_01/runtime/reconciliation.py
 new file mode 100644
-index 0000000..69dfd20
+index 0000000..a521e82
 --- /dev/null
 +++ b/RUNTIME_INTEGRATION_GATE_01/runtime/reconciliation.py
-@@ -0,0 +1,235 @@
+@@ -0,0 +1,260 @@
 +"""P-B02 — RECONCILIATION AUTENTICATA E LEGATA ALL'IDENTITA' (Runtime, LAB).
 +
 +Cosa il Core offre (registry/reservations.SqliteReservationStore.reconcile, CR-05):
@@ -753,9 +882,9 @@ index 0000000..69dfd20
 +verificatore fail-closed. La riconciliazione avviene solo se:
 +
 +  1. il REPORT e' ben formato e AUTENTICATO: HMAC-SHA256 sui campi canonici con
-+     una chiave derivata dal segreto dello spender per (provider, conto). E' l'
-+     equivalente LAB di "risposta autenticata del provider": chi non ha il segreto
-+     dello spender non puo' produrre un report valido (l'orchestrator non lo ha);
++     una chiave derivata da un segreto per (provider, conto). E' l'equivalente LAB
++     di "risposta autenticata del provider": chi non possiede quel segreto non puo'
++     produrre un report che superi la verifica;
 +  2. il job esiste nello store AUTOREVOLE ed e' in uno stato riconciliabile
 +     (RESERVED con intento di submit persistito, oppure SUBMIT_UNKNOWN);
 +  3. l'ADAPTER che riconcilia e' il proprietario del job (provider + conto: la
@@ -774,9 +903,26 @@ index 0000000..69dfd20
 +registrare l'evidenza. Ogni rifiuto e' `ReconciliationRefused(code)` PRIMA di
 +qualunque scrittura sul journal.
 +
-+Questo e' un hardening LAB: la chiave e la firma sono un equivalente
-+verificabile dell'interlocutore autenticato, NON una verifica contro un provider
-+reale. Nessun claim di "real provider reconciliation".
++PERIMETRO DI CIO' CHE E' VERIFICATO (HUMAN REVIEW 01 — correzione di classificazione):
++
++  VERIFICATO (B03/B04)  il BINDING e l'AUTENTICAZIONE HMAC: un report non firmato, firmato
++                        con un'altra chiave, alterato dopo la firma, riferito ad altro
++                        provider/conto/job/operazione/token/digest, o riproposto (nonce
++                        gia' consumato) non produce alcuna transizione.
++  NON VERIFICATO        la COMPOSIZIONE con P-B01: in B03/B04 il segreto e la chiave sono
++                        FIXTURE di test, create e usate nel processo del gate, NON dentro
++                        il daemon spender isolato. Che il segreto e la chiave non escano mai
++                        dal dominio dello spender e' un requisito di DESIGN di questa fase,
++                        non un fatto dimostrato dai test correnti; l'API stessa espone la
++                        chiave derivata (`LabProviderStatusAuthority.key`, `derive_report_key`),
++                        quindi la custodia dipende da chi la invoca e da dove.
++  NON VERIFICATO        il provider reale: nessuna verifica contro un sistema di provider.
++                        Nessun claim di "real provider reconciliation".
++  APERTO                FRESHNESS: `max_age_s` e' OPZIONALE. Senza di esso un report valido e
++                        mai consumato resta accettabile indefinitamente (il nonce monouso
++                        impedisce il riuso, non l'eta'). Renderlo obbligatorio e fail-closed
++                        e' una precondizione del futuro Provider Boundary Gate, non di questo
++                        delta correttivo (vedi OPEN_GAPS.md).
 +"""
 +from __future__ import annotations
 +
@@ -810,8 +956,13 @@ index 0000000..69dfd20
 +
 +
 +def derive_report_key(secret: str | bytes, provider: str, provider_account: str) -> bytes:
-+    """Chiave di autenticazione dei report, derivata dal segreto dello spender per
-+    (provider, conto). Il segreto non lascia mai lo spender; la chiave nemmeno."""
++    """Chiave di autenticazione dei report, derivata da un segreto per (provider, conto).
++
++    NOTA DI PERIMETRO (HUMAN REVIEW 01): nel design di questa fase il segreto vive solo nel
++    processo spender (P-B01) e la chiave e' derivata li'. Questa funzione NON impone quella
++    custodia — la garantisce l'isolamento del processo che la chiama, non la firma. I test
++    B03/B04 la usano come fixture fuori dal daemon: dimostrano il binding e l'autenticazione,
++    non la custodia del segreto."""
 +    if isinstance(secret, str):
 +        secret = secret.encode("utf-8")
 +    if not secret or not provider or not provider_account:
@@ -841,7 +992,9 @@ index 0000000..69dfd20
 +
 +class LabProviderStatusAuthority:
 +    """Equivalente LAB dell'endpoint di stato autenticato del provider, per UN conto.
-+    Vive dal lato dello spender (che possiede il segreto). Emette report firmati."""
++    Nel design va istanziata SOLO dal lato spender, che possiede il segreto; la classe non
++    puo' imporlo (espone `key`), quindi la custodia e' una proprieta' del processo che la
++    costruisce, non di questa API. Vedi il perimetro dichiarato in testa al modulo."""
 +
 +    def __init__(self, secret: str | bytes, provider: str, provider_account: str):
 +        self.provider, self.provider_account = provider, provider_account
@@ -899,6 +1052,7 @@ index 0000000..69dfd20
 +def reconcile_authenticated(store, adapter, report, *, job_id: str, key: bytes, nonce_dir: str,
 +                            snapshot_ledger=None, now: float | None = None,
 +                            max_age_s: float | None = None):
++    # `max_age_s=None` NON impone freshness: gap dichiarato APERTO (vedi testa del modulo).
 +    """Verifica tutto, poi (e solo poi) `store.reconcile`. Restituisce il Job aggiornato.
 +    `job_id` e' il job che il CHIAMANTE intende riconciliare: un report valido ma di un altro
 +    job/operazione non viene mai applicato altrove (JOB_MISMATCH)."""

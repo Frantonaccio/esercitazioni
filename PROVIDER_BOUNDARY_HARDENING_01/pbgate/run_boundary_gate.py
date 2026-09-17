@@ -20,6 +20,7 @@ BLOCKED non e' PASS.
   B09  Authorization / pricing authority: stato LAB, irraggiungibile dall'orchestrator
   B10  Regressione R0-R1 (tests/run_gate.py T01-T37) sul runtime modificato
   B11  P2 freeze after == before, Core pin/tree invariati, static checks
+  B12  NG-03 provenance economica del rifiuto PRE-SUBMIT (corrective delta, HUMAN REVIEW 01)
 """
 from __future__ import annotations
 
@@ -56,7 +57,7 @@ CANON = {"core_sha": "740ee979300fe20a9382992528604dee70cb2fcf",
          "runtime_main_sha": "39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e",
          "p2_sha256": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"}
 P2_PATH = os.path.join(GATE01, "p2_handoff", "VF_RUNTIME_T16_HANDOFF_2026-09-16", "P2_RUNTIME", "hf_batch.py")
-EXPECTED_IDS = frozenset(f"B{i:02d}" for i in range(0, 12))
+EXPECTED_IDS = frozenset(f"B{i:02d}" for i in range(0, 13))
 POLICY = {"B01": frozenset({"BLOCKED_ENVIRONMENT"}), "B09": frozenset({"BLOCKED_ENVIRONMENT"})}
 CTX = multiprocessing.get_context("spawn")
 RESULTS: list[dict] = []
@@ -300,6 +301,26 @@ def b02():
 
 
 # ------------------------------------------------------------------ B03 / B04
+def _reconcile_call_sites() -> list:
+    """Chiamate REALI a `.reconcile(` in runtime/ (AST: i docstring non contano), con la
+    funzione che le contiene. Ordinate, deduplicate."""
+    import ast
+    sites = set()
+    rt = os.path.join(GATE01, "runtime")
+    for name in sorted(os.listdir(rt)):
+        if not name.endswith(".py"):
+            continue
+        tree = ast.parse(open(os.path.join(rt, name), encoding="utf-8").read(), filename=name)
+        for fn in ast.walk(tree):
+            if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            for node in ast.walk(fn):
+                if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) \
+                        and node.func.attr == "reconcile":
+                    sites.add((name, fn.name))
+    return sorted(sites)
+
+
 def _unknown_job(db: str, prompt: str, op: str) -> dict:
     r = in_process(pb_worker.go_governed, db, CORE_PATH, prompt, op, adapter_kind="submit_unknown")
     row = next((x for x in pb_worker._rows(db) if x["operation_id"] == op), None)
@@ -407,8 +428,10 @@ def b04():
     # 4. controprova storica: il percorso raw del Core resta accettante (e' il gap riprodotto), ma il runtime non lo usa
     D["raw_core_reconcile_still_permissive"] = in_process(pb_worker.raw_reconcile_unauthenticated, db, CORE_PATH,
                                                            raw_row["job_id"], "FAILED") if raw_row else None
-    runtime_callers = [f for f in os.listdir(os.path.join(GATE01, "runtime")) if f.endswith(".py")
-                       and "store.reconcile(" in open(os.path.join(GATE01, "runtime", f), encoding="utf-8").read()]
+    runtime_callers = _reconcile_call_sites()
+    # Invariante: nel runtime `reconcile` e' chiamato SOLO dai due percorsi con provenance
+    # esplicita e dichiarata (report autenticato P-B02; rifiuto pre-submit NG-03).
+    expected_callers = [("go_candidate.py", "_refuse_pre_submit"), ("reconciliation.py", "reconcile_authenticated")]
     ok = (D["first_apply"].get("state") == "RUNNING" and D["back_to_unknown"].get("state") == "SUBMIT_UNKNOWN"
           and D["replay_same_nonce"].get("code") == "REPLAY" and D["replay_same_nonce"].get("journal_unchanged")
           and D["fresh_report_after_replay"].get("state") == "SUCCEEDED"
@@ -416,15 +439,16 @@ def b04():
           and D["raw_reserved_no_intent"].get("code") == "OWNERSHIP_INCOMPLETE"
           and D["snapshot_bind_removed_then_reconcile"].get("code") == "SNAPSHOT_AUDIT_FAILED"
           and D["same_without_snapshot_audit"].get("ok") is True
-          and runtime_callers == ["reconciliation.py"])
+          and runtime_callers == expected_callers)
     ev = evidence("B04", "reconciliation_replay_cross_operation", {"jobs": {"u3": u3, "u4": u4, "raw": raw_row}, "steps": D,
                                                                    "removed_snapshot_files": removed,
-                                                                   "runtime_callers_of_store_reconcile": runtime_callers})
+                                                                   "runtime_reconcile_call_sites": runtime_callers,
+                                                                   "expected_call_sites": expected_callers})
     pb_worker.cleanup_db(db)
     return (f"N1 -> {D['first_apply'].get('state')} · incertezza -> replay N1 -> {D['replay_same_nonce'].get('code')} · nuovo report -> "
             f"{D['fresh_report_after_replay'].get('state')} · report valido di altro job -> {D['valid_report_other_job_applied_to_u3'].get('code')} · "
             f"RESERVED senza intento -> {D['raw_reserved_no_intent'].get('code')} · snapshot bind rimosso -> "
-            f"{D['snapshot_bind_removed_then_reconcile'].get('code')} · unico chiamante runtime di store.reconcile: {runtime_callers}"), ev, ok
+            f"{D['snapshot_bind_removed_then_reconcile'].get('code')} · chiamanti runtime di reconcile (AST): {runtime_callers}"), ev, ok
 
 
 # ------------------------------------------------------------------ B05 / B06
@@ -481,19 +505,27 @@ def b06():
     for e in state["ledger"]:
         ledger.setdefault(e["job_id"], []).append((e["kind"], e["units"], e["source"]))
 
-    def refused_before_send(kind, op, expect_anomaly):
+    # NG-03 (HUMAN REVIEW 01): la provenance del settlement 0 dipende da CHI ha attestato che
+    # nessun invio e' avvenuto. Rifiuto a mark_submitting -> verifica del runtime; rifiuto dentro
+    # adapter.submit con marcatore invariato -> attestazione del trasporto letta dal Core.
+    # Il dettaglio della provenance pre-submit e' verificato da B12.
+    PRE_SUBMIT = "RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED"
+    TRANSPORT = "TRANSPORT_ATTESTED_NOT_SENT"
+
+    def refused_before_send(kind, op, expect_anomaly, source=TRANSPORT):
         r, row = R[kind], rows.get(op)
         if not row:
             return False
         return (r.get("ok") is False and r.get("transport_sent_count") == 0
                 and row["state"] == "FAILED" and row["settled_units"] == 0
-                and row["settlement_source"] == "TRANSPORT_ATTESTED_NOT_SENT"
+                and row["settlement_source"] == source
                 and expect_anomaly in anoms.get(row["job_id"], [])
-                and any(k == "SETTLE" and u == 0 for k, u, _ in ledger.get(row["job_id"], [])))
+                and any(k == "SETTLE" and u == 0 and src == source
+                        for k, u, src in ledger.get(row["job_id"], [])))
     checks = {
-        "nested_mutation_refused_before_send": refused_before_send("drift_nested", "T32:nested", "SNAPSHOT_REFUSED_BEFORE_SEND")
-                                               and "SERIALIZATION_DRIFT" in str(R["drift_nested"].get("message")),
-        "serialization_drift_refused_before_send": refused_before_send("drift_top", "T32:drift", "SNAPSHOT_REFUSED_BEFORE_SEND"),
+        "nested_mutation_refused_pre_submit": refused_before_send("drift_nested", "T32:nested", "SNAPSHOT_REFUSED_PRE_SUBMIT", PRE_SUBMIT)
+                                              and "SERIALIZATION_DRIFT" in str(R["drift_nested"].get("message")),
+        "serialization_drift_refused_pre_submit": refused_before_send("drift_top", "T32:drift", "SNAPSHOT_REFUSED_PRE_SUBMIT", PRE_SUBMIT),
         "field_reorder_refused_before_send": refused_before_send("reorder", "T32:reorder", "REFUSED_BEFORE_SEND")
                                              and "SNAPSHOT_MISSING" in str(R["reorder"].get("message")),
         "substituted_after_authorization_refused_before_send": refused_before_send("substitute", "T32:subst", "REFUSED_BEFORE_SEND")
@@ -511,13 +543,17 @@ def b06():
     checks["control_correct_adapter_succeeds"] = R["control_ok"].get("state") == "SUCCEEDED" and R["control_ok"].get("transport_sent_count") == 1
     pre = json.load(open(os.path.join(EVIDENCE_DIR, "pre_fix", "reproduction_baseline.json"), encoding="utf-8"))["P-B04"]["drift_case"]
     checks["pre_fix_same_case_reached_send_marker"] = pre["transport_sent_count"] == 1 and pre["job"]["state"] == "SUBMIT_UNKNOWN"
+    checks["drift_cases_never_claim_transport_attestation"] = all(
+        TRANSPORT not in json.dumps(anoms.get(rows[op]["job_id"], [])) and rows[op]["settlement_source"] == PRE_SUBMIT
+        for op in ("T32:nested", "T32:drift") if rows.get(op))
     ok = all(checks.values())
     ev = evidence("B06", "snapshot_counterproofs", {"results": R, "rows": state["rows"], "anomalies": state["anomalies"],
                                                     "ledger": state["ledger"], "checks": checks,
                                                     "pre_fix_reference": pre})
     pb_worker.cleanup_db(db)
     failed = [k for k, v in checks.items() if not v]
-    return (f"6 controprove: tutte rifiutate PRIMA del marcatore (sent_count 0), FAILED con settlement 0 attestato, nessun SUBMIT_UNKNOWN · "
+    return (f"6 controprove: tutte rifiutate PRIMA del marcatore (sent_count 0), FAILED con settlement 0 · "
+            f"provenance: drift -> {PRE_SUBMIT} (verifica runtime), reorder/sostituzione/missing/corrupt -> {TRANSPORT} (Core) · "
             f"pre-fix lo stesso caso 'substitute' raggiungeva l'invio (sent_count {pre['transport_sent_count']}, {pre['job']['state']}) · "
             f"adapter corretto dopo i rifiuti -> {R['control_ok'].get('state')} · check falliti: {failed or 'nessuno'}"), ev, ok
 
@@ -728,6 +764,139 @@ def b11():
             f"static checks ok={st['ok']} ({len(st['findings'])} findings)"), ev, ok
 
 
+# ------------------------------------------------------------------ B12 (corrective delta)
+def b12():
+    """NG-03: la provenance del settlement zero deve corrispondere all'evidenza realmente prodotta.
+    A = rifiuto a mark_submitting (pre-authorize, pre-send): provenance del RUNTIME.
+    B = rifiuto dentro adapter.submit con marcatore invariato: attestazione del TRASPORTO (Core)."""
+    from runtime.payload_snapshot import PRE_SUBMIT_REFUSAL_REMOTE_REF, PRE_SUBMIT_REFUSAL_SOURCE
+    TRANSPORT = "TRANSPORT_ATTESTED_NOT_SENT"
+    db = db_for("b12")
+    R, S = {}, {}
+    # --- 1/2: rifiuti a mark_submitting (SERIALIZATION_DRIFT, IDENTITY_DRIFT)
+    for kind, op in (("drift_nested", "T32:b12ser"), ("identity_drift", "T32:b12id")):
+        R[kind] = in_process(pb_worker.go_governed, db, CORE_PATH, f"b12 {kind}", op, adapter_kind=kind)
+        S[kind] = pb_worker.read_state(db)
+    # --- 3: rifiuto DENTRO adapter.submit, marcatore invariato -> attestazione del trasporto
+    R["reorder"] = in_process(pb_worker.go_governed, db, CORE_PATH, "b12 reorder", "T32:b12tr", adapter_kind="reorder")
+    # --- 4: invio avvenuto ed esito incerto -> nessun settlement, SUBMIT_UNKNOWN
+    R["submit_unknown"] = in_process(pb_worker.go_governed, db, CORE_PATH, "b12 unknown", "T32:b12unk",
+                                     adapter_kind="submit_unknown")
+    state = pb_worker.read_state(db)
+    rows = {r["operation_id"]: r for r in state["rows"]}
+    anoms: dict = {}
+    for a in state["anomalies"]:
+        anoms.setdefault(a["job_id"], []).append(a)
+    ledger: dict = {}
+    for e in state["ledger"]:
+        ledger.setdefault(e["job_id"], []).append((e["kind"], e["units"], e["source"]))
+    # --- 5: race / stale write
+    race = in_process(pb_worker.pre_submit_race, db_for("b12race"), CORE_PATH, "b12 race", "T32:b12race")
+
+    def recon_sources(job_id):
+        return [a["detail"]["evidence"]["source"] for a in anoms.get(job_id, []) if a["kind"] == "RECONCILIATION"]
+
+    def pre_submit_case(op, expected_code):
+        r = rows.get(op)
+        if not r:
+            return False, {"missing_row": op}
+        jid = r["job_id"]
+        kinds = [a["kind"] for a in anoms.get(jid, [])]
+        pre = next((a["detail"] for a in anoms.get(jid, []) if a["kind"] == "SNAPSHOT_REFUSED_PRE_SUBMIT"), {})
+        obs = pre.get("observed", {})
+        d = {"state": r["state"], "settled_units": r["settled_units"], "settlement_source": r["settlement_source"],
+             "anomaly_kinds": kinds, "reconciliation_sources": recon_sources(jid),
+             "ledger": ledger.get(jid), "refusal_code": pre.get("code"), "observed": obs,
+             "not_dispatched_provable": pre.get("not_dispatched_provable"),
+             "terminalized": pre.get("terminalized"), "settled": pre.get("settled")}
+        ok = (r["state"] == "FAILED" and r["settled_units"] == 0
+              and r["settlement_source"] == PRE_SUBMIT_REFUSAL_SOURCE
+              and r["settlement_source"] != TRANSPORT                      # provenance NON falsificata
+              and recon_sources(jid) == [PRE_SUBMIT_REFUSAL_SOURCE]
+              and TRANSPORT not in json.dumps(anoms.get(jid, []))          # in nessun punto dell'evidenza
+              and "SNAPSHOT_REFUSED_PRE_SUBMIT" in kinds
+              and "PRE_SUBMIT_REFUSAL_NOT_PROVABLE" not in kinds
+              and pre.get("code") == expected_code and pre.get("not_dispatched_provable") is True
+              and pre.get("terminalized") is True and pre.get("settled") is True
+              # fatti osservati, non dichiarati
+              and obs.get("transport_sent_count_unchanged") is True
+              and obs.get("sealed_digest_authorized_in_transport") is False
+              and obs.get("core_digest_authorized_in_transport") is False
+              and obs.get("guard_armed_for_this_attempt") is False
+              and obs.get("send_attestation_present") is False
+              # ledger: esposizione prenotata e regolata a 0 con la stessa provenance
+              and ("SETTLE", 0, PRE_SUBMIT_REFUSAL_SOURCE) in (ledger.get(jid) or [])
+              and not any(src == TRANSPORT for _, _, src in (ledger.get(jid) or [])))
+        return ok, d
+    ok_ser, d_ser = pre_submit_case("T32:b12ser", "SERIALIZATION_DRIFT")
+    ok_id, d_id = pre_submit_case("T32:b12id", "IDENTITY_DRIFT")
+    # 3: il percorso attestato dal trasporto resta invariato
+    tr = rows.get("T32:b12tr", {})
+    tr_jid = tr.get("job_id")
+    ok_tr = (R["reorder"].get("transport_sent_count") == 0 and tr.get("state") == "FAILED"
+             and tr.get("settled_units") == 0 and tr.get("settlement_source") == TRANSPORT
+             and recon_sources(tr_jid) == [TRANSPORT]
+             and "REFUSED_BEFORE_SEND" in [a["kind"] for a in anoms.get(tr_jid, [])]
+             and ("SETTLE", 0, TRANSPORT) in (ledger.get(tr_jid) or []))
+    # 4: invio avvenuto, esito incerto -> nessun settlement, nessun terminale
+    unk = rows.get("T32:b12unk", {})
+    unk_jid = unk.get("job_id")
+    ok_unk = (R["submit_unknown"].get("transport_sent_count") == 1 and unk.get("state") == "SUBMIT_UNKNOWN"
+              and unk.get("settled_units") is None and unk.get("settlement_source") is None
+              and not any(k == "SETTLE" for k, _, _ in (ledger.get(unk_jid) or []))
+              and PRE_SUBMIT_REFUSAL_SOURCE not in json.dumps(anoms.get(unk_jid, []))
+              and TRANSPORT not in json.dumps(anoms.get(unk_jid, [])))
+    # 5: race — la seconda terminalizzazione (revisione obsoleta) e' rifiutata dal Core, nessun doppio SETTLE
+    rc = race if race.get("ok") else {}
+    r_end = rc.get("state_end", {})
+    settles = [e for e in (r_end.get("ledger") or []) if e["kind"] == "SETTLE"]
+    ok_race = (race.get("ok") is True
+               and rc.get("first", {}).get("report", {}).get("terminalized") is True
+               and rc.get("first", {}).get("report", {}).get("settled") is True
+               and rc.get("second_stale", {}).get("refused") is True
+               and rc.get("second_stale", {}).get("report", {}).get("terminalized") is False
+               and "StaleWrite" in str(rc.get("second_stale", {}).get("report", {}).get("terminalize_error"))
+               and rc.get("second_stale", {}).get("report", {}).get("settled") is False
+               and len(settles) == 1 and settles[0]["units"] == 0
+               and settles[0]["source"] == PRE_SUBMIT_REFUSAL_SOURCE
+               and rc.get("settle_same_amount_again", {}).get("duplicate") is True
+               and rc.get("settle_same_amount_again", {}).get("applied") is False
+               and rc.get("settle_other_amount", {}).get("error") == "SettlementConflict"
+               and (r_end.get("rows") or [{}])[0].get("settled_units") == 0
+               and (r_end.get("rows") or [{}])[0].get("state") == "FAILED"
+               and "PRE_SUBMIT_TERMINALIZE_REFUSED" in [a["kind"] for a in (r_end.get("anomalies") or [])])
+    # confronto con il difetto riprodotto pre-fix
+    pre_fix = json.load(open(os.path.join(EVIDENCE_DIR, "pre_fix", "reproduction_ng03.json"), encoding="utf-8"))
+    ok_regressed = (pre_fix["case_A_refusal_at_mark_submitting"]["row"]["settlement_source"] == TRANSPORT
+                    and pre_fix["case_B_control_refusal_inside_adapter_submit"]["row"]["settlement_source"] == TRANSPORT)
+    checks = {"serialization_drift_truthful_provenance": ok_ser, "identity_drift_truthful_provenance": ok_id,
+              "transport_attested_path_unchanged": ok_tr, "uncertain_send_not_settled": ok_unk,
+              "race_no_double_settlement": ok_race, "pre_fix_defect_documented": ok_regressed,
+              "provenances_are_distinct": PRE_SUBMIT_REFUSAL_SOURCE != TRANSPORT}
+    ok = all(checks.values())
+    ev = evidence("B12", "pre_submit_provenance", {
+        "sources": {"pre_submit_runtime": PRE_SUBMIT_REFUSAL_SOURCE, "remote_ref": PRE_SUBMIT_REFUSAL_REMOTE_REF,
+                    "transport_attested": TRANSPORT},
+        "case_1_serialization_drift": d_ser, "case_2_identity_drift": d_id,
+        "case_3_transport_attested": {"go": R["reorder"], "row": tr, "reconciliation_sources": recon_sources(tr_jid),
+                                      "ledger": ledger.get(tr_jid)},
+        "case_4_uncertain_send": {"go": R["submit_unknown"], "row": unk, "ledger": ledger.get(unk_jid),
+                                  "anomalies": [a["kind"] for a in anoms.get(unk_jid, [])]},
+        "case_5_race_stale_write": race, "rows": state["rows"], "anomalies": state["anomalies"],
+        "pre_fix_reference": pre_fix, "checks": checks,
+        "scope_note": "il rifiuto pre-submit usa i percorsi espliciti del Core (reconcile + settle) con "
+                      "provenance del runtime; nessuna API additiva del Core e' stata richiesta"})
+    pb_worker.cleanup_db(db)
+    pb_worker.cleanup_db(os.path.join(STATE_DIR, "pb_b12race.db"))
+    failed = [k for k, v in checks.items() if not v]
+    return (f"SERIALIZATION_DRIFT e IDENTITY_DRIFT -> FAILED settlement 0 con provenance {PRE_SUBMIT_REFUSAL_SOURCE} "
+            f"(TRANSPORT_ATTESTED_NOT_SENT assente da riga, evidenza e ledger; fatti osservati: sent_count invariato, "
+            f"digest non autorizzati, guard non armato, nessuna attestazione) · rifiuto dentro submit -> {tr.get('settlement_source')} "
+            f"(invariato) · invio incerto -> {unk.get('state')} senza settlement · race: seconda terminalizzazione "
+            f"{'StaleWrite' if ok_race else 'NON rifiutata'}, un solo SETTLE, settle idempotente, importo diverso -> SettlementConflict · "
+            f"check falliti: {failed or 'nessuno'}"), ev, ok
+
+
 # ------------------------------------------------------------------ report
 def write_results() -> dict:
     s = gate_report.summarize(RESULTS, policy=POLICY, expected_ids=EXPECTED_IDS)
@@ -737,6 +906,7 @@ def write_results() -> dict:
                       "security_boundary_p_b01": "LAB_VERIFIED_UID_BOUNDARY" if "B01" in passed else "NOT_VERIFIED",
                       "p_b02_authenticated_reconciliation": "LAB_VERIFIED" if {"B03", "B04"} <= passed else "NOT_VERIFIED",
                       "p_b04_exact_byte_snapshot": "LAB_VERIFIED" if {"B05", "B06"} <= passed else "NOT_VERIFIED",
+                      "pre_submit_settlement_provenance": "LAB_VERIFIED_TRUTHFUL" if "B12" in passed else "NOT_VERIFIED",
                       "legacy_spend_paths": "INVENTORIED_SWITCH_VERIFIED_RESIDUAL_BLOCKED_PROVIDER_GATE" if "B07" in passed else "NOT_VERIFIED",
                       "orphan_reserved_lease": "STILL_OPEN (riprodotto, classificato, nessuna reclaim)",
                       "authorization_pricing": "LAB_ONLY" if "B09" in passed else "NOT_VERIFIED",
@@ -784,6 +954,10 @@ def main() -> int:
         record("B07", "Legacy spend paths inventory + fail-closed switch", "interruttore chiuso -> LEGACY_SPEND_PATH_DISABLED prima di import/store; governato invariato; hf_batch legacy 0 submit; __main__ mai al provider; P2 frozen non importato", b07)
         record("B08", "Orphan RESERVED lease: reproduction + classification", "RESERVED_NO_INTENT senza uscite; 0 submit; new_attempt rifiutato; recover ignora; reconcile OWNERSHIP_INCOMPLETE; con intento -> SUBMIT_UNKNOWN; reclaim NOT_AUTHORIZED", b08)
         record("B09", "Authorization / pricing authority (LAB state)", "autorita' LAB nello spender; orchestrator non emette quote ne' scrive lo store; importo dal client rifiutato; real: NOT_VERIFIED", b09)
+        record("B12", "NG-03 truthful pre-submit settlement provenance",
+               "rifiuto a mark_submitting -> FAILED settlement 0 con provenance RUNTIME_PRE_SUBMIT_REFUSED_NOT_DISPATCHED "
+               "e fatti osservati; rifiuto dentro submit -> TRANSPORT_ATTESTED_NOT_SENT invariato; invio incerto -> "
+               "SUBMIT_UNKNOWN senza settlement; race -> StaleWrite, nessun doppio settlement", b12)
         record("B11", "P2 freeze after + Core pin/tree + static checks", "P2 before == after == canonico; Core HEAD canonico pulito; static checks 0 findings", b11)
     finally:
         shutil.rmtree(scratch, ignore_errors=True)

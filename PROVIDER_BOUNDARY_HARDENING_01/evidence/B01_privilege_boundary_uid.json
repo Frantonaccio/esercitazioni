@@ -24,11 +24,11 @@
     "whoami_peer_authenticated": true
   },
   "daemon": {
-    "account_id": "acct_1aebf3f17cab",
+    "account_id": "acct_f62cc2abcf72",
     "allowed_peer_uid": 65531,
     "db": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb01/spender/store.db",
     "gid": 65532,
-    "pid": 3602,
+    "pid": 2315,
     "secret_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb01/spender/secret/worker_secret.json",
     "socket": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb01/ipc/spender.sock",
     "uid": 65532
@@ -76,7 +76,7 @@
     },
     "gid": 65531,
     "no_new_privs": "1",
-    "pid": 3610,
+    "pid": 2323,
     "protocol": {
       "amount_from_client": {
         "ok": false,
@@ -95,24 +95,24 @@
           "bytes": 177,
           "digest": "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19",
           "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pb01/spender/store.db.snapshots",
-          "opkey": "58c0d94726b5da8d44fbc694",
+          "opkey": "7508fd4ddab2d7511bc84de5",
           "persisted_mode": "0o444",
-          "sealed_at": 1789635826.8489163,
+          "sealed_at": 1789637569.4142373,
           "send_attestation": {
-            "attempt_token": "att_107223ea991dff5f57766a91",
+            "attempt_token": "att_29100c80fcddc73c29fbbe1a",
             "bytes": 177,
             "digest": "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19",
             "exact_bytes_equal": true,
             "job_id": "res_1b756b91dd15fdb2_1",
-            "opkey": "58c0d94726b5da8d44fbc694",
+            "opkey": "7508fd4ddab2d7511bc84de5",
             "schema": "payload-snapshot-send-attestation/1",
-            "verified_at": 1789635826.8546867
+            "verified_at": 1789637569.4206293
           },
           "send_verified": true
         },
-        "permit_id": "permit_82b777fa8102e9ccea618f3c",
-        "provider_account": "acct_1aebf3f17cab",
-        "quote_id": "quote_bc1592a27b511c2087247182",
+        "permit_id": "permit_e8d2139a70f05886db27dd92",
+        "provider_account": "acct_f62cc2abcf72",
+        "quote_id": "quote_b00f1795d65763a23aaf4206",
         "reservation_outcome": "RESERVED_NEW",
         "resumed": false,
         "spec_key": "1b756b91dd15fdb2737e1ce4b2f7b1bb2dbc291d4e997982ed50cf83829ab531",
@@ -130,7 +130,7 @@
         "envelope_id": "ENV_T29",
         "ok": true,
         "price_source": "LAB_PRICE_TABLE",
-        "quote_id": "quote_bc1592a27b511c2087247182",
+        "quote_id": "quote_b00f1795d65763a23aaf4206",
         "sku": "fake_model_v1"
       },
       "resume": {
@@ -142,8 +142,8 @@
         "outcome": "RESUMED/SUCCEEDED",
         "payload_snapshot": null,
         "permit_id": null,
-        "provider_account": "acct_1aebf3f17cab",
-        "quote_id": "quote_bc1592a27b511c2087247182",
+        "provider_account": "acct_f62cc2abcf72",
+        "quote_id": "quote_b00f1795d65763a23aaf4206",
         "reservation_outcome": "NONE",
         "resumed": true,
         "spec_key": "1b756b91dd15fdb2737e1ce4b2f7b1bb2dbc291d4e997982ed50cf83829ab531",
@@ -158,7 +158,7 @@
       },
       "status": {
         "latest": {
-          "attempt_token": "att_107223ea991dff5f57766a91",
+          "attempt_token": "att_29100c80fcddc73c29fbbe1a",
           "cost_credits": 4.0,
           "error": null,
           "job_id": "res_1b756b91dd15fdb2_1",
@@ -166,23 +166,23 @@
           "payload_digest": "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19",
           "polls": 1,
           "provider": "fake",
-          "provider_account": "acct_1aebf3f17cab",
+          "provider_account": "acct_f62cc2abcf72",
           "provider_job_id": "pv_1b756b91",
-          "quote_id": "quote_bc1592a27b511c2087247182",
+          "quote_id": "quote_b00f1795d65763a23aaf4206",
           "revision": 3,
           "spec_key": "1b756b91dd15fdb2737e1ce4b2f7b1bb2dbc291d4e997982ed50cf83829ab531",
           "state": "SUCCEEDED",
-          "submitted_at": 1789635826.8552895,
-          "terminal_by": 1789636126.8552895,
+          "submitted_at": 1789637569.421317,
+          "terminal_by": 1789637869.421317,
           "webhook_hints": 0
         },
         "ok": true
       },
       "whoami": {
-        "account_id": "acct_1aebf3f17cab",
+        "account_id": "acct_f62cc2abcf72",
         "ok": true,
         "peer_uid": 65531,
-        "pid": 3602,
+        "pid": 2315,
         "served": 1,
         "uid": 65532
       }
@@ -198,7 +198,7 @@
     },
     "gid": 65530,
     "no_new_privs": "1",
-    "pid": 3621,
+    "pid": 2334,
     "protocol": [
       {
         "allowed_peer_uid": 65531,
@@ -217,30 +217,30 @@
   },
   "spender_snapshot_ledger": [
     "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19.bin",
-    "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19__58c0d94726b5da8d44fbc694.seal.json",
-    "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19__58c0d94726b5da8d44fbc694__att_107223ea991dff5f57766a91.bind.json",
-    "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19__58c0d94726b5da8d44fbc694__att_107223ea991dff5f57766a91.send.json"
+    "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19__7508fd4ddab2d7511bc84de5.seal.json",
+    "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19__7508fd4ddab2d7511bc84de5__att_29100c80fcddc73c29fbbe1a.bind.json",
+    "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19__7508fd4ddab2d7511bc84de5__att_29100c80fcddc73c29fbbe1a.send.json"
   ],
   "spender_store_rows": [
     {
-      "attempt_token": "att_107223ea991dff5f57766a91",
+      "attempt_token": "att_29100c80fcddc73c29fbbe1a",
       "budget_units": 10,
       "envelope_id": "ENV_T29",
       "error": null,
       "job_id": "res_1b756b91dd15fdb2_1",
       "operation_id": "T29:uid",
       "payload_digest": "7bfe44f06001c7fc98644f7d45aeb389b051e086308777fbc35a062477d0ef19",
-      "permit_id": "permit_82b777fa8102e9ccea618f3c",
+      "permit_id": "permit_e8d2139a70f05886db27dd92",
       "provider": "fake",
-      "provider_account": "acct_1aebf3f17cab",
+      "provider_account": "acct_f62cc2abcf72",
       "provider_job_id": "pv_1b756b91",
-      "quote_id": "quote_bc1592a27b511c2087247182",
+      "quote_id": "quote_b00f1795d65763a23aaf4206",
       "revision": 3,
       "settled_units": null,
       "settlement_source": null,
       "spec_key": "1b756b91dd15fdb2737e1ce4b2f7b1bb2dbc291d4e997982ed50cf83829ab531",
       "state": "SUCCEEDED",
-      "submit_intent_at": 1789635826.8527176
+      "submit_intent_at": 1789637569.4178402
     }
   ],
   "status": "PASS",
@@ -252,33 +252,33 @@
     },
     "gid": 65531,
     "no_new_privs": "1",
-    "pid": 3622,
+    "pid": 2335,
     "protocol": [
       {
-        "account_id": "acct_1aebf3f17cab",
+        "account_id": "acct_f62cc2abcf72",
         "audit": [
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3610,
+            "peer_pid": 2323,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3610,
+            "peer_pid": 2323,
             "peer_uid": 65531
           },
           {
             "event": "PEER_REFUSED",
             "peer_gid": 65530,
-            "peer_pid": 3621,
+            "peer_pid": 2334,
             "peer_uid": 65530
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3622,
+            "peer_pid": 2335,
             "peer_uid": 65531
           }
         ],
