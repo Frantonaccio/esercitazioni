@@ -27,16 +27,14 @@ nessun force-push, nessun file modificato. Il branch canonico punta ESATTAMENTE 
   `A tests/run_r0_r1_hardening.py`, `M tests/run_reservation.py`, `M transport/pipeline.py`
 - nessun file `.github`, `.env`, credenziali o segreti
 
-## Merge 2 — RUNTIME (`Frantonaccio/esercitazioni`, canonico `main`) — ESEGUITO IN LOCALE, PUSH BLOCCATO
+## Merge 2 — RUNTIME (`Frantonaccio/esercitazioni`, canonico `main`) — ESEGUITO E PUBBLICATO
 
 - pre-merge `main`: `8ded1c4947374a5fd2f925b8d27e91de51e7bbb9`
-- post-merge `main` (locale): `39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e` (fast-forward)
-- `origin/main` remoto: ANCORA `8ded1c49…` — il push è stato negato dal permission classifier della sessione
-  Claude Code (motivo: "Out-of-Place Publication": la sessione è vincolata al branch
-  `claude/r0-r1-controlled-merge-3wmgfy`). Non è un rifiuto di GitHub (branch `main` non protetto).
-  Il blocco NON è stato aggirato tramite API GitHub o PR.
+- post-merge `main`: `39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e` (fast-forward, push `8ded1c4..39c8296 -> main`).
+  Il primo tentativo di push era stato negato dal permission classifier della sessione; il push è riuscito dopo
+  la ri-autorizzazione esplicita nel mandato CONTROLLED MERGE HANDOFF del 17/09/2026.
 - merge commit: nessuno (non applicabile)
-- ancestry (locale): `git merge-base --is-ancestor 39c82968 main` → OK; tree byte-identico alla promotion
+- ancestry: `git merge-base --is-ancestor 39c82968 origin/main` → OK; tree di `main` byte-identico alla promotion
 - changed files (8ded1c4..39c82968, 124 file, +17558/-0): tutti sotto `RUNTIME_INTEGRATION_GATE_01/`
   (11 doc, 44 evidence, 37 p2_handoff, 8 runtime, 16 state, 8 tests). Nessun file fuori dalla directory del gate.
 
@@ -45,7 +43,7 @@ nessun force-push, nessun file modificato. Il branch canonico punta ESATTAMENTE 
 | # | verifica | esito |
 |---|---|---|
 | 1 | Core canonico contiene 740ee979 | PASS (HEAD == 740ee979, remoto) |
-| 2 | Runtime canonico contiene 39c82968 | PASS in locale · PENDING sul remoto (push bloccato) |
+| 2 | Runtime canonico contiene 39c82968 | PASS (HEAD == 39c82968, remoto) |
 | 3 | Runtime pinna esattamente 740ee979 | PASS (`REQUIRED_CORE_SHA = "740ee979300fe20a9382992528604dee70cb2fcf"`) |
 | 4 | nessun file inatteso nei merge | PASS (elenchi sopra; fast-forward = tree della promotion) |
 | 5 | P2 invariato | PASS: `sha256(P2_RUNTIME/hf_batch.py)` = `637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1`, idem `LAB/hf_batch_ORIGINAL.py` |
@@ -71,7 +69,7 @@ Human Review è un artefatto separato. Da trattare, se voluto, con mandato separ
 ## Freeze
 
 - Core: `main` == 740ee979, baseline canonica post-promotion. Nessun tag creato (fuori dal perimetro "esclusivamente il merge").
-- Runtime: freeze completabile solo dopo il push di `main` a 39c82968.
+- Runtime: `main` == 39c82968, baseline canonica post-promotion. Nessun tag creato (tag esplicitamente non autorizzati).
 
 ## Gap ancora aperti (invariati)
 
@@ -79,8 +77,13 @@ P-B01 BLOCKED_ENVIRONMENT · P-B02 STILL_OPEN · P-B03 STILL_OPEN (design requir
 G-N02 STILL_OPEN · RV07 STILL_OPEN · orphan lease STILL_OPEN · legacy spend paths · run_contamination NOT_RUN ·
 authorization/pricing reali non verificati · CI indipendente assente · T29 BLOCKED_ENVIRONMENT.
 
+## Evidence bundle v4
+
+`R0_R1_CONTROLLED_PROMOTION_EVIDENCE(4).zip`: SHA256 esterno `38e9d7bb4bbe79a7ef0e20e025af7aad3811235be1ce829ad293bb98ec31cf8d` verificato;
+SHA256SUMS interno 0 mismatch; `PROMOTION_PAIR.json` = (740ee979, 39c82968); `core_tree_hash` `c5323e86…` == tree di `creative-os/main`.
+
 ## Stato
 
-Core: R0_R1_CONTROLLED_PROMOTION_MERGED — BASELINE_CANONICAL.
-Runtime: MERGE_READY_LOCAL — PUSH_PENDING_HUMAN (un solo comando: `git push origin 39c82968fbfb3f3b7ba9fcfe9dc317ea0da9e74e:refs/heads/main`, fast-forward da 8ded1c4).
+R0_R1_CONTROLLED_PROMOTION_MERGED — BASELINE_CANONICAL (Core + Runtime).
+Runtime: R0_R1_CONTROLLED_PROMOTION_MERGED — BASELINE_CANONICAL.
 Non significa: production ready · provider ready · P-B01 verified · R2 authorized.
