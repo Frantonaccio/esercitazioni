@@ -38,10 +38,16 @@ from dataclasses import dataclass
 # questo runtime dichiara non esisterebbe. Il pin si sposta quindi sul commit che la
 # porta: un runtime che pretende quell'invariante non puo' dichiararsi compatibile con
 # un Core che non ce l'ha.
+#
+# HUMAN REVIEW 01 (DISPATCH_AUTHORIZATION_FORGEABLE): il pin si sposta ancora, sul
+# delta correttivo. Il confine di `44f9ea29` si apriva con un'autorizzazione che il
+# chiamante poteva costruire; quello di `605a8d74` pretende che la concessione nasca
+# da una rilettura del journal. Un runtime che dichiara "lo spender e' raggiungibile
+# solo dal percorso governato" non puo' pinnare il Core in cui quella frase era falsa.
 # Core candidate: Frantonaccio/creative-os, branch
-# harden/legacy-spend-core-2026-09-18, figlio diretto della baseline canonica
+# harden/legacy-spend-core-2026-09-18, discendente della baseline canonica
 # 9cf9cee1a751f7a2ad6c768574ff5aa38d8db515.
-REQUIRED_CORE_SHA = "44f9ea29cea112dfb30c752e5519498e25044c19"
+REQUIRED_CORE_SHA = "605a8d746fdafbfc33456ec6f26fa942947a43b9"
 
 # Pin storici noti: un Core a questo SHA NON e' un Core sconosciuto, e' un Core
 # VECCHIO. Va rifiutato con un esito che lo dica.
@@ -56,6 +62,10 @@ KNOWN_STALE_CORE_SHAS = frozenset({
     # confine dello spender: un adapter spendibile vi sarebbe dispacciabile. Non e' un
     # Core sconosciuto, e' un Core VECCHIO, e va rifiutato con un esito che lo dica.
     "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
+    # Primo candidate di questa fase, sottoposto a Human Review. Ha il confine dello
+    # spender, ma l'autorizzazione che lo apre era costruibile dal chiamante
+    # (DISPATCH_AUTHORIZATION_FORGEABLE). E' un Core superato, non sconosciuto.
+    "44f9ea29cea112dfb30c752e5519498e25044c19",
 })
 
 
