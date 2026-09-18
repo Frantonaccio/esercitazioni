@@ -44,10 +44,16 @@ from dataclasses import dataclass
 # chiamante poteva costruire; quello di `605a8d74` pretende che la concessione nasca
 # da una rilettura del journal. Un runtime che dichiara "lo spender e' raggiungibile
 # solo dal percorso governato" non puo' pinnare il Core in cui quella frase era falsa.
+#
+# HUMAN REVIEW 02 (SAME_ATTEMPT_AUTHORIZATION_REISSUABLE): e si sposta di nuovo. In
+# `605a8d74` la rilettura era corretta ma non consumava nulla: lo stesso tentativo
+# poteva coniare due autorizzazioni distinte, e due dispatch. In `59304455` il diritto
+# a dispacciare e' un CLAIM persistito nel journal, con `job_id` PRIMARY KEY: un
+# attempt autorizza UN dispatch, fra chiamate, fra thread e fra processi.
 # Core candidate: Frantonaccio/creative-os, branch
 # harden/legacy-spend-core-2026-09-18, discendente della baseline canonica
 # 9cf9cee1a751f7a2ad6c768574ff5aa38d8db515.
-REQUIRED_CORE_SHA = "605a8d746fdafbfc33456ec6f26fa942947a43b9"
+REQUIRED_CORE_SHA = "593044556e0097172526883dc0a8887f0369b109"
 
 # Pin storici noti: un Core a questo SHA NON e' un Core sconosciuto, e' un Core
 # VECCHIO. Va rifiutato con un esito che lo dica.
@@ -66,6 +72,10 @@ KNOWN_STALE_CORE_SHAS = frozenset({
     # spender, ma l'autorizzazione che lo apre era costruibile dal chiamante
     # (DISPATCH_AUTHORIZATION_FORGEABLE). E' un Core superato, non sconosciuto.
     "44f9ea29cea112dfb30c752e5519498e25044c19",
+    # Secondo candidate. L'autorizzazione non era piu' falsificabile, ma lo STESSO
+    # tentativo poteva coniarne due distinte finche' la riga restava RESERVED
+    # (SAME_ATTEMPT_AUTHORIZATION_REISSUABLE). Anche questo e' un Core superato.
+    "605a8d746fdafbfc33456ec6f26fa942947a43b9",
 })
 
 
