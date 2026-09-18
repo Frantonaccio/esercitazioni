@@ -16,7 +16,7 @@
     "slot_injection_reached_spender": true,
     "two_arg_grant_existed": true
   },
-  "corrective_core_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9",
+  "corrective_core_sha": "593044556e0097172526883dc0a8887f0369b109",
   "note": "`bypass_constructor` risulta NON rifiutato in entrambe le esecuzioni, ed e' corretto: costruire un oggetto Python e' sempre possibile. Cio' che conta e' che quell'oggetto non apra nulla — vedi `slot_injection`.",
   "probes_post_fix": {
     "P11": {
@@ -58,7 +58,7 @@
         "entry_point"
       ],
       "ok": true,
-      "pid": 3647,
+      "pid": 2162,
       "reached_by_any": false,
       "sentinel": {
         "authorized_calls": 0,
@@ -108,7 +108,7 @@
         "_dispatch": true
       },
       "ok": true,
-      "pid": 3649,
+      "pid": 2164,
       "sentinel": {
         "authorized_calls": 0,
         "boundary": "SPEND_CAPABLE_ADAPTER",
@@ -145,14 +145,14 @@
       },
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_xg3b4kgu/core_reviewed",
+      "core_path": "/tmp/lspc1_l8opbxgm/core_reviewed",
       "grant_dispatch_accepts_authorization": true,
       "grant_dispatch_signature": [
         "adapter",
         "auth"
       ],
       "ok": true,
-      "pid": 3639,
+      "pid": 2154,
       "reached_by_any": true,
       "sentinel": {
         "authorized_calls": 2,
@@ -213,13 +213,13 @@
       },
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_xg3b4kgu/core_reviewed",
+      "core_path": "/tmp/lspc1_l8opbxgm/core_reviewed",
       "hooks_guarded": {
         "_authorize_payload": false,
         "_dispatch": false
       },
       "ok": true,
-      "pid": 3641,
+      "pid": 2156,
       "sentinel": {
         "authorized_calls": 2,
         "boundary": "SPEND_CAPABLE_ADAPTER",

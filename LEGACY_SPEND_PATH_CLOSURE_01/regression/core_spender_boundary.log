@@ -9,13 +9,13 @@
 [32mPASS[0m  E. envelope_units (budget del client) vietato allo spender
       [2menvelope_units nel percorso spendibile -> SPEND_AUTHORIZATION_REQUIRED · righe 0 · quote consumate 0 · sentinella reached=0[0m
 [32mPASS[0m  F. percorso governato: il dispatch avviene e porta l'autorizzazione
-      [2mgovernato -> SUCCEEDED · sentinella reached=1 · authorize_payload=1 · autorizzazione: op=LSPC:f quote=quote_30c1fc65… env=ENV_LSPC importo=10 synthetic_units · digest e attempt_token = journal[0m
+      [2mgovernato -> SUCCEEDED · sentinella reached=1 · authorize_payload=1 · autorizzazione: op=LSPC:f quote=quote_81065572… env=ENV_LSPC importo=10 synthetic_units · digest e attempt_token = journal[0m
 [32mPASS[0m  G. l'autorizzazione e' riletta dal journal, non ricevuta
       [2mrifiuti: DISPATCH_ATTEMPT_TOKEN_MISMATCH · DISPATCH_PAYLOAD_DIGEST_MISMATCH · DISPATCH_OWNERSHIP_MISMATCH · DISPATCH_OWNERSHIP_MISMATCH · DISPATCH_JOB_UNKNOWN · DISPATCH_QUOTE_NOT_CONSUMED_BY_JOB · DISPATCH_LEDGER_RESERVE_MISSING · DISPATCH_QUOTE_REQUIRED · sentinella reached=0[0m
 [32mPASS[0m  H. la concessione e' limitata al with, alla spec e al digest
-      [2mfuori dal with -> SPEND_AUTHORIZATION_REQUIRED · rientrante -> DISPATCH_GRANT_REENTRANT · altra spec -> DISPATCH_SPEC_NOT_COVERED · altro digest -> DISPATCH_DIGEST_NOT_COVERED · sentinella reached=0[0m
+      [2mfuori dal with -> SPEND_AUTHORIZATION_REQUIRED · rientrante -> DISPATCH_GRANT_REENTRANT · altra spec -> DISPATCH_SPEC_NOT_COVERED · altro digest -> DISPATCH_DIGEST_NOT_COVERED · dopo il with -> SPEND_AUTHORIZATION_REQUIRED · sentinella reached=0[0m
 [32mPASS[0m  I. store senza autorita' economica: nessun dispatch
-      [2mstore in memoria -> ReservationContractError (JobStore in memoria non supporta envel…) · store senza autorita' della quote -> DISPATCH_QUOTE_AUTHORITY_MISSING · sentinella reached=0 · sent=0[0m
+      [2mstore in memoria -> ReservationContractError (JobStore in memoria non supporta envel…) · store che non puo' garantire l'unicita' del claim -> DISPATCH_CLAIM_AUTHORITY_MISSING · sentinella reached=0 · sent=0[0m
 [32mPASS[0m  J. reconcile (#11): allowlist delle provenienze
       [2mprovenienza estranea -> riconciliazione rifiutata: provenienza 'FABBRICATA' … · stato invariato RESERVED · anomalia registrata · provenienza riconosciuta -> FAILED · store senza allowlist: invariato[0m
 [32mPASS[0m  K. NON-REGRESSIONE: adapter di laboratorio invariato
@@ -28,8 +28,14 @@
       [2mfirma: ['adapter', 'store', 'job_id'] + keyword-only ['attempt_token', 'entry_point', 'payload_digest', 'spec_key'] · grant_dispatch(adapter, auth) -> TypeError · sentinella reached=0[0m
 [32mPASS[0m  O. autorizzazione legittima non riusabile
       [2mdispatch governato: reached=1 · replay via grant -> DISPATCH_AUTHORIZATION_SPENT · via slot: submit -> DISPATCH_AUTHORIZATION_SPENT, authorize_payload -> DISPATCH_AUTHORIZATION_SPENT · sentinella resta 1[0m
+[32mPASS[0m  P. stesso attempt, due claim sequenziali (HUMAN REVIEW 02)
+      [2mg1 dispaccia (pv_62c78f03), riga ancora RESERVED, claim persistito · g2 -> DISPATCH_AUTHORIZATION_ALREADY_CLAIMED · due conii prima di ogni uso -> DISPATCH_AUTHORIZATION_ALREADY_CLAIMED · rifiuto registrato in anomalies · sentinella reached=1 (max 1)[0m
+[32mPASS[0m  Q. stesso attempt, due thread concorrenti
+      [2m2 thread sullo stesso attempt -> 1 claim, 1 DISPATCH_AUTHORIZATION_ALREADY_CLAIMED · sentinella reached=0[0m
+[32mPASS[0m  R. stesso attempt, due PROCESSI concorrenti
+      [2m2 processi reali (pid [768, 769]) sullo stesso file di journal -> 1 claim, 1 DISPATCH_AUTHORIZATION_ALREADY_CLAIMED · un solo claim persistito · sentinella reached=0[0m
 
-SPENDER BOUNDARY (Core): 15/15 PASS
+SPENDER BOUNDARY (Core): 18/18 PASS
 crediti spesi: 0 · provider reali: 0 · rete generativa: 0
 
 --- stderr ---

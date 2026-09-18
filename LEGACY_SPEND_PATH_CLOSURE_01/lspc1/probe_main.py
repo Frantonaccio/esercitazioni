@@ -96,11 +96,19 @@ def forge(core: str) -> dict:
             "P12": run(workers.p12_direct_implementation_hooks, core, sd("p12"))}
 
 
+def reissue(core: str) -> dict:
+    """HUMAN REVIEW 02: lo STESSO tentativo puo' coniare due autorizzazioni?"""
+    sd = workers.state_db
+    return {"P13": run(workers.p13_same_attempt_sequential, core, sd("p13"), db2=sd("p13b")),
+            "P14": run(workers.p14_same_attempt_threads, core, sd("p14")),
+            "P15": run(workers.p15_same_attempt_processes, core, sd("p15"))}
+
+
 def main() -> int:
     core, outfile = sys.argv[1], sys.argv[2]
     mode = os.environ.get("LSPC1_PROBE_MODE", "probes")
     data = {"probes": probes, "switches": switches, "budget": budget,
-            "forge": forge}[mode](core)
+            "forge": forge, "reissue": reissue}[mode](core)
     with open(outfile, "w", encoding="utf-8") as fh:
         json.dump(data, fh, indent=2, ensure_ascii=False, sort_keys=True, default=str)
     return 0

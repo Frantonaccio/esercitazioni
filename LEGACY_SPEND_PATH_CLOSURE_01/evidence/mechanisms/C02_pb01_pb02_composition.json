@@ -23,19 +23,19 @@
     },
     "stale": {
       "case": "stale",
-      "message": "REPORT_STALE: report vecchio di 360.000037s, massimo 300.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
+      "message": "REPORT_STALE: report vecchio di 360.000039s, massimo 300.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
       "ok": true,
       "refused": "REPORT_STALE"
     },
     "wrong_account": {
       "case": "wrong_account",
-      "message": "ACCOUNT_MISMATCH: report 'acct_stranger' != job 'acct_f267d5e97987'",
+      "message": "ACCOUNT_MISMATCH: report 'acct_stranger' != job 'acct_970940580540'",
       "ok": true,
       "refused": "ACCOUNT_MISMATCH"
     },
     "wrong_attempt": {
       "case": "wrong_attempt",
-      "message": "ATTEMPT_TOKEN_MISMATCH: report 'att_bogus' != job 'att_5e3a1b55ef1ea0debc33ab3e'",
+      "message": "ATTEMPT_TOKEN_MISMATCH: report 'att_bogus' != job 'att_1748ba9cb4fd65cf64214147'",
       "ok": true,
       "refused": "ATTEMPT_TOKEN_MISMATCH"
     },
@@ -122,19 +122,19 @@
       },
       "stale": {
         "case": "stale",
-        "message": "REPORT_STALE: report vecchio di 360.000037s, massimo 300.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
+        "message": "REPORT_STALE: report vecchio di 360.000039s, massimo 300.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
         "ok": true,
         "refused": "REPORT_STALE"
       },
       "wrong_account": {
         "case": "wrong_account",
-        "message": "ACCOUNT_MISMATCH: report 'acct_stranger' != job 'acct_f267d5e97987'",
+        "message": "ACCOUNT_MISMATCH: report 'acct_stranger' != job 'acct_970940580540'",
         "ok": true,
         "refused": "ACCOUNT_MISMATCH"
       },
       "wrong_attempt": {
         "case": "wrong_attempt",
-        "message": "ATTEMPT_TOKEN_MISMATCH: report 'att_bogus' != job 'att_5e3a1b55ef1ea0debc33ab3e'",
+        "message": "ATTEMPT_TOKEN_MISMATCH: report 'att_bogus' != job 'att_1748ba9cb4fd65cf64214147'",
         "ok": true,
         "refused": "ATTEMPT_TOKEN_MISMATCH"
       },
@@ -168,12 +168,12 @@
       "explained_hex64": [
         "0000000000000000000000000000000000000000000000000000000000000000",
         "4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c",
-        "f85d7c24f43fcc464d274b5caf090352067d8cf1833700d89e88ef27a0975b53"
+        "8f962792cfc2b622b4e0355ca727fd88ce872671cbf2c95435af47ceeac4cf6e"
       ],
       "hex64_tokens_in_channel": [
         "0000000000000000000000000000000000000000000000000000000000000000",
         "4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c",
-        "f85d7c24f43fcc464d274b5caf090352067d8cf1833700d89e88ef27a0975b53"
+        "8f962792cfc2b622b4e0355ca727fd88ce872671cbf2c95435af47ceeac4cf6e"
       ],
       "secret_marker_in_channel": false,
       "signature_present_in_report": true,
@@ -250,7 +250,7 @@
     }
   },
   "daemon": {
-    "account_id": "acct_f267d5e97987",
+    "account_id": "acct_970940580540",
     "allowed_peer_uid": 65531,
     "db": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_comp/spender/store.db",
     "freshness": {
@@ -259,7 +259,7 @@
       "max_future_skew_s": 5.0
     },
     "gid": 65532,
-    "pid": 3517,
+    "pid": 2037,
     "recon_secret_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_comp/spender/secret/reconciliation_secret.json",
     "secret_path": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/pbg2_comp/spender/secret/worker_secret.json",
     "signing_key_on_disk": false,
@@ -306,19 +306,19 @@
         },
         "stale": {
           "case": "stale",
-          "message": "REPORT_STALE: report vecchio di 360.000037s, massimo 300.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
+          "message": "REPORT_STALE: report vecchio di 360.000039s, massimo 300.0s (policy 'LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION')",
           "ok": true,
           "refused": "REPORT_STALE"
         },
         "wrong_account": {
           "case": "wrong_account",
-          "message": "ACCOUNT_MISMATCH: report 'acct_stranger' != job 'acct_f267d5e97987'",
+          "message": "ACCOUNT_MISMATCH: report 'acct_stranger' != job 'acct_970940580540'",
           "ok": true,
           "refused": "ACCOUNT_MISMATCH"
         },
         "wrong_attempt": {
           "case": "wrong_attempt",
-          "message": "ATTEMPT_TOKEN_MISMATCH: report 'att_bogus' != job 'att_5e3a1b55ef1ea0debc33ab3e'",
+          "message": "ATTEMPT_TOKEN_MISMATCH: report 'att_bogus' != job 'att_1748ba9cb4fd65cf64214147'",
           "ok": true,
           "refused": "ATTEMPT_TOKEN_MISMATCH"
         },
@@ -352,12 +352,12 @@
         "explained_hex64": [
           "0000000000000000000000000000000000000000000000000000000000000000",
           "4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c",
-          "f85d7c24f43fcc464d274b5caf090352067d8cf1833700d89e88ef27a0975b53"
+          "8f962792cfc2b622b4e0355ca727fd88ce872671cbf2c95435af47ceeac4cf6e"
         ],
         "hex64_tokens_in_channel": [
           "0000000000000000000000000000000000000000000000000000000000000000",
           "4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c",
-          "f85d7c24f43fcc464d274b5caf090352067d8cf1833700d89e88ef27a0975b53"
+          "8f962792cfc2b622b4e0355ca727fd88ce872671cbf2c95435af47ceeac4cf6e"
         ],
         "secret_marker_in_channel": false,
         "signature_present_in_report": true,
@@ -436,7 +436,7 @@
     "gid": 65531,
     "job_id": "res_908f816daf68d2d1_1",
     "no_new_privs": "1",
-    "pid": 3526,
+    "pid": 2046,
     "submit_lost": {
       "error": "ConnectionResetError",
       "job_id": "res_908f816daf68d2d1_1",
@@ -446,7 +446,7 @@
     },
     "uid": 65531,
     "whoami": {
-      "account_id": "acct_f267d5e97987",
+      "account_id": "acct_970940580540",
       "freshness": {
         "label": "LAB_GATE_PARAMETER_NOT_A_POLICY_DECISION",
         "max_age_s": 300.0,
@@ -454,7 +454,7 @@
       },
       "ok": true,
       "peer_uid": 65531,
-      "pid": 3517,
+      "pid": 2037,
       "served": 1,
       "uid": 65532
     }
@@ -475,7 +475,7 @@
         "refused": "PEER_UID_NOT_AUTHORIZED"
       }
     ],
-    "pid": 3530,
+    "pid": 2050,
     "uid": 65530
   },
   "recon_secret_stat": {
@@ -486,24 +486,24 @@
   "scope_note": "composizione LAB: segreto e chiave fittizi, FakeAdapter, kernel DAC fra UID non privilegiati. NON e' una verifica di provider reale ne' di credenziali reali.",
   "spender_store_rows": [
     {
-      "attempt_token": "att_5e3a1b55ef1ea0debc33ab3e",
+      "attempt_token": "att_1748ba9cb4fd65cf64214147",
       "budget_units": 10,
       "envelope_id": "ENV_LAB",
       "error": null,
       "job_id": "res_908f816daf68d2d1_1",
       "operation_id": "lab:composition",
       "payload_digest": "4bc4a637ce5660412603f40d7c7fef60d257fd7397d5774e42c3d9f04e7b584c",
-      "permit_id": "permit_ccbd03fe02de2b390bb2fb92",
+      "permit_id": "permit_585b7505a4b6f370713c805b",
       "provider": "fake",
-      "provider_account": "acct_f267d5e97987",
+      "provider_account": "acct_970940580540",
       "provider_job_id": "pv_remote_1",
-      "quote_id": "quote_16636d9494b7b7942cb99ecd",
+      "quote_id": "quote_a359de6f07425e7ae2cdac19",
       "revision": 5,
       "settled_units": null,
       "settlement_source": null,
       "spec_key": "908f816daf68d2d1629d35a61af5c6c1c1ee6145d04edca49688cbb7dec7dad9",
       "state": "SUCCEEDED",
-      "submit_intent_at": 1789715907.5987947
+      "submit_intent_at": 1789717514.0791645
     }
   ],
   "status": "PASS",
@@ -515,117 +515,117 @@
     },
     "gid": 65531,
     "no_new_privs": "1",
-    "pid": 3531,
+    "pid": 2051,
     "stop": [
       {
-        "account_id": "acct_f267d5e97987",
+        "account_id": "acct_970940580540",
         "audit": [
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3526,
+            "peer_pid": 2046,
             "peer_uid": 65531
           },
           {
             "event": "PEER_REFUSED",
             "peer_gid": 65530,
-            "peer_pid": 3530,
+            "peer_pid": 2050,
             "peer_uid": 65530
           },
           {
             "event": "PEER_ACCEPTED",
             "peer_gid": 65531,
-            "peer_pid": 3531,
+            "peer_pid": 2051,
             "peer_uid": 65531
           }
         ],

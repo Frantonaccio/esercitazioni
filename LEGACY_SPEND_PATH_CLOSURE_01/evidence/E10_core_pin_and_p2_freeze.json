@@ -5,11 +5,13 @@
     "pin_equals_core_candidate_head": true,
     "previous_canonical_baseline_is_now_stale": true,
     "reviewed_candidate_is_now_stale": true,
+    "reviewed_candidate_v2_is_now_stale": true,
     "unknown_sha_is_mismatch": true
   },
-  "core_head": "605a8d746fdafbfc33456ec6f26fa942947a43b9",
+  "core_head": "593044556e0097172526883dc0a8887f0369b109",
   "known_stale": [
     "44f9ea29cea112dfb30c752e5519498e25044c19",
+    "605a8d746fdafbfc33456ec6f26fa942947a43b9",
     "740ee979300fe20a9382992528604dee70cb2fcf",
     "9afaddf3cec1e8baf9600ed8dc0461e7adccb5c7",
     "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
@@ -20,5 +22,5 @@
     "declared": "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1",
     "path": "RUNTIME_INTEGRATION_GATE_01/p2_handoff/VF_RUNTIME_T16_HANDOFF_2026-09-16/P2_RUNTIME/hf_batch.py"
   },
-  "required_core_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9"
+  "required_core_sha": "593044556e0097172526883dc0a8887f0369b109"
 }

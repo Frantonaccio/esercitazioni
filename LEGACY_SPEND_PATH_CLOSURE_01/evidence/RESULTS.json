@@ -1,7 +1,7 @@
 {
   "results": [
     {
-      "actual": "Core 605a8d746fda (harden/legacy-spend-core-2026-09-18) · Runtime 434e0ea58d85 (claude/legacy-spend-path-closure-c50coy) · pin=605a8d746fda · P2=637f3a803ee38d04… · controlli falliti: nessuno",
+      "actual": "Core 593044556e00 (harden/legacy-spend-core-2026-09-18) · Runtime b2dd6db8af4e (claude/legacy-spend-path-closure-c50coy) · pin=593044556e00 · P2=637f3a803ee38d04… · controlli falliti: nessuno",
       "error": null,
       "evidence": "evidence/E00_reality_lock.json",
       "expected": "coppia canonica verificata, branch dedicati, P2 invariato",
@@ -11,13 +11,13 @@
       "title": "Reality Lock"
     },
     {
-      "actual": "CORE: 10 file con superficie di spesa, 278 chiamate · RUNTIME: 8 file, 23 chiamate · confine presente nel Core: grant_dispatch/authorize_dispatch",
+      "actual": "CORE: 10 file con superficie di spesa, 283 chiamate · RUNTIME: 8 file, 23 chiamate · confine presente nel Core: grant_dispatch/authorize_dispatch",
       "error": null,
       "evidence": "evidence/E01_spend_path_inventory_static.json",
       "expected": "ogni entry point che tocca la catena di spesa, in Core e Runtime",
       "id": "E01",
       "pass": true,
-      "seconds": 0.3,
+      "seconds": 0.4,
       "title": "inventario statico dei percorsi di spesa"
     },
     {
@@ -27,17 +27,17 @@
       "expected": "lo spender E' raggiungibile dai percorsi legacy su 9cf9cee1 + fea7b439",
       "id": "E02",
       "pass": true,
-      "seconds": 1.4,
+      "seconds": 1.5,
       "title": "riproduzione PRE-FIX sulla coppia canonica"
     },
     {
-      "actual": "Core delta additivo (5 file) · suite unitaria del confine: 15/15 PASS, exit 0",
+      "actual": "Core delta additivo (5 file) · suite unitaria del confine: 18/18 PASS, exit 0",
       "error": null,
       "evidence": "evidence/E03_core_primitives_classification.json",
       "expected": "delta additivo, 11/11 PASS",
       "id": "E03",
       "pass": true,
-      "seconds": 0.2,
+      "seconds": 0.3,
       "title": "classificazione delle primitive del Core + suite unitaria del confine"
     },
     {
@@ -77,7 +77,7 @@
       "expected": "20/20 equivalenti governati o Core-unit, assert non indeboliti",
       "id": "E07",
       "pass": true,
-      "seconds": 10.0,
+      "seconds": 9.9,
       "title": "migrazione dei test storici"
     },
     {
@@ -87,7 +87,7 @@
       "expected": "nessuna regressione introdotta da questa fase",
       "id": "E08",
       "pass": true,
-      "seconds": 20.8,
+      "seconds": 20.3,
       "title": "regressione R0-R1 T01-T37"
     },
     {
@@ -97,11 +97,11 @@
       "expected": "P-B01/P-B02, NG-04, legacy spend paths, orphan lease, suite Core: verdi",
       "id": "E09",
       "pass": true,
-      "seconds": 3.9,
+      "seconds": 3.8,
       "title": "meccanismi approvati + suite del Core sulla coppia candidate"
     },
     {
-      "actual": "pin 605a8d746fda == Core HEAD · 9cf9cee1a751 e 44f9ea29cea1 ora STALE · P2 before==after==637f3a803ee38d04… · falliti: nessuno",
+      "actual": "pin 593044556e00 == Core HEAD · 9cf9cee1a751, 44f9ea29cea1 e 605a8d746fda ora STALE · P2 before==after==637f3a803ee38d04… · falliti: nessuno",
       "error": null,
       "evidence": "evidence/E10_core_pin_and_p2_freeze.json",
       "expected": "pin sul candidate, baseline precedente STALE, P2 before == after",
@@ -111,7 +111,7 @@
       "title": "Core pin e P2 freeze"
     },
     {
-      "actual": "nessun .pyc/__pycache__ · code SHA Core 605a8d746fda / Runtime 434e0ea58d85 distinti da evidence-head · bundle approvati intatti · falliti: nessuno",
+      "actual": "nessun .pyc/__pycache__ · code SHA Core 593044556e00 / Runtime b2dd6db8af4e distinti da evidence-head · bundle approvati intatti · falliti: nessuno",
       "error": null,
       "evidence": "evidence/E11_evidence_chain_integrity.json",
       "expected": "code SHA / evidence-head / base canonica / branch distinti, 0 .pyc",
@@ -131,7 +131,17 @@
       "title": "HUMAN REVIEW 01: autorizzazione fabbricata e hook diretti"
     },
     {
-      "actual": "confine del Core: 10 minacce coperte, ognuna con evidenza · P-B01: 3 · fuori perimetro, dichiarate: 2 · falliti: nessuno",
+      "actual": "su 605a8d746fda: sentinella 2 con lo STESSO attempt (2 thread, 2 claim) — BLOCKER_REPRODUCED · sul correttivo: sentinella 1, claim persistito, 1 su 2 thread e 1 su 2 PROCESSI (pid [2195, 2196]) · falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E15_same_attempt_authorization_reissuable.json",
+      "expected": "difetto riprodotto su 605a8d74, chiuso dal claim nel journal; 1 claim fra chiamate, thread e processi",
+      "id": "E15",
+      "pass": true,
+      "seconds": 0.9,
+      "title": "HUMAN REVIEW 02: stesso attempt, due autorizzazioni"
+    },
+    {
+      "actual": "confine del Core: 11 minacce coperte, ognuna con evidenza · P-B01: 3 · fuori perimetro, dichiarate: 2 · falliti: nessuno",
       "error": null,
       "evidence": "evidence/E14_threat_model.json",
       "expected": "cosa protegge il Core, cosa protegge P-B01, cosa nessuno dei due pretende",
@@ -141,7 +151,7 @@
       "title": "threat model del confine dello spender"
     },
     {
-      "actual": "stato massimo: LEGACY_SPEND_PATHS_CLOSED — READY_FOR_HUMAN_REVIEW · suite: 14/14 · requisiti aperti: 9 · falliti: nessuno",
+      "actual": "stato massimo: LEGACY_SPEND_PATHS_CLOSED — READY_FOR_HUMAN_REVIEW · suite: 15/15 · requisiti aperti: 9 · falliti: nessuno",
       "error": null,
       "evidence": "evidence/E12_reporting_test_result_vs_readiness.json",
       "expected": "due oggetti separati; nessun requisito chiuso per errore",
@@ -156,7 +166,7 @@
     "fail": 0,
     "fail_ids": [],
     "gate_decision": "LSPC_GATE_COMPLETE",
-    "pass": 15,
+    "pass": 16,
     "pass_ids": [
       "E00",
       "E01",
@@ -171,11 +181,12 @@
       "E10",
       "E11",
       "E13",
+      "E15",
       "E14",
       "E12"
     ],
     "runner_exit": 0,
     "schema": "legacy-spend-path-closure-results/1",
-    "total": 15
+    "total": 16
   }
 }

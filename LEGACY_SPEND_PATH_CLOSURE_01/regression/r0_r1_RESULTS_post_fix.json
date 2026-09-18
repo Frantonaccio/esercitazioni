@@ -1,12 +1,12 @@
 {
   "schema": "runtime-gate-results/2",
-  "required_core_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9",
+  "required_core_sha": "593044556e0097172526883dc0a8887f0369b109",
   "results": [
     {
       "id": "T01",
       "title": "correct Core pin",
       "expected": "CORE_PIN_OK, go procede",
-      "actual": "core_sha=605a8d746fda verdict=CORE_PIN_OK state=SUCCEEDED",
+      "actual": "core_sha=593044556e00 verdict=CORE_PIN_OK state=SUCCEEDED",
       "status": "PASS",
       "reason_code": "VERIFIED",
       "evidence": "evidence/T01_correct_core_pin.json",
@@ -197,8 +197,8 @@
     {
       "id": "T17",
       "title": "Core canonical unchanged",
-      "expected": "HEAD == 605a8d7 (Core promosso), working tree pulito",
-      "actual": "CANONICAL_CLEAN: HEAD=605a8d746fda required=605a8d746fda branch=harden/legacy-spend-core-2026-09-18 dirty_files=0",
+      "expected": "HEAD == 5930445 (Core promosso), working tree pulito",
+      "actual": "CANONICAL_CLEAN: HEAD=593044556e00 required=593044556e00 branch=harden/legacy-spend-core-2026-09-18 dirty_files=0",
       "status": "PASS",
       "reason_code": "VERIFIED",
       "evidence": "evidence/T17_core_canonical_unchanged.json",

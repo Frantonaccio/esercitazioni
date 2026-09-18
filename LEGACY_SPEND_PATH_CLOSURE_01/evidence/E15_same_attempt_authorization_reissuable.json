@@ -1,0 +1,384 @@
+{
+  "blocker_closed": {
+    "claim_persisted_in_journal": true,
+    "multiprocess_not_simulated": true,
+    "row_still_reserved": true,
+    "second_dispatch_refused": true,
+    "sentinel_at_most_one": true,
+    "two_mints_refused": true,
+    "two_processes_exactly_one": true,
+    "two_processes_really_distinct": true,
+    "two_threads_exactly_one": true
+  },
+  "blocker_reproduced": {
+    "no_persisted_claim_on_reviewed_candidate": true,
+    "row_still_reserved_no_mark_submitted": true,
+    "second_dispatch_on_same_attempt_succeeded": true,
+    "sentinel_reached_twice": true,
+    "two_mints_before_any_use_succeeded": true,
+    "two_threads_both_claimed": true
+  },
+  "corrective_core_sha": "593044556e0097172526883dc0a8887f0369b109",
+  "crash_semantics": {
+    "A_before_claim_commit": "nessun claim: un tentativo successivo e' il primo",
+    "B_after_claim_before_submit": "ALREADY_CLAIMED; recovery governato, non retry",
+    "C_uncertain_submit": "SUBMIT_UNKNOWN, zero blind retry, invariato"
+  },
+  "note": "Su `605a8d74` P15 riferisce NO_CLAIM_PRIMITIVE_ON_THIS_CORE: la primitive non esiste, ed e' il difetto. La riproduzione che conta e' P13/P14.",
+  "probes_post_fix": {
+    "P13": {
+      "attempts": {
+        "dispatch_1_governato": {
+          "refused": false,
+          "result": "pv_9b604401"
+        },
+        "dispatch_2_stesso_attempt": {
+          "code": "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED",
+          "error": "SpendAuthorizationInvalid",
+          "message": "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED: claim_dispatch_authorization: il diritto a dispacciare il tentativo res_9b6044017f4fcb2c_1 e' gia' stato emesso (attempt att_000000003099…). Un tentativo autori",
+          "refused": true
+        },
+        "due_conii_prima_di_ogni_uso": {
+          "code": "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED",
+          "error": "SpendAuthorizationInvalid",
+          "message": "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED: claim_dispatch_authorization: il diritto a dispacciare il tentativo res_73687ef6f34e174e_1 e' gia' stato emesso (attempt att_0000000026ba…). Un tentativo autori",
+          "refused": true
+        }
+      },
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "dispatch_claim_persisted": true,
+      "mark_submitted_called": false,
+      "ok": true,
+      "pid": 2188,
+      "sentinel": {
+        "authorized_calls": 1,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [
+          [
+            "authorize_payload",
+            "res_9b6044017f4fcb2c_1",
+            "quote_8dbfb49b989bb89336f39e2f"
+          ],
+          [
+            "submit",
+            "res_9b6044017f4fcb2c_1",
+            "quote_8dbfb49b989bb89336f39e2f"
+          ]
+        ],
+        "reached": 1,
+        "spend_capable": true,
+        "submits": 1,
+        "transport_authorized": 1,
+        "transport_sent": 1
+      },
+      "sentinel_second_adapter": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": false,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "state_after_first": "RESERVED",
+      "store": {
+        "anomalies": 1,
+        "created": true,
+        "ledger": 1,
+        "live": 1,
+        "permits_consumed": 0,
+        "quotes_consumed": 1,
+        "reservations": 1
+      }
+    },
+    "P14": {
+      "claimed": 1,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "ok": true,
+      "pid": 2190,
+      "refused": [
+        "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED"
+      ],
+      "results": [
+        {
+          "claimed": true
+        },
+        {
+          "claimed": false,
+          "code": "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED"
+        }
+      ],
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 1,
+        "created": true,
+        "ledger": 1,
+        "live": 1,
+        "permits_consumed": 0,
+        "quotes_consumed": 1,
+        "reservations": 1
+      }
+    },
+    "P15": {
+      "blocked_environment": false,
+      "claim_persisted": true,
+      "claimed": 1,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "distinct_processes": 2,
+      "ok": true,
+      "pid": 2194,
+      "pids": [
+        2195,
+        2196
+      ],
+      "refused": [
+        "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED"
+      ],
+      "results": [
+        {
+          "claimed": true,
+          "pid": 2196
+        },
+        {
+          "claimed": false,
+          "code": "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED",
+          "pid": 2195
+        }
+      ],
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 1,
+        "created": true,
+        "ledger": 1,
+        "live": 1,
+        "permits_consumed": 0,
+        "quotes_consumed": 1,
+        "reservations": 1
+      }
+    }
+  },
+  "probes_pre_fix": {
+    "P13": {
+      "attempts": {
+        "dispatch_1_governato": {
+          "refused": false,
+          "result": "pv_9b604401"
+        },
+        "dispatch_2_stesso_attempt": {
+          "refused": false,
+          "result": "pv_9b604401"
+        },
+        "due_conii_prima_di_ogni_uso": {
+          "refused": false,
+          "result": "due grant distinti: True"
+        }
+      },
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_l8opbxgm/core_reviewed_v2",
+      "dispatch_claim_persisted": false,
+      "mark_submitted_called": false,
+      "ok": true,
+      "pid": 2172,
+      "sentinel": {
+        "authorized_calls": 2,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [
+          [
+            "authorize_payload",
+            "res_9b6044017f4fcb2c_1",
+            "quote_2e10a53aa257e5d5f0e8bc99"
+          ],
+          [
+            "submit",
+            "res_9b6044017f4fcb2c_1",
+            "quote_2e10a53aa257e5d5f0e8bc99"
+          ],
+          [
+            "authorize_payload",
+            "res_9b6044017f4fcb2c_1",
+            "quote_2e10a53aa257e5d5f0e8bc99"
+          ],
+          [
+            "submit",
+            "res_9b6044017f4fcb2c_1",
+            "quote_2e10a53aa257e5d5f0e8bc99"
+          ]
+        ],
+        "reached": 2,
+        "spend_capable": true,
+        "submits": 2,
+        "transport_authorized": 1,
+        "transport_sent": 2
+      },
+      "sentinel_second_adapter": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": false,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "state_after_first": "RESERVED",
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 1,
+        "permits_consumed": 0,
+        "quotes_consumed": 1,
+        "reservations": 1
+      }
+    },
+    "P14": {
+      "claimed": 2,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_l8opbxgm/core_reviewed_v2",
+      "ok": true,
+      "pid": 2174,
+      "refused": [],
+      "results": [
+        {
+          "claimed": true
+        },
+        {
+          "claimed": true
+        }
+      ],
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 1,
+        "permits_consumed": 0,
+        "quotes_consumed": 1,
+        "reservations": 1
+      }
+    },
+    "P15": {
+      "blocked_environment": false,
+      "claim_persisted": false,
+      "claimed": 0,
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_l8opbxgm/core_reviewed_v2",
+      "distinct_processes": 2,
+      "ok": true,
+      "pid": 2178,
+      "pids": [
+        2179,
+        2180
+      ],
+      "refused": [],
+      "results": [
+        {
+          "claimed": null,
+          "code": "NO_CLAIM_PRIMITIVE_ON_THIS_CORE",
+          "pid": 2179
+        },
+        {
+          "claimed": null,
+          "code": "NO_CLAIM_PRIMITIVE_ON_THIS_CORE",
+          "pid": 2180
+        }
+      ],
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true,
+      "snapshots": {
+        "created": false,
+        "files": 0
+      },
+      "store": {
+        "anomalies": 0,
+        "created": true,
+        "ledger": 1,
+        "live": 1,
+        "permits_consumed": 0,
+        "quotes_consumed": 1,
+        "reservations": 1
+      }
+    }
+  },
+  "property": "ONE_ATTEMPT = AT_MOST_ONE_DISPATCH_AUTHORIZATION",
+  "reviewed_core_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9"
+}

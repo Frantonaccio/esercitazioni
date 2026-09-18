@@ -6,7 +6,7 @@ Fonte macchina: `READINESS.json`, `evidence/E12_reporting_test_result_vs_readine
 
 | requisito | stato | su cosa si regge |
 |---|---|---|
-| `LEGACY_SPEND_PATHS_CORE_PRIMITIVES` | `CLOSED_LAB_VERIFIED` | E02 (difetto riprodotto sulla coppia canonica), E03 (**15/15** unitari del confine), E04 (sentinella a 0 in ogni percorso legacy, 1 nel governato), E06 (il client non sceglie il prezzo), **E13** (autorizzazione fabbricata e hook diretti: riprodotti su `44f9ea29`, chiusi sul correttivo), **E14** (threat model esplicito) |
+| `LEGACY_SPEND_PATHS_CORE_PRIMITIVES` | `CLOSED_LAB_VERIFIED` | E02 (difetto riprodotto sulla coppia canonica), E03 (**18/18** unitari del confine), E04 (sentinella a 0 in ogni percorso legacy, 1 nel governato), E06 (il client non sceglie il prezzo), **E13** (autorizzazione fabbricata e hook diretti: riprodotti su `44f9ea29`, chiusi sul correttivo), **E15** (stesso attempt che conia due autorizzazioni: riprodotto su `605a8d74`, chiuso dal claim nel journal, verificato anche fra due processi reali), **E14** (threat model esplicito) |
 | `LEGACY_TESTS_MIGRATION_TO_GOVERNED` | `CLOSED_LAB_VERIFIED` | E05 (LEGACY_LAB non e' capace di provider, contro cinque tentativi di riaprirlo), E07 (20/20 equivalenti governati o Core-unit), E08 (nessuna regressione, assert storici intatti) |
 
 `CLOSED_LAB_VERIFIED` significa: verificato in **laboratorio**, con adapter

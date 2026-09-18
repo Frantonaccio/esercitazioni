@@ -1,7 +1,7 @@
-RUNTIME INTEGRATION GATE 01 — Core /home/user/creative-os @ 605a8d746fda (required 605a8d746fda)
+RUNTIME INTEGRATION GATE 01 — Core /home/user/creative-os @ 593044556e00 (required 593044556e00)
   P2 hf_batch.py baseline 637f3a803ee38d04 (13484 bytes)
   T01 [32mPASS[0m  correct Core pin  [VERIFIED exit=0]
-       [2mcore_sha=605a8d746fda verdict=CORE_PIN_OK state=SUCCEEDED[0m
+       [2mcore_sha=593044556e00 verdict=CORE_PIN_OK state=SUCCEEDED[0m
   T02 [32mPASS[0m  wrong Core pin  [VERIFIED exit=0]
        [2merror=CORE_PIN_MISMATCH core_imported=False[0m
   T03 [32mPASS[0m  stale old Core pin (9afaddf)  [VERIFIED exit=0]
@@ -33,7 +33,7 @@ RUNTIME INTEGRATION GATE 01 — Core /home/user/creative-os @ 605a8d746fda (requ
   T16 [32mPASS[0m  P2 hash unchanged  [VERIFIED exit=0]
        [2mbefore=637f3a803ee3 after=637f3a803ee3 declared=637f3a803ee3 sources_agree=True[0m
   T17 [32mPASS[0m  Core canonical unchanged  [VERIFIED exit=0]
-       [2mCANONICAL_CLEAN: HEAD=605a8d746fda required=605a8d746fda branch=harden/legacy-spend-core-2026-09-18 dirty_files=0[0m
+       [2mCANONICAL_CLEAN: HEAD=593044556e00 required=593044556e00 branch=harden/legacy-spend-core-2026-09-18 dirty_files=0[0m
   T18 [32mPASS[0m  durable terminal persistence  [VERIFIED exit=0]
        [2mSUCCEEDED letto da nuovo processo; replay = RESUMED/SUCCEEDED (0 submit, 1 riga); new_attempt con permesso = RESERVED_NEW (2 righe, 0 impegnato)[0m
   T19 [32mPASS[0m  static: no duplicate control system (AST)  [VERIFIED exit=0]
@@ -67,7 +67,7 @@ balance None -> None · LOCK_HELD
        [2msenza intent -> PROTOCOL: INTENT_REQUIRED  (×2, anche con quote) · intent estraneo -> PROTOCOL · resume senza attempt -> NO_EXISTING_ATTEMPT (0 submit, nessuna riga) · prima spesa new_attempt/INITIAL_GENERATION -> SUCCEEDED · resume=RESUMED/SUCCEEDED · quote fidata 10u (LAB_PRICE_TABLE) · amount dal client -> PROTOCOL ×2 · fixture zero -> SUCCEEDED/0 · budget≠quote -> BUDGET_NOT_QUOTED · shell/argv/non-JSON -> PROTOCOL · new_attempt (quote nuova)=RESERVED_NEW · permit replay -> PermitError · su incerto -> LIVE_OR_UNCERTAIN_ATTEMPT · senza quote -> QUOTE_REQUIRED · senza operazione -> OPERATION_ID_REQUIRED · violazioni sentinella 0 · segreto nel canale: no[0m
   T29 [33mBLOCKED[0m  P-B01 privilege isolation  [BLOCKED_ENVIRONMENT exit=1]
        [2mstesso uid (0) per orchestrator e worker; tentativi di bypass: {'read_worker_secret': 'BYPASS_POSSIBLE', 'write_worker_code': 'BYPASS_POSSIBLE', 'write_worker_store': 'BYPASS_POSSIBLE', 'direct_dispatch_on_worker_store': 'BYPASS_POSSIBLE'}[0m
-B1_NEW_CLIP            SUCCEEDED job=res_f4076e463c1fbcd9_1 0.1s 
+B1_NEW_CLIP            SUCCEEDED job=res_f4076e463c1fbcd9_1 0.0s 
 B4C_NEW_CLIP           SUCCEEDED job=res_6d687b11cfaf4fd0_1 0.0s 
 balance None -> None · LOCK_HELD
   T37 [32mPASS[0m  DELTA 03 intent fail-closed  [VERIFIED exit=0]

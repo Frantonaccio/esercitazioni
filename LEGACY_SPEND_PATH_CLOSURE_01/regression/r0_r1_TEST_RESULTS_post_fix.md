@@ -1,12 +1,12 @@
 # TEST_RESULTS — RUNTIME INTEGRATION GATE 01
 
-Core canonical: `605a8d746fdafbfc33456ec6f26fa942947a43b9` · provider: FakeAdapter only · crediti spesi: 0 · rete generativa: nessuna
+Core canonical: `593044556e0097172526883dc0a8887f0369b109` · provider: FakeAdapter only · crediti spesi: 0 · rete generativa: nessuna
 
 Stato per test (authority unica, tri-state): PASS = requisito verificato · FAIL = requisito NON superato · BLOCKED = requisito NON verificabile nell'ambiente corrente (NON superato). EXIT = exit diagnostico del singolo test, distinto dall'exit del runner.
 
 | TEST | TITLE | EXPECTED | ACTUAL | STATUS | REASON_CODE | EXIT | EVIDENCE |
 |---|---|---|---|---|---|---|---|
-| T01 | correct Core pin | CORE_PIN_OK, go procede | core_sha=605a8d746fda verdict=CORE_PIN_OK state=SUCCEEDED | **PASS** | `VERIFIED` | 0 | `evidence/T01_correct_core_pin.json` |
+| T01 | correct Core pin | CORE_PIN_OK, go procede | core_sha=593044556e00 verdict=CORE_PIN_OK state=SUCCEEDED | **PASS** | `VERIFIED` | 0 | `evidence/T01_correct_core_pin.json` |
 | T02 | wrong Core pin | CORE_PIN_MISMATCH, Core non importato, nessuno store | error=CORE_PIN_MISMATCH core_imported=False | **PASS** | `VERIFIED` | 0 | `evidence/T02_wrong_core_pin.json` |
 | T03 | stale old Core pin (9afaddf) | STALE_CORE_PIN, Core non importato | error=STALE_CORE_PIN observed=44f9ea2 core_imported=False | **PASS** | `VERIFIED` | 0 | `evidence/T03_stale_core_pin.json` |
 | T04 | deterministic spec_key | run A == run B == run C == altro processo | A==B==C==other_process: True (e355dd3ed48831f2…) | **PASS** | `VERIFIED` | 0 | `evidence/T04_deterministic_spec_key.json` |
@@ -22,7 +22,7 @@ Stato per test (authority unica, tri-state): PASS = requisito verificato · FAIL
 | T14 | fake mode blocks real provider | REAL_PROVIDER_DISABLED prima di credenziali/subprocess/rete/import Core | provider_mode=higgsfield -> REAL_PROVIDER_DISABLED violations=0 core_imported=False db_created=False | **PASS** | `VERIFIED` | 0 | `evidence/T14_fake_mode_blocks_real_provider.json` |
 | T15 | no credential read | 0 violazioni in fake mode; controprova: sentinella rileva l'esca | fake go -> SUCCEEDED violations=0 | controprova: sentinella rileva ['credential_file_open', 'provider_subprocess', 'secret_env_read'] | **PASS** | `VERIFIED` | 0 | `evidence/T15_no_credential_read.json` |
 | T16 | P2 hash unchanged | SHA256(hf_batch.py) before == after | before=637f3a803ee3 after=637f3a803ee3 declared=637f3a803ee3 sources_agree=True | **PASS** | `VERIFIED` | 0 | `evidence/T16_p2_hash.json` |
-| T17 | Core canonical unchanged | HEAD == 605a8d7 (Core promosso), working tree pulito | CANONICAL_CLEAN: HEAD=605a8d746fda required=605a8d746fda branch=harden/legacy-spend-core-2026-09-18 dirty_files=0 | **PASS** | `VERIFIED` | 0 | `evidence/T17_core_canonical_unchanged.json` |
+| T17 | Core canonical unchanged | HEAD == 5930445 (Core promosso), working tree pulito | CANONICAL_CLEAN: HEAD=593044556e00 required=593044556e00 branch=harden/legacy-spend-core-2026-09-18 dirty_files=0 | **PASS** | `VERIFIED` | 0 | `evidence/T17_core_canonical_unchanged.json` |
 | T18 | durable terminal persistence | SUCCEEDED riletto da nuovo processo; nuovo tentativo dopo terminale | SUCCEEDED letto da nuovo processo; replay = RESUMED/SUCCEEDED (0 submit, 1 riga); new_attempt con permesso = RESERVED_NEW (2 righe, 0 impegnato) | **PASS** | `VERIFIED` | 0 | `evidence/T18_durable_terminal.json` |
 | T19 | static: no duplicate control system (AST) | 0 findings; import dal Core = 4 attesi | findings=0 core_imports=6 contract_drift=0 | **PASS** | `VERIFIED` | 0 | `evidence/T19_static_no_duplicate_control.json` |
 | T20 | dirty Core must fail closed | canonical+clean PASS; canonical+tracked mod -> CORE_WORKTREE_DIRTY (no import); wrong+clean -> MISMATCH; stale+clean -> STALE | clean -> pin ok | tracked mod (HEAD invariato) -> CORE_WORKTREE_DIRTY core_imported=False | untracked inside -> CORE_WORKTREE_DIRTY | wrong+clean -> CORE_PIN_MISMATCH | stale+clean -> STALE_CORE_PIN | **PASS** | `VERIFIED` | 0 | `evidence/T20_dirty_core_fail_closed.json` |

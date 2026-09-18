@@ -62,6 +62,18 @@
           "what": "la stessa, fabbricata aggirando `__post_init__`: il registro dei coniati e' per IDENTITA', non per uguaglianza di campi"
         },
         {
+          "closed_by": "`claim_dispatch_authorization`: verifica E claim in UNA transazione, `job_id` come PRIMARY KEY. Vale fra chiamate, fra thread e fra PROCESSI, perche' l'autorita' e' il file del journal, non la memoria di un interprete.",
+          "evidence": [
+            "E15.blocker_reproduced",
+            "E15.blocker_closed",
+            "run_spender_boundary:P",
+            "run_spender_boundary:Q",
+            "run_spender_boundary:R"
+          ],
+          "id": "SAME_ATTEMPT_MULTIPLE_MINT",
+          "what": "lo STESSO tentativo che conia due autorizzazioni distinte, entrambe valide, usando SOLO API supportate e il journal autorevole reale — il blocker della Human Review 02. Non e' codice malevolo: e' misuse possibile dall'API, quindi tocca al confine del Core fermarlo."
+        },
+        {
           "evidence": [
             "run_spender_boundary:O"
           ],
@@ -93,6 +105,12 @@
         }
       ],
       "what_it_is": "`adapters.base.SpendCapableAdapter` + `authorize_dispatch` + `grant_dispatch` + il guard sugli hook, piu' i controlli di `transport.pipeline.run_job`."
+    },
+    "crash_semantics": {
+      "A_before_claim_commit": "nessun claim, nessuna autorizzazione. Un tentativo successivo e' il primo, non un blind retry.",
+      "B_after_claim_before_submit": "il claim resta. Una seconda richiesta e' DISPATCH_AUTHORIZATION_ALREADY_CLAIMED, non un nuovo dispatch: il tentativo entra nel recovery gia' governato (recover_orphaned_submits -> SUBMIT_UNKNOWN -> riconciliazione).",
+      "C_uncertain_submit": "SUBMIT_UNKNOWN preservato, zero blind retry, invariato.",
+      "claim_is_not_releasable": "rilasciarlo sarebbe la scorciatoia di retry che tutto il resto del modulo esiste per non avere."
     },
     "date": "2026-09-18",
     "design_note": {
@@ -145,6 +163,11 @@
       ],
       "what_it_is": "confine di PROCESSO: UID distinto per l'orchestrator, nessuna capability, `no_new_privs`, segreto e store leggibili solo nel dominio dello spender, `SO_PEERCRED` sul canale."
     },
-    "schema": "spender-boundary-threat-model/1"
+    "schema": "spender-boundary-threat-model/1",
+    "two_distinct_properties": {
+      "ONE_ATTEMPT_IS_AT_MOST_ONE_AUTHORIZATION": "un tentativo non conia due autorizzazioni. Claim persistito nel journal con `job_id` come PRIMARY KEY. Controprove: `run_spender_boundary:P/Q/R`, `E15`.",
+      "ONE_AUTHORIZATION_IS_ONE_USE": "un'autorizzazione gia' consumata non si riusa. Registro `_SPENT`, per identita' dell'oggetto. Controprova: `run_spender_boundary:O`.",
+      "why_both": "la prima senza la seconda lascia chiedere due chiavi originali per la stessa camera; la seconda senza la prima lascia riusare la stessa chiave. Sono proprieta' diverse, ed entrambe necessarie."
+    }
   }
 }

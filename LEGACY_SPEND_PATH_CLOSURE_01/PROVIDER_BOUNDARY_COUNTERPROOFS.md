@@ -48,7 +48,7 @@ oggetto. Tutti e sei l'hanno raggiunto:
 
 ---
 
-## DOPO — coppia candidate `605a8d74` + `434e0ea5`
+## DOPO — coppia candidate `59304455` + `b2dd6db8`
 
 | sonda | percorso | esito | sentinella | effetti sullo store |
 |---|---|---|---|---|
@@ -139,6 +139,38 @@ Nell'evidenza il tentativo `bypass_constructor` risulta *non rifiutato* in entra
 esecuzioni: costruire un oggetto Python e' sempre possibile e nessun controllo puo'
 vietarlo. Cio' che conta e' che quell'oggetto non apra nulla, ed e' cio' che misura
 `slot_injection`. Registrarlo come riuscito invece di nasconderlo e' il punto.
+
+## HUMAN REVIEW 02 — due chiavi originali per la stessa camera
+
+Chiusa la fotocopia della chiave, restava la riemissione. `E15` la prova contro
+`605a8d74` e contro il correttivo, usando **solo fatti autorevoli**: store reale,
+prenotazione governata reale, quote LAB reale, ledger `RESERVE` reale, stesso
+`job_id`, stesso `attempt_token`.
+
+### Sul candidate `605a8d74` — BLOCKER_REPRODUCED
+
+| tentativo | esito | sentinella |
+|---|---|---|
+| dispatch #1 governato | **riuscito** | `reached=1` |
+| riga dopo il #1 (nessun `mark_submitted`) | ancora `RESERVED` | |
+| dispatch #2, **stesso attempt** | **riuscito** | `reached=2`, `sent=2` |
+| due conii prima di qualunque uso | **due grant distinti** | |
+| due **thread** concorrenti | **entrambi** ottengono l'autorizzazione | |
+| claim persistito | **nessuno** | |
+
+### Sul correttivo `59304455`
+
+| tentativo | esito | sentinella |
+|---|---|---|
+| dispatch #1 governato | `SUCCEEDED` | **1** |
+| dispatch #2, stesso attempt | `DISPATCH_AUTHORIZATION_ALREADY_CLAIMED` | resta **1** |
+| due conii prima di qualunque uso | `DISPATCH_AUTHORIZATION_ALREADY_CLAIMED` | **0** |
+| due **thread** concorrenti | 1 claim, 1 `ALREADY_CLAIMED` | **0** |
+| due **PROCESSI** concorrenti, stesso file di journal | 1 claim, 1 `ALREADY_CLAIMED`, PID distinti | **0** |
+
+Il caso multi-processo e' stato **eseguito**, non simulato
+(`distinct_processes = 2`, `blocked_environment = false`). E' il caso che un registro
+Python in memoria non supererebbe, ed e' la ragione per cui il claim vive nel journal.
 
 ## Cosa queste controprove NON dimostrano
 

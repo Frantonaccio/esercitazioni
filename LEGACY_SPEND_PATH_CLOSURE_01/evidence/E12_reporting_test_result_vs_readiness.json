@@ -5,8 +5,8 @@
       "runtime_main": "fea7b439a63a0100a732e21af4dfde6b8edd0951"
     },
     "code_sha": {
-      "core": "605a8d746fdafbfc33456ec6f26fa942947a43b9",
-      "runtime": "434e0ea58d859b4e252c538676cb9725819c5d30"
+      "core": "593044556e0097172526883dc0a8887f0369b109",
+      "runtime": "b2dd6db8af4e31e704b88cdc6c3e5b1fea28ee7f"
     },
     "evidence_head_sha": "assegnato dal commit che pubblica questo bundle; distinto da code_sha per costruzione",
     "real_branch": {
@@ -72,8 +72,8 @@
     "answer": "SI",
     "fail": 0,
     "fail_ids": [],
-    "pass": 14,
+    "pass": 15,
     "question": "i test hanno prodotto l'esito atteso?",
-    "total": 14
+    "total": 15
   }
 }

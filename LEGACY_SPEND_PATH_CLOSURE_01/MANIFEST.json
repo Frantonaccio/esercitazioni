@@ -6,11 +6,15 @@
   },
   "canonical_runtime_base_sha": "fea7b439a63a0100a732e21af4dfde6b8edd0951",
   "core_branch": "harden/legacy-spend-core-2026-09-18",
-  "core_code_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9",
+  "core_code_sha": "593044556e0097172526883dc0a8887f0369b109",
   "core_pin": {
     "points_to_core_candidate": true,
     "previous_canonical_now_stale": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
-    "required_core_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9"
+    "required_core_sha": "593044556e0097172526883dc0a8887f0369b109",
+    "reviewed_candidates_now_stale": [
+      "44f9ea29cea112dfb30c752e5519498e25044c19",
+      "605a8d746fdafbfc33456ec6f26fa942947a43b9"
+    ]
   },
   "core_repo": "Frantonaccio/creative-os",
   "credential_scan": {
@@ -20,7 +24,7 @@
       ".bin",
       ".sock"
     ],
-    "files_scanned": 62,
+    "files_scanned": 66,
     "hits": [],
     "patterns_count": 8,
     "patterns_declared_in": "pbg2/bundle_provenance.py",
@@ -40,13 +44,13 @@
     "real_provider_verified": false,
     "spend_authorized": false
   },
-  "file_count": 61,
+  "file_count": 65,
   "gate": {
     "decision": "LSPC_GATE_COMPLETE",
     "fail": 0,
     "fail_ids": [],
-    "pass": 15,
-    "steps": 15
+    "pass": 16,
+    "steps": 16
   },
   "human_review_01": {
     "blocker": "`DispatchAuthorization` era costruibile e `grant_dispatch(adapter, auth)` accettava l'oggetto senza rileggere il journal; `_dispatch` e `_authorize_payload` erano invocabili direttamente.",
@@ -78,6 +82,43 @@
       "status": "STILL_OPEN"
     },
     "verdict_received": "HUMAN_REVIEW_HOLD — DISPATCH_AUTHORIZATION_FORGEABLE"
+  },
+  "human_review_02": {
+    "blocker": "`authorize_dispatch` LEGGEVA il journal senza consumare nulla: finche' la riga restava RESERVED lo stesso (job_id, attempt_token) poteva coniare due DispatchAuthorization distinte, entrambe minted e non-spent, e dispacciare due volte. Il registro `_SPENT` era per identita' dell'oggetto, non per attempt.",
+    "concurrency_verified": {
+      "multiprocess_simulated": false,
+      "processes": true,
+      "sequential": true,
+      "threads": true
+    },
+    "crash_semantics": {
+      "A_before_claim_commit": "nessun claim; un tentativo successivo e' il primo",
+      "B_after_claim_before_submit": "ALREADY_CLAIMED; recovery governato, non retry",
+      "C_uncertain_submit": "SUBMIT_UNKNOWN, zero blind retry, invariato",
+      "claim_is_not_releasable": true
+    },
+    "evidence": [
+      "evidence/E15_same_attempt_authorization_reissuable.json",
+      "HUMAN_REVIEW_02_CORRECTIVE_DELTA.md",
+      "THREAT_MODEL.md"
+    ],
+    "history_preserved": "nessun amend, nessun force-push: delta correttivi come commit nuovi sugli stessi branch",
+    "property_enforced": "ONE_ATTEMPT = AT_MOST_ONE_DISPATCH_AUTHORIZATION",
+    "reproduced_on_reviewed_candidate": true,
+    "reproduction_used_only_authoritative_facts": true,
+    "resolution": "`claim_dispatch_authorization`: verifica E claim in UNA transazione BEGIN IMMEDIATE, `job_id` come PRIMARY KEY. Vale fra chiamate sequenziali, fra thread e fra PROCESSI, perche' il vincolo lo impone il database. `authorize_dispatch` delega interamente; uno store senza quella primitive e' DISPATCH_CLAIM_AUTHORITY_MISSING, fail-closed.",
+    "reviewed_iteration": {
+      "core_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9",
+      "merged": false,
+      "runtime_code_sha": "434e0ea58d859b4e252c538676cb9725819c5d30",
+      "runtime_evidence_head_sha": "e8a02da53ae6e8c3fd269157327390bf9f80faa0",
+      "zip_sha256": "ec33fb57f29ddf1f7506f6956881b7e9dd1140260a407f2098d6327416477a0c"
+    },
+    "two_properties": [
+      "ONE_AUTHORIZATION_IS_ONE_USE",
+      "ONE_ATTEMPT_IS_AT_MOST_ONE_AUTHORIZATION"
+    ],
+    "verdict_received": "HUMAN_REVIEW_HOLD — SAME_ATTEMPT_AUTHORIZATION_REISSUABLE"
   },
   "mode": "MOCK ONLY · ZERO PROVIDER REALI · ZERO CREDENZIALI · ZERO CREDITI · NO PRODUZIONE",
   "p2_frozen": {
@@ -121,7 +162,7 @@
     }
   },
   "runtime_branch": "claude/legacy-spend-path-closure-c50coy",
-  "runtime_code_sha": "434e0ea58d859b4e252c538676cb9725819c5d30",
+  "runtime_code_sha": "b2dd6db8af4e31e704b88cdc6c3e5b1fea28ee7f",
   "runtime_evidence_head_sha": "DECLARED_IN_EXTERNAL_PROVENANCE",
   "runtime_repo": "Frantonaccio/esercitazioni",
   "schema": "legacy-spend-path-closure-manifest/1",
@@ -129,8 +170,8 @@
     "answer": "SI",
     "fail": 0,
     "fail_ids": [],
-    "pass": 15,
+    "pass": 16,
     "question": "i test hanno prodotto l'esito atteso?",
-    "total": 15
+    "total": 16
   }
 }

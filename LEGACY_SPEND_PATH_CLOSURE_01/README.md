@@ -30,6 +30,7 @@ permesso, ledger, snapshot exact-byte, pin del Core e ownership.
 | file | cosa contiene |
 |---|---|
 | `HUMAN_REVIEW_01_CORRECTIVE_DELTA.md` | il blocker `DISPATCH_AUTHORIZATION_FORGEABLE`, riprodotto e chiuso |
+| `HUMAN_REVIEW_02_CORRECTIVE_DELTA.md` | il blocker `SAME_ATTEMPT_AUTHORIZATION_REISSUABLE`, riprodotto e chiuso |
 | `THREAT_MODEL.md` | cosa protegge il confine del Core, cosa protegge P-B01, cosa nessuno dei due pretende |
 | `REALITY_LOCK.md` | gli otto controlli eseguiti **prima** di qualunque write |
 | `SPEND_PATH_INVENTORY.md` | la matrice completa degli entry point (§5 del mandato) |
@@ -57,13 +58,16 @@ Il gate ripristina l'albero del bundle storico `RUNTIME_INTEGRATION_GATE_01` pri
 dopo l'esecuzione: rieseguire la suite R0-R1 ne riscrive per costruzione l'evidenza,
 e quella riscrittura non deve entrare qui dentro.
 
-## Iterazione 2 — dopo la Human Review 01
+## Le tre iterazioni
 
-Il primo candidate (`44f9ea29` / `ad2f9c07`) ha ricevuto
-`HUMAN_REVIEW_HOLD — DISPATCH_AUTHORIZATION_FORGEABLE`: l'oggetto che apriva il
-cancello si poteva stampare in casa. Riprodotto (`E13`), corretto nel Core
-(`605a8d74`), controprovato con quattro casi unitari nuovi e due sonde nuove, e
-accompagnato da un threat model esplicito (`E14`).
+| | Core | esito della review | cosa mancava |
+|---|---|---|---|
+| 1 | `44f9ea29` | `HUMAN_REVIEW_HOLD — DISPATCH_AUTHORIZATION_FORGEABLE` | l'oggetto che apriva il cancello si poteva stampare in casa |
+| 2 | `605a8d74` | `HUMAN_REVIEW_HOLD — SAME_ATTEMPT_AUTHORIZATION_REISSUABLE` | chiusa la fotocopia della chiave, restava la seconda chiave originale per la stessa camera |
+| 3 | `59304455` | in attesa | — |
+
+Entrambi i blocker sono stati **riprodotti** sul Core che li conteneva prima di essere
+corretti (`E13`, `E15`), con le stesse sonde che poi li verificano chiusi.
 
 I commit revisionati non sono stati toccati: nessun amend, nessun force-push, delta
 correttivi come commit nuovi sugli stessi branch.

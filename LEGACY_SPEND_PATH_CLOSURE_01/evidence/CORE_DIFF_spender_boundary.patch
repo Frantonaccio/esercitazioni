@@ -1,5 +1,5 @@
 diff --git a/adapters/base.py b/adapters/base.py
-index 70fd3b1..375c9d1 100644
+index 70fd3b1..491bb10 100644
 --- a/adapters/base.py
 +++ b/adapters/base.py
 @@ -34,9 +34,12 @@ R0-R1 (hardening, 2026-09-16) aggiunge quattro invarianti al contratto:
@@ -15,7 +15,7 @@ index 70fd3b1..375c9d1 100644
  from collections.abc import Mapping
  from dataclasses import dataclass, field, asdict
  from enum import Enum
-@@ -591,6 +594,480 @@ class GenerationAdapter(Protocol):
+@@ -591,6 +594,443 @@ class GenerationAdapter(Protocol):
      def open_stream(self, asset: GeneratedAsset): ...
  
  
@@ -255,83 +255,46 @@ index 70fd3b1..375c9d1 100644
 +                         "adapter spendibile: l'importo viene dalla quote fidata")
 +
 +
-+def _ledger_has_reserve(store, job_id: str) -> bool:
-+    rows = getattr(store, "ledger", None)
-+    if not callable(rows):
-+        return False
-+    try:
-+        return any(r.get("kind") == "RESERVE" for r in rows(job_id) or ())
-+    except Exception:                                       # noqa: BLE001
-+        return False
-+
-+
 +def authorize_dispatch(store, job_id: str, *, adapter_name: str, adapter_account: str,
 +                       spec_key: str, payload_digest: str, attempt_token: str,
 +                       entry_point: str = "authorize_dispatch") -> DispatchAuthorization:
-+    """Ricostruisce l'autorizzazione al dispatch DAL JOURNAL AUTOREVOLE.
++    """CLAIMA il diritto a dispacciare questo tentativo, sul journal autorevole.
 +
-+    Non accetta nulla dal chiamante che non venga riconfrontato con la riga
-+    persistita. Solleva `SpendAuthorizationInvalid` con un codice parlante al
-+    primo fatto che manca: nessun fallback, nessun "quasi".
++    HUMAN REVIEW 02 — SAME_ATTEMPT_AUTHORIZATION_REISSUABLE. Prima questa funzione
++    LEGGEVA il journal e coniava un oggetto. La lettura era corretta, ma non consumava
++    nulla: finche' la riga restava `RESERVED`, due chiamate producevano due
++    autorizzazioni distinte, entrambe valide. Chiuso il replay dello stesso oggetto,
++    restava la riemissione dello stesso tentativo.
 +
-+    E' l'UNICO posto in cui una `DispatchAuthorization` puo' nascere: possiede il
-+    token di conio e registra l'oggetto nel registro dei coniati."""
-+    def refuse(code: str, msg: str):
-+        raise SpendAuthorizationInvalid(code, f"{entry_point}: {msg}")
++    Ora la decisione non e' piu' una lettura: e'
++    `store.claim_dispatch_authorization(...)`, che in UNA transazione verifica e
++    CLAIMA, con `job_id` come PRIMARY KEY. Un secondo claim dello stesso tentativo e'
++    `DISPATCH_AUTHORIZATION_ALREADY_CLAIMED` — fra chiamate, fra thread e fra processi,
++    perche' l'autorita' e' il file del journal, non la memoria di un interprete.
 +
-+    persisted = store.get(job_id)
-+    if persisted is None:
-+        refuse("DISPATCH_JOB_UNKNOWN", f"job {job_id} sconosciuto allo store autorevole")
-+    if persisted.state is not JobState.RESERVED or persisted.provider_job_id:
-+        refuse("DISPATCH_NOT_PRE_SUBMIT",
-+               f"job {job_id} in stato {persisted.state.value} "
-+               f"(provider_job_id={persisted.provider_job_id!r}): non e' un pre-submit")
-+    if persisted.spec_key != spec_key:
-+        refuse("DISPATCH_SPEC_MISMATCH", f"job {job_id} appartiene a un'altra spec")
-+    if not persisted.operation_id:
-+        refuse("DISPATCH_OPERATION_REQUIRED",
-+               f"job {job_id} non ha operation_id: nessuna identita' di operazione")
-+    if not persisted.attempt_token or persisted.attempt_token != attempt_token:
-+        refuse("DISPATCH_ATTEMPT_TOKEN_MISMATCH",
-+               f"job {job_id}: attempt_token persistito {persisted.attempt_token!r} != {attempt_token!r}")
-+    if not persisted.payload_digest or persisted.payload_digest != payload_digest:
-+        refuse("DISPATCH_PAYLOAD_DIGEST_MISMATCH",
-+               f"job {job_id}: digest persistito {str(persisted.payload_digest)[:16]}… != "
-+               f"{str(payload_digest)[:16]}…")
-+    if persisted.provider != adapter_name or (persisted.provider_account or "") != (adapter_account or ""):
-+        refuse("DISPATCH_OWNERSHIP_MISMATCH",
-+               f"job {job_id} appartiene a {persisted.provider!r}/{persisted.provider_account!r}, "
-+               f"adapter {adapter_name!r}/{adapter_account!r}")
-+    if not persisted.quote_id:
-+        refuse("DISPATCH_QUOTE_REQUIRED",
-+               f"job {job_id} non e' legato a una quote fidata: il client non sceglie il prezzo")
-+    get_quote = getattr(store, "quote", None)
-+    if not callable(get_quote):
-+        refuse("DISPATCH_QUOTE_AUTHORITY_MISSING",
-+               "lo store non espone l'autorita' della quote (EconomicLedger)")
-+    q = get_quote(persisted.quote_id)
-+    if q is None:
-+        refuse("DISPATCH_QUOTE_UNKNOWN", f"quote {persisted.quote_id} sconosciuta")
-+    if q.get("consumed_by") != job_id:
-+        refuse("DISPATCH_QUOTE_NOT_CONSUMED_BY_JOB",
-+               f"quote {persisted.quote_id} consumata da {q.get('consumed_by')!r}, non da {job_id!r}: "
-+               f"l'importo non e' stato impegnato da questo tentativo")
-+    if q.get("operation_id") != persisted.operation_id:
-+        refuse("DISPATCH_QUOTE_OPERATION_MISMATCH",
-+               f"quote {persisted.quote_id} appartiene all'operazione {q.get('operation_id')!r}")
-+    if q.get("spec_key") != spec_key:
-+        refuse("DISPATCH_QUOTE_SPEC_MISMATCH", f"quote {persisted.quote_id} appartiene a un'altra spec")
-+    if not q.get("envelope_id"):
-+        refuse("DISPATCH_ENVELOPE_REQUIRED", f"quote {persisted.quote_id} senza envelope")
-+    if not _ledger_has_reserve(store, job_id):
-+        refuse("DISPATCH_LEDGER_RESERVE_MISSING",
-+               f"nessun movimento RESERVE nel ledger per {job_id}: l'envelope non e' impegnato")
++    Tutte le verifiche (pre-submit, ownership, digest, attempt_token, quote consumata
++    da QUESTO job, envelope, movimento RESERVE) vivono DENTRO quella transazione: qui
++    non sono duplicate, perche' due copie della stessa regola sono due regole che prima
++    o poi divergono.
++
++    Questa funzione e' l'UNICO posto in cui una `DispatchAuthorization` puo' nascere:
++    possiede il token di conio e registra l'oggetto nel registro dei coniati."""
++    claim = getattr(store, "claim_dispatch_authorization", None)
++    if not callable(claim):
++        raise SpendAuthorizationInvalid(
++            "DISPATCH_CLAIM_AUTHORITY_MISSING",
++            f"{entry_point}: lo store non espone `claim_dispatch_authorization`, quindi non "
++            f"puo' garantire che un tentativo autorizzi UN solo dispatch. Fail-closed: senza "
++            f"quella garanzia non esiste autorizzazione.")
++    facts = claim(job_id, attempt_token=attempt_token, payload_digest=payload_digest,
++                  spec_key=spec_key, provider=adapter_name, provider_account=adapter_account or "")
 +    return _register_minted(DispatchAuthorization(
-+        job_id=job_id, spec_key=spec_key, operation_id=persisted.operation_id,
-+        attempt_token=attempt_token, payload_digest=payload_digest,
-+        provider=adapter_name, provider_account=adapter_account or "",
-+        envelope_id=q["envelope_id"], quote_id=persisted.quote_id,
-+        quote_amount=int(q["amount"]), quote_unit=str(q["unit"]), mint=_MINT))
++        job_id=facts["job_id"], spec_key=facts["spec_key"],
++        operation_id=facts["operation_id"], attempt_token=facts["attempt_token"],
++        payload_digest=facts["payload_digest"], provider=facts["provider"],
++        provider_account=facts["provider_account"], envelope_id=facts["envelope_id"],
++        quote_id=facts["quote_id"], quote_amount=int(facts["quote_amount"]),
++        quote_unit=str(facts["quote_unit"]), mint=_MINT))
 +
 +
 +class _DispatchGrant:
@@ -497,13 +460,18 @@ index 70fd3b1..375c9d1 100644
      """Registro dei job in volo, con riconciliazione.
  
 diff --git a/registry/reservations.py b/registry/reservations.py
-index a3baf66..986fd7e 100644
+index a3baf66..c8f94d8 100644
 --- a/registry/reservations.py
 +++ b/registry/reservations.py
-@@ -26,6 +26,11 @@ R0-R1 (2026-09-16), nello stesso file e nella stessa autorita' transazionale:
+@@ -26,6 +26,16 @@ R0-R1 (2026-09-16), nello stesso file e nella stessa autorita' transazionale:
    RV03   `permits`: permesso di nuovo tentativo consumabile UNA volta, nella
           stessa transazione della prenotazione; `operation_id`: al massimo un
           tentativo vivo per operazione (indice univoco), qualunque sia la spec.
++  HUMAN REVIEW 02 (2026-09-18): `dispatch_claims`, il diritto a dispacciare UN
++         tentativo, con `job_id` come PRIMARY KEY. `claim_dispatch_authorization`
++         verifica e CLAIMA in una sola transazione: un attempt autorizza al massimo
++         UN dispatch, fra chiamate, fra thread e fra processi.
++
 +  LEGACY SPEND PATH CLOSURE (2026-09-18): `reconciliation_sources`, allowlist
 +         OPZIONALE (default None = invariato) delle provenienze ammesse da
 +         `reconcile`. Uno store aperto con un insieme di autorita' riconosciute
@@ -512,8 +480,33 @@ index a3baf66..986fd7e 100644
    P-B03  `envelopes` + `ledger` (append-only): l'invariante e'
             settled + unsettled_exposure + nuova_reservation <= authorized.
           Un terminale NON azzera l'esposizione: solo un settlement esplicito
-@@ -132,8 +137,24 @@ class SqliteReservationStore:
+@@ -44,7 +54,8 @@ from adapters.base import (BudgetExceeded, EnvelopeError, GenSpec, Job, JobState
+                            OperationBusy, OperationConflict, OwnershipViolation, PermitError,
+                            QuoteAlreadyConsumed, QuoteError, ReconciliationEvidenceRequired,
+                            ReservationConflict, ReservationOutcome,
+-                           SettlementConflict, StaleWrite, TransitionRefused, assert_transition,
++                           SettlementConflict, SpendAuthorizationInvalid, StaleWrite,
++                           TransitionRefused, assert_transition,
+                            validate_reconciliation_evidence, validate_units)
+ 
+ LIVE_STATES = tuple(s.value for s in JobState if not s.terminal)
+@@ -130,10 +141,39 @@ class SqliteReservationStore:
+               envelope_id TEXT NOT NULL, amount INTEGER NOT NULL, unit TEXT NOT NULL,
+               version INTEGER NOT NULL, issued_at REAL NOT NULL, expires_at REAL,
                consumed_by TEXT, consumed_at REAL)""",
++        # HUMAN REVIEW 02 — SAME_ATTEMPT_AUTHORIZATION_REISSUABLE.
++        # Il diritto a dispacciare un tentativo e' UNO, e vive nel journal, non in
++        # memoria. `job_id` e' la chiave primaria: l'ownership di un tentativo e'
++        # write-once, quindi un job ha un solo attempt_token e quindi un solo claim.
++        # Il vincolo lo impone il DATABASE, percio' vale fra thread E fra processi.
++        """CREATE TABLE IF NOT EXISTS dispatch_claims(
++              job_id TEXT PRIMARY KEY,
++              attempt_token TEXT NOT NULL, payload_digest TEXT NOT NULL,
++              spec_key TEXT NOT NULL, operation_id TEXT NOT NULL,
++              provider TEXT NOT NULL, provider_account TEXT NOT NULL,
++              envelope_id TEXT NOT NULL, quote_id TEXT NOT NULL,
++              quote_amount INTEGER NOT NULL, quote_unit TEXT NOT NULL,
++              claimed_at REAL NOT NULL)""",
      )
  
 -    def __init__(self, path: str):
@@ -538,7 +531,169 @@ index a3baf66..986fd7e 100644
          with self._conn() as c:
              c.execute("BEGIN IMMEDIATE")
              try:
-@@ -804,6 +825,19 @@ class SqliteReservationStore:
+@@ -460,6 +500,161 @@ class SqliteReservationStore:
+             raise QuoteError(f"importo {budget_units} diverso dalla quote {quote_id} ({q['amount']} "
+                              f"{q['unit']}): il client non sceglie l'importo")
+ 
++    # ------------------------------------- HUMAN REVIEW 02: claim del dispatch
++    def claim_dispatch_authorization(self, job_id: str, *, attempt_token: str,
++                                     payload_digest: str, spec_key: str, provider: str,
++                                     provider_account: str, now: float | None = None) -> dict:
++        """UNA transazione: verifica + CLAIM del diritto a dispacciare QUESTO tentativo.
++
++        PERCHE' ESISTE. Fino al Core `605a8d74` il diritto al dispatch era un oggetto
++        Python coniato da una lettura: la lettura era corretta, ma non consumava nulla.
++        Finche' la riga restava `RESERVED`, due letture successive producevano due
++        autorizzazioni distinte, entrambe valide — la prima chiusa, la seconda ancora
++        aperta. Chiuso il replay dello stesso oggetto, restava la riemissione dello
++        stesso tentativo: due chiavi originali per la stessa camera.
++
++        LA PROPRIETA' IMPOSTA QUI:
++
++            ONE_ATTEMPT = AT_MOST_ONE_DISPATCH_AUTHORIZATION
++
++        e non e' una convenzione del chiamante: e' una PRIMARY KEY su `job_id` in una
++        transazione `BEGIN IMMEDIATE`. Vale fra chiamate sequenziali, fra thread e fra
++        PROCESSI, perche' l'autorita' e' il file del journal, non la memoria di un
++        interprete.
++
++        COSA VERIFICA, tutto dentro la stessa transazione:
++          - stato `RESERVED` senza identita' remota (siamo davvero pre-submit);
++          - spec, operazione, `attempt_token`, `payload_digest`, provider e conto
++            coincidenti con la riga persistita;
++          - `quote_id` presente, quote CONSUMATA DA QUESTO job, legata alla stessa
++            operazione, alla stessa spec, a un envelope;
++          - un movimento di ledger `RESERVE` per questo job;
++          - che NESSUN claim esista gia'.
++
++        SEMANTICA DI CRASH, dichiarata:
++          A. arresto PRIMA del COMMIT -> nessun claim, nessuna autorizzazione. Un
++             tentativo successivo puo' riprovare: non e' un blind retry, e' il primo.
++          B. arresto DOPO il COMMIT e PRIMA del submit -> il claim resta. Una seconda
++             richiesta e' `DISPATCH_AUTHORIZATION_ALREADY_CLAIMED`, NON un nuovo
++             dispatch: il tentativo entra nel percorso di recovery gia' governato
++             (`recover_orphaned_submits` -> SUBMIT_UNKNOWN -> riconciliazione).
++          C. invio incerto -> `SUBMIT_UNKNOWN`, zero blind retry, invariato.
++        Il claim NON e' rilasciabile: se lo fosse, sarebbe la scorciatoia di retry che
++        tutto il resto di questo modulo esiste per non avere.
++        """
++        now = time.time() if now is None else now
++
++        def refuse(code: str, msg: str):
++            raise SpendAuthorizationInvalid(code, f"claim_dispatch_authorization: {msg}")
++
++        with self._conn() as c:
++            c.execute("BEGIN IMMEDIATE")
++            try:
++                r = c.execute("SELECT state,provider_job_id,spec_key,operation_id,attempt_token,"
++                              "payload_digest,provider,provider_account,quote_id,envelope_id "
++                              "FROM reservations WHERE job_id=?", (job_id,)).fetchone()
++                if r is None:
++                    refuse("DISPATCH_JOB_UNKNOWN", f"job {job_id} sconosciuto allo store autorevole")
++                (state, remote, row_spec, operation_id, row_token, row_digest,
++                 row_provider, row_account, quote_id, envelope_id) = r
++                if state != JobState.RESERVED.value or remote:
++                    refuse("DISPATCH_NOT_PRE_SUBMIT",
++                           f"job {job_id} in stato {state} (provider_job_id={remote!r}): "
++                           f"non e' un pre-submit")
++                if row_spec != spec_key:
++                    refuse("DISPATCH_SPEC_MISMATCH", f"job {job_id} appartiene a un'altra spec")
++                if not operation_id:
++                    refuse("DISPATCH_OPERATION_REQUIRED",
++                           f"job {job_id} non ha operation_id: nessuna identita' di operazione")
++                if not row_token or row_token != attempt_token:
++                    refuse("DISPATCH_ATTEMPT_TOKEN_MISMATCH",
++                           f"job {job_id}: attempt_token persistito {row_token!r} != {attempt_token!r}")
++                if not row_digest or row_digest != payload_digest:
++                    refuse("DISPATCH_PAYLOAD_DIGEST_MISMATCH",
++                           f"job {job_id}: digest persistito {str(row_digest)[:16]}… != "
++                           f"{str(payload_digest)[:16]}…")
++                if row_provider != provider or (row_account or "") != (provider_account or ""):
++                    refuse("DISPATCH_OWNERSHIP_MISMATCH",
++                           f"job {job_id} appartiene a {row_provider!r}/{row_account!r}, "
++                           f"adapter {provider!r}/{provider_account!r}")
++                if not quote_id:
++                    refuse("DISPATCH_QUOTE_REQUIRED",
++                           f"job {job_id} non e' legato a una quote fidata: il client non "
++                           f"sceglie il prezzo")
++                q = c.execute(f"SELECT {','.join(_QCOLS)} FROM quotes WHERE quote_id=?",
++                              (quote_id,)).fetchone()
++                if q is None:
++                    refuse("DISPATCH_QUOTE_UNKNOWN", f"quote {quote_id} sconosciuta")
++                quote = dict(zip(_QCOLS, q))
++                if quote.get("consumed_by") != job_id:
++                    refuse("DISPATCH_QUOTE_NOT_CONSUMED_BY_JOB",
++                           f"quote {quote_id} consumata da {quote.get('consumed_by')!r}, non da "
++                           f"{job_id!r}: l'importo non e' stato impegnato da questo tentativo")
++                if quote.get("operation_id") != operation_id:
++                    refuse("DISPATCH_QUOTE_OPERATION_MISMATCH",
++                           f"quote {quote_id} appartiene all'operazione {quote.get('operation_id')!r}")
++                if quote.get("spec_key") != spec_key:
++                    refuse("DISPATCH_QUOTE_SPEC_MISMATCH", f"quote {quote_id} appartiene a un'altra spec")
++                env = quote.get("envelope_id") or envelope_id
++                if not env:
++                    refuse("DISPATCH_ENVELOPE_REQUIRED", f"quote {quote_id} senza envelope")
++                n = c.execute("SELECT COUNT(*) FROM ledger WHERE job_id=? AND kind='RESERVE'",
++                              (job_id,)).fetchone()[0]
++                if not n:
++                    refuse("DISPATCH_LEDGER_RESERVE_MISSING",
++                           f"nessun movimento RESERVE nel ledger per {job_id}: l'envelope non "
++                           f"e' impegnato")
++                prev = c.execute("SELECT attempt_token,claimed_at FROM dispatch_claims "
++                                 "WHERE job_id=?", (job_id,)).fetchone()
++                if prev is not None:
++                    self._insert_anomaly(c, job_id, "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED",
++                                         {"attempt_token": attempt_token,
++                                          "claimed_attempt_token": prev[0],
++                                          "claimed_at": prev[1]}, now)
++                    c.execute("COMMIT")
++                    raise SpendAuthorizationInvalid(
++                        "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED",
++                        f"claim_dispatch_authorization: il diritto a dispacciare il tentativo "
++                        f"{job_id} e' gia' stato emesso (attempt {str(prev[0])[:16]}…). Un "
++                        f"tentativo autorizza UN dispatch: un nuovo invio richiede un nuovo "
++                        f"tentativo, non una seconda lettura dello stesso.")
++                c.execute("INSERT INTO dispatch_claims(job_id,attempt_token,payload_digest,"
++                          "spec_key,operation_id,provider,provider_account,envelope_id,quote_id,"
++                          "quote_amount,quote_unit,claimed_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
++                          (job_id, attempt_token, payload_digest, spec_key, operation_id,
++                           provider, provider_account or "", env, quote_id,
++                           int(quote["amount"]), str(quote["unit"]), now))
++                c.execute("COMMIT")
++            except sqlite3.IntegrityError as exc:
++                # Corsa persa contro un altro thread/processo fra il SELECT e l'INSERT:
++                # il vincolo del database ha l'ultima parola, ed e' la risposta giusta.
++                c.execute("ROLLBACK")
++                raise SpendAuthorizationInvalid(
++                    "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED",
++                    f"claim_dispatch_authorization: claim concorrente per {job_id} ({exc})") from exc
++            except Exception:
++                try:
++                    c.execute("ROLLBACK")
++                except sqlite3.OperationalError:
++                    pass
++                raise
++        return {"job_id": job_id, "attempt_token": attempt_token, "spec_key": spec_key,
++                "operation_id": operation_id, "payload_digest": payload_digest,
++                "provider": provider, "provider_account": provider_account or "",
++                "envelope_id": env, "quote_id": quote_id,
++                "quote_amount": int(quote["amount"]), "quote_unit": str(quote["unit"]),
++                "claimed_at": now}
++
++    def dispatch_claim(self, job_id: str) -> dict | None:
++        """Lettura del claim, per audit ed evidenza. Non emette nulla."""
++        cols = ("job_id", "attempt_token", "payload_digest", "spec_key", "operation_id",
++                "provider", "provider_account", "envelope_id", "quote_id", "quote_amount",
++                "quote_unit", "claimed_at")
++        with self._conn() as c:
++            r = c.execute(f"SELECT {','.join(cols)} FROM dispatch_claims WHERE job_id=?",
++                          (job_id,)).fetchone()
++        return dict(zip(cols, r)) if r else None
++
+     # -------------------------------------------- contratto atomico
+     def reserve_or_get_live(self, spec: GenSpec, *, budget_units: int = 0,
+                             envelope_units: int | None = None,
+@@ -804,6 +999,19 @@ class SqliteReservationStore:
                                      sort_keys=True, ensure_ascii=False, default=str)))],
              error=reason)
  
@@ -558,7 +713,7 @@ index a3baf66..986fd7e 100644
      def reconcile(self, job: Job, state: JobState, evidence: Mapping, *,
                    now: float | None = None) -> Job:
          """Percorso ESPLICITO di riconciliazione (CR-05): porta RESERVED o
-@@ -812,6 +846,7 @@ class SqliteReservationStore:
+@@ -812,6 +1020,7 @@ class SqliteReservationStore:
          transazione come anomalia 'RECONCILIATION': verificabile a posteriori.
          Un `put` ordinario non puo' fare queste transizioni."""
          ev = validate_reconciliation_evidence(evidence)
@@ -568,10 +723,10 @@ index a3baf66..986fd7e 100644
          frm = current.state.value if current else None
 diff --git a/tests/run_spender_boundary.py b/tests/run_spender_boundary.py
 new file mode 100644
-index 0000000..267decb
+index 0000000..1d4fbef
 --- /dev/null
 +++ b/tests/run_spender_boundary.py
-@@ -0,0 +1,591 @@
+@@ -0,0 +1,762 @@
 +#!/usr/bin/env python3
 +"""LEGACY SPEND PATH CLOSURE — CONFINE DELLO SPENDER (2026-09-18).
 +
@@ -621,12 +776,30 @@ index 0000000..267decb
 +     lo STORE e rilegge il journal per conto proprio;
 +  O  un'autorizzazione LEGITTIMA non e' riusabile: fuori dal suo `with` e' consumata.
 +
++HUMAN REVIEW 02 — SAME_ATTEMPT_AUTHORIZATION_REISSUABLE (2026-09-18). Il caso O
++dimostrava che lo STESSO OGGETTO non si riusa. Non dimostrava che lo STESSO TENTATIVO
++non possa coniare due oggetti distinti: finche' la riga restava `RESERVED`, due
++chiamate a `grant_dispatch` producevano due autorizzazioni, entrambe valide. Chiusa la
++fotocopia della chiave, restava la seconda chiave originale per la stessa camera.
++
++  P  due claim SEQUENZIALI dello stesso attempt: il primo dispaccia, il secondo e'
++     `DISPATCH_AUTHORIZATION_ALREADY_CLAIMED`. Sentinella al massimo 1;
++  Q  due THREAD concorrenti sullo stesso attempt: esattamente uno ottiene
++     l'autorizzazione, al massimo un dispatch;
++  R  due PROCESSI concorrenti sullo stesso file di journal: esattamente uno. E' il
++     caso che conta davvero, perche' un registro in memoria non lo supererebbe.
++
++Le due proprieta' sono distinte ed entrambe necessarie:
++  1. un'autorizzazione e' ONE-USE (caso O);
++  2. un attempt e' ONE-AUTHORIZATION (casi P/Q/R).
++
 +Nessuna rete, nessun provider reale, nessun credito.
 +"""
 +from __future__ import annotations
 +
 +import hashlib
 +import os
++import multiprocessing
 +import shutil
 +import sys
 +import tempfile
@@ -644,6 +817,7 @@ index 0000000..267decb
 +
 +GREEN, RED, DIM, RESET = "\033[32m", "\033[31m", "\033[2m", "\033[0m"
 +RESULTS: list[tuple[str, bool, str]] = []
++CTX = multiprocessing.get_context("spawn")
 +
 +
 +# --------------------------------------------------------------- sentinella
@@ -698,6 +872,36 @@ index 0000000..267decb
 +    qid = store.issue_quote(operation_id=op, spec_key=s.spec_key, envelope_id=env,
 +                            amount=amount, unit="synthetic_units")
 +    return {"operation_id": op, "envelope_id": env, "quote_id": qid, "budget_units": amount}
++
++
++def governed_attempt(db: str, *, op: str, prompt: str = "attempt", amount: int = 10,
++                     adapter=None, env: str | None = None) -> dict:
++    """Una prenotazione GOVERNATA REALE portata fino a `mark_submitting`.
++
++    Store reale, quote LAB reale, ledger `RESERVE` reale, stesso `job_id` e stesso
++    `attempt_token`: e' cio' che serve per provare la proprieta' di unicita' senza
++    fabbricare nulla."""
++    store = SqliteReservationStore(db)
++    a = adapter or SpenderSentinel()
++    s_ = spec(prompt)
++    e = env or "ENV_" + op.split(":", 1)[0]
++    store.open_envelope(e, 100, unit="synthetic_units", scope=None)
++    qid = store.issue_quote(operation_id=op, spec_key=s_.spec_key, envelope_id=e,
++                            amount=amount, unit="synthetic_units")
++    _, job = store.reserve_or_get_live(s_, budget_units=amount, now=1.0, operation_id=op,
++                                       quote_id=qid, envelope_id=e)
++    digest = hashlib.sha256(a.serialize(s_)).hexdigest()
++    token = f"att_{job.job_id[-8:]:>024s}".replace(" ", "0")
++    job = store.mark_submitting(job, provider=a.name, provider_account=a.account_id,
++                                payload_digest=digest, attempt_token=token, now=1.0)
++    return {"store": store, "adapter": a, "spec": s_, "job": job, "digest": digest,
++            "token": token, "quote_id": qid, "envelope_id": e}
++
++
++def open_grant(ctx: dict):
++    return grant_dispatch(ctx["adapter"], ctx["store"], ctx["job"].job_id,
++                          spec_key=ctx["spec"].spec_key, payload_digest=ctx["digest"],
++                          attempt_token=ctx["token"])
 +
 +
 +def must_raise(exc_types, fn, *, code=None):
@@ -870,36 +1074,25 @@ index 0000000..267decb
 +def h_grant_is_bounded(db: str) -> str:
 +    """La concessione e' limitata al `with`, alla spec e al digest — e la si apre solo
 +    passando lo STORE, mai un'autorizzazione (HUMAN REVIEW 01)."""
-+    store, a, s = SqliteReservationStore(db), SpenderSentinel(), spec("grant")
-+    g = governed(store, s, op="LSPC:h")
-+    _, job = store.reserve_or_get_live(s, budget_units=g["budget_units"], now=1.0,
-+                                       operation_id=g["operation_id"], quote_id=g["quote_id"],
-+                                       envelope_id=g["envelope_id"])
-+    digest = hashlib.sha256(a.serialize(s)).hexdigest()
-+    token = "att_" + "b" * 24
-+    job = store.mark_submitting(job, provider=a.name, provider_account=a.account_id,
-+                                payload_digest=digest, attempt_token=token, now=1.0)
-+
-+    def open_grant():
-+        return grant_dispatch(a, store, job.job_id, spec_key=s.spec_key,
-+                              payload_digest=digest, attempt_token=token)
-+
++    ctx = governed_attempt(db, op="LSPCH:h", prompt="grant")
++    a, s_ = ctx["adapter"], ctx["spec"]
 +    # fuori dal `with` non esiste concessione
-+    e1 = must_raise(SpendAuthorizationRequired, lambda: a.submit(s))
-+    # non e' rientrante
-+    with open_grant():
-+        e2 = must_raise(SpendAuthorizationInvalid, lambda: open_grant().__enter__(),
-+                        code="DISPATCH_GRANT_REENTRANT")
-+    # non copre un'altra spec ne' un altro digest
++    e1 = must_raise(SpendAuthorizationRequired, lambda: a.submit(s_))
 +    other = spec("grant_altra")
-+    with open_grant():
++    with open_grant(ctx) as auth:
++        # non e' rientrante: la STESSA autorizzazione, gia' attiva, non si riapre
++        e2 = must_raise(SpendAuthorizationInvalid,
++                        lambda: _base._DispatchGrant(a, auth).__enter__(),
++                        code="DISPATCH_GRANT_REENTRANT")
 +        e3 = must_raise(SpendAuthorizationInvalid, lambda: a.submit(other),
 +                        code="DISPATCH_SPEC_NOT_COVERED")
 +        e4 = must_raise(SpendAuthorizationInvalid, lambda: a.authorize_payload("0" * 64),
 +                        code="DISPATCH_DIGEST_NOT_COVERED")
++    # uscito il `with`, la concessione non c'e' piu'
++    e5 = must_raise(SpendAuthorizationRequired, lambda: a.submit(s_))
 +    assert a.reached == 0, a.reached
 +    return (f"fuori dal with -> {e1.code} · rientrante -> {e2.code} · altra spec -> {e3.code} · "
-+            f"altro digest -> {e4.code} · sentinella reached={a.reached}")
++            f"altro digest -> {e4.code} · dopo il with -> {e5.code} · sentinella reached={a.reached}")
 +
 +
 +# ------------------------------------------------------------------- I
@@ -926,19 +1119,26 @@ index 0000000..267decb
 +                                  payload_digest=digest, attempt_token="att_" + "0" * 24, now=1.0)
 +
 +    class NoQuoteAuthority:
-+        """Stesso journal, nessuna autorita' economica esposta."""
++        """Stesso journal, nessuna autorita' del claim esposta: non puo' garantire
++        che un tentativo autorizzi UN solo dispatch, quindi non autorizza nulla."""
 +        def get(self, job_id):
 +            return durable.get(job_id)
++
++        def quote(self, quote_id):
++            return durable.quote(quote_id)
++
++        def ledger(self, job_id=None):
++            return durable.ledger(job_id)
 +
 +    e2 = must_raise(SpendAuthorizationInvalid,
 +                    lambda: authorize_dispatch(NoQuoteAuthority(), job.job_id,
 +                                               adapter_name=a.name, adapter_account=a.account_id,
 +                                               spec_key=s.spec_key, payload_digest=digest,
 +                                               attempt_token="att_" + "0" * 24),
-+                    code="DISPATCH_QUOTE_AUTHORITY_MISSING")
++                    code="DISPATCH_CLAIM_AUTHORITY_MISSING")
 +    assert a.reached == 0 and a.transport.sent_count == 0
-+    return (f"store in memoria -> ReservationContractError ({str(e1)[:38]}…) · store senza "
-+            f"autorita' della quote -> {e2.code} · sentinella reached=0 · sent=0")
++    return (f"store in memoria -> ReservationContractError ({str(e1)[:38]}…) · store che non "
++            f"puo' garantire l'unicita' del claim -> {e2.code} · sentinella reached=0 · sent=0")
 +
 +
 +# ------------------------------------------------------------------- J
@@ -1121,6 +1321,128 @@ index 0000000..267decb
 +    return (f"dispatch governato: reached=1 · replay via grant -> {e1.code} · via slot: "
 +            f"submit -> {e2.code}, authorize_payload -> {e3.code} · sentinella resta {a.reached}")
 +
++
++# ------------------------------------------------------------------- P
++def p_same_attempt_two_sequential_claims(db: str) -> str:
++    """La sequenza esatta chiesta dalla Human Review 02: creare g1, USARLO, uscire,
++    NON chiamare `mark_submitted`, e provare a ottenere g2 per lo stesso attempt.
++
++    Niente oggetti falsi, niente store duck-typed: store reale, prenotazione governata
++    reale, quote LAB reale, ledger `RESERVE` reale, stesso `job_id`, stesso
++    `attempt_token`. Il bypass usava SOLO fatti autorevoli."""
++    ctx = governed_attempt(db, op="LSPCP:p", prompt="sequential")
++    a, s_, store, job = ctx["adapter"], ctx["spec"], ctx["store"], ctx["job"]
++    with open_grant(ctx):
++        a.authorize_payload(ctx["digest"])
++        first = a.submit(s_)
++    assert a.reached == 1, a.reached
++    persisted = store.get(job.job_id)
++    assert persisted.state is JobState.RESERVED, persisted.state   # NESSUN mark_submitted
++    claim = store.dispatch_claim(job.job_id)
++    assert claim and claim["attempt_token"] == ctx["token"]
++    e = must_raise(SpendAuthorizationInvalid, lambda: open_grant(ctx),
++                   code="DISPATCH_AUTHORIZATION_ALREADY_CLAIMED")
++    # e nemmeno due conii PRIMA di qualunque uso
++    ctx2 = governed_attempt(db + ".b", op="LSPCP:p2", prompt="sequential2")
++    g1 = open_grant(ctx2)
++    e2 = must_raise(SpendAuthorizationInvalid, lambda: open_grant(ctx2),
++                    code="DISPATCH_AUTHORIZATION_ALREADY_CLAIMED")
++    assert ctx2["adapter"].reached == 0
++    kinds = [x["kind"] for x in store.anomalies(job.job_id)]
++    assert "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED" in kinds, kinds
++    assert a.reached == 1, a.reached
++    return (f"g1 dispaccia ({first.provider_job_id}), riga ancora {persisted.state.value}, "
++            f"claim persistito · g2 -> {e.code} · due conii prima di ogni uso -> {e2.code} · "
++            f"rifiuto registrato in anomalies · sentinella reached={a.reached} (max 1)")
++
++
++# ------------------------------------------------------------------- Q
++def q_same_attempt_two_threads(db: str) -> str:
++    import threading
++    ctx = governed_attempt(db, op="LSPCQ:q", prompt="threads")
++    a = ctx["adapter"]
++    start = threading.Barrier(2)
++    out: list[dict] = []
++    lock = threading.Lock()
++
++    def worker():
++        start.wait(timeout=30)
++        try:
++            g = open_grant(ctx)
++            r = {"claimed": True}
++        except BaseException as e:                              # noqa: BLE001
++            r = {"claimed": False, "code": getattr(e, "code", type(e).__name__)}
++        with lock:
++            out.append(r)
++
++    ts = [threading.Thread(target=worker) for _ in range(2)]
++    for t in ts:
++        t.start()
++    for t in ts:
++        t.join(60)
++    claimed = [r for r in out if r["claimed"]]
++    refused = [r for r in out if not r["claimed"]]
++    assert len(out) == 2, out
++    assert len(claimed) == 1, out
++    assert refused[0]["code"] == "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED", refused
++    assert a.reached == 0
++    return (f"2 thread sullo stesso attempt -> 1 claim, 1 {refused[0]['code']} · "
++            f"sentinella reached={a.reached}")
++
++
++# ------------------------------------------------------------------- R
++def claim_in_process(db: str, job_id: str, spec_key: str, payload_digest: str,
++                     attempt_token: str, provider: str, account: str, barrier=None) -> dict:
++    """Eseguita in un PROCESSO REALE: apre il proprio store sullo stesso file e prova
++    il claim. Nessuna memoria condivisa: l'unica autorita' e' il journal."""
++    store = SqliteReservationStore(db)
++    if barrier is not None:
++        barrier.wait(timeout=30)
++    try:
++        store.claim_dispatch_authorization(
++            job_id, attempt_token=attempt_token, payload_digest=payload_digest,
++            spec_key=spec_key, provider=provider, provider_account=account)
++        return {"pid": os.getpid(), "claimed": True}
++    except BaseException as e:                                  # noqa: BLE001
++        return {"pid": os.getpid(), "claimed": False,
++                "code": getattr(e, "code", type(e).__name__)}
++
++
++def _proc_entry(q, fn, args, kwargs):
++    try:
++        q.put(fn(*args, **kwargs))
++    except BaseException as e:                                  # noqa: BLE001
++        q.put({"claimed": False, "code": f"WORKER_{type(e).__name__}"})
++
++
++def r_same_attempt_two_processes(db: str) -> str:
++    """Il caso che un registro Python in memoria NON supererebbe."""
++    ctx = governed_attempt(db, op="LSPCR:r", prompt="processes")
++    job, s_ = ctx["job"], ctx["spec"]
++    a = ctx["adapter"]
++    args = (db, job.job_id, s_.spec_key, ctx["digest"], ctx["token"], a.name, a.account_id)
++    barrier = CTX.Barrier(2)
++    q = CTX.Queue()
++    ps = [CTX.Process(target=_proc_entry, args=(q, claim_in_process, args, {"barrier": barrier}))
++          for _ in range(2)]
++    for p_ in ps:
++        p_.start()
++    outs = [q.get(timeout=120) for _ in ps]
++    for p_ in ps:
++        p_.join(30)
++    pids = {o.get("pid") for o in outs if o.get("pid")}
++    claimed = [o for o in outs if o.get("claimed")]
++    refused = [o for o in outs if not o.get("claimed")]
++    if len(pids) < 2:
++        raise AssertionError(f"BLOCKED_ENVIRONMENT: due processi distinti non osservati ({outs})")
++    assert len(claimed) == 1, outs
++    assert refused[0]["code"] == "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED", outs
++    claim = ctx["store"].dispatch_claim(job.job_id)
++    assert claim and claim["attempt_token"] == ctx["token"]
++    assert a.reached == 0
++    return (f"2 processi reali (pid {sorted(pids)}) sullo stesso file di journal -> 1 claim, "
++            f"1 {refused[0]['code']} · un solo claim persistito · sentinella reached={a.reached}")
++
 +def check(name, fn):
 +    try:
 +        RESULTS.append((name, True, fn() or ""))
@@ -1147,7 +1469,11 @@ index 0000000..267decb
 +                ("l", "L. autorizzazione FABBRICATA rifiutata (HUMAN REVIEW 01)", l_forged_authorization),
 +                ("m", "M. hook di implementazione invocati direttamente", m_direct_implementation_hooks),
 +                ("n", "N. grant_dispatch pretende lo store, non una capability", n_grant_requires_the_store),
-+                ("o", "O. autorizzazione legittima non riusabile", o_legitimate_authorization_not_replayable)):
++                ("o", "O. autorizzazione legittima non riusabile", o_legitimate_authorization_not_replayable),
++                ("p", "P. stesso attempt, due claim sequenziali (HUMAN REVIEW 02)",
++                 p_same_attempt_two_sequential_claims),
++                ("q", "Q. stesso attempt, due thread concorrenti", q_same_attempt_two_threads),
++                ("r", "R. stesso attempt, due PROCESSI concorrenti", r_same_attempt_two_processes)):
 +            check(name, lambda fn=fn, key=key: fn(os.path.join(tmp, f"{key}.db")))
 +    finally:
 +        shutil.rmtree(tmp, ignore_errors=True)

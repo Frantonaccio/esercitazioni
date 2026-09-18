@@ -37,7 +37,7 @@ CORE = os.environ.get("CREATIVE_OS_CORE_PATH", "/home/user/creative-os")
 P2 = os.path.join(GATE01, "p2_handoff", "VF_RUNTIME_T16_HANDOFF_2026-09-16", "P2_RUNTIME",
                   "hf_batch.py")
 OUT_DIR = os.environ.get("LSPC1_PACKAGE_OUT", os.path.join(REPO, "..", "lspc1_package"))
-ZIP_NAME = "VF_LEGACY_SPEND_PATH_CLOSURE_EVIDENCE_V2_2026-09-18.zip"
+ZIP_NAME = "VF_LEGACY_SPEND_PATH_CLOSURE_EVIDENCE_V3_2026-09-18.zip"
 
 CANONICAL_CORE_BASE = "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
 CANONICAL_RUNTIME_BASE = "fea7b439a63a0100a732e21af4dfde6b8edd0951"
@@ -49,6 +49,12 @@ REVIEWED_CORE_SHA = "44f9ea29cea112dfb30c752e5519498e25044c19"
 REVIEWED_RUNTIME_CODE_SHA = "ad2f9c072b2a775637eb0b0da0aeca1cb82ca770"
 REVIEWED_RUNTIME_EVIDENCE_HEAD = "108af8a606d81ef1b09191fda062d684befd54ec"
 REVIEWED_ZIP_SHA256 = "c0f497c08e201b2f14679cb81c80ce820ee6a5fc8927964c231077ea35073d34"
+
+# Iterazione 2, sottoposta a Human Review e NON mergiata.
+REVIEWED_CORE_SHA_V2 = "605a8d746fdafbfc33456ec6f26fa942947a43b9"
+REVIEWED_RUNTIME_CODE_SHA_V2 = "434e0ea58d859b4e252c538676cb9725819c5d30"
+REVIEWED_RUNTIME_EVIDENCE_HEAD_V2 = "e8a02da53ae6e8c3fd269157327390bf9f80faa0"
+REVIEWED_ZIP_SHA256_V2 = "ec33fb57f29ddf1f7506f6956881b7e9dd1140260a407f2098d6327416477a0c"
 
 for p in (GATE01, GATE02, BUNDLE, REPO):
     if p not in sys.path:
@@ -95,7 +101,8 @@ def build_manifest(file_count: int) -> dict:
         "core_pin": {"required_core_sha": REQUIRED_CORE_SHA,
                      "points_to_core_candidate": REQUIRED_CORE_SHA == git("rev-parse", "HEAD",
                                                                           cwd=CORE),
-                     "previous_canonical_now_stale": CANONICAL_CORE_BASE},
+                     "previous_canonical_now_stale": CANONICAL_CORE_BASE,
+                     "reviewed_candidates_now_stale": [REVIEWED_CORE_SHA, REVIEWED_CORE_SHA_V2]},
         "p2_frozen": {"declared": P2_DECLARED, "observed": bp.sha256_file(P2),
                       "path": os.path.relpath(P2, REPO)},
 
@@ -132,6 +139,42 @@ def build_manifest(file_count: int) -> dict:
                                                 "NO DOUBLE SPEND OBSERVED"],
                 "fixed_here": False,
                 "next": "candidato del gate successivo, dopo il merge di questa fase"},
+        },
+        "human_review_02": {
+            "verdict_received": "HUMAN_REVIEW_HOLD — SAME_ATTEMPT_AUTHORIZATION_REISSUABLE",
+            "reviewed_iteration": {
+                "core_sha": REVIEWED_CORE_SHA_V2,
+                "runtime_code_sha": REVIEWED_RUNTIME_CODE_SHA_V2,
+                "runtime_evidence_head_sha": REVIEWED_RUNTIME_EVIDENCE_HEAD_V2,
+                "zip_sha256": REVIEWED_ZIP_SHA256_V2,
+                "merged": False},
+            "blocker": ("`authorize_dispatch` LEGGEVA il journal senza consumare nulla: "
+                        "finche' la riga restava RESERVED lo stesso (job_id, attempt_token) "
+                        "poteva coniare due DispatchAuthorization distinte, entrambe minted e "
+                        "non-spent, e dispacciare due volte. Il registro `_SPENT` era per "
+                        "identita' dell'oggetto, non per attempt."),
+            "reproduced_on_reviewed_candidate": True,
+            "reproduction_used_only_authoritative_facts": True,
+            "property_enforced": "ONE_ATTEMPT = AT_MOST_ONE_DISPATCH_AUTHORIZATION",
+            "evidence": ["evidence/E15_same_attempt_authorization_reissuable.json",
+                         "HUMAN_REVIEW_02_CORRECTIVE_DELTA.md", "THREAT_MODEL.md"],
+            "resolution": ("`claim_dispatch_authorization`: verifica E claim in UNA "
+                           "transazione BEGIN IMMEDIATE, `job_id` come PRIMARY KEY. Vale fra "
+                           "chiamate sequenziali, fra thread e fra PROCESSI, perche' il "
+                           "vincolo lo impone il database. `authorize_dispatch` delega "
+                           "interamente; uno store senza quella primitive e' "
+                           "DISPATCH_CLAIM_AUTHORITY_MISSING, fail-closed."),
+            "concurrency_verified": {"sequential": True, "threads": True,
+                                     "processes": True, "multiprocess_simulated": False},
+            "crash_semantics": {
+                "A_before_claim_commit": "nessun claim; un tentativo successivo e' il primo",
+                "B_after_claim_before_submit": "ALREADY_CLAIMED; recovery governato, non retry",
+                "C_uncertain_submit": "SUBMIT_UNKNOWN, zero blind retry, invariato",
+                "claim_is_not_releasable": True},
+            "two_properties": ["ONE_AUTHORIZATION_IS_ONE_USE",
+                               "ONE_ATTEMPT_IS_AT_MOST_ONE_AUTHORIZATION"],
+            "history_preserved": "nessun amend, nessun force-push: delta correttivi come "
+                                 "commit nuovi sugli stessi branch",
         },
         "file_count": file_count,
         "credential_scan": bp.scan_credentials(BUNDLE),
@@ -232,6 +275,7 @@ def step_package() -> int:
         "core_pin": manifest["core_pin"],
         "p2_frozen": manifest["p2_frozen"],
         "human_review_01": manifest["human_review_01"],
+        "human_review_02": manifest["human_review_02"],
         "phase_state": readiness["phase_state"],
         "test_suite_result": readiness["test_suite_result"],
         "requirement_readiness": readiness["requirement_readiness"],

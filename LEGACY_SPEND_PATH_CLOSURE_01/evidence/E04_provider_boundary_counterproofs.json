@@ -26,7 +26,7 @@
       "error": "LegacyPathNotProviderCapable",
       "message": "LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.",
       "ok": false,
-      "pid": 2245,
+      "pid": 775,
       "sentinel": {
         "authorized_calls": 0,
         "boundary": "SPEND_CAPABLE_ADAPTER",
@@ -56,7 +56,7 @@
       "error": "LegacyPathNotProviderCapable",
       "message": "LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.",
       "ok": false,
-      "pid": 2276,
+      "pid": 806,
       "sentinel": {
         "authorized_calls": 0,
         "boundary": "SPEND_CAPABLE_ADAPTER",
@@ -88,7 +88,7 @@
       "error": "LegacyPathNotProviderCapable",
       "message": "LEGACY_LAB_NOT_PROVIDER_CAPABLE: lspc1.spenders.sentinel_class.<locals>.Sentinel dichiara `spend_capable` e il percorso LEGACY_LAB (authorization=None) e' LAB_ONLY_NON_PROVIDER_CAPABLE. Uno spender passa ESCLUSIVAMENTE dal percorso governato (operazione + quote fidata + envelope + permit). Nessun pin letto, nessun Core importato, nessuno store aperto, nessuna reservation, nessun submit.",
       "ok": false,
-      "pid": 2248,
+      "pid": 778,
       "sentinel": {
         "authorized_calls": 0,
         "boundary": "SPEND_CAPABLE_ADAPTER",
@@ -121,7 +121,7 @@
       },
       "legacy_resume_as_start": true,
       "ok": true,
-      "pid": 2250,
+      "pid": 780,
       "sentinel": {
         "authorized_calls": null,
         "built": false,
@@ -162,22 +162,22 @@
         "ledger_dir": "/home/user/esercitazioni/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p3.db.snapshots",
         "opkey": "f1b985db98b28fc2c3de62e9",
         "persisted_mode": "0o444",
-        "sealed_at": 1789715875.2618778,
+        "sealed_at": 1789717482.3626854,
         "send_attestation": {
-          "attempt_token": "att_8b089ecf6c61cc1fb2f4a952",
+          "attempt_token": "att_a4eebb68a3f7fb819a28b3b6",
           "bytes": 192,
           "digest": "9a1b0ef7434192d874fffd0809e60fb94e5a989f5387130367e2021ea940ac3d",
           "exact_bytes_equal": true,
           "job_id": "res_16d317a9cab42b5f_1",
           "opkey": "f1b985db98b28fc2c3de62e9",
           "schema": "payload-snapshot-send-attestation/1",
-          "verified_at": 1789715875.2700362
+          "verified_at": 1789717482.3700697
         },
         "send_verified": true
       },
-      "permit_id": "permit_6e1d07ea5be665289072aff8",
-      "pid": 2256,
-      "quote_id": "quote_9e4291e88dc1089f830edd8b",
+      "permit_id": "permit_5e4096f37c1c62ba0663c43a",
+      "pid": 786,
+      "quote_id": "quote_c362e683995b2922bb3a28e7",
       "sentinel": {
         "authorized_calls": 1,
         "boundary": "SPEND_CAPABLE_ADAPTER",
@@ -186,12 +186,12 @@
           [
             "authorize_payload",
             "res_16d317a9cab42b5f_1",
-            "quote_9e4291e88dc1089f830edd8b"
+            "quote_c362e683995b2922bb3a28e7"
           ],
           [
             "submit",
             "res_16d317a9cab42b5f_1",
-            "quote_9e4291e88dc1089f830edd8b"
+            "quote_c362e683995b2922bb3a28e7"
           ]
         ],
         "reached": 1,
@@ -224,7 +224,7 @@
       "error": "SpendAuthorizationRequired",
       "message": "SPEND_AUTHORIZATION_REQUIRED: transport.pipeline.run_job richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): input governati mancanti: operation_id, quote_id, envelope_id. Nessun invio, nessuna spesa.",
       "ok": false,
-      "pid": 2262,
+      "pid": 792,
       "sentinel": {
         "authorized_calls": 0,
         "boundary": "SPEND_CAPABLE_ADAPTER",
@@ -259,7 +259,7 @@
       "error": "SpendAuthorizationRequired",
       "message": "SPEND_AUTHORIZATION_REQUIRED: transport.pipeline.run_job richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): input governati mancanti: operation_id, quote_id, envelope_id. Nessun invio, nessuna spesa.",
       "ok": false,
-      "pid": 2264,
+      "pid": 794,
       "sentinel": {
         "authorized_calls": 0,
         "boundary": "SPEND_CAPABLE_ADAPTER",
@@ -294,7 +294,7 @@
       "error": "SpendAuthorizationRequired",
       "message": "SPEND_AUTHORIZATION_REQUIRED: sentinel_class.<locals>.Sentinel.submit richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): nessuna concessione attiva in questo thread. Nessun invio, nessuna spesa.",
       "ok": false,
-      "pid": 2266,
+      "pid": 796,
       "sentinel": {
         "authorized_calls": 0,
         "boundary": "SPEND_CAPABLE_ADAPTER",
@@ -316,7 +316,7 @@
       "error": "SpendAuthorizationRequired",
       "message": "SPEND_AUTHORIZATION_REQUIRED: sentinel_class.<locals>.Sentinel.authorize_payload richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope): nessuna concessione attiva in questo thread. Nessun invio, nessuna spesa.",
       "ok": false,
-      "pid": 2268,
+      "pid": 798,
       "sentinel": {
         "authorized_calls": 0,
         "boundary": "SPEND_CAPABLE_ADAPTER",
@@ -336,7 +336,7 @@
       "core_imported_at_entry": false,
       "core_path": "/home/user/creative-os",
       "ok": true,
-      "pid": 2270,
+      "pid": 800,
       "reconcile": {
         "accepted": true,
         "state": "FAILED"
@@ -383,7 +383,7 @@
       "core_imported_at_entry": false,
       "core_path": "/home/user/creative-os",
       "ok": true,
-      "pid": 2272,
+      "pid": 802,
       "reconcile": {
         "accepted": false,
         "error": "ReconciliationEvidenceRequired",
@@ -460,7 +460,7 @@
       "error": "StoreCallMethodNotAllowed",
       "message": "'reconcile' non e' nella superficie dichiarata di store_call (lettura / autorita' / sonda del Core). Una transizione di stato si prova sul Core, non da un helper del Runtime.",
       "ok": false,
-      "pid": 2274,
+      "pid": 804,
       "sentinel": {
         "authorized_calls": null,
         "built": false,

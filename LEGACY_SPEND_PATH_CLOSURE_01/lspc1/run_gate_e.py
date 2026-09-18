@@ -42,6 +42,9 @@ BASELINE_CORE_SHA = "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
 # DISPATCH_AUTHORIZATION_FORGEABLE. E13 ci riproduce il difetto: riprodurlo sul Core
 # gia' corretto non riprodurrebbe nulla.
 REVIEWED_CORE_SHA = "44f9ea29cea112dfb30c752e5519498e25044c19"
+# Secondo candidate, quello su cui la Human Review 02 ha trovato
+# SAME_ATTEMPT_AUTHORIZATION_REISSUABLE. E15 ci riproduce il difetto.
+REVIEWED_CORE_SHA_V2 = "605a8d746fdafbfc33456ec6f26fa942947a43b9"
 BASELINE_RUNTIME_SHA = "fea7b439a63a0100a732e21af4dfde6b8edd0951"
 P2_SHA = "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
 P2_PATH = os.path.join(GATE01, "p2_handoff", "VF_RUNTIME_T16_HANDOFF_2026-09-16",
@@ -508,6 +511,9 @@ def e10():
         "reviewed_candidate_is_now_stale":
             REVIEWED_CORE_SHA in KNOWN_STALE_CORE_SHAS
             and verify_core_pin(REVIEWED_CORE_SHA).code == "STALE_CORE_PIN",
+        "reviewed_candidate_v2_is_now_stale":
+            REVIEWED_CORE_SHA_V2 in KNOWN_STALE_CORE_SHAS
+            and verify_core_pin(REVIEWED_CORE_SHA_V2).code == "STALE_CORE_PIN",
         "unknown_sha_is_mismatch": verify_core_pin("de" * 20).code == "CORE_PIN_MISMATCH",
         "dirty_tree_fails_closed":
             verify_core_pin(REQUIRED_CORE_SHA, dirty=(" M adapters/base.py",)).code
@@ -520,8 +526,8 @@ def e10():
         "p2": {"before": P2_BEFORE.get("sha256"), "after": p2_after, "declared": P2_SHA,
                "path": os.path.relpath(P2_PATH, REPO)}})
     failed = [k for k, v in checks.items() if not v]
-    return (f"pin {REQUIRED_CORE_SHA[:12]} == Core HEAD · {BASELINE_CORE_SHA[:12]} e "
-            f"{REVIEWED_CORE_SHA[:12]} ora STALE · "
+    return (f"pin {REQUIRED_CORE_SHA[:12]} == Core HEAD · {BASELINE_CORE_SHA[:12]}, "
+            f"{REVIEWED_CORE_SHA[:12]} e {REVIEWED_CORE_SHA_V2[:12]} ora STALE · "
             f"P2 before==after=={p2_after[:16]}… · falliti: {failed or 'nessuno'}"), ev, not failed
 
 
@@ -694,6 +700,87 @@ def e14():
             f"perimetro, dichiarate: {n_out} · falliti: {failed or 'nessuno'}"), ev, not failed
 
 
+# =========================================================== E15 same-attempt
+def e15(scratch: str):
+    """HUMAN REVIEW 02 — SAME_ATTEMPT_AUTHORIZATION_REISSUABLE.
+
+    Le stesse sonde contro due Core: `605a8d74`, dove lo stesso tentativo conia due
+    autorizzazioni e dispaccia due volte, e il correttivo, dove il diritto a
+    dispacciare e' un claim persistito. Nessun oggetto fabbricato, nessuno store
+    duck-typed: prenotazione governata reale, quote LAB reale, ledger RESERVE reale,
+    stesso `job_id`, stesso `attempt_token`. Il bypass usava solo fatti autorevoli."""
+    from lspc1 import runner
+    wt = os.path.join(scratch, "core_reviewed_v2")
+    subprocess.run(["git", "-C", CORE_PATH, "worktree", "add", "--detach", wt,
+                    REVIEWED_CORE_SHA_V2], check=True, capture_output=True)
+    try:
+        pre = runner.reissue_probes(wt)
+    finally:
+        subprocess.run(["git", "-C", CORE_PATH, "worktree", "remove", "--force", wt],
+                       capture_output=True)
+        subprocess.run(["git", "-C", CORE_PATH, "worktree", "prune"], capture_output=True)
+    post = runner.reissue_probes(CORE_PATH)
+
+    def att(run_, name):
+        return ((run_.get("P13") or {}).get("attempts") or {}).get(name) or {}
+
+    def reached(run_):
+        return ((run_.get("P13") or {}).get("sentinel") or {}).get("reached")
+
+    reproduced = {
+        "second_dispatch_on_same_attempt_succeeded":
+            att(pre, "dispatch_2_stesso_attempt").get("refused") is False,
+        "two_mints_before_any_use_succeeded":
+            att(pre, "due_conii_prima_di_ogni_uso").get("refused") is False,
+        "sentinel_reached_twice": reached(pre) == 2,
+        "row_still_reserved_no_mark_submitted":
+            (pre.get("P13") or {}).get("state_after_first") == "RESERVED"
+            and (pre.get("P13") or {}).get("mark_submitted_called") is False,
+        "no_persisted_claim_on_reviewed_candidate":
+            (pre.get("P13") or {}).get("dispatch_claim_persisted") is False,
+        "two_threads_both_claimed": (pre.get("P14") or {}).get("claimed") == 2,
+    }
+    p15 = post.get("P15") or {}
+    closed = {
+        "second_dispatch_refused":
+            att(post, "dispatch_2_stesso_attempt").get("code")
+            == "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED",
+        "two_mints_refused":
+            att(post, "due_conii_prima_di_ogni_uso").get("code")
+            == "DISPATCH_AUTHORIZATION_ALREADY_CLAIMED",
+        "sentinel_at_most_one": reached(post) == 1,
+        "claim_persisted_in_journal":
+            (post.get("P13") or {}).get("dispatch_claim_persisted") is True,
+        "row_still_reserved": (post.get("P13") or {}).get("state_after_first") == "RESERVED",
+        "two_threads_exactly_one":
+            (post.get("P14") or {}).get("claimed") == 1
+            and (post.get("P14") or {}).get("refused") == ["DISPATCH_AUTHORIZATION_ALREADY_CLAIMED"],
+        "two_processes_exactly_one":
+            p15.get("claimed") == 1
+            and p15.get("refused") == ["DISPATCH_AUTHORIZATION_ALREADY_CLAIMED"],
+        "two_processes_really_distinct": p15.get("distinct_processes") == 2,
+        "multiprocess_not_simulated": p15.get("blocked_environment") is False,
+    }
+    ev = evidence("E15", "same_attempt_authorization_reissuable", {
+        "reviewed_core_sha": REVIEWED_CORE_SHA_V2,
+        "corrective_core_sha": git("rev-parse", "HEAD", cwd=CORE_PATH),
+        "property": "ONE_ATTEMPT = AT_MOST_ONE_DISPATCH_AUTHORIZATION",
+        "blocker_reproduced": reproduced, "blocker_closed": closed,
+        "probes_pre_fix": pre, "probes_post_fix": post,
+        "crash_semantics": {
+            "A_before_claim_commit": "nessun claim: un tentativo successivo e' il primo",
+            "B_after_claim_before_submit": "ALREADY_CLAIMED; recovery governato, non retry",
+            "C_uncertain_submit": "SUBMIT_UNKNOWN, zero blind retry, invariato"},
+        "note": ("Su `605a8d74` P15 riferisce NO_CLAIM_PRIMITIVE_ON_THIS_CORE: la primitive "
+                 "non esiste, ed e' il difetto. La riproduzione che conta e' P13/P14.")})
+    failed = [k for k, v in {**{f"repro:{k}": v for k, v in reproduced.items()},
+                             **{f"closed:{k}": v for k, v in closed.items()}}.items() if not v]
+    return (f"su {REVIEWED_CORE_SHA_V2[:12]}: sentinella {reached(pre)} con lo STESSO attempt "
+            f"(2 thread, 2 claim) — BLOCKER_REPRODUCED · sul correttivo: sentinella "
+            f"{reached(post)}, claim persistito, 1 su 2 thread e 1 su 2 PROCESSI "
+            f"(pid {p15.get('pids')}) · falliti: {failed or 'nessuno'}"), ev, not failed
+
+
 # =========================================================================
 def main() -> int:
     os.makedirs(EVIDENCE_DIR, exist_ok=True)
@@ -731,6 +818,9 @@ def main() -> int:
         record("E13", "HUMAN REVIEW 01: autorizzazione fabbricata e hook diretti",
                "difetto riprodotto su 44f9ea29, chiuso sul correttivo, sentinella 0",
                lambda: e13(scratch))
+        record("E15", "HUMAN REVIEW 02: stesso attempt, due autorizzazioni",
+               "difetto riprodotto su 605a8d74, chiuso dal claim nel journal; 1 claim fra "
+               "chiamate, thread e processi", lambda: e15(scratch))
         record("E14", "threat model del confine dello spender",
                "cosa protegge il Core, cosa protegge P-B01, cosa nessuno dei due pretende", e14)
         record("E12", "reporting: esito della suite vs readiness del requisito",

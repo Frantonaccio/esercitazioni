@@ -71,8 +71,14 @@ riprendersi `submit` non esiste: `TypeError`).
 > `grant_dispatch(adapter, auth)` accettava l'oggetto senza rileggere nulla. Il
 > controesempio della review raggiungeva la sentinella. Riprodotto in `E13`, corretto
 > in `605a8d74`. Dettaglio in `HUMAN_REVIEW_01_CORRECTIVE_DELTA.md`.
+>
+> **HUMAN REVIEW 02.** E anche dopo, era vera solo a meta': la rilettura era corretta
+> ma non consumava nulla, quindi lo STESSO tentativo poteva coniare due autorizzazioni
+> distinte e dispacciare due volte. Riprodotto in `E15` con soli fatti autorevoli,
+> corretto in `59304455` da un CLAIM persistito nel journal. Dettaglio in
+> `HUMAN_REVIEW_02_CORRECTIVE_DELTA.md`.
 
-Tre meccanismi, deliberatamente ridondanti:
+Quattro meccanismi, deliberatamente ridondanti:
 
 1. **`grant_dispatch` rilegge il journal.** Non riceve un'autorizzazione: riceve lo
    STORE AUTOREVOLE e l'identita' del tentativo, e chiama `authorize_dispatch` da se'.
@@ -86,6 +92,15 @@ Tre meccanismi, deliberatamente ridondanti:
    primi due costruendo l'oggetto con `object.__new__` e infilandolo nello slot si
    ferma qui. E un'autorizzazione LEGITTIMA vale per un solo tentativo: fuori dal suo
    `with` e' `DISPATCH_AUTHORIZATION_SPENT` (`run_spender_boundary:O`).
+4. **CLAIM persistito nel journal** (`claim_dispatch_authorization`, `job_id` come
+   PRIMARY KEY): un tentativo autorizza AL MASSIMO UN dispatch. Non e' un registro in
+   memoria — deve sopravvivere a due processi, e lo fa perche' il vincolo lo impone il
+   database (`run_spender_boundary:P/Q/R`).
+
+Le proprieta' imposte sono DUE e distinte: *un'autorizzazione e' one-use* (3) e *un
+attempt e' one-authorization* (4). La prima senza la seconda lascia chiedere due chiavi
+originali per la stessa camera; la seconda senza la prima lascia riusare la stessa
+chiave.
 
 `DispatchAuthorization` **non e' un token che il chiamante costruisce**: e' un fatto
 riletto dal journal autorevole. Per ottenerla servono, nella riga persistita:

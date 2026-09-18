@@ -51,3 +51,7 @@ def budget_paths(core_path: str, gate01: str | None = None) -> dict:
 
 def forge_probes(core_path: str, gate01: str | None = None) -> dict:
     return _run(core_path, "forge", gate01)
+
+
+def reissue_probes(core_path: str, gate01: str | None = None) -> dict:
+    return _run(core_path, "reissue", gate01)

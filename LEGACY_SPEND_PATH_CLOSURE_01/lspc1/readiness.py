@@ -20,8 +20,10 @@ CLOSES = {
     # E13 e' entrato con la Human Review 01: senza la controprova dell'autorizzazione
     # fabbricata, `CORE_PRIMITIVES` non si puo' dichiarare chiuso — era esattamente il
     # blocker. E14 (threat model) e' il suo complemento: dire cosa il confine NON
-    # protegge fa parte del chiuderlo.
-    "LEGACY_SPEND_PATHS_CORE_PRIMITIVES": ("E02", "E03", "E04", "E06", "E13", "E14"),
+    # protegge fa parte del chiuderlo. E15 e' entrato con la Human Review 02: un
+    # attempt che conia due autorizzazioni e' un secondo dispatch, e nessuna delle
+    # controprove precedenti lo copriva.
+    "LEGACY_SPEND_PATHS_CORE_PRIMITIVES": ("E02", "E03", "E04", "E06", "E13", "E14", "E15"),
     "LEGACY_TESTS_MIGRATION_TO_GOVERNED": ("E05", "E07", "E08"),
 }
 

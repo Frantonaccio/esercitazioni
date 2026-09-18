@@ -1,8 +1,8 @@
 diff --git a/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py b/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py
-index e18a2b4..30aaa65 100644
+index e18a2b4..748aa81 100644
 --- a/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py
 +++ b/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py
-@@ -30,23 +30,42 @@ from dataclasses import dataclass
+@@ -30,23 +30,52 @@ from dataclasses import dataclass
  
  # Core richiesto da questo runtime.
  #
@@ -24,13 +24,19 @@ index e18a2b4..30aaa65 100644
 +# chiamante poteva costruire; quello di `605a8d74` pretende che la concessione nasca
 +# da una rilettura del journal. Un runtime che dichiara "lo spender e' raggiungibile
 +# solo dal percorso governato" non puo' pinnare il Core in cui quella frase era falsa.
++#
++# HUMAN REVIEW 02 (SAME_ATTEMPT_AUTHORIZATION_REISSUABLE): e si sposta di nuovo. In
++# `605a8d74` la rilettura era corretta ma non consumava nulla: lo stesso tentativo
++# poteva coniare due autorizzazioni distinte, e due dispatch. In `59304455` il diritto
++# a dispacciare e' un CLAIM persistito nel journal, con `job_id` PRIMARY KEY: un
++# attempt autorizza UN dispatch, fra chiamate, fra thread e fra processi.
  # Core candidate: Frantonaccio/creative-os, branch
 -# harden/provider-boundary-core-atomicity-2026-09-17, figlio diretto della baseline
 -# 740ee979300fe20a9382992528604dee70cb2fcf.
 -REQUIRED_CORE_SHA = "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
 +# harden/legacy-spend-core-2026-09-18, discendente della baseline canonica
 +# 9cf9cee1a751f7a2ad6c768574ff5aa38d8db515.
-+REQUIRED_CORE_SHA = "605a8d746fdafbfc33456ec6f26fa942947a43b9"
++REQUIRED_CORE_SHA = "593044556e0097172526883dc0a8887f0369b109"
  
  # Pin storici noti: un Core a questo SHA NON e' un Core sconosciuto, e' un Core
  # VECCHIO. Va rifiutato con un esito che lo dica.
@@ -50,6 +56,10 @@ index e18a2b4..30aaa65 100644
 +    # spender, ma l'autorizzazione che lo apre era costruibile dal chiamante
 +    # (DISPATCH_AUTHORIZATION_FORGEABLE). E' un Core superato, non sconosciuto.
 +    "44f9ea29cea112dfb30c752e5519498e25044c19",
++    # Secondo candidate. L'autorizzazione non era piu' falsificabile, ma lo STESSO
++    # tentativo poteva coniarne due distinte finche' la riga restava RESERVED
++    # (SAME_ATTEMPT_AUTHORIZATION_REISSUABLE). Anche questo e' un Core superato.
++    "605a8d746fdafbfc33456ec6f26fa942947a43b9",
  })
  
  
@@ -196,6 +206,26 @@ index 4f67e28..a818b34 100644
      state = legacy_spend_path_state()
      if state != "ENABLED_LAB_ONLY":
          raise LegacySpendPathDisabled(state)
+diff --git a/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p13.db b/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p13.db
+new file mode 100644
+index 0000000..82dfc9f
+Binary files /dev/null and b/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p13.db differ
+diff --git a/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p13.db.b b/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p13.db.b
+new file mode 100644
+index 0000000..1fcccc3
+Binary files /dev/null and b/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p13.db.b differ
+diff --git a/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p13b.db b/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p13b.db
+new file mode 100644
+index 0000000..0c38656
+Binary files /dev/null and b/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p13b.db differ
+diff --git a/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p14.db b/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p14.db
+new file mode 100644
+index 0000000..65bdf19
+Binary files /dev/null and b/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p14.db differ
+diff --git a/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p15.db b/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p15.db
+new file mode 100644
+index 0000000..0947b85
+Binary files /dev/null and b/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p15.db differ
 diff --git a/RUNTIME_INTEGRATION_GATE_01/tests/worker.py b/RUNTIME_INTEGRATION_GATE_01/tests/worker.py
 index 8702dcb..a4cb5e4 100644
 --- a/RUNTIME_INTEGRATION_GATE_01/tests/worker.py

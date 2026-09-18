@@ -1,15 +1,16 @@
 {
   "closure_harness": {
     "call_totals": {
-      "authorize_payload": 6,
+      "authorize_payload": 8,
       "go": 10,
-      "grant_dispatch": 2,
-      "issue_quote": 3,
-      "open_envelope": 2,
+      "grant_dispatch": 6,
+      "issue_quote": 4,
+      "mark_submitting": 1,
+      "open_envelope": 3,
       "reconcile": 1,
-      "reserve_or_get_live": 2,
+      "reserve_or_get_live": 3,
       "run_job": 2,
-      "submit": 6
+      "submit": 8
     },
     "files_with_spend_surface": 7,
     "per_file": {
@@ -116,6 +117,12 @@
       "lspc1/workers.py": {
         "budget_kwargs": [
           {
+            "call": "reserve_or_get_live",
+            "in": "_governed_attempt",
+            "kwarg": "budget_units",
+            "line": 969
+          },
+          {
             "call": "update",
             "in": "p3_governed_with_spender",
             "kwarg": "budget_units",
@@ -170,6 +177,30 @@
             "in": "_authority_quote",
             "line": 143,
             "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "open_envelope",
+            "in": "_governed_attempt",
+            "line": 966,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "_governed_attempt",
+            "line": 967,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "_governed_attempt",
+            "line": 969,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "mark_submitting",
+            "in": "_governed_attempt",
+            "line": 973,
+            "role": "persistenza dell'intento di submit"
           },
           {
             "call": "go",
@@ -268,6 +299,24 @@
             "role": "verbo `go` del runtime"
           },
           {
+            "call": "grant_dispatch",
+            "in": "mint",
+            "line": 992,
+            "role": "CONFINE: concessione del dispatch"
+          },
+          {
+            "call": "grant_dispatch",
+            "in": "two_mints",
+            "line": 1015,
+            "role": "CONFINE: concessione del dispatch"
+          },
+          {
+            "call": "grant_dispatch",
+            "in": "two_mints",
+            "line": 1017,
+            "role": "CONFINE: concessione del dispatch"
+          },
+          {
             "call": "authorize_payload",
             "in": "authorize_payload",
             "line": 509,
@@ -316,6 +365,24 @@
             "role": "CONFINE: concessione del dispatch"
           },
           {
+            "call": "authorize_payload",
+            "in": "first_dispatch",
+            "line": 998,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "authorize_payload",
+            "in": "second_dispatch",
+            "line": 1006,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "grant_dispatch",
+            "in": "worker",
+            "line": 1070,
+            "role": "CONFINE: concessione del dispatch"
+          },
+          {
             "call": "submit",
             "in": "build_and_dispatch",
             "line": 858,
@@ -325,6 +392,18 @@
             "call": "submit",
             "in": "slot_injection",
             "line": 882,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "submit",
+            "in": "first_dispatch",
+            "line": 999,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "submit",
+            "in": "second_dispatch",
+            "line": 1007,
             "role": "SPENDER: invio al provider"
           }
         ],
@@ -336,23 +415,23 @@
   "core": {
     "call_totals": {
       "authorize_dispatch": 4,
-      "authorize_payload": 7,
+      "authorize_payload": 8,
       "expire": 3,
       "grant_dispatch": 3,
       "issue_permit": 7,
-      "issue_quote": 13,
+      "issue_quote": 14,
       "mark_refused_before_send": 2,
       "mark_refused_pre_submit": 15,
       "mark_submitted": 3,
       "mark_submitting": 6,
-      "open_envelope": 20,
+      "open_envelope": 21,
       "reconcile": 15,
       "recover_orphaned_submits": 2,
       "reserve_or_get_live": 62,
       "resume_job": 8,
       "run_job": 84,
       "settle": 14,
-      "submit": 10
+      "submit": 12
     },
     "files_with_spend_surface": 10,
     "per_file": {
@@ -362,7 +441,7 @@
           {
             "call": "authorize_dispatch",
             "in": "grant_dispatch",
-            "line": 964,
+            "line": 927,
             "role": "CONFINE: autorizzazione riletta dal journal"
           }
         ],
@@ -374,7 +453,7 @@
             "call": "check_quote_binding",
             "in": "reserve_or_get_live",
             "kwarg": "budget_units",
-            "line": 567
+            "line": 741
           }
         ],
         "calls": [],
@@ -2182,293 +2261,323 @@
       "tests/run_spender_boundary.py": {
         "budget_kwargs": [
           {
+            "call": "reserve_or_get_live",
+            "in": "governed_attempt",
+            "kwarg": "budget_units",
+            "line": 162
+          },
+          {
             "call": "run_job",
             "in": "f_governed_dispatch",
             "kwarg": "budget_units",
-            "line": 224
+            "line": 273
           },
           {
             "call": "reserve_or_get_live",
             "in": "g_authorization_is_reread",
             "kwarg": "budget_units",
-            "line": 249
-          },
-          {
-            "call": "reserve_or_get_live",
-            "in": "h_grant_is_bounded",
-            "kwarg": "budget_units",
-            "line": 301
+            "line": 298
           },
           {
             "call": "reserve_or_get_live",
             "in": "i_store_without_quote_authority",
             "kwarg": "budget_units",
-            "line": 347
+            "line": 385
           },
           {
             "call": "reserve_or_get_live",
             "in": "j_reconciliation_allowlist",
             "kwarg": "budget_units",
-            "line": 374
+            "line": 419
           },
           {
             "call": "reserve_or_get_live",
             "in": "j_reconciliation_allowlist",
             "kwarg": "budget_units",
-            "line": 386
+            "line": 431
           },
           {
             "call": "run_job",
             "in": "k_lab_adapter_unchanged",
             "kwarg": "budget_units",
-            "line": 403
+            "line": 448
           },
           {
             "call": "run_job",
             "in": "k_lab_adapter_unchanged",
             "kwarg": "envelope_units",
-            "line": 403
+            "line": 448
           },
           {
             "call": "run_job",
             "in": "o_legitimate_authorization_not_replayable",
             "kwarg": "budget_units",
-            "line": 530
+            "line": 575
           },
           {
             "call": "run_job",
             "in": "e_envelope_units_forbidden",
             "kwarg": "budget_units",
-            "line": 211
+            "line": 260
           },
           {
             "call": "run_job",
             "in": "e_envelope_units_forbidden",
             "kwarg": "envelope_units",
-            "line": 211
+            "line": 260
           },
           {
             "call": "run_job",
             "in": "i_store_without_quote_authority",
             "kwarg": "budget_units",
-            "line": 340
+            "line": 378
           }
         ],
         "calls": [
           {
             "call": "open_envelope",
             "in": "governed",
-            "line": 123,
+            "line": 142,
             "role": "AUTORITA': apertura di un envelope"
           },
           {
             "call": "issue_quote",
             "in": "governed",
-            "line": 124,
+            "line": 143,
             "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "open_envelope",
+            "in": "governed_attempt",
+            "line": 159,
+            "role": "AUTORITA': apertura di un envelope"
+          },
+          {
+            "call": "issue_quote",
+            "in": "governed_attempt",
+            "line": 160,
+            "role": "AUTORITA': emissione di una quote fidata"
+          },
+          {
+            "call": "reserve_or_get_live",
+            "in": "governed_attempt",
+            "line": 162,
+            "role": "prenotazione atomica (identita' + budget)"
+          },
+          {
+            "call": "mark_submitting",
+            "in": "governed_attempt",
+            "line": 166,
+            "role": "persistenza dell'intento di submit"
+          },
+          {
+            "call": "grant_dispatch",
+            "in": "open_grant",
+            "line": 173,
+            "role": "CONFINE: concessione del dispatch"
           },
           {
             "call": "run_job",
             "in": "f_governed_dispatch",
-            "line": 224,
+            "line": 273,
             "role": "dispatch (arteria del Core)"
           },
           {
             "call": "reserve_or_get_live",
             "in": "g_authorization_is_reread",
-            "line": 249,
+            "line": 298,
             "role": "prenotazione atomica (identita' + budget)"
           },
           {
             "call": "mark_submitting",
             "in": "g_authorization_is_reread",
-            "line": 255,
-            "role": "persistenza dell'intento di submit"
-          },
-          {
-            "call": "reserve_or_get_live",
-            "in": "h_grant_is_bounded",
-            "line": 301,
-            "role": "prenotazione atomica (identita' + budget)"
-          },
-          {
-            "call": "mark_submitting",
-            "in": "h_grant_is_bounded",
-            "line": 306,
+            "line": 304,
             "role": "persistenza dell'intento di submit"
           },
           {
             "call": "reserve_or_get_live",
             "in": "i_store_without_quote_authority",
-            "line": 347,
+            "line": 385,
             "role": "prenotazione atomica (identita' + budget)"
           },
           {
             "call": "mark_submitting",
             "in": "i_store_without_quote_authority",
-            "line": 351,
+            "line": 389,
             "role": "persistenza dell'intento di submit"
           },
           {
             "call": "reserve_or_get_live",
             "in": "j_reconciliation_allowlist",
-            "line": 374,
+            "line": 419,
             "role": "prenotazione atomica (identita' + budget)"
           },
           {
             "call": "reconcile",
             "in": "j_reconciliation_allowlist",
-            "line": 381,
+            "line": 426,
             "role": "riconciliazione: libera l'identita' di una spec"
           },
           {
             "call": "reserve_or_get_live",
             "in": "j_reconciliation_allowlist",
-            "line": 386,
+            "line": 431,
             "role": "prenotazione atomica (identita' + budget)"
           },
           {
             "call": "run_job",
             "in": "k_lab_adapter_unchanged",
-            "line": 397,
+            "line": 442,
             "role": "dispatch (arteria del Core)"
           },
           {
             "call": "run_job",
             "in": "k_lab_adapter_unchanged",
-            "line": 403,
+            "line": 448,
             "role": "dispatch (arteria del Core)"
           },
           {
             "call": "run_job",
             "in": "o_legitimate_authorization_not_replayable",
-            "line": 530,
+            "line": 575,
             "role": "dispatch (arteria del Core)"
           },
           {
             "call": "authorize_payload",
             "in": "_authorize_payload",
-            "line": 94,
+            "line": 113,
             "role": "autorizzazione dei byte al trasporto"
           },
           {
             "call": "submit",
             "in": "_dispatch",
-            "line": 99,
+            "line": 118,
             "role": "SPENDER: invio al provider"
           },
           {
             "call": "authorize_dispatch",
             "in": "ask",
-            "line": 262,
+            "line": 311,
             "role": "CONFINE: autorizzazione riletta dal journal"
           },
           {
-            "call": "grant_dispatch",
-            "in": "open_grant",
-            "line": 310,
-            "role": "CONFINE: concessione del dispatch"
+            "call": "authorize_payload",
+            "in": "p_same_attempt_two_sequential_claims",
+            "line": 607,
+            "role": "autorizzazione dei byte al trasporto"
+          },
+          {
+            "call": "submit",
+            "in": "p_same_attempt_two_sequential_claims",
+            "line": 608,
+            "role": "SPENDER: invio al provider"
           },
           {
             "call": "submit",
             "in": "b_direct_submit",
-            "line": 179,
+            "line": 228,
             "role": "SPENDER: invio al provider"
           },
           {
             "call": "authorize_payload",
             "in": "c_direct_authorize",
-            "line": 188,
+            "line": 237,
             "role": "autorizzazione dei byte al trasporto"
           },
           {
             "call": "run_job",
             "in": "d_legacy_run_job",
-            "line": 198,
+            "line": 247,
             "role": "dispatch (arteria del Core)"
           },
           {
             "call": "run_job",
             "in": "e_envelope_units_forbidden",
-            "line": 211,
+            "line": 260,
             "role": "dispatch (arteria del Core)"
           },
           {
             "call": "submit",
             "in": "h_grant_is_bounded",
-            "line": 314,
+            "line": 351,
+            "role": "SPENDER: invio al provider"
+          },
+          {
+            "call": "submit",
+            "in": "h_grant_is_bounded",
+            "line": 363,
             "role": "SPENDER: invio al provider"
           },
           {
             "call": "run_job",
             "in": "i_store_without_quote_authority",
-            "line": 340,
+            "line": 378,
             "role": "dispatch (arteria del Core)"
           },
           {
             "call": "authorize_dispatch",
             "in": "i_store_without_quote_authority",
-            "line": 360,
+            "line": 405,
             "role": "CONFINE: autorizzazione riletta dal journal"
           },
           {
             "call": "reconcile",
             "in": "j_reconciliation_allowlist",
-            "line": 377,
+            "line": 422,
             "role": "riconciliazione: libera l'identita' di una spec"
           },
           {
             "call": "reconcile",
             "in": "j_reconciliation_allowlist",
-            "line": 387,
+            "line": 432,
             "role": "riconciliazione: libera l'identita' di una spec"
           },
           {
             "call": "grant_dispatch",
             "in": "n_grant_requires_the_store",
-            "line": 518,
+            "line": 563,
             "role": "CONFINE: concessione del dispatch"
           },
           {
             "call": "submit",
             "in": "h_grant_is_bounded",
-            "line": 322,
+            "line": 358,
             "role": "SPENDER: invio al provider"
           },
           {
             "call": "authorize_payload",
             "in": "h_grant_is_bounded",
-            "line": 324,
+            "line": 360,
             "role": "autorizzazione dei byte al trasporto"
           },
           {
             "call": "authorize_payload",
             "in": "l_forged_authorization",
-            "line": 447,
+            "line": 492,
             "role": "autorizzazione dei byte al trasporto"
           },
           {
             "call": "submit",
             "in": "l_forged_authorization",
-            "line": 449,
+            "line": 494,
             "role": "SPENDER: invio al provider"
           },
           {
             "call": "submit",
             "in": "o_legitimate_authorization_not_replayable",
-            "line": 539,
+            "line": 584,
             "role": "SPENDER: invio al provider"
           },
           {
             "call": "authorize_payload",
             "in": "o_legitimate_authorization_not_replayable",
-            "line": 542,
+            "line": 587,
             "role": "autorizzazione dei byte al trasporto"
           },
           {
             "call": "authorize_dispatch",
             "in": "g_authorization_is_reread",
-            "line": 272,
+            "line": 321,
             "role": "CONFINE: autorizzazione riletta dal journal"
           }
         ],

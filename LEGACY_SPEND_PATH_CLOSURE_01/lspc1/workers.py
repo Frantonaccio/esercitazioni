@@ -940,3 +940,185 @@ def p12_direct_implementation_hooks(core_path: str, db: str, *, prompt: str = "p
         _err(out, e)
         out["trace"] = traceback.format_exc(limit=4)
     return _epilogue(out, None, adapter)
+
+
+# ===========================================================================
+# P13/P14/P15 — HUMAN REVIEW 02: un attempt autorizza UN solo dispatch?
+#
+# Il bypass precedente non usava nulla di fabbricato: store reale, prenotazione
+# governata reale, quote LAB reale, ledger RESERVE reale, stesso job_id, stesso
+# attempt_token. Due chiamate a `grant_dispatch`, due autorizzazioni, due dispatch.
+# Queste sonde lo riproducono e poi lo verificano chiuso, nei tre modi in cui la
+# proprieta' puo' rompersi: in sequenza, fra thread, fra processi.
+# ===========================================================================
+def _governed_attempt(core_path: str, db: str, *, op: str, prompt: str, amount: int = 10):
+    """Prenotazione GOVERNATA REALE portata fino a `mark_submitting`. Nessun oggetto
+    falso, nessuno store duck-typed: la prova deve usare fatti autorevoli."""
+    import hashlib
+    from adapters.base import GenSpec
+    from lspc1.spenders import build_sentinel
+    from registry.reservations import SqliteReservationStore
+    from runtime.genspec_bridge import build_genspec
+    store = SqliteReservationStore(db)
+    adapter = build_sentinel()
+    spec = build_genspec(_inputs(prompt), GenSpec)
+    env = "ENV_" + op.split(":", 1)[0]
+    store.open_envelope(env, 100, unit="synthetic_units", scope=None)
+    qid = store.issue_quote(operation_id=op, spec_key=spec.spec_key, envelope_id=env,
+                            amount=amount, unit="synthetic_units")
+    _, job = store.reserve_or_get_live(spec, budget_units=amount, now=1.0, operation_id=op,
+                                       quote_id=qid, envelope_id=env)
+    digest = hashlib.sha256(adapter.serialize(spec)).hexdigest()
+    token = "att_" + ("%024x" % abs(hash(job.job_id)))[:24]
+    job = store.mark_submitting(job, provider=adapter.name, provider_account=adapter.account_id,
+                                payload_digest=digest, attempt_token=token, now=1.0)
+    return store, adapter, spec, job, digest, token
+
+
+def p13_same_attempt_sequential(core_path: str, db: str, *, db2: str | None = None,
+                                prompt: str = "p13 same attempt") -> dict:
+    """La sequenza esatta della Human Review 02: g1, uso di g1, uscita, NESSUN
+    mark_submitted, poi g2."""
+    out = _prelude(core_path)
+    adapter = None
+    try:
+        if core_path not in sys.path:
+            sys.path.insert(0, core_path)
+        from adapters.base import grant_dispatch
+        store, adapter, spec, job, digest, token = _governed_attempt(
+            core_path, db, op="LSPC13:a", prompt=prompt)
+
+        def mint():
+            return grant_dispatch(adapter, store, job.job_id, spec_key=spec.spec_key,
+                                  payload_digest=digest, attempt_token=token)
+        attempts: dict = {}
+
+        def first_dispatch():
+            with mint():
+                adapter.authorize_payload(digest)
+                return adapter.submit(spec).provider_job_id
+        _attempt("dispatch_1_governato", first_dispatch, attempts)
+        out["state_after_first"] = store.get(job.job_id).state.value
+        out["mark_submitted_called"] = False
+
+        def second_dispatch():
+            with mint():
+                adapter.authorize_payload(digest)
+                return adapter.submit(spec).provider_job_id
+        _attempt("dispatch_2_stesso_attempt", second_dispatch, attempts)
+
+        # variante: due conii PRIMA di qualunque uso
+        store2, adapter2, spec2, job2, digest2, token2 = _governed_attempt(
+            core_path, db2 or state_db("p13b"), op="LSPC13:b", prompt=prompt + " b")
+
+        def two_mints():
+            g1 = grant_dispatch(adapter2, store2, job2.job_id, spec_key=spec2.spec_key,
+                                payload_digest=digest2, attempt_token=token2)
+            g2 = grant_dispatch(adapter2, store2, job2.job_id, spec_key=spec2.spec_key,
+                                payload_digest=digest2, attempt_token=token2)
+            return f"due grant distinti: {g1 is not g2}"
+        _attempt("due_conii_prima_di_ogni_uso", two_mints, attempts)
+        from lspc1.spenders import observe
+        out["sentinel_second_adapter"] = observe(adapter2)
+        claim = getattr(store, "dispatch_claim", None)
+        out["dispatch_claim_persisted"] = bool(callable(claim) and claim(job.job_id))
+        out.update(ok=True, attempts=attempts)
+    except BaseException as e:                              # noqa: BLE001
+        _err(out, e)
+        out["trace"] = traceback.format_exc(limit=4)
+    return _epilogue(out, db, adapter)
+
+
+def _claim_worker(db: str, core_path: str, job_id: str, spec_key: str, payload_digest: str,
+                  attempt_token: str, provider: str, account: str, barrier=None) -> dict:
+    """PROCESSO REALE: apre il proprio store sullo stesso file e prova il claim.
+    Nessuna memoria condivisa: l'unica autorita' e' il journal."""
+    if core_path not in sys.path:
+        sys.path.insert(0, core_path)
+    from registry.reservations import SqliteReservationStore
+    store = SqliteReservationStore(db)
+    if barrier is not None:
+        barrier.wait(timeout=30)
+    claim = getattr(store, "claim_dispatch_authorization", None)
+    if not callable(claim):
+        return {"pid": os.getpid(), "claimed": None,
+                "code": "NO_CLAIM_PRIMITIVE_ON_THIS_CORE"}
+    try:
+        claim(job_id, attempt_token=attempt_token, payload_digest=payload_digest,
+              spec_key=spec_key, provider=provider, provider_account=account)
+        return {"pid": os.getpid(), "claimed": True}
+    except BaseException as e:                              # noqa: BLE001
+        return {"pid": os.getpid(), "claimed": False,
+                "code": getattr(e, "code", type(e).__name__)}
+
+
+def p14_same_attempt_threads(core_path: str, db: str, *, prompt: str = "p14 threads") -> dict:
+    out = _prelude(core_path)
+    adapter = None
+    try:
+        import threading
+        if core_path not in sys.path:
+            sys.path.insert(0, core_path)
+        from adapters.base import grant_dispatch
+        store, adapter, spec, job, digest, token = _governed_attempt(
+            core_path, db, op="LSPC14:a", prompt=prompt)
+        start, lock, results = threading.Barrier(2), threading.Lock(), []
+
+        def worker():
+            start.wait(timeout=30)
+            try:
+                grant_dispatch(adapter, store, job.job_id, spec_key=spec.spec_key,
+                               payload_digest=digest, attempt_token=token)
+                r = {"claimed": True}
+            except BaseException as e:                      # noqa: BLE001
+                r = {"claimed": False, "code": getattr(e, "code", type(e).__name__)}
+            with lock:
+                results.append(r)
+
+        ts = [threading.Thread(target=worker) for _ in range(2)]
+        for t in ts:
+            t.start()
+        for t in ts:
+            t.join(60)
+        out.update(ok=True, results=results,
+                   claimed=sum(1 for r in results if r.get("claimed")),
+                   refused=[r.get("code") for r in results if not r.get("claimed")])
+    except BaseException as e:                              # noqa: BLE001
+        _err(out, e)
+        out["trace"] = traceback.format_exc(limit=4)
+    return _epilogue(out, db, adapter)
+
+
+def p15_same_attempt_processes(core_path: str, db: str, *, prompt: str = "p15 processes") -> dict:
+    """Il caso che un registro Python in memoria NON supererebbe."""
+    import multiprocessing
+    out = _prelude(core_path)
+    adapter = None
+    try:
+        if core_path not in sys.path:
+            sys.path.insert(0, core_path)
+        store, adapter, spec, job, digest, token = _governed_attempt(
+            core_path, db, op="LSPC15:a", prompt=prompt)
+        ctx = multiprocessing.get_context("spawn")
+        barrier, q = ctx.Barrier(2), ctx.Queue()
+        args = (db, core_path, job.job_id, spec.spec_key, digest, token,
+                adapter.name, adapter.account_id)
+        ps = [ctx.Process(target=_entry, args=(q, _claim_worker, args, {"barrier": barrier}))
+              for _ in range(2)]
+        for p in ps:
+            p.start()
+        results = [q.get(timeout=120) for _ in ps]
+        for p in ps:
+            p.join(30)
+        pids = sorted({r.get("pid") for r in results if r.get("pid")})
+        claim = getattr(store, "dispatch_claim", None)
+        out.update(ok=True, results=results, pids=pids,
+                   distinct_processes=len(pids),
+                   claimed=sum(1 for r in results if r.get("claimed")),
+                   refused=[r.get("code") for r in results if r.get("claimed") is False],
+                   claim_persisted=bool(callable(claim) and claim(job.job_id)),
+                   blocked_environment=len(pids) < 2)
+    except BaseException as e:                              # noqa: BLE001
+        _err(out, e)
+        out["trace"] = traceback.format_exc(limit=4)
+    return _epilogue(out, db, adapter)

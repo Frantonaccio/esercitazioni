@@ -8,7 +8,7 @@ Due fonti, nessuna delle quali basta da sola:
 - **statica** — scansione AST di `adapters/ core/ registry/ transport/ tests/` del Core
   e di `runtime/ tests/` del Runtime: `evidence/E01_spend_path_inventory_static.json`.
   Dice DOVE sono i punti; non sa cosa succede quando li si percorre.
-- **dinamica** — 14 sonde, ognuna in un **processo reale**, ognuna con una SENTINELLA
+- **dinamica** — 17 sonde, ognuna in un **processo reale**, ognuna con una SENTINELLA
   al posto del provider: `evidence/E02_pre_fix_reproduction.json` (coppia canonica) e
   `evidence/E04_provider_boundary_counterproofs.json` (coppia candidate). Dice COSA
   succede; non sa cosa ha dimenticato.
@@ -49,6 +49,7 @@ Due fonti, nessuna delle quali basta da sola:
 | 11 | `SqliteReservationStore.reconcile(job, state, evidence)` con evidenza arbitraria | CORE | `registry/reservations.py:reconcile` | runtime, test, chiunque | no (non dispaccia) | libera l'identita' della spec → pre-fix la rispesa raggiungeva lo spender | NO | si | **si** | **si** | **A/D** | `CORE_CHANGE_REQUIRED` | `reconcile` **resta** (non dispaccia, ed e' una primitive valida). La **rispesa** che ne seguiva e' chiusa da #10a (`SPEND_AUTHORIZATION_REQUIRED`, `reached=0`). In piu': allowlist OPZIONALE `reconciliation_sources` (default inerte) che rifiuta — registrandola — una provenienza estranea |
 | 14 | **`DispatchAuthorization` presentata dal chiamante** (HUMAN REVIEW 01) | CORE | `adapters/base.py`, `grant_dispatch` | chiunque abbia il Core in `sys.path` | **si** | **si** (riprodotto su `44f9ea29`: `reached=2`, `sent=2`) | NO — la capability sostituiva il journal | si | no | no | **E** | non inventariato nell'iterazione 1: era il varco | **CHIUSO**: `grant_dispatch` riceve lo STORE e rilegge il journal; il costruttore pretende un token di conio; registro dei coniati per identita' a consumo singolo. `DISPATCH_AUTHORIZATION_FORGED` / `DISPATCH_AUTHORIZATION_SPENT`, `reached=0` |
 | 15 | **`_dispatch` / `_authorize_payload` invocati direttamente** | CORE | `adapters/base.py`, hook di `SpendCapableAdapter` | chiunque | **si** | **si** (riprodotto: `reached=2`) | NO | si | no | no | **E** | non inventariato nell'iterazione 1 | **CHIUSO**: `__init_subclass__` avvolge gli hook con lo stesso guard dei template method. `SPEND_AUTHORIZATION_REQUIRED` / `DISPATCH_AUTHORIZATION_FORGED`, `reached=0` |
+| 16 | **stesso attempt, due autorizzazioni** (HUMAN REVIEW 02) | CORE | `adapters/base.py` + `registry/reservations.py`, `authorize_dispatch` | chiunque abbia il Core in `sys.path` | **si** | **si** (riprodotto su `605a8d74`: `reached=2`, `sent=2`, con soli fatti autorevoli) | il percorso governato veniva percorso DUE volte sullo stesso tentativo | si | no | no | **E** | non inventariato nelle iterazioni 1 e 2 | **CHIUSO**: `claim_dispatch_authorization` verifica e claima in UNA transazione, `job_id` PRIMARY KEY. `DISPATCH_AUTHORIZATION_ALREADY_CLAIMED` fra chiamate, fra thread e fra processi |
 | 12 | P2 `hf_batch.py` congelato (`subprocess higgsfield generate create`) | fuori runtime | `p2_handoff/…/P2_RUNTIME/hf_batch.py` | nessuno in questo ambiente | **si, provider REALE** con CLI e credenziali | si | NO | **no** (mai importato ne' eseguito) | no | n/a | fuori perimetro | **FROZEN**: SHA256 `637f3a80…` before == after (E00/E10). Migrazione retroattiva vietata dal mandato | invariato |
 | 13 | strumenti MCP Higgsfield della sessione | ambiente | non repository | operatore | si, provider reale | si | NO | no | no | n/a | fuori perimetro | **0 chiamate in questa fase** | 0 chiamate |
 
@@ -59,8 +60,10 @@ Due fonti, nessuna delle quali basta da sola:
 Prima: **sei** percorsi raggiungevano un provider/spender fuori dal governed path
 (#2, #4, #10a, #10b, #10c, #10d, e #11 in composizione con #10a). La Human Review 01
 ne ha trovati **altri due** che l'iterazione 1 non aveva inventariato (#14, #15):
-l'autorizzazione presentata dal chiamante e gli hook di implementazione.
-Dopo: **uno** lo raggiunge, ed e' #1/#3 — il governed path.
+l'autorizzazione presentata dal chiamante e gli hook di implementazione. La Human
+Review 02 ne ha trovato un altro ancora (#16), il piu' sottile perche' non fabbricava
+nulla: lo stesso tentativo che conia due autorizzazioni.
+Dopo: **uno** lo raggiunge, ed e' #1/#3 — il governed path, **una volta per tentativo**.
 
 ## Che cosa NON e' cambiato, ed e' deliberato
 
