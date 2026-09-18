@@ -47,3 +47,7 @@ def config_switches(core_path: str, gate01: str | None = None) -> dict:
 
 def budget_paths(core_path: str, gate01: str | None = None) -> dict:
     return _run(core_path, "budget", gate01)
+
+
+def forge_probes(core_path: str, gate01: str | None = None) -> dict:
+    return _run(core_path, "forge", gate01)

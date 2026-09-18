@@ -1,12 +1,12 @@
 {
   "schema": "runtime-gate-results/2",
-  "required_core_sha": "44f9ea29cea112dfb30c752e5519498e25044c19",
+  "required_core_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9",
   "results": [
     {
       "id": "T01",
       "title": "correct Core pin",
       "expected": "CORE_PIN_OK, go procede",
-      "actual": "core_sha=44f9ea29cea1 verdict=CORE_PIN_OK state=SUCCEEDED",
+      "actual": "core_sha=605a8d746fda verdict=CORE_PIN_OK state=SUCCEEDED",
       "status": "PASS",
       "reason_code": "VERIFIED",
       "evidence": "evidence/T01_correct_core_pin.json",
@@ -30,7 +30,7 @@
       "id": "T03",
       "title": "stale old Core pin (9afaddf)",
       "expected": "STALE_CORE_PIN, Core non importato",
-      "actual": "error=STALE_CORE_PIN observed=740ee97 core_imported=False",
+      "actual": "error=STALE_CORE_PIN observed=44f9ea2 core_imported=False",
       "status": "PASS",
       "reason_code": "VERIFIED",
       "evidence": "evidence/T03_stale_core_pin.json",
@@ -197,8 +197,8 @@
     {
       "id": "T17",
       "title": "Core canonical unchanged",
-      "expected": "HEAD == 44f9ea2 (Core promosso), working tree pulito",
-      "actual": "CANONICAL_CLEAN: HEAD=44f9ea29cea1 required=44f9ea29cea1 branch=harden/legacy-spend-core-2026-09-18 dirty_files=0",
+      "expected": "HEAD == 605a8d7 (Core promosso), working tree pulito",
+      "actual": "CANONICAL_CLEAN: HEAD=605a8d746fda required=605a8d746fda branch=harden/legacy-spend-core-2026-09-18 dirty_files=0",
       "status": "PASS",
       "reason_code": "VERIFIED",
       "evidence": "evidence/T17_core_canonical_unchanged.json",

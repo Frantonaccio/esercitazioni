@@ -66,6 +66,27 @@ riprendersi `submit` non esiste: `TypeError`).
 
 ## 3. Come l'autorizzazione non e' falsificabile
 
+> **HUMAN REVIEW 01.** Nella prima stesura questa sezione era vera per *intenzione* e
+> falsa per *costruzione*: `DispatchAuthorization` era una dataclass costruibile e
+> `grant_dispatch(adapter, auth)` accettava l'oggetto senza rileggere nulla. Il
+> controesempio della review raggiungeva la sentinella. Riprodotto in `E13`, corretto
+> in `605a8d74`. Dettaglio in `HUMAN_REVIEW_01_CORRECTIVE_DELTA.md`.
+
+Tre meccanismi, deliberatamente ridondanti:
+
+1. **`grant_dispatch` rilegge il journal.** Non riceve un'autorizzazione: riceve lo
+   STORE AUTOREVOLE e l'identita' del tentativo, e chiama `authorize_dispatch` da se'.
+   Non esiste una firma alternativa che accetti una capability presentata dal
+   chiamante — se esistesse, sarebbe quella che verrebbe usata (`run_spender_boundary:N`).
+2. **Il costruttore pretende un token di conio** privato del modulo: l'identita' di un
+   oggetto, non un booleano ne' una stringa. Il controesempio letterale della review
+   fallisce qui con `DISPATCH_AUTHORIZATION_FORGED` (`run_spender_boundary:L`).
+3. **Registro dei coniati, per identita', a consumo singolo.** `eq=False`: due
+   autorizzazioni con gli stessi campi non sono la stessa autorizzazione. Chi aggira i
+   primi due costruendo l'oggetto con `object.__new__` e infilandolo nello slot si
+   ferma qui. E un'autorizzazione LEGITTIMA vale per un solo tentativo: fuori dal suo
+   `with` e' `DISPATCH_AUTHORIZATION_SPENT` (`run_spender_boundary:O`).
+
 `DispatchAuthorization` **non e' un token che il chiamante costruisce**: e' un fatto
 riletto dal journal autorevole. Per ottenerla servono, nella riga persistita:
 
@@ -88,6 +109,18 @@ La concessione (`grant_dispatch`) e' **thread-local per istanza**, non rientrant
 vive solo dentro il `with`: copre `authorize_payload` + `submit` di **quel** tentativo
 e non presta la propria autorizzazione a nessun altro (`Batch.go` dispaccia job in
 thread paralleli con lo stesso adapter — il confine non deve attraversarlo).
+
+### Gli hook di implementazione
+
+`_dispatch` e `_authorize_payload` sono hook Python, e in Python il trattino basso non
+e' un confine di sicurezza. Non sono stati lasciati scoperti *ne'* dichiarati fuori
+perimetro: `__init_subclass__` li **avvolge** con lo stesso guard dei template method.
+La sottoclasse non deve ricordarsi di nulla e non puo' disapplicarlo se non
+ridefinendo l'hook — che verrebbe a sua volta avvolto (`run_spender_boundary:M`).
+
+Cio' che resta fuori perimetro e' dichiarato in `THREAT_MODEL.md`: codice
+arbitrariamente malevolo eseguito con la stessa identita' dello spender. Contro quello
+il confine e' P-B01, e non e' mai stato preteso il contrario.
 
 **Controprova esplicita.** Caso G: otto manomissioni della riga persistita, otto
 rifiuti parlanti (`DISPATCH_ATTEMPT_TOKEN_MISMATCH`, `DISPATCH_PAYLOAD_DIGEST_MISMATCH`,

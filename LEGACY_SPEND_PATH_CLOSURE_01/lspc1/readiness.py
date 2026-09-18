@@ -17,7 +17,11 @@ import subprocess
 
 # Requisiti che questa fase CHIUDE, se e solo se i passi corrispondenti sono PASS.
 CLOSES = {
-    "LEGACY_SPEND_PATHS_CORE_PRIMITIVES": ("E02", "E03", "E04", "E06"),
+    # E13 e' entrato con la Human Review 01: senza la controprova dell'autorizzazione
+    # fabbricata, `CORE_PRIMITIVES` non si puo' dichiarare chiuso — era esattamente il
+    # blocker. E14 (threat model) e' il suo complemento: dire cosa il confine NON
+    # protegge fa parte del chiuderlo.
+    "LEGACY_SPEND_PATHS_CORE_PRIMITIVES": ("E02", "E03", "E04", "E06", "E13", "E14"),
     "LEGACY_TESTS_MIGRATION_TO_GOVERNED": ("E05", "E07", "E08"),
 }
 

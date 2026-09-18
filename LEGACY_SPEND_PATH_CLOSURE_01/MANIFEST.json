@@ -6,11 +6,11 @@
   },
   "canonical_runtime_base_sha": "fea7b439a63a0100a732e21af4dfde6b8edd0951",
   "core_branch": "harden/legacy-spend-core-2026-09-18",
-  "core_code_sha": "44f9ea29cea112dfb30c752e5519498e25044c19",
+  "core_code_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9",
   "core_pin": {
     "points_to_core_candidate": true,
     "previous_canonical_now_stale": "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515",
-    "required_core_sha": "44f9ea29cea112dfb30c752e5519498e25044c19"
+    "required_core_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9"
   },
   "core_repo": "Frantonaccio/creative-os",
   "credential_scan": {
@@ -20,7 +20,7 @@
       ".bin",
       ".sock"
     ],
-    "files_scanned": 55,
+    "files_scanned": 62,
     "hits": [],
     "patterns_count": 8,
     "patterns_declared_in": "pbg2/bundle_provenance.py",
@@ -40,13 +40,44 @@
     "real_provider_verified": false,
     "spend_authorized": false
   },
-  "file_count": 54,
+  "file_count": 61,
   "gate": {
     "decision": "LSPC_GATE_COMPLETE",
     "fail": 0,
     "fail_ids": [],
-    "pass": 13,
-    "steps": 13
+    "pass": 15,
+    "steps": 15
+  },
+  "human_review_01": {
+    "blocker": "`DispatchAuthorization` era costruibile e `grant_dispatch(adapter, auth)` accettava l'oggetto senza rileggere il journal; `_dispatch` e `_authorize_payload` erano invocabili direttamente.",
+    "evidence": [
+      "evidence/E13_forged_dispatch_authorization.json",
+      "evidence/E14_threat_model.json",
+      "HUMAN_REVIEW_01_CORRECTIVE_DELTA.md",
+      "THREAT_MODEL.md"
+    ],
+    "history_preserved": "nessun amend, nessun force-push: delta correttivi come commit nuovi sugli stessi branch",
+    "reproduced_on_reviewed_candidate": true,
+    "resolution": "grant_dispatch riceve lo store e rilegge il journal; costruttore con token di conio; registro dei coniati per identita' a consumo singolo; guard automatico sugli hook.",
+    "reviewed_iteration": {
+      "core_sha": "44f9ea29cea112dfb30c752e5519498e25044c19",
+      "merged": false,
+      "runtime_code_sha": "ad2f9c072b2a775637eb0b0da0aeca1cb82ca770",
+      "runtime_evidence_head_sha": "108af8a606d81ef1b09191fda062d684befd54ec",
+      "zip_sha256": "c0f497c08e201b2f14679cb81c80ce820ee6a5fc8927964c231077ea35073d34"
+    },
+    "snapshot_seal_write_race": {
+      "fixed_here": false,
+      "human_review_classification": [
+        "PREEXISTING",
+        "FAIL_CLOSED",
+        "AVAILABILITY / CONCURRENCY DEFECT",
+        "NO DOUBLE SPEND OBSERVED"
+      ],
+      "next": "candidato del gate successivo, dopo il merge di questa fase",
+      "status": "STILL_OPEN"
+    },
+    "verdict_received": "HUMAN_REVIEW_HOLD — DISPATCH_AUTHORIZATION_FORGEABLE"
   },
   "mode": "MOCK ONLY · ZERO PROVIDER REALI · ZERO CREDENZIALI · ZERO CREDITI · NO PRODUZIONE",
   "p2_frozen": {
@@ -90,7 +121,7 @@
     }
   },
   "runtime_branch": "claude/legacy-spend-path-closure-c50coy",
-  "runtime_code_sha": "ad2f9c072b2a775637eb0b0da0aeca1cb82ca770",
+  "runtime_code_sha": "434e0ea58d859b4e252c538676cb9725819c5d30",
   "runtime_evidence_head_sha": "DECLARED_IN_EXTERNAL_PROVENANCE",
   "runtime_repo": "Frantonaccio/esercitazioni",
   "schema": "legacy-spend-path-closure-manifest/1",
@@ -98,8 +129,8 @@
     "answer": "SI",
     "fail": 0,
     "fail_ids": [],
-    "pass": 13,
+    "pass": 15,
     "question": "i test hanno prodotto l'esito atteso?",
-    "total": 13
+    "total": 15
   }
 }

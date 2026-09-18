@@ -38,6 +38,10 @@ REGRESSION_DIR = os.path.join(BUNDLE, "regression")
 CORE_PATH = os.environ.get("CREATIVE_OS_CORE_PATH", "/home/user/creative-os")
 
 BASELINE_CORE_SHA = "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
+# Primo candidate di questa fase, quello su cui la Human Review ha trovato il blocker
+# DISPATCH_AUTHORIZATION_FORGEABLE. E13 ci riproduce il difetto: riprodurlo sul Core
+# gia' corretto non riprodurrebbe nulla.
+REVIEWED_CORE_SHA = "44f9ea29cea112dfb30c752e5519498e25044c19"
 BASELINE_RUNTIME_SHA = "fea7b439a63a0100a732e21af4dfde6b8edd0951"
 P2_SHA = "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
 P2_PATH = os.path.join(GATE01, "p2_handoff", "VF_RUNTIME_T16_HANDOFF_2026-09-16",
@@ -499,6 +503,11 @@ def e10():
         "previous_canonical_baseline_is_now_stale":
             BASELINE_CORE_SHA in KNOWN_STALE_CORE_SHAS
             and verify_core_pin(BASELINE_CORE_SHA).code == "STALE_CORE_PIN",
+        # HUMAN REVIEW 01: anche il candidate revisionato e' superato. Ha il confine,
+        # ma l'autorizzazione che lo apriva era costruibile dal chiamante.
+        "reviewed_candidate_is_now_stale":
+            REVIEWED_CORE_SHA in KNOWN_STALE_CORE_SHAS
+            and verify_core_pin(REVIEWED_CORE_SHA).code == "STALE_CORE_PIN",
         "unknown_sha_is_mismatch": verify_core_pin("de" * 20).code == "CORE_PIN_MISMATCH",
         "dirty_tree_fails_closed":
             verify_core_pin(REQUIRED_CORE_SHA, dirty=(" M adapters/base.py",)).code
@@ -511,7 +520,8 @@ def e10():
         "p2": {"before": P2_BEFORE.get("sha256"), "after": p2_after, "declared": P2_SHA,
                "path": os.path.relpath(P2_PATH, REPO)}})
     failed = [k for k, v in checks.items() if not v]
-    return (f"pin {REQUIRED_CORE_SHA[:12]} == Core HEAD · {BASELINE_CORE_SHA[:12]} ora STALE · "
+    return (f"pin {REQUIRED_CORE_SHA[:12]} == Core HEAD · {BASELINE_CORE_SHA[:12]} e "
+            f"{REVIEWED_CORE_SHA[:12]} ora STALE · "
             f"P2 before==after=={p2_after[:16]}… · falliti: {failed or 'nessuno'}"), ev, not failed
 
 
@@ -599,6 +609,91 @@ def e12():
             f"{failed or 'nessuno'}"), ev, not failed
 
 
+# =========================================================== E13 forged capability
+def e13(scratch: str):
+    """HUMAN REVIEW 01 — DISPATCH_AUTHORIZATION_FORGEABLE.
+
+    Due esecuzioni delle STESSE sonde: sul candidate revisionato `44f9ea29`, dove il
+    difetto deve riprodursi, e sul delta correttivo, dove deve essere chiuso. Se il
+    difetto non si riproducesse, questa sezione non proverebbe nulla."""
+    from lspc1 import runner
+    wt = os.path.join(scratch, "core_reviewed")
+    subprocess.run(["git", "-C", CORE_PATH, "worktree", "add", "--detach", wt,
+                    REVIEWED_CORE_SHA], check=True, capture_output=True)
+    try:
+        pre = runner.forge_probes(wt)
+    finally:
+        subprocess.run(["git", "-C", CORE_PATH, "worktree", "remove", "--force", wt],
+                       capture_output=True)
+        subprocess.run(["git", "-C", CORE_PATH, "worktree", "prune"], capture_output=True)
+    post = runner.forge_probes(CORE_PATH)
+
+    def att(run_, probe, name):
+        return ((run_.get(probe) or {}).get("attempts") or {}).get(name) or {}
+
+    def sent(run_, probe, field="reached"):
+        return ((run_.get(probe) or {}).get("sentinel") or {}).get(field)
+
+    reproduced = {
+        "counterexample_reached_spender_on_reviewed_candidate":
+            att(pre, "P11", "counterexample_review").get("refused") is False,
+        "slot_injection_reached_spender": att(pre, "P11", "slot_injection").get("refused") is False,
+        "two_arg_grant_existed": att(pre, "P11", "grant_dispatch_two_arg").get("refused") is False,
+        "direct_hooks_reached_spender": (sent(pre, "P12") or 0) >= 1,
+        "sentinel_reached_on_reviewed_candidate": (sent(pre, "P11") or 0) >= 1,
+    }
+    closed = {
+        "counterexample_refused":
+            att(post, "P11", "counterexample_review").get("code") == "DISPATCH_AUTHORIZATION_FORGED",
+        "slot_injection_refused":
+            att(post, "P11", "slot_injection").get("code") == "DISPATCH_AUTHORIZATION_FORGED",
+        "two_arg_grant_no_longer_exists":
+            att(post, "P11", "grant_dispatch_two_arg").get("error") == "TypeError",
+        "grant_dispatch_takes_the_store":
+            (post.get("P11") or {}).get("grant_dispatch_accepts_authorization") is False,
+        "hooks_refused": all(
+            att(post, "P12", n).get("refused") is True
+            for n in ("_dispatch_senza_grant", "_authorize_payload_senza_grant",
+                      "_dispatch_con_autorizzazione_fabbricata",
+                      "_authorize_payload_con_autorizzazione_fabbricata")),
+        "hooks_guarded_by_base": all(
+            (post.get("P12") or {}).get("hooks_guarded", {}).values()),
+        "sentinel_zero_forged": (post.get("P11") or {}).get("sentinel_zero") is True,
+        "sentinel_zero_hooks": (post.get("P12") or {}).get("sentinel_zero") is True,
+    }
+    ev = evidence("E13", "forged_dispatch_authorization", {
+        "reviewed_core_sha": REVIEWED_CORE_SHA, "corrective_core_sha":
+            git("rev-parse", "HEAD", cwd=CORE_PATH),
+        "blocker_reproduced_on_reviewed_candidate": reproduced,
+        "blocker_closed_on_corrective_delta": closed,
+        "probes_pre_fix": pre, "probes_post_fix": post,
+        "note": ("`bypass_constructor` risulta NON rifiutato in entrambe le esecuzioni, ed e' "
+                 "corretto: costruire un oggetto Python e' sempre possibile. Cio' che conta "
+                 "e' che quell'oggetto non apra nulla — vedi `slot_injection`.")})
+    failed = [k for k, v in {**{f"repro:{k}": v for k, v in reproduced.items()},
+                             **{f"closed:{k}": v for k, v in closed.items()}}.items() if not v]
+    return (f"sul candidate revisionato {REVIEWED_CORE_SHA[:12]}: sentinella "
+            f"{sent(pre, 'P11')} (forge) / {sent(pre, 'P12')} (hook) — BLOCKER_REPRODUCED · "
+            f"sul correttivo: 0 / 0, controesempio -> DISPATCH_AUTHORIZATION_FORGED, "
+            f"grant a due argomenti inesistente · falliti: {failed or 'nessuno'}"), ev, not failed
+
+
+# =========================================================== E14 threat model
+def e14():
+    from lspc1 import threat_model
+    r = threat_model.verify()
+    doc = os.path.join(BUNDLE, "THREAT_MODEL.md")
+    checks = dict(r["checks"])
+    checks["documented_alongside_machine_readable"] = os.path.isfile(doc)
+    ev = evidence("E14", "threat_model", {"checks": checks, "model": r["model"]})
+    failed = [k for k, v in checks.items() if not v]
+    n_core = len(r["model"]["core_boundary"]["protects_against"])
+    n_out = len(r["model"]["explicitly_not_protected_against"])
+    return (f"confine del Core: {n_core} minacce coperte, ognuna con evidenza · P-B01: "
+            f"{len(r['model']['process_boundary_p_b01']['protects_against'])} · fuori "
+            f"perimetro, dichiarate: {n_out} · falliti: {failed or 'nessuno'}"), ev, not failed
+
+
 # =========================================================================
 def main() -> int:
     os.makedirs(EVIDENCE_DIR, exist_ok=True)
@@ -633,6 +728,11 @@ def main() -> int:
                                               "P2 before == after", e10)
         record("E11", "integrita' della catena di evidenza",
                "code SHA / evidence-head / base canonica / branch distinti, 0 .pyc", e11)
+        record("E13", "HUMAN REVIEW 01: autorizzazione fabbricata e hook diretti",
+               "difetto riprodotto su 44f9ea29, chiuso sul correttivo, sentinella 0",
+               lambda: e13(scratch))
+        record("E14", "threat model del confine dello spender",
+               "cosa protegge il Core, cosa protegge P-B01, cosa nessuno dei due pretende", e14)
         record("E12", "reporting: esito della suite vs readiness del requisito",
                "due oggetti separati; nessun requisito chiuso per errore", e12)
     finally:

@@ -1,17 +1,17 @@
 {
   "results": [
     {
-      "actual": "Core 44f9ea29cea1 (harden/legacy-spend-core-2026-09-18) · Runtime ad2f9c072b2a (claude/legacy-spend-path-closure-c50coy) · pin=44f9ea29cea1 · P2=637f3a803ee38d04… · controlli falliti: nessuno",
+      "actual": "Core 605a8d746fda (harden/legacy-spend-core-2026-09-18) · Runtime 434e0ea58d85 (claude/legacy-spend-path-closure-c50coy) · pin=605a8d746fda · P2=637f3a803ee38d04… · controlli falliti: nessuno",
       "error": null,
       "evidence": "evidence/E00_reality_lock.json",
       "expected": "coppia canonica verificata, branch dedicati, P2 invariato",
       "id": "E00",
       "pass": true,
-      "seconds": 2.1,
+      "seconds": 2.0,
       "title": "Reality Lock"
     },
     {
-      "actual": "CORE: 9 file con superficie di spesa, 273 chiamate · RUNTIME: 8 file, 23 chiamate · confine presente nel Core: grant_dispatch/authorize_dispatch",
+      "actual": "CORE: 10 file con superficie di spesa, 278 chiamate · RUNTIME: 8 file, 23 chiamate · confine presente nel Core: grant_dispatch/authorize_dispatch",
       "error": null,
       "evidence": "evidence/E01_spend_path_inventory_static.json",
       "expected": "ogni entry point che tocca la catena di spesa, in Core e Runtime",
@@ -27,17 +27,17 @@
       "expected": "lo spender E' raggiungibile dai percorsi legacy su 9cf9cee1 + fea7b439",
       "id": "E02",
       "pass": true,
-      "seconds": 1.3,
+      "seconds": 1.4,
       "title": "riproduzione PRE-FIX sulla coppia canonica"
     },
     {
-      "actual": "Core delta additivo (5 file) · suite unitaria del confine: 11/11 PASS, exit 0",
+      "actual": "Core delta additivo (5 file) · suite unitaria del confine: 15/15 PASS, exit 0",
       "error": null,
       "evidence": "evidence/E03_core_primitives_classification.json",
       "expected": "delta additivo, 11/11 PASS",
       "id": "E03",
       "pass": true,
-      "seconds": 0.1,
+      "seconds": 0.2,
       "title": "classificazione delle primitive del Core + suite unitaria del confine"
     },
     {
@@ -47,7 +47,7 @@
       "expected": "0 attraversamenti in ogni percorso legacy, 1 nel governato",
       "id": "E04",
       "pass": true,
-      "seconds": 0.9,
+      "seconds": 1.1,
       "title": "controprove del confine provider (sentinella)"
     },
     {
@@ -67,7 +67,7 @@
       "expected": "il client non sceglie il prezzo; envelope_units non raggiunge lo spender",
       "id": "E06",
       "pass": true,
-      "seconds": 0.5,
+      "seconds": 0.6,
       "title": "percorsi legacy di envelope/budget"
     },
     {
@@ -77,7 +77,7 @@
       "expected": "20/20 equivalenti governati o Core-unit, assert non indeboliti",
       "id": "E07",
       "pass": true,
-      "seconds": 8.6,
+      "seconds": 10.0,
       "title": "migrazione dei test storici"
     },
     {
@@ -87,7 +87,7 @@
       "expected": "nessuna regressione introdotta da questa fase",
       "id": "E08",
       "pass": true,
-      "seconds": 18.7,
+      "seconds": 20.8,
       "title": "regressione R0-R1 T01-T37"
     },
     {
@@ -97,11 +97,11 @@
       "expected": "P-B01/P-B02, NG-04, legacy spend paths, orphan lease, suite Core: verdi",
       "id": "E09",
       "pass": true,
-      "seconds": 3.2,
+      "seconds": 3.9,
       "title": "meccanismi approvati + suite del Core sulla coppia candidate"
     },
     {
-      "actual": "pin 44f9ea29cea1 == Core HEAD · 9cf9cee1a751 ora STALE · P2 before==after==637f3a803ee38d04… · falliti: nessuno",
+      "actual": "pin 605a8d746fda == Core HEAD · 9cf9cee1a751 e 44f9ea29cea1 ora STALE · P2 before==after==637f3a803ee38d04… · falliti: nessuno",
       "error": null,
       "evidence": "evidence/E10_core_pin_and_p2_freeze.json",
       "expected": "pin sul candidate, baseline precedente STALE, P2 before == after",
@@ -111,7 +111,7 @@
       "title": "Core pin e P2 freeze"
     },
     {
-      "actual": "nessun .pyc/__pycache__ · code SHA Core 44f9ea29cea1 / Runtime ad2f9c072b2a distinti da evidence-head · bundle approvati intatti · falliti: nessuno",
+      "actual": "nessun .pyc/__pycache__ · code SHA Core 605a8d746fda / Runtime 434e0ea58d85 distinti da evidence-head · bundle approvati intatti · falliti: nessuno",
       "error": null,
       "evidence": "evidence/E11_evidence_chain_integrity.json",
       "expected": "code SHA / evidence-head / base canonica / branch distinti, 0 .pyc",
@@ -121,7 +121,27 @@
       "title": "integrita' della catena di evidenza"
     },
     {
-      "actual": "stato massimo: LEGACY_SPEND_PATHS_CLOSED — READY_FOR_HUMAN_REVIEW · suite: 12/12 · requisiti aperti: 9 · falliti: nessuno",
+      "actual": "sul candidate revisionato 44f9ea29cea1: sentinella 2 (forge) / 2 (hook) — BLOCKER_REPRODUCED · sul correttivo: 0 / 0, controesempio -> DISPATCH_AUTHORIZATION_FORGED, grant a due argomenti inesistente · falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E13_forged_dispatch_authorization.json",
+      "expected": "difetto riprodotto su 44f9ea29, chiuso sul correttivo, sentinella 0",
+      "id": "E13",
+      "pass": true,
+      "seconds": 0.5,
+      "title": "HUMAN REVIEW 01: autorizzazione fabbricata e hook diretti"
+    },
+    {
+      "actual": "confine del Core: 10 minacce coperte, ognuna con evidenza · P-B01: 3 · fuori perimetro, dichiarate: 2 · falliti: nessuno",
+      "error": null,
+      "evidence": "evidence/E14_threat_model.json",
+      "expected": "cosa protegge il Core, cosa protegge P-B01, cosa nessuno dei due pretende",
+      "id": "E14",
+      "pass": true,
+      "seconds": 0.0,
+      "title": "threat model del confine dello spender"
+    },
+    {
+      "actual": "stato massimo: LEGACY_SPEND_PATHS_CLOSED — READY_FOR_HUMAN_REVIEW · suite: 14/14 · requisiti aperti: 9 · falliti: nessuno",
       "error": null,
       "evidence": "evidence/E12_reporting_test_result_vs_readiness.json",
       "expected": "due oggetti separati; nessun requisito chiuso per errore",
@@ -136,7 +156,7 @@
     "fail": 0,
     "fail_ids": [],
     "gate_decision": "LSPC_GATE_COMPLETE",
-    "pass": 13,
+    "pass": 15,
     "pass_ids": [
       "E00",
       "E01",
@@ -150,10 +170,12 @@
       "E09",
       "E10",
       "E11",
+      "E13",
+      "E14",
       "E12"
     ],
     "runner_exit": 0,
     "schema": "legacy-spend-path-closure-results/1",
-    "total": 13
+    "total": 15
   }
 }

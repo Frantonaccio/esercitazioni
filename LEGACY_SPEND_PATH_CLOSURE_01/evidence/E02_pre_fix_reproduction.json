@@ -7,12 +7,12 @@
       "core_imported": true,
       "core_imported_at_entry": false,
       "core_imported_before_go": true,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "envelope_id": null,
       "governance": "LEGACY_LAB",
       "job_id": "res_ba7bcf9edd89a600_1",
       "ok": true,
-      "pid": 5557,
+      "pid": 2196,
       "quote_id": null,
       "reservation_outcome": "RESERVED_NEW",
       "sentinel": {
@@ -45,7 +45,7 @@
     "P10": {
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "job_errors": [
         "None"
       ],
@@ -53,7 +53,7 @@
         "SUCCEEDED"
       ],
       "ok": true,
-      "pid": 5590,
+      "pid": 2229,
       "run_verdict": "LOCK_HELD",
       "sentinel": {
         "authorized_calls": 2,
@@ -87,11 +87,11 @@
       "core_imported": true,
       "core_imported_at_entry": false,
       "core_imported_before_go": true,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "error": "CorePinError",
       "message": "CORE_PIN_MISMATCH: osservato '9cf9cee1a751f7a2ad6c768574ff5aa38d8db515', richiesto 'deaddeaddeaddeaddeaddeaddeaddeaddeaddead'",
       "ok": false,
-      "pid": 5562,
+      "pid": 2201,
       "sentinel": {
         "authorized_calls": 0,
         "boundary": "NONE",
@@ -111,12 +111,12 @@
       "store": {
         "created": false
       },
-      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/LEGACY_SPEND_PATH_CLOSURE_01/lspc1/workers.py\", line 174, in p1_legacy_with_spender\n    res = go_candidate.go(_inputs(prompt), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/lspc1_3r78b5h5/runtime_baseline/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 292, in go\n    verdict = require_core_verdict(core_path, required_core_sha)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/lspc1_3r78b5h5/runtime_baseline/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py\", line 152, in require_core_verdict\n    raise CorePinError(v.code, v.observed, v.required, v.dirty)\nruntime.core_pin.CorePinError: CORE_PIN_MISMATCH: osservato '9cf9cee1a751f7a2ad6c768574ff5aa38d8db515', richiesto 'deaddeaddeaddeaddeaddeaddeaddeaddeaddead'\n"
+      "trace": "Traceback (most recent call last):\n  File \"/home/user/esercitazioni/LEGACY_SPEND_PATH_CLOSURE_01/lspc1/workers.py\", line 174, in p1_legacy_with_spender\n    res = go_candidate.go(_inputs(prompt), adapter=adapter, provider_mode=\"fake\",\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/lspc1_xg3b4kgu/runtime_baseline/RUNTIME_INTEGRATION_GATE_01/runtime/go_candidate.py\", line 292, in go\n    verdict = require_core_verdict(core_path, required_core_sha)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/lspc1_xg3b4kgu/runtime_baseline/RUNTIME_INTEGRATION_GATE_01/runtime/core_pin.py\", line 152, in require_core_verdict\n    raise CorePinError(v.code, v.observed, v.required, v.dirty)\nruntime.core_pin.CorePinError: CORE_PIN_MISMATCH: osservato '9cf9cee1a751f7a2ad6c768574ff5aa38d8db515', richiesto 'deaddeaddeaddeaddeaddeaddeaddeaddeaddead'\n"
     },
     "P2": {
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "governance": "LEGACY_LAB",
       "lab_adapter": {
         "submits": 1,
@@ -124,7 +124,7 @@
       },
       "legacy_resume_as_start": true,
       "ok": true,
-      "pid": 5566,
+      "pid": 2205,
       "sentinel": {
         "authorized_calls": null,
         "built": false,
@@ -154,7 +154,7 @@
       "budget_units": 10,
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "envelope_id": "ENV_LSPC1G",
       "governance": "GOVERNED_LAB",
       "job_id": "res_16d317a9cab42b5f_1",
@@ -162,25 +162,25 @@
       "payload_snapshot": {
         "bytes": 192,
         "digest": "9a1b0ef7434192d874fffd0809e60fb94e5a989f5387130367e2021ea940ac3d",
-        "ledger_dir": "/tmp/lspc1_3r78b5h5/runtime_baseline/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p3.db.snapshots",
+        "ledger_dir": "/tmp/lspc1_xg3b4kgu/runtime_baseline/RUNTIME_INTEGRATION_GATE_01/state/lspc1_p3.db.snapshots",
         "opkey": "f1b985db98b28fc2c3de62e9",
         "persisted_mode": "0o444",
-        "sealed_at": 1789686800.7254868,
+        "sealed_at": 1789715873.8195908,
         "send_attestation": {
-          "attempt_token": "att_d0f21dd41885d337725aabc6",
+          "attempt_token": "att_ae7315795ca1f2fdb65274c6",
           "bytes": 192,
           "digest": "9a1b0ef7434192d874fffd0809e60fb94e5a989f5387130367e2021ea940ac3d",
           "exact_bytes_equal": true,
           "job_id": "res_16d317a9cab42b5f_1",
           "opkey": "f1b985db98b28fc2c3de62e9",
           "schema": "payload-snapshot-send-attestation/1",
-          "verified_at": 1789686800.7303505
+          "verified_at": 1789715873.824469
         },
         "send_verified": true
       },
-      "permit_id": "permit_89dec6ee66c3bb11f22a2646",
-      "pid": 5571,
-      "quote_id": "quote_0a9eb6aa2a2e3a6a57825cfe",
+      "permit_id": "permit_89e8d5678481b725717ada5e",
+      "pid": 2210,
+      "quote_id": "quote_3f3c110f32c8a9428402cda9",
       "sentinel": {
         "authorized_calls": 1,
         "boundary": "NONE",
@@ -211,11 +211,11 @@
     "P4": {
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "job_id": "res_f4b3d4c1de0ab44a_1",
       "ok": true,
       "operation_id": null,
-      "pid": 5576,
+      "pid": 2215,
       "quote_id": null,
       "sentinel": {
         "authorized_calls": 1,
@@ -247,11 +247,11 @@
     "P4env": {
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "job_id": "res_f4b3d4c1de0ab44a_1",
       "ok": true,
       "operation_id": null,
-      "pid": 5578,
+      "pid": 2217,
       "quote_id": null,
       "sentinel": {
         "authorized_calls": 1,
@@ -284,11 +284,11 @@
       "code": null,
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "error": "PayloadBindingError",
       "message": "trasporto: digest 4e15b2ded08f1795… non autorizzato (autorizzati: []); nessun invio",
       "ok": false,
-      "pid": 5580,
+      "pid": 2219,
       "sentinel": {
         "authorized_calls": 0,
         "boundary": "NONE",
@@ -306,9 +306,9 @@
       "authorized_digest": "0944f0ce8addc386",
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "ok": true,
-      "pid": 5582,
+      "pid": 2221,
       "sentinel": {
         "authorized_calls": 1,
         "boundary": "NONE",
@@ -326,9 +326,9 @@
       "allowlist_supported": false,
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "ok": true,
-      "pid": 5584,
+      "pid": 2223,
       "reconcile": {
         "accepted": true,
         "state": "FAILED"
@@ -371,9 +371,9 @@
       "allowlist_supported": false,
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "ok": true,
-      "pid": 5586,
+      "pid": 2225,
       "reconcile": {
         "accepted": true,
         "state": "FAILED"
@@ -417,12 +417,12 @@
       "code": null,
       "core_imported": true,
       "core_imported_at_entry": false,
-      "core_path": "/tmp/lspc1_3r78b5h5/core_baseline",
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_baseline",
       "dispatch_reached": true,
       "error": "TypeError",
       "message": "SqliteReservationStore.reconcile() missing 3 required positional arguments: 'job', 'state', and 'evidence'",
       "ok": false,
-      "pid": 5588,
+      "pid": 2227,
       "sentinel": {
         "authorized_calls": null,
         "built": false,

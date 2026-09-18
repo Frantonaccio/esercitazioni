@@ -29,6 +29,8 @@ permesso, ledger, snapshot exact-byte, pin del Core e ownership.
 
 | file | cosa contiene |
 |---|---|
+| `HUMAN_REVIEW_01_CORRECTIVE_DELTA.md` | il blocker `DISPATCH_AUTHORIZATION_FORGEABLE`, riprodotto e chiuso |
+| `THREAT_MODEL.md` | cosa protegge il confine del Core, cosa protegge P-B01, cosa nessuno dei due pretende |
 | `REALITY_LOCK.md` | gli otto controlli eseguiti **prima** di qualunque write |
 | `SPEND_PATH_INVENTORY.md` | la matrice completa degli entry point (§5 del mandato) |
 | `CORE_PRIMITIVES_CLASSIFICATION.md` | perche' ogni primitive del Core e' stata toccata o lasciata stare |
@@ -54,6 +56,17 @@ python3 LEGACY_SPEND_PATH_CLOSURE_01/lspc1/run_gate_e.py
 Il gate ripristina l'albero del bundle storico `RUNTIME_INTEGRATION_GATE_01` prima e
 dopo l'esecuzione: rieseguire la suite R0-R1 ne riscrive per costruzione l'evidenza,
 e quella riscrittura non deve entrare qui dentro.
+
+## Iterazione 2 — dopo la Human Review 01
+
+Il primo candidate (`44f9ea29` / `ad2f9c07`) ha ricevuto
+`HUMAN_REVIEW_HOLD — DISPATCH_AUTHORIZATION_FORGEABLE`: l'oggetto che apriva il
+cancello si poteva stampare in casa. Riprodotto (`E13`), corretto nel Core
+(`605a8d74`), controprovato con quattro casi unitari nuovi e due sonde nuove, e
+accompagnato da un threat model esplicito (`E14`).
+
+I commit revisionati non sono stati toccati: nessun amend, nessun force-push, delta
+correttivi come commit nuovi sugli stessi branch.
 
 ## Cosa questo bundle NON dichiara
 

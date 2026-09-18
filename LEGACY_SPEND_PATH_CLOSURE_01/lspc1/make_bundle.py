@@ -37,11 +37,18 @@ CORE = os.environ.get("CREATIVE_OS_CORE_PATH", "/home/user/creative-os")
 P2 = os.path.join(GATE01, "p2_handoff", "VF_RUNTIME_T16_HANDOFF_2026-09-16", "P2_RUNTIME",
                   "hf_batch.py")
 OUT_DIR = os.environ.get("LSPC1_PACKAGE_OUT", os.path.join(REPO, "..", "lspc1_package"))
-ZIP_NAME = "VF_LEGACY_SPEND_PATH_CLOSURE_EVIDENCE_2026-09-18.zip"
+ZIP_NAME = "VF_LEGACY_SPEND_PATH_CLOSURE_EVIDENCE_V2_2026-09-18.zip"
 
 CANONICAL_CORE_BASE = "9cf9cee1a751f7a2ad6c768574ff5aa38d8db515"
 CANONICAL_RUNTIME_BASE = "fea7b439a63a0100a732e21af4dfde6b8edd0951"
 P2_DECLARED = "637f3a803ee38d0494f6ca51837f36207593680a06920e7d76b80660329ea7d1"
+
+# Iterazione 1, sottoposta a Human Review e NON mergiata. Resta dichiarata: un bundle
+# v2 che non dicesse da dove viene sarebbe un bundle senza storia.
+REVIEWED_CORE_SHA = "44f9ea29cea112dfb30c752e5519498e25044c19"
+REVIEWED_RUNTIME_CODE_SHA = "ad2f9c072b2a775637eb0b0da0aeca1cb82ca770"
+REVIEWED_RUNTIME_EVIDENCE_HEAD = "108af8a606d81ef1b09191fda062d684befd54ec"
+REVIEWED_ZIP_SHA256 = "c0f497c08e201b2f14679cb81c80ce820ee6a5fc8927964c231077ea35073d34"
 
 for p in (GATE01, GATE02, BUNDLE, REPO):
     if p not in sys.path:
@@ -98,6 +105,34 @@ def build_manifest(file_count: int) -> dict:
         "explicitly_not_claimed": readiness["explicitly_not_claimed"],
         "gate": {"steps": results["total"], "pass": results["pass"], "fail": results["fail"],
                  "fail_ids": results["fail_ids"], "decision": results["gate_decision"]},
+        "human_review_01": {
+            "verdict_received": "HUMAN_REVIEW_HOLD — DISPATCH_AUTHORIZATION_FORGEABLE",
+            "reviewed_iteration": {
+                "core_sha": REVIEWED_CORE_SHA,
+                "runtime_code_sha": REVIEWED_RUNTIME_CODE_SHA,
+                "runtime_evidence_head_sha": REVIEWED_RUNTIME_EVIDENCE_HEAD,
+                "zip_sha256": REVIEWED_ZIP_SHA256,
+                "merged": False},
+            "blocker": ("`DispatchAuthorization` era costruibile e `grant_dispatch(adapter, "
+                        "auth)` accettava l'oggetto senza rileggere il journal; `_dispatch` e "
+                        "`_authorize_payload` erano invocabili direttamente."),
+            "reproduced_on_reviewed_candidate": True,
+            "evidence": ["evidence/E13_forged_dispatch_authorization.json",
+                         "evidence/E14_threat_model.json",
+                         "HUMAN_REVIEW_01_CORRECTIVE_DELTA.md", "THREAT_MODEL.md"],
+            "resolution": ("grant_dispatch riceve lo store e rilegge il journal; costruttore "
+                           "con token di conio; registro dei coniati per identita' a consumo "
+                           "singolo; guard automatico sugli hook."),
+            "history_preserved": "nessun amend, nessun force-push: delta correttivi come "
+                                 "commit nuovi sugli stessi branch",
+            "snapshot_seal_write_race": {
+                "status": "STILL_OPEN",
+                "human_review_classification": ["PREEXISTING", "FAIL_CLOSED",
+                                                "AVAILABILITY / CONCURRENCY DEFECT",
+                                                "NO DOUBLE SPEND OBSERVED"],
+                "fixed_here": False,
+                "next": "candidato del gate successivo, dopo il merge di questa fase"},
+        },
         "file_count": file_count,
         "credential_scan": bp.scan_credentials(BUNDLE),
     }
@@ -196,6 +231,7 @@ def step_package() -> int:
                          f"chiamati con lo stesso nome."),
         "core_pin": manifest["core_pin"],
         "p2_frozen": manifest["p2_frozen"],
+        "human_review_01": manifest["human_review_01"],
         "phase_state": readiness["phase_state"],
         "test_suite_result": readiness["test_suite_result"],
         "requirement_readiness": readiness["requirement_readiness"],

@@ -1,0 +1,595 @@
+diff --git a/adapters/base.py b/adapters/base.py
+index 7d9e033..375c9d1 100644
+--- a/adapters/base.py
++++ b/adapters/base.py
+@@ -34,10 +34,12 @@ R0-R1 (hardening, 2026-09-16) aggiunge quattro invarianti al contratto:
+ """
+ from __future__ import annotations
+ 
++import functools
+ import hashlib
+ import json
+ import math
+ import threading
++import weakref
+ from collections.abc import Mapping
+ from dataclasses import dataclass, field, asdict
+ from enum import Enum
+@@ -677,10 +679,107 @@ class SpendAuthorizationInvalid(Exception):
+         super().__init__(f"{code}: {message}")
+ 
+ 
+-@dataclass(frozen=True)
++# ---------------------------------------------------------------------------
++# HUMAN REVIEW 01 — DISPATCH_AUTHORIZATION_FORGEABLE (2026-09-18)
++#
++# IL DIFETTO CHE QUESTA SEZIONE CORREGGE. Nella prima stesura del confine
++# `DispatchAuthorization` era una dataclass costruibile e `grant_dispatch(adapter,
++# auth)` accettava l'oggetto senza rileggere nulla. Bastava quindi:
++#
++#     forged = DispatchAuthorization(job_id="forged", spec_key=spec.spec_key, ...)
++#     with grant_dispatch(adapter, forged):
++#         adapter.authorize_payload(digest); adapter.submit(spec)
++#
++# e lo spender veniva raggiunto (riprodotto: `reached=1`, `sent=1`). L'autorizzazione
++# era "derivata dal journal" solo per convenzione del chiamante — cioe' non lo era.
++# Una dataclass frozen rende l'oggetto immutabile, non autentico.
++#
++# TRE MECCANISMI, NON UNO. Nessuno da solo basta, e sono deliberatamente ridondanti:
++#
++#  1. `grant_dispatch(...)` NON riceve piu' un'autorizzazione. Riceve lo STORE
++#     AUTOREVOLE e l'identita' del tentativo, e chiama internamente
++#     `authorize_dispatch(store, ...)`. L'unica strada supportata per aprire il
++#     cancello implica una NUOVA lettura del journal.
++#  2. `DispatchAuthorization` non e' costruibile dall'esterno: il costruttore
++#     pretende un token di conio privato del modulo, e senza quello solleva
++#     DISPATCH_AUTHORIZATION_FORGED. Il controesempio della review fallisce qui,
++#     prima ancora di arrivare al grant.
++#  3. Ogni punto che apre il confine (`_DispatchGrant.__enter__`, `submit`,
++#     `authorize_payload` e gli hook di implementazione) verifica che l'oggetto sia
++#     nel registro dei coniati, PER IDENTITA' — non per uguaglianza di campi — e che
++#     non sia gia' stato consumato. Un'autorizzazione legittima non si riusa.
++#
++# COSA QUESTO NON PRETENDE DI ESSERE. In Python il trattino basso non e' un confine
++# di sicurezza, e questo modulo non finge il contrario. Codice arbitrariamente
++# malevolo eseguito NELLO STESSO PROCESSO, con la stessa identita' e le stesse
++# credenziali dello spender, puo' importare un nome privato o scrivere nello slot
++# della concessione. Contro quello il confine e' P-B01: UID distinto, nessuna
++# capability, `no_new_privs`, segreto e store leggibili solo nel dominio dello
++# spender. Vedi THREAT_MODEL.md del bundle di questa fase.
++# ---------------------------------------------------------------------------
++
++# Token di conio: privato del modulo, senza valore semantico, identificato SOLO per
++# identita'. Non e' un booleano e non e' una stringa: quelli si scrivono, questo no.
++_MINT = object()
++
++# Registro delle autorizzazioni realmente coniate da `authorize_dispatch`, per
++# IDENTITA'. `WeakSet` perche' un'autorizzazione non deve sopravvivere al proprio
++# tentativo; il lock perche' `Batch.go` dispaccia in thread paralleli.
++_MINTED: "weakref.WeakSet" = weakref.WeakSet()
++_SPENT: "weakref.WeakSet" = weakref.WeakSet()
++_MINT_LOCK = threading.Lock()
++
++
++def _register_minted(auth: "DispatchAuthorization") -> "DispatchAuthorization":
++    with _MINT_LOCK:
++        _MINTED.add(auth)
++    return auth
++
++
++def _is_minted(auth) -> bool:
++    if not isinstance(auth, DispatchAuthorization):
++        return False
++    with _MINT_LOCK:
++        return any(a is auth for a in _MINTED)
++
++
++def _is_spent(auth) -> bool:
++    with _MINT_LOCK:
++        return any(a is auth for a in _SPENT)
++
++
++def _mark_spent(auth) -> None:
++    with _MINT_LOCK:
++        _SPENT.add(auth)
++
++
++def _require_minted(auth, entry_point: str) -> "DispatchAuthorization":
++    """Unico punto che decide se un'autorizzazione e' autentica. Chiamato da OGNI
++    varco: il grant, i due template method e i due hook di implementazione."""
++    if auth is None:
++        raise SpendAuthorizationRequired(entry_point, "nessuna concessione attiva in questo thread")
++    if not _is_minted(auth):
++        raise SpendAuthorizationInvalid(
++            "DISPATCH_AUTHORIZATION_FORGED",
++            f"{entry_point}: l'autorizzazione presentata non e' stata emessa da "
++            f"`authorize_dispatch` su un journal autorevole. Un oggetto con i campi giusti "
++            f"non e' un'autorizzazione: e' una fotocopia.")
++    if _is_spent(auth):
++        raise SpendAuthorizationInvalid(
++            "DISPATCH_AUTHORIZATION_SPENT",
++            f"{entry_point}: autorizzazione gia' consumata dal tentativo {auth.job_id}. "
++            f"Un nuovo dispatch richiede una nuova lettura del journal.")
++    return auth
++
++
++@dataclass(frozen=True, eq=False)
+ class DispatchAuthorization:
+     """Fatti RILETTI dal journal autorevole. Non e' un permesso emesso: e' una
+-    fotografia verificata della prenotazione governata che sta per dispacciare."""
++    fotografia verificata della prenotazione governata che sta per dispacciare.
++
++    `eq=False` e' deliberato: l'identita' di un'autorizzazione e' l'OGGETTO, non i
++    suoi campi. Due autorizzazioni con gli stessi campi non sono la stessa
++    autorizzazione, ed e' esattamente cio' che rende inutile fabbricarne una."""
+     job_id: str
+     spec_key: str
+     operation_id: str
+@@ -692,6 +791,14 @@ class DispatchAuthorization:
+     quote_id: str
+     quote_amount: int
+     quote_unit: str
++    mint: Any = None            # token di conio: solo `authorize_dispatch` lo possiede
++
++    def __post_init__(self):
++        if self.mint is not _MINT:
++            raise SpendAuthorizationInvalid(
++                "DISPATCH_AUTHORIZATION_FORGED",
++                "DispatchAuthorization non si costruisce: la si ottiene da "
++                "`authorize_dispatch(store, ...)`, che la deriva dal journal autorevole")
+ 
+     def covers(self, spec: "GenSpec") -> bool:
+         return getattr(spec, "spec_key", None) == self.spec_key
+@@ -740,7 +847,10 @@ def authorize_dispatch(store, job_id: str, *, adapter_name: str, adapter_account
+ 
+     Non accetta nulla dal chiamante che non venga riconfrontato con la riga
+     persistita. Solleva `SpendAuthorizationInvalid` con un codice parlante al
+-    primo fatto che manca: nessun fallback, nessun "quasi"."""
++    primo fatto che manca: nessun fallback, nessun "quasi".
++
++    E' l'UNICO posto in cui una `DispatchAuthorization` puo' nascere: possiede il
++    token di conio e registra l'oggetto nel registro dei coniati."""
+     def refuse(code: str, msg: str):
+         raise SpendAuthorizationInvalid(code, f"{entry_point}: {msg}")
+ 
+@@ -791,24 +901,26 @@ def authorize_dispatch(store, job_id: str, *, adapter_name: str, adapter_account
+     if not _ledger_has_reserve(store, job_id):
+         refuse("DISPATCH_LEDGER_RESERVE_MISSING",
+                f"nessun movimento RESERVE nel ledger per {job_id}: l'envelope non e' impegnato")
+-    return DispatchAuthorization(
++    return _register_minted(DispatchAuthorization(
+         job_id=job_id, spec_key=spec_key, operation_id=persisted.operation_id,
+         attempt_token=attempt_token, payload_digest=payload_digest,
+         provider=adapter_name, provider_account=adapter_account or "",
+         envelope_id=q["envelope_id"], quote_id=persisted.quote_id,
+-        quote_amount=int(q["amount"]), quote_unit=str(q["unit"]))
++        quote_amount=int(q["amount"]), quote_unit=str(q["unit"]), mint=_MINT))
+ 
+ 
+ class _DispatchGrant:
+     """Concessione a tempo determinato: vive quanto il `with`, e non oltre.
+ 
+-    Non e' rientrante e non e' ereditabile da un altro thread: il dispatch di un
+-    tentativo non presta la propria autorizzazione a nessun altro."""
++    Non e' rientrante, non e' ereditabile da un altro thread e non e' riusabile:
++    all'uscita l'autorizzazione e' CONSUMATA e nessun varco la accetta piu'."""
+ 
+     def __init__(self, adapter, auth: DispatchAuthorization):
+-        self._adapter, self._auth = adapter, auth
++        self._adapter = adapter
++        self._auth = _require_minted(auth, "grant_dispatch")
+ 
+     def __enter__(self):
++        _require_minted(self._auth, "grant_dispatch")
+         slot = _grant_slot(self._adapter)
+         if getattr(slot, "auth", None) is not None:
+             raise SpendAuthorizationInvalid(
+@@ -820,6 +932,7 @@ class _DispatchGrant:
+ 
+     def __exit__(self, *exc):
+         _grant_slot(self._adapter).auth = None
++        _mark_spent(self._auth)
+         return False
+ 
+ 
+@@ -840,11 +953,49 @@ def _grant_slot(adapter):
+     return slot
+ 
+ 
+-def grant_dispatch(adapter, auth: DispatchAuthorization) -> _DispatchGrant:
+-    """Unico modo di autorizzare `authorize_payload` + `submit` di uno spender."""
++def grant_dispatch(adapter, store, job_id: str, *, spec_key: str, payload_digest: str,
++                   attempt_token: str, entry_point: str = "grant_dispatch") -> _DispatchGrant:
++    """UNICO modo supportato di autorizzare `authorize_payload` + `submit` di uno spender.
++
++    HUMAN REVIEW 01: non riceve piu' un'autorizzazione gia' costruita. Riceve lo
++    STORE AUTOREVOLE e l'identita' del tentativo, e rilegge il journal QUI, adesso.
++    Non esiste una firma alternativa che accetti una capability presentata dal
++    chiamante: se esistesse, sarebbe quella che verrebbe usata."""
++    auth = authorize_dispatch(
++        store, job_id, adapter_name=getattr(adapter, "name", ""),
++        adapter_account=str(getattr(adapter, "account_id", "") or ""),
++        spec_key=spec_key, payload_digest=payload_digest, attempt_token=attempt_token,
++        entry_point=entry_point)
+     return _DispatchGrant(adapter, auth)
+ 
+ 
++def _active_grant(adapter):
++    return getattr(_grant_slot(adapter), "auth", None)
++
++
++def _guard_hook(name: str, fn):
++    """Avvolge un hook di implementazione (`_dispatch`, `_authorize_payload`) con la
++    stessa verifica dei template method.
++
++    PERCHE'. In Python il trattino basso non nasconde nulla: `adapter._dispatch(spec,
++    auth)` e' una chiamata come le altre, e senza questo guard sarebbe il varco
++    lasciato aperto dietro la struttura. Il guard e' applicato dalla BASE in
++    `__init_subclass__`: la sottoclasse non deve ricordarsi di nulla, e non puo'
++    disapplicarlo se non ridefinendo l'hook — che verrebbe a sua volta avvolto."""
++    @functools.wraps(fn)
++    def guarded(self, *args, **kwargs):
++        entry = f"{type(self).__qualname__}.{name}"
++        active = _require_minted(_active_grant(self), entry)
++        presented = args[1] if len(args) > 1 else kwargs.get("auth")
++        if presented is not None and presented is not active:
++            raise SpendAuthorizationInvalid(
++                "DISPATCH_AUTHORIZATION_NOT_ACTIVE",
++                f"{entry}: l'autorizzazione presentata non e' quella concessa in questo thread")
++        return fn(self, *args, **kwargs)
++    guarded.__lspc_guarded__ = True
++    return guarded
++
++
+ class SpendCapableAdapter:
+     """Base OBBLIGATORIA per ogni adapter che puo' raggiungere un provider reale.
+ 
+@@ -853,7 +1004,11 @@ class SpendCapableAdapter:
+     `submit` ne' `authorize_payload`: quei due nomi sono il confine, e
+     `__init_subclass__` rifiuta a tempo di definizione della classe qualunque
+     sottoclasse che provi a ridefinirli o a ereditarli da un'altra base. Non e'
+-    una convenzione da ricordare: e' un TypeError."""
++    una convenzione da ricordare: e' un TypeError.
++
++    HUMAN REVIEW 01: `__init_subclass__` AVVOLGE anche i due hook di
++    implementazione con lo stesso guard dei template method. Una chiamata diretta
++    a `_dispatch` o `_authorize_payload` non raggiunge il provider."""
+ 
+     spend_capable = True
+ 
+@@ -869,19 +1024,19 @@ class SpendCapableAdapter:
+                     f"{cls.__qualname__}: `{name}` risolve a un'altra implementazione "
+                     f"(ordine di risoluzione: {[b.__name__ for b in cls.__mro__]}); "
+                     f"SpendCapableAdapter deve precedere le altre basi")
++        for name in ("_dispatch", "_authorize_payload"):
++            fn = cls.__dict__.get(name)
++            if fn is not None and callable(fn) and not getattr(fn, "__lspc_guarded__", False):
++                setattr(cls, name, _guard_hook(name, fn))
+ 
+     # -------------------------------------------------------- confine
+     def _require_dispatch(self, spec, entry_point: str) -> DispatchAuthorization:
+-        auth = getattr(_grant_slot(self), "auth", None)
+-        if auth is None:
+-            raise SpendAuthorizationRequired(
+-                f"{type(self).__qualname__}.{entry_point}",
+-                "nessuna concessione attiva in questo thread")
++        entry = f"{type(self).__qualname__}.{entry_point}"
++        auth = _require_minted(_active_grant(self), entry)
+         if not auth.covers(spec):
+             raise SpendAuthorizationInvalid(
+                 "DISPATCH_SPEC_NOT_COVERED",
+-                f"{type(self).__qualname__}.{entry_point}: la concessione copre la spec "
+-                f"{auth.spec_key[:12]}…, non quella presentata")
++                f"{entry}: la concessione copre la spec {auth.spec_key[:12]}…, non quella presentata")
+         if getattr(self, "name", None) != auth.provider:
+             raise SpendAuthorizationInvalid(
+                 "DISPATCH_PROVIDER_NOT_COVERED",
+@@ -893,16 +1048,13 @@ class SpendCapableAdapter:
+         return self._authorize_payload(digest, auth)
+ 
+     def _require_dispatch_digest(self, digest: str) -> DispatchAuthorization:
+-        auth = getattr(_grant_slot(self), "auth", None)
+-        if auth is None:
+-            raise SpendAuthorizationRequired(
+-                f"{type(self).__qualname__}.authorize_payload",
+-                "nessuna concessione attiva in questo thread")
++        entry = f"{type(self).__qualname__}.authorize_payload"
++        auth = _require_minted(_active_grant(self), entry)
+         if digest != auth.payload_digest:
+             raise SpendAuthorizationInvalid(
+                 "DISPATCH_DIGEST_NOT_COVERED",
+-                f"{type(self).__qualname__}.authorize_payload: la concessione copre il digest "
+-                f"{auth.payload_digest[:16]}…, non {str(digest)[:16]}…")
++                f"{entry}: la concessione copre il digest {auth.payload_digest[:16]}…, "
++                f"non {str(digest)[:16]}…")
+         return auth
+ 
+     def submit(self, spec: "GenSpec") -> "Job":
+@@ -916,7 +1068,6 @@ class SpendCapableAdapter:
+     def _dispatch(self, spec: "GenSpec", auth: DispatchAuthorization) -> "Job":
+         raise NotImplementedError
+ 
+-
+ class JobStore:
+     """Registro dei job in volo, con riconciliazione.
+ 
+diff --git a/tests/run_spender_boundary.py b/tests/run_spender_boundary.py
+index e3c478e..267decb 100644
+--- a/tests/run_spender_boundary.py
++++ b/tests/run_spender_boundary.py
+@@ -32,6 +32,21 @@ Cosa si dimostra:
+   K  NON-REGRESSIONE: un adapter di laboratorio non spendibile passa da `run_job`
+      esattamente come prima, anche senza operazione/quote/envelope.
+ 
++HUMAN REVIEW 01 — DISPATCH_AUTHORIZATION_FORGEABLE (2026-09-18). Le prime undici
++controprove verificavano una concessione SCADUTA, RIENTRANTE, di ALTRA SPEC, di ALTRO
++DIGEST e un JOURNAL ALTERATO — ma nessuna costruiva direttamente una
++`DispatchAuthorization` falsa. Era il varco: l'oggetto che apre il cancello si poteva
++stampare in casa. Quattro controprove in piu':
++
++  L  autorizzazione FABBRICATA (il controesempio esatto della review) -> rifiutata
++     alla costruzione; e fabbricata AGGIRANDO il costruttore -> rifiutata al varco,
++     perche' il registro dei coniati e' per IDENTITA', non per campi. Sentinella 0;
++  M  hook di implementazione (`_dispatch`, `_authorize_payload`) invocati
++     DIRETTAMENTE, con e senza autorizzazione -> rifiutati. Sentinella 0;
++  N  `grant_dispatch` non ha piu' una forma che accetti un'autorizzazione: pretende
++     lo STORE e rilegge il journal per conto proprio;
++  O  un'autorizzazione LEGITTIMA non e' riusabile: fuori dal suo `with` e' consumata.
++
+ Nessuna rete, nessun provider reale, nessun credito.
+ """
+ from __future__ import annotations
+@@ -48,6 +63,7 @@ from adapters.base import (DispatchAuthorization, GenSpec, JobState, JobStore,
+                            ReconciliationEvidenceRequired, SpendAuthorizationInvalid,
+                            SpendAuthorizationRequired, SpendCapableAdapter, authorize_dispatch,
+                            grant_dispatch, is_spend_capable)
++import adapters.base as _base
+ from adapters.fake import FakeAdapter
+ from registry.reservations import SqliteReservationStore
+ from transport.pipeline import run_job
+@@ -278,29 +294,38 @@ def g_authorization_is_reread(db: str) -> str:
+ 
+ # ------------------------------------------------------------------- H
+ def h_grant_is_bounded(db: str) -> str:
++    """La concessione e' limitata al `with`, alla spec e al digest — e la si apre solo
++    passando lo STORE, mai un'autorizzazione (HUMAN REVIEW 01)."""
+     store, a, s = SqliteReservationStore(db), SpenderSentinel(), spec("grant")
+     g = governed(store, s, op="LSPC:h")
+-    run_job(a, s, store, max_polls=5, budget_units=g["budget_units"],
+-            operation_id=g["operation_id"], quote_id=g["quote_id"], envelope_id=g["envelope_id"])
+-    auth = a.seen[0]
+-    reached_after_governed = a.reached
+-    # fuori dal `with` la concessione non esiste piu'
++    _, job = store.reserve_or_get_live(s, budget_units=g["budget_units"], now=1.0,
++                                       operation_id=g["operation_id"], quote_id=g["quote_id"],
++                                       envelope_id=g["envelope_id"])
++    digest = hashlib.sha256(a.serialize(s)).hexdigest()
++    token = "att_" + "b" * 24
++    job = store.mark_submitting(job, provider=a.name, provider_account=a.account_id,
++                                payload_digest=digest, attempt_token=token, now=1.0)
++
++    def open_grant():
++        return grant_dispatch(a, store, job.job_id, spec_key=s.spec_key,
++                              payload_digest=digest, attempt_token=token)
++
++    # fuori dal `with` non esiste concessione
+     e1 = must_raise(SpendAuthorizationRequired, lambda: a.submit(s))
+     # non e' rientrante
+-    with grant_dispatch(a, auth):
+-        e2 = must_raise(SpendAuthorizationInvalid,
+-                        lambda: grant_dispatch(a, auth).__enter__(),
++    with open_grant():
++        e2 = must_raise(SpendAuthorizationInvalid, lambda: open_grant().__enter__(),
+                         code="DISPATCH_GRANT_REENTRANT")
+-    # non copre un'altra spec
++    # non copre un'altra spec ne' un altro digest
+     other = spec("grant_altra")
+-    with grant_dispatch(a, auth):
++    with open_grant():
+         e3 = must_raise(SpendAuthorizationInvalid, lambda: a.submit(other),
+                         code="DISPATCH_SPEC_NOT_COVERED")
+         e4 = must_raise(SpendAuthorizationInvalid, lambda: a.authorize_payload("0" * 64),
+                         code="DISPATCH_DIGEST_NOT_COVERED")
+-    assert a.reached == reached_after_governed == 1
++    assert a.reached == 0, a.reached
+     return (f"fuori dal with -> {e1.code} · rientrante -> {e2.code} · altra spec -> {e3.code} · "
+-            f"altro digest -> {e4.code} · sentinella reached resta {a.reached}")
++            f"altro digest -> {e4.code} · sentinella reached={a.reached}")
+ 
+ 
+ # ------------------------------------------------------------------- I
+@@ -382,6 +407,146 @@ def k_lab_adapter_unchanged(db: str) -> str:
+             f"{store.get(job2.job_id).state.value} · nessun confine attraversato")
+ 
+ 
++
++# ------------------------------------------------------------------- L
++def _forge_bypassing_constructor(**fields) -> DispatchAuthorization:
++    """Fabbrica un'autorizzazione AGGIRANDO `__post_init__`.
++
++    E' il tentativo serio: chi vuole falsificare non si ferma davanti a un
++    controllo nel costruttore. L'oggetto che ne esce ha i campi giusti, la classe
++    giusta ed e' frozen come l'originale — e non apre nulla, perche' cio' che conta
++    non e' come e' fatto ma DA DOVE viene."""
++    obj = object.__new__(DispatchAuthorization)
++    for k, v in fields.items():
++        object.__setattr__(obj, k, v)
++    return obj
++
++
++def l_forged_authorization(db: str) -> str:
++    a, s = SpenderSentinel(), spec("forged")
++    digest = hashlib.sha256(a.serialize(s)).hexdigest()
++    fields = dict(job_id="forged", spec_key=s.spec_key, operation_id="forged-op",
++                  attempt_token="forged-attempt", payload_digest=digest,
++                  provider=a.name, provider_account=a.account_id,
++                  envelope_id="forged-envelope", quote_id="forged-quote",
++                  quote_amount=1, quote_unit="units")
++
++    # L1 — il controesempio ESATTO della Human Review: costruzione diretta.
++    e1 = must_raise(SpendAuthorizationInvalid, lambda: DispatchAuthorization(**fields),
++                    code="DISPATCH_AUTHORIZATION_FORGED")
++
++    # L2 — costruzione che AGGIRA il costruttore, poi passata al grant privato.
++    forged = _forge_bypassing_constructor(**fields, mint=_base._MINT)
++    e2 = must_raise(SpendAuthorizationInvalid, lambda: _base._DispatchGrant(a, forged),
++                    code="DISPATCH_AUTHORIZATION_FORGED")
++
++    # L3 — la stessa, infilata a mano nello slot della concessione: i template
++    #      method non si fidano dello slot, verificano il registro.
++    _base._grant_slot(a).auth = forged
++    try:
++        e3 = must_raise(SpendAuthorizationInvalid, lambda: a.authorize_payload(digest),
++                        code="DISPATCH_AUTHORIZATION_FORGED")
++        e4 = must_raise(SpendAuthorizationInvalid, lambda: a.submit(s),
++                        code="DISPATCH_AUTHORIZATION_FORGED")
++    finally:
++        _base._grant_slot(a).auth = None
++
++    # L4 — un'autorizzazione con gli STESSI CAMPI di una legittima non e' quella
++    #      legittima: il registro e' per identita', non per uguaglianza.
++    assert DispatchAuthorization.__dataclass_params__.eq is False, \
++        "l'uguaglianza per campi renderebbe il registro falsificabile"
++    assert a.reached == 0 and a.authorized_calls == 0 and a.transport.sent_count == 0
++    return (f"costruzione diretta -> {e1.code} · costruttore aggirato + grant -> {e2.code} · "
++            f"slot forzato: authorize_payload -> {e3.code}, submit -> {e4.code} · "
++            f"eq per identita' · sentinella reached={a.reached} sent={a.transport.sent_count}")
++
++
++# ------------------------------------------------------------------- M
++def m_direct_implementation_hooks(db: str) -> str:
++    """`_dispatch` e `_authorize_payload` sono hook Python, e in Python il trattino
++    basso non e' un confine di sicurezza. Il guard lo applica la BASE in
++    `__init_subclass__`: la sottoclasse non deve ricordarsi di nulla."""
++    a, s = SpenderSentinel(), spec("hooks")
++    digest = hashlib.sha256(a.serialize(s)).hexdigest()
++    fields = dict(job_id="forged", spec_key=s.spec_key, operation_id="forged-op",
++                  attempt_token="forged-attempt", payload_digest=digest,
++                  provider=a.name, provider_account=a.account_id,
++                  envelope_id="forged-envelope", quote_id="forged-quote",
++                  quote_amount=1, quote_unit="units")
++    forged = _forge_bypassing_constructor(**fields, mint=_base._MINT)
++
++    # M1 — senza alcuna concessione attiva, con o senza autorizzazione presentata:
++    #      il guard si ferma sulla CONCESSIONE, che e' il fatto che manca davvero.
++    e1 = must_raise(SpendAuthorizationRequired, lambda: a._dispatch(s, None))
++    e2 = must_raise(SpendAuthorizationRequired, lambda: a._authorize_payload(digest, None))
++    e3 = must_raise(SpendAuthorizationRequired, lambda: a._dispatch(s, forged))
++    e4 = must_raise(SpendAuthorizationRequired, lambda: a._authorize_payload(digest, forged))
++    # M2 — con un'autorizzazione FABBRICATA forzata nello slot: il guard la
++    #      riconosce come non coniata.
++    _base._grant_slot(a).auth = forged
++    try:
++        e5 = must_raise(SpendAuthorizationInvalid, lambda: a._dispatch(s, forged),
++                        code="DISPATCH_AUTHORIZATION_FORGED")
++        e6 = must_raise(SpendAuthorizationInvalid, lambda: a._authorize_payload(digest, forged),
++                        code="DISPATCH_AUTHORIZATION_FORGED")
++    finally:
++        _base._grant_slot(a).auth = None
++    assert getattr(type(a).__dict__["_dispatch"], "__lspc_guarded__", False)
++    assert getattr(type(a).__dict__["_authorize_payload"], "__lspc_guarded__", False)
++    assert a.reached == 0 and a.authorized_calls == 0 and a.transport.sent_count == 0
++    return (f"senza concessione: _dispatch -> {e1.code}, _authorize_payload -> {e2.code} "
++            f"(idem con autorizzazione presentata: {e3.code}/{e4.code}) · con autorizzazione "
++            f"fabbricata nello slot -> {e5.code}/{e6.code} · hook avvolti dalla base · "
++            f"sentinella reached={a.reached} sent={a.transport.sent_count}")
++
++
++# ------------------------------------------------------------------- N
++def n_grant_requires_the_store(db: str) -> str:
++    """Non esiste piu' una forma di `grant_dispatch` che accetti una capability."""
++    import inspect
++    sig = inspect.signature(grant_dispatch)
++    params = list(sig.parameters)
++    assert params[:3] == ["adapter", "store", "job_id"], params
++    assert "auth" not in sig.parameters and "authorization" not in sig.parameters, params
++    a, s = SpenderSentinel(), spec("shape")
++    digest = hashlib.sha256(a.serialize(s)).hexdigest()
++    forged = _forge_bypassing_constructor(
++        job_id="forged", spec_key=s.spec_key, operation_id="op", attempt_token="t",
++        payload_digest=digest, provider=a.name, provider_account=a.account_id,
++        envelope_id="e", quote_id="q", quote_amount=1, quote_unit="units", mint=_base._MINT)
++    # la vecchia chiamata a due argomenti non esiste piu'
++    e = must_raise(TypeError, lambda: grant_dispatch(a, forged))
++    assert a.reached == 0
++    return (f"firma: {params[:3]} + keyword-only {sorted(k for k, v in sig.parameters.items() if v.kind == v.KEYWORD_ONLY)} · "
++            f"grant_dispatch(adapter, auth) -> TypeError · sentinella reached={a.reached}")
++
++
++# ------------------------------------------------------------------- O
++def o_legitimate_authorization_not_replayable(db: str) -> str:
++    """Un'autorizzazione legittima vale per UN tentativo. Fuori dal suo `with` e'
++    consumata, e nessun varco la riaccetta: un replay e' una seconda spesa."""
++    store, a, s = SqliteReservationStore(db), SpenderSentinel(), spec("replay")
++    g = governed(store, s, op="LSPC:o")
++    run_job(a, s, store, max_polls=5, budget_units=g["budget_units"],
++            operation_id=g["operation_id"], quote_id=g["quote_id"], envelope_id=g["envelope_id"])
++    assert a.reached == 1
++    auth = a.seen[0]
++    assert _base._is_minted(auth), "l'autorizzazione del percorso governato deve essere coniata"
++    e1 = must_raise(SpendAuthorizationInvalid, lambda: _base._DispatchGrant(a, auth),
++                    code="DISPATCH_AUTHORIZATION_SPENT")
++    _base._grant_slot(a).auth = auth
++    try:
++        e2 = must_raise(SpendAuthorizationInvalid, lambda: a.submit(s),
++                        code="DISPATCH_AUTHORIZATION_SPENT")
++        e3 = must_raise(SpendAuthorizationInvalid,
++                        lambda: a.authorize_payload(auth.payload_digest),
++                        code="DISPATCH_AUTHORIZATION_SPENT")
++    finally:
++        _base._grant_slot(a).auth = None
++    assert a.reached == 1, a.reached
++    return (f"dispatch governato: reached=1 · replay via grant -> {e1.code} · via slot: "
++            f"submit -> {e2.code}, authorize_payload -> {e3.code} · sentinella resta {a.reached}")
++
+ def check(name, fn):
+     try:
+         RESULTS.append((name, True, fn() or ""))
+@@ -404,7 +569,11 @@ def main() -> int:
+                 ("h", "H. la concessione e' limitata al with, alla spec e al digest", h_grant_is_bounded),
+                 ("i", "I. store senza autorita' economica: nessun dispatch", i_store_without_quote_authority),
+                 ("j", "J. reconcile (#11): allowlist delle provenienze", j_reconciliation_allowlist),
+-                ("k", "K. NON-REGRESSIONE: adapter di laboratorio invariato", k_lab_adapter_unchanged)):
++                ("k", "K. NON-REGRESSIONE: adapter di laboratorio invariato", k_lab_adapter_unchanged),
++                ("l", "L. autorizzazione FABBRICATA rifiutata (HUMAN REVIEW 01)", l_forged_authorization),
++                ("m", "M. hook di implementazione invocati direttamente", m_direct_implementation_hooks),
++                ("n", "N. grant_dispatch pretende lo store, non una capability", n_grant_requires_the_store),
++                ("o", "O. autorizzazione legittima non riusabile", o_legitimate_authorization_not_replayable)):
+             check(name, lambda fn=fn, key=key: fn(os.path.join(tmp, f"{key}.db")))
+     finally:
+         shutil.rmtree(tmp, ignore_errors=True)
+diff --git a/transport/pipeline.py b/transport/pipeline.py
+index 14871dd..7e40603 100644
+--- a/transport/pipeline.py
++++ b/transport/pipeline.py
+@@ -31,9 +31,10 @@ reale). Per uno spender:
+   - PRIMA della prenotazione, `require_governed_dispatch_inputs` pretende
+     operazione, quote fidata ed envelope, e VIETA `envelope_units` (il budget
+     scelto dal client). Rifiuto a effetto zero: nessuna riga, nessun ledger.
+-  - DOPO `mark_submitting` e PRIMA di `authorize_payload`, `authorize_dispatch`
+-    rilegge dal journal autorevole i fatti che autorizzano il dispatch e li
+-    concede per la sola durata di `authorize_payload` + `submit`.
++  - DOPO `mark_submitting` e PRIMA di `authorize_payload`, `grant_dispatch` rilegge
++    dal journal autorevole (via `authorize_dispatch`) i fatti che autorizzano il
++    dispatch e li concede per la sola durata di `authorize_payload` + `submit`.
++    L'autorizzazione non transita dal chiamante: nasce e muore dentro quel `with`.
+ 
+ Un adapter non spendibile non e' toccato: il contesto e' `nullcontext` e il
+ comportamento e' identico a quello del Core `9cf9cee1`.
+@@ -160,10 +161,12 @@ def run_job(adapter: GenerationAdapter, spec: GenSpec, store: JobStore, *,
+         # QUESTO job, movimento RESERVE nel ledger). Vive solo dentro il `with`, e
+         # quindi copre esattamente `authorize_payload` + `submit` di questo tentativo.
+         # Per un adapter non spendibile il contesto e' inerte: comportamento invariato.
+-        grant = (grant_dispatch(adapter, authorize_dispatch(
+-                     store, job.job_id, adapter_name=adapter.name, adapter_account=account,
+-                     spec_key=spec.spec_key, payload_digest=authorized, attempt_token=token,
+-                     entry_point="transport.pipeline.run_job"))
++        # HUMAN REVIEW 01: `grant_dispatch` riceve lo STORE, non un'autorizzazione gia'
++        # costruita, e rilegge il journal per conto proprio. Il chiamante non ha piu' un
++        # modo di presentare una capability.
++        grant = (grant_dispatch(adapter, store, job.job_id, spec_key=spec.spec_key,
++                                payload_digest=authorized, attempt_token=token,
++                                entry_point="transport.pipeline.run_job")
+                  if is_spend_capable(adapter) else contextlib.nullcontext())
+         with grant:
+             adapter.authorize_payload(authorized)

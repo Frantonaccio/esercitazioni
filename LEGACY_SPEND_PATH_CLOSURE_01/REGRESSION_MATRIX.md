@@ -1,7 +1,7 @@
 # MATRICE DELLE REGRESSIONI
 
-Tutto rieseguito contro la **coppia candidate** (Core `44f9ea29` + Runtime del branch
-di questa fase). Evidenza: `evidence/E08_regression_r0_r1.json`,
+Tutto rieseguito contro la **coppia candidate** corrente (Core `605a8d74` + Runtime
+`434e0ea5`), dopo il delta correttivo della Human Review 01. Evidenza: `evidence/E08_regression_r0_r1.json`,
 `evidence/E09_mechanism_and_core_regressions.json`, `regression/`.
 
 ## Il confronto che conta
@@ -90,18 +90,32 @@ esattamente la ragione per cui il requisito si chiamava `CORE_CHANGE_REQUIRED`.
 | `run_review_pr2` | PASS |
 | `run_review_pr2_final` | PASS |
 | `run_ng05_pre_submit_atomicity` | PASS |
-| `run_spender_boundary` (nuova) | **11/11** |
+| `run_spender_boundary` (nuova) | **15/15** (11 + L/M/N/O della Human Review 01) |
 | `run_contamination` | **NON eseguita** — `RUN_CONTAMINATION` resta `NOT_RUN` per mandato, e non va chiusa incidentalmente |
 
 ## Pin del Core e P2
 
 | | |
 |---|---|
-| `REQUIRED_CORE_SHA` == Core HEAD | ✓ `44f9ea29cea112dfb30c752e5519498e25044c19` |
+| `REQUIRED_CORE_SHA` == Core HEAD | ✓ `605a8d746fdafbfc33456ec6f26fa942947a43b9` |
 | `9cf9cee1…` (baseline precedente) ora `STALE_CORE_PIN` | ✓ |
+| `44f9ea29…` (candidate revisionato) ora `STALE_CORE_PIN` | ✓ |
 | SHA sconosciuto → `CORE_PIN_MISMATCH` | ✓ |
 | tree sporco sullo SHA giusto → `CORE_WORKTREE_DIRTY` | ✓ |
 | P2 `hf_batch.py` before == after == `637f3a80…3ea7d1` | ✓ |
+
+## Iterazione 2 — dopo la Human Review 01
+
+Tutto quanto sopra e' stato **rieseguito** sulla coppia correttiva
+(`605a8d74` + `434e0ea5`), non ereditato dall'iterazione 1. In piu':
+
+| verifica | esito |
+|---|---|
+| `E13` — autorizzazione fabbricata e hook diretti | difetto **riprodotto** su `44f9ea29` (sentinella 2/2), **chiuso** sul correttivo (0/0) |
+| `E14` — threat model | 10 minacce del confine del Core, 3 di P-B01, 2 dichiarate fuori perimetro |
+| `run_spender_boundary` | 11 → **15/15** |
+| R0-R1 T01–T37 | 36/37, 0 FAIL, T29 blocked (invariato) |
+| meccanismi + suite del Core | 4/4 + 9/9 (invariati) |
 
 ## Migrazione dei test storici
 

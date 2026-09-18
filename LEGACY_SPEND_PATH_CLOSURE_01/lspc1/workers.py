@@ -797,3 +797,146 @@ def gov_hf_batch(core_path: str, db: str, *, namespace: str = "WOG",
     if adapter is not None:
         out["submits"] = adapter.submits
     return out
+
+
+# ===========================================================================
+# P11 — HUMAN REVIEW 01: l'autorizzazione si puo' STAMPARE IN CASA?
+#
+# Le controprove E04/E05 verificavano una concessione scaduta, rientrante, di altra
+# spec, di altro digest e un journal alterato. Nessuna costruiva direttamente una
+# `DispatchAuthorization` falsa — ed era esattamente il varco. Questa sonda lo prova
+# nei tre modi in cui un chiamante ci proverebbe davvero.
+#
+# Gira su ENTRAMBI i Core: su `44f9ea29` (il candidate revisionato) deve RIUSCIRE,
+# altrimenti non c'e' nulla da correggere; sul delta correttivo deve fallire.
+# ===========================================================================
+def _forge_fields(adapter, spec) -> dict:
+    import hashlib
+    return {"job_id": "forged", "spec_key": spec.spec_key, "operation_id": "forged-op",
+            "attempt_token": "forged-attempt",
+            "payload_digest": hashlib.sha256(adapter.serialize(spec)).hexdigest(),
+            "provider": adapter.name, "provider_account": adapter.account_id,
+            "envelope_id": "forged-envelope", "quote_id": "forged-quote",
+            "quote_amount": 1, "quote_unit": "units"}
+
+
+def _attempt(label: str, fn, into: dict) -> None:
+    try:
+        into[label] = {"refused": False, "result": str(fn())[:120]}
+    except BaseException as e:                              # noqa: BLE001
+        into[label] = {"refused": True, "error": type(e).__name__,
+                       "code": getattr(e, "code", None), "message": str(e)[:200]}
+
+
+def p11_forged_authorization(core_path: str, db: str, *, prompt: str = "p11 forged") -> dict:
+    out = _prelude(core_path)
+    adapter = None
+    try:
+        if core_path not in sys.path:
+            sys.path.insert(0, core_path)
+        import inspect
+        import adapters.base as base
+        from adapters.base import DispatchAuthorization, GenSpec, grant_dispatch
+        from lspc1.spenders import build_sentinel
+        from runtime.genspec_bridge import build_genspec
+        adapter = build_sentinel()
+        spec = build_genspec(_inputs(prompt), GenSpec)
+        fields = _forge_fields(adapter, spec)
+        attempts: dict = {}
+        sig = inspect.signature(grant_dispatch)
+        out["grant_dispatch_signature"] = list(sig.parameters)
+        out["grant_dispatch_accepts_authorization"] = list(sig.parameters)[:2] == ["adapter", "auth"]
+
+        # 1) il CONTROESEMPIO ESATTO della Human Review
+        forged = {}
+
+        def build_and_dispatch():
+            f = DispatchAuthorization(**fields)
+            forged["obj"] = f
+            with grant_dispatch(adapter, f):
+                adapter.authorize_payload(f.payload_digest)
+                return adapter.submit(spec).provider_job_id
+        _attempt("counterexample_review", build_and_dispatch, attempts)
+
+        # 2) costruzione che AGGIRA il costruttore (chi falsifica non si ferma a un if)
+        def bypass_constructor():
+            obj = object.__new__(DispatchAuthorization)
+            for k, v in {**fields, "mint": getattr(base, "_MINT", None)}.items():
+                try:
+                    object.__setattr__(obj, k, v)
+                except AttributeError:
+                    pass
+            forged["bypassed"] = obj
+            return obj
+        _attempt("bypass_constructor", bypass_constructor, attempts)
+
+        # 3) l'oggetto fabbricato infilato a mano nello slot della concessione
+        def slot_injection():
+            f = forged.get("bypassed") or forged.get("obj")
+            if f is None:
+                raise RuntimeError("nessun oggetto fabbricato disponibile")
+            slot = base._grant_slot(adapter)
+            slot.auth = f
+            try:
+                adapter.authorize_payload(f.payload_digest)
+                return adapter.submit(spec).provider_job_id
+            finally:
+                slot.auth = None
+        _attempt("slot_injection", slot_injection, attempts)
+
+        # 4) la vecchia forma a due argomenti, se esiste ancora
+        def legacy_two_arg_grant():
+            f = forged.get("bypassed") or forged.get("obj")
+            with grant_dispatch(adapter, f):
+                return "grant aperto"
+        _attempt("grant_dispatch_two_arg", legacy_two_arg_grant, attempts)
+
+        out.update(ok=True, attempts=attempts,
+                   reached_by_any=bool((getattr(adapter, "reached", 0) or 0) > 0))
+    except BaseException as e:                              # noqa: BLE001
+        _err(out, e)
+        out["trace"] = traceback.format_exc(limit=4)
+    return _epilogue(out, None, adapter)
+
+
+# ===========================================================================
+# P12 — gli hook di implementazione, chiamati direttamente
+# ===========================================================================
+def p12_direct_implementation_hooks(core_path: str, db: str, *, prompt: str = "p12 hooks") -> dict:
+    """In Python il trattino basso non e' un confine di sicurezza. O gli hook sono
+    protetti, o dietro la struttura c'e' una porta aperta."""
+    out = _prelude(core_path)
+    adapter = None
+    try:
+        if core_path not in sys.path:
+            sys.path.insert(0, core_path)
+        import adapters.base as base
+        from adapters.base import DispatchAuthorization, GenSpec
+        from lspc1.spenders import build_sentinel
+        from runtime.genspec_bridge import build_genspec
+        adapter = build_sentinel()
+        spec = build_genspec(_inputs(prompt), GenSpec)
+        fields = _forge_fields(adapter, spec)
+        forged = object.__new__(DispatchAuthorization)
+        for k, v in {**fields, "mint": getattr(base, "_MINT", None)}.items():
+            try:
+                object.__setattr__(forged, k, v)
+            except AttributeError:
+                pass
+        attempts: dict = {}
+        _attempt("_authorize_payload_senza_grant",
+                 lambda: adapter._authorize_payload(fields["payload_digest"], None), attempts)
+        _attempt("_dispatch_senza_grant",
+                 lambda: adapter._dispatch(spec, None), attempts)
+        _attempt("_authorize_payload_con_autorizzazione_fabbricata",
+                 lambda: adapter._authorize_payload(fields["payload_digest"], forged), attempts)
+        _attempt("_dispatch_con_autorizzazione_fabbricata",
+                 lambda: adapter._dispatch(spec, forged), attempts)
+        cls = type(adapter)
+        out.update(ok=True, attempts=attempts,
+                   hooks_guarded={n: bool(getattr(cls.__dict__.get(n), "__lspc_guarded__", False))
+                                  for n in ("_dispatch", "_authorize_payload")})
+    except BaseException as e:                              # noqa: BLE001
+        _err(out, e)
+        out["trace"] = traceback.format_exc(limit=4)
+    return _epilogue(out, None, adapter)

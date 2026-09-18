@@ -6,7 +6,7 @@ Fonte macchina: `READINESS.json`, `evidence/E12_reporting_test_result_vs_readine
 
 | requisito | stato | su cosa si regge |
 |---|---|---|
-| `LEGACY_SPEND_PATHS_CORE_PRIMITIVES` | `CLOSED_LAB_VERIFIED` | E02 (difetto riprodotto sulla coppia canonica), E03 (11/11 unitari del confine), E04 (sentinella a 0 in ogni percorso legacy, 1 nel governato), E06 (il client non sceglie il prezzo) |
+| `LEGACY_SPEND_PATHS_CORE_PRIMITIVES` | `CLOSED_LAB_VERIFIED` | E02 (difetto riprodotto sulla coppia canonica), E03 (**15/15** unitari del confine), E04 (sentinella a 0 in ogni percorso legacy, 1 nel governato), E06 (il client non sceglie il prezzo), **E13** (autorizzazione fabbricata e hook diretti: riprodotti su `44f9ea29`, chiusi sul correttivo), **E14** (threat model esplicito) |
 | `LEGACY_TESTS_MIGRATION_TO_GOVERNED` | `CLOSED_LAB_VERIFIED` | E05 (LEGACY_LAB non e' capace di provider, contro cinque tentativi di riaprirlo), E07 (20/20 equivalenti governati o Core-unit), E08 (nessuna regressione, assert storici intatti) |
 
 `CLOSED_LAB_VERIFIED` significa: verificato in **laboratorio**, con adapter
@@ -56,6 +56,11 @@ fase. Le controprove usano una sentinella, che prova **raggiungibilita'**, non s
 
 ### `SNAPSHOT_SEAL_WRITE_RACE = STILL_OPEN`
 
+**Classificazione Human Review 01:** `PREEXISTING` · `FAIL_CLOSED` ·
+`AVAILABILITY / CONCURRENCY DEFECT` · `NO DOUBLE SPEND OBSERVED`.
+Accettato come non-blocker di questa fase e indicato come **candidato naturale del
+gate successivo**, dopo il merge. Non corretto qui, come da verdetto.
+
 **Dove.** `RUNTIME_INTEGRATION_GATE_01/runtime/payload_snapshot.py`, `_write_once`.
 
 **Cosa.** Il file viene creato con `O_EXCL` e scritto **subito dopo**. Fra `os.open` e
@@ -80,7 +85,14 @@ di T08 superate; non ripresentatosi nella corsa post-fix).
 
 **Perche' non corretto.** E' un difetto di concorrenza del **percorso governato**
 (ledger degli snapshot P-B04), non un percorso di spesa legacy. Correggerlo qui sarebbe
-stato `SCOPE_EXPANSION_REQUIRED`, e il mandato vieta di aggirare uno STOP.
+stato `SCOPE_EXPANSION_REQUIRED`, e il mandato vieta di aggirare uno STOP. La Human
+Review 01 ha confermato la classificazione e ha chiesto esplicitamente di non
+correggerlo nel delta correttivo.
+
+**Nota della review, registrata:** il sigillo avviene PRIMA della chiamata a
+`run_job` del Core, quindi il fallimento concorrente ferma l'operazione prima della
+nuova reservation. E': P-B04 non puo' arrivare al provider reale con una primitive
+write-once che ogni tanto scambia una scrittura concorrente per corruzione.
 
 **Gravita'.** Fail-closed: il processo perdente si ferma con un errore e **non**
 spende. Nessuna spesa doppia, nessuna autorizzazione concessa per errore. Il danno e'

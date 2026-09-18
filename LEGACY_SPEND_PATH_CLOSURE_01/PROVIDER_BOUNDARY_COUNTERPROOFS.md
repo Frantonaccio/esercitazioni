@@ -48,7 +48,7 @@ oggetto. Tutti e sei l'hanno raggiunto:
 
 ---
 
-## DOPO — coppia candidate `44f9ea29` + `ad2f9c07`
+## DOPO — coppia candidate `605a8d74` + `434e0ea5`
 
 | sonda | percorso | esito | sentinella | effetti sullo store |
 |---|---|---|---|---|
@@ -108,9 +108,43 @@ l'ownership veniva contestata **dopo** l'invio). Sulla candidate no.
 
 ---
 
+## HUMAN REVIEW 01 — l'oggetto che apre il cancello
+
+La review ha trovato cio' che le controprove sopra **non** coprivano: nessuna
+costruiva direttamente una `DispatchAuthorization` falsa. `E13` lo fa, contro
+entrambi i Core.
+
+### Sul candidate revisionato `44f9ea29` — BLOCKER_REPRODUCED
+
+| tentativo | esito | sentinella |
+|---|---|---|
+| controesempio esatto della review | **riuscito** (`pv_e46492dd`) | `reached=2`, `sent=2` |
+| `grant_dispatch(adapter, auth)` a due argomenti | **grant aperto** | |
+| oggetto fabbricato infilato nello slot | **riuscito** | |
+| `_dispatch` / `_authorize_payload` con autorizzazione fabbricata | **riusciti** | `reached=2` |
+
+### Sul delta correttivo `605a8d74`
+
+| tentativo | esito | sentinella |
+|---|---|---|
+| controesempio esatto della review | `DISPATCH_AUTHORIZATION_FORGED` | **0** |
+| `grant_dispatch(adapter, auth)` | `TypeError` — la firma non esiste piu' | **0** |
+| oggetto fabbricato nello slot | `DISPATCH_AUTHORIZATION_FORGED` | **0** |
+| `_dispatch` / `_authorize_payload` senza concessione | `SPEND_AUTHORIZATION_REQUIRED` | **0** |
+| `_dispatch` / `_authorize_payload` con autorizzazione fabbricata nello slot | `DISPATCH_AUTHORIZATION_FORGED` | **0** |
+| autorizzazione **legittima** riusata | `DISPATCH_AUTHORIZATION_SPENT` | invariata |
+| percorso **governato** | `SUCCEEDED` | **1** |
+
+Nell'evidenza il tentativo `bypass_constructor` risulta *non rifiutato* in entrambe le
+esecuzioni: costruire un oggetto Python e' sempre possibile e nessun controllo puo'
+vietarlo. Cio' che conta e' che quell'oggetto non apra nulla, ed e' cio' che misura
+`slot_injection`. Registrarlo come riuscito invece di nasconderlo e' il punto.
+
 ## Cosa queste controprove NON dimostrano
 
 Non dimostrano che un provider reale funzioni, ne' che sia sicuro accenderlo. Non sono
-un test di un provider: sono un test di **raggiungibilita'**. `REAL_AUTHORIZATION_AND_PRICING`
+un test di un provider: sono un test di **raggiungibilita'**. E non dimostrano nulla
+contro codice arbitrariamente malevolo eseguito con la stessa identita' dello spender:
+quello e' P-B01, e la distinzione e' scritta in `THREAT_MODEL.md`. `REAL_AUTHORIZATION_AND_PRICING`
 e `REAL_PROVIDER_RECONCILIATION` restano `REAL_PROVIDER_REQUIRED`, e questa fase non
 li tocca.

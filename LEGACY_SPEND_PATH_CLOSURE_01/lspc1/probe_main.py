@@ -89,10 +89,18 @@ def budget(core: str) -> dict:
     return out
 
 
+def forge(core: str) -> dict:
+    """HUMAN REVIEW 01: si puo' stampare in casa l'oggetto che apre il cancello?"""
+    sd = workers.state_db
+    return {"P11": run(workers.p11_forged_authorization, core, sd("p11")),
+            "P12": run(workers.p12_direct_implementation_hooks, core, sd("p12"))}
+
+
 def main() -> int:
     core, outfile = sys.argv[1], sys.argv[2]
     mode = os.environ.get("LSPC1_PROBE_MODE", "probes")
-    data = {"probes": probes, "switches": switches, "budget": budget}[mode](core)
+    data = {"probes": probes, "switches": switches, "budget": budget,
+            "forge": forge}[mode](core)
     with open(outfile, "w", encoding="utf-8") as fh:
         json.dump(data, fh, indent=2, ensure_ascii=False, sort_keys=True, default=str)
     return 0

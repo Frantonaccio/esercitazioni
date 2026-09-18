@@ -1,0 +1,249 @@
+{
+  "blocker_closed_on_corrective_delta": {
+    "counterexample_refused": true,
+    "grant_dispatch_takes_the_store": true,
+    "hooks_guarded_by_base": true,
+    "hooks_refused": true,
+    "sentinel_zero_forged": true,
+    "sentinel_zero_hooks": true,
+    "slot_injection_refused": true,
+    "two_arg_grant_no_longer_exists": true
+  },
+  "blocker_reproduced_on_reviewed_candidate": {
+    "counterexample_reached_spender_on_reviewed_candidate": true,
+    "direct_hooks_reached_spender": true,
+    "sentinel_reached_on_reviewed_candidate": true,
+    "slot_injection_reached_spender": true,
+    "two_arg_grant_existed": true
+  },
+  "corrective_core_sha": "605a8d746fdafbfc33456ec6f26fa942947a43b9",
+  "note": "`bypass_constructor` risulta NON rifiutato in entrambe le esecuzioni, ed e' corretto: costruire un oggetto Python e' sempre possibile. Cio' che conta e' che quell'oggetto non apra nulla — vedi `slot_injection`.",
+  "probes_post_fix": {
+    "P11": {
+      "attempts": {
+        "bypass_constructor": {
+          "refused": false,
+          "result": "DispatchAuthorization(job_id='forged', spec_key='e46492dda5e7a665fcd631ecc95af6e6f2412026d0479658615937d7f1378be2', oper"
+        },
+        "counterexample_review": {
+          "code": "DISPATCH_AUTHORIZATION_FORGED",
+          "error": "SpendAuthorizationInvalid",
+          "message": "DISPATCH_AUTHORIZATION_FORGED: DispatchAuthorization non si costruisce: la si ottiene da `authorize_dispatch(store, ...)`, che la deriva dal journal autorevole",
+          "refused": true
+        },
+        "grant_dispatch_two_arg": {
+          "code": null,
+          "error": "TypeError",
+          "message": "grant_dispatch() missing 1 required positional argument: 'job_id'",
+          "refused": true
+        },
+        "slot_injection": {
+          "code": "DISPATCH_AUTHORIZATION_FORGED",
+          "error": "SpendAuthorizationInvalid",
+          "message": "DISPATCH_AUTHORIZATION_FORGED: sentinel_class.<locals>.Sentinel.authorize_payload: l'autorizzazione presentata non e' stata emessa da `authorize_dispatch` su un journal autorevole. Un oggetto con i ca",
+          "refused": true
+        }
+      },
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "grant_dispatch_accepts_authorization": false,
+      "grant_dispatch_signature": [
+        "adapter",
+        "store",
+        "job_id",
+        "spec_key",
+        "payload_digest",
+        "attempt_token",
+        "entry_point"
+      ],
+      "ok": true,
+      "pid": 3647,
+      "reached_by_any": false,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true
+    },
+    "P12": {
+      "attempts": {
+        "_authorize_payload_con_autorizzazione_fabbricata": {
+          "code": "SPEND_AUTHORIZATION_REQUIRED",
+          "error": "SpendAuthorizationRequired",
+          "message": "SPEND_AUTHORIZATION_REQUIRED: sentinel_class.<locals>.Sentinel._authorize_payload richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed ",
+          "refused": true
+        },
+        "_authorize_payload_senza_grant": {
+          "code": "SPEND_AUTHORIZATION_REQUIRED",
+          "error": "SpendAuthorizationRequired",
+          "message": "SPEND_AUTHORIZATION_REQUIRED: sentinel_class.<locals>.Sentinel._authorize_payload richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed ",
+          "refused": true
+        },
+        "_dispatch_con_autorizzazione_fabbricata": {
+          "code": "SPEND_AUTHORIZATION_REQUIRED",
+          "error": "SpendAuthorizationRequired",
+          "message": "SPEND_AUTHORIZATION_REQUIRED: sentinel_class.<locals>.Sentinel._dispatch richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope)",
+          "refused": true
+        },
+        "_dispatch_senza_grant": {
+          "code": "SPEND_AUTHORIZATION_REQUIRED",
+          "error": "SpendAuthorizationRequired",
+          "message": "SPEND_AUTHORIZATION_REQUIRED: sentinel_class.<locals>.Sentinel._dispatch richiede una DispatchAuthorization emessa dal percorso governato (reservation atomica con operazione, quote fidata ed envelope)",
+          "refused": true
+        }
+      },
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/home/user/creative-os",
+      "hooks_guarded": {
+        "_authorize_payload": true,
+        "_dispatch": true
+      },
+      "ok": true,
+      "pid": 3649,
+      "sentinel": {
+        "authorized_calls": 0,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [],
+        "reached": 0,
+        "spend_capable": true,
+        "submits": 0,
+        "transport_authorized": 0,
+        "transport_sent": 0
+      },
+      "sentinel_zero": true
+    }
+  },
+  "probes_pre_fix": {
+    "P11": {
+      "attempts": {
+        "bypass_constructor": {
+          "refused": false,
+          "result": "DispatchAuthorization(job_id='forged', spec_key='e46492dda5e7a665fcd631ecc95af6e6f2412026d0479658615937d7f1378be2', oper"
+        },
+        "counterexample_review": {
+          "refused": false,
+          "result": "pv_e46492dd"
+        },
+        "grant_dispatch_two_arg": {
+          "refused": false,
+          "result": "grant aperto"
+        },
+        "slot_injection": {
+          "refused": false,
+          "result": "pv_e46492dd"
+        }
+      },
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_reviewed",
+      "grant_dispatch_accepts_authorization": true,
+      "grant_dispatch_signature": [
+        "adapter",
+        "auth"
+      ],
+      "ok": true,
+      "pid": 3639,
+      "reached_by_any": true,
+      "sentinel": {
+        "authorized_calls": 2,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [
+          [
+            "authorize_payload",
+            "forged",
+            "forged-quote"
+          ],
+          [
+            "submit",
+            "forged",
+            "forged-quote"
+          ],
+          [
+            "authorize_payload",
+            "forged",
+            "forged-quote"
+          ],
+          [
+            "submit",
+            "forged",
+            "forged-quote"
+          ]
+        ],
+        "reached": 2,
+        "spend_capable": true,
+        "submits": 2,
+        "transport_authorized": 1,
+        "transport_sent": 2
+      },
+      "sentinel_zero": false
+    },
+    "P12": {
+      "attempts": {
+        "_authorize_payload_con_autorizzazione_fabbricata": {
+          "refused": false,
+          "result": "None"
+        },
+        "_authorize_payload_senza_grant": {
+          "code": null,
+          "error": "AttributeError",
+          "message": "'NoneType' object has no attribute 'job_id'",
+          "refused": true
+        },
+        "_dispatch_con_autorizzazione_fabbricata": {
+          "refused": false,
+          "result": "Job(job_id='job_239e5eef9b5a_1', spec_key='239e5eef9b5aa0f567fc51deaf8f187491eae83d8b1385ca387100831ff3b5e0', provider='"
+        },
+        "_dispatch_senza_grant": {
+          "code": null,
+          "error": "AttributeError",
+          "message": "'NoneType' object has no attribute 'job_id'",
+          "refused": true
+        }
+      },
+      "core_imported": true,
+      "core_imported_at_entry": false,
+      "core_path": "/tmp/lspc1_xg3b4kgu/core_reviewed",
+      "hooks_guarded": {
+        "_authorize_payload": false,
+        "_dispatch": false
+      },
+      "ok": true,
+      "pid": 3641,
+      "sentinel": {
+        "authorized_calls": 2,
+        "boundary": "SPEND_CAPABLE_ADAPTER",
+        "built": true,
+        "grants": [
+          [
+            "authorize_payload",
+            "forged",
+            "forged-quote"
+          ],
+          [
+            "submit",
+            "forged",
+            "forged-quote"
+          ]
+        ],
+        "reached": 2,
+        "spend_capable": true,
+        "submits": 1,
+        "transport_authorized": 1,
+        "transport_sent": 1
+      },
+      "sentinel_zero": false
+    }
+  },
+  "reviewed_core_sha": "44f9ea29cea112dfb30c752e5519498e25044c19"
+}
